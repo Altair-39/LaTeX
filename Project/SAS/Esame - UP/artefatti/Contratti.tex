@@ -1,1 +1,211 @@
 \chapter{Contratti}
+\paragraph{Pre-condizione generale:} L'attore è identificato con un'istanza \textit{org} di Organizzatore.
+
+\section{Passo 1}
+\section*{1. aggiungiTurnoCucina(\underline{turno}: Turno,  \underline{data}: Data, \underline{orario}: numerico, \underline{luogo?}: Luogo):}
+
+\paragraph{Pre-condizioni:}
+
+\begin{itemize}
+  \item \underline{\textit{turno}} è \textbf{assegnato a} {\textit{org}}.
+\end{itemize}
+
+\paragraph{Post-condizioni:}
+
+\begin{itemize}
+    \item è stata creata un'istanza $tc$ di TurnoCucina;
+    \item $tc$ è \textbf{contenuto in} $t$ \underline{TabelloneDeiTurni};
+    \item \underline{\textit{turno}.data} = \underline{\textit{data}};
+    
+    \item \underline{\textit{turno}.orario} = \underline{\textit{orario}};
+    \item $[$ se \underline{\textit{luogo}} è specificato $]$ \underline{\textit{turno}.luogo} = \underline{\textit{luogo}};
+    \item \textit{turno}.concluso  = no.
+\end{itemize}
+
+\section*{1a.1 modificaTurnoCucina(\underline{turno}: Turno, \underline{data?}: Data, \underline{orario?}: Ora, \underline{luogo?}: Luogo):}
+
+\paragraph{Pre-condizioni:}
+
+\begin{itemize}
+ \item \underline{\textit{turno}} è \textbf{assegnato a} {\textit{org}};
+ \item $t$ \textbf{contiene} \underline{turno};
+ \item $[$ se \underline{\textit{orario}} è specificato $]$ non esiste un $tc$ con lo stesso \underline{\textit{orario}}.
+\end{itemize}
+
+\paragraph{Post-condizioni:}
+
+\begin{itemize}
+    \item $[$ se \underline{\textit{data}} è specificato $]$ \underline{\textit{turno}.data} = \underline{\textit{data}};
+
+    \item $[$ se \underline{\textit{orario}} è specificato $]$ \underline{\textit{turno}.orario} = \underline{\textit{orario}};
+
+    \item $[$ se \underline{\textit{luogo}} è specificato $]$ \underline{\textit{turno}.luogo} = \underline{\textit{luogo}}.
+
+\end{itemize}
+
+\section*{1b.1 cancellaTurnoCucina(\underline{turno}: Turno):}
+
+\paragraph{Pre-condizioni:}
+
+\begin{itemize}
+ \item \underline{\textit{turno}} è \textbf{assegnato a} {\textit{org}};
+ \item $t$ \textbf{contiene} \underline{turno}.
+\end{itemize}
+
+\paragraph{Post-condizioni:}
+
+\begin{itemize}
+   \item \textlangle $ $ per ogni Compito $c$ \textbf{presente in} \underline{turno} \textrangle:
+    \begin{itemize}
+        \item l'associazione tra $c$ e \underline{turno} è stata eliminata.
+    \end{itemize}
+    \item l'associazione \textbf{contiene} tra \underline{\textit{turno}} e $t$ è stata eliminata;
+    \item l'istanza $tc$ di TurnoCucina cessa di esistere.
+\end{itemize}
+
+\section*{1c.1 modificaTuttiTurniCucina(\underline{data}: Data, \underline{orario?}: numerico, \underline{luogo?}: Luogo):}
+
+\paragraph{Pre-condizioni:}
+
+\begin{itemize}
+ \item \underline{\textit{turno}} è \textbf{assegnato a} {\textit{org}};
+ \item $t$ \textbf{contiene} \underline{turno}.
+\end{itemize}
+
+\paragraph{Post-condizioni:} se \underline{\textit{turno}.data} == \underline{data}
+
+ \begin{itemize}
+     \item $[$ se \underline{\textit{data}} è specificato $]$ \underline{\textit{turno}.data} = \underline{\textit{data}};
+
+    \item $[$ se \underline{\textit{orario}} è specificato $]$ \underline{\textit{turno}.orario} = \underline{\textit{orario}};
+
+    \item $[$ se \underline{\textit{luogo}} è specificato $]$ \underline{\textit{turno}.luogo} = \underline{\textit{luogo}}.
+
+\end{itemize}
+
+\section*{1d.1 eliminaTuttiTurniCucina(\underline{data}: Data):}
+
+\paragraph{Pre-condizioni:}
+
+\begin{itemize}
+ \item \underline{\textit{turno}} è \textbf{assegnato a} {\textit{org}};
+ \item $t$ \textbf{contiene} \underline{turno}.
+\end{itemize}
+
+\paragraph{Post-condizioni:}  se \underline{\textit{turno}.data} == \underline{data}
+
+\begin{itemize}
+   \item \textlangle $ $ per ogni Compito $c$ \textbf{presente in} \underline{turno} \textrangle:
+    \begin{itemize}
+        \item l'associazione tra $c$ e \underline{turno} è stata eliminata.
+    \end{itemize}
+    \item l'associazione \textbf{contiene} tra \underline{\textit{turno}} e $t$ è stata eliminata;
+    \item l'istanza $tc$ di TurnoCucina cessa di esistere.
+\end{itemize}
+
+\section{Passo 2}
+\section*{2. consultaEventi():}
+
+\paragraph{Pre-condizioni:}
+
+\paragraph{Post-condizioni:}
+
+\nt{consultaEventi() è un’interrogazione di sistema quindi non ha pre e post condizioni.}
+
+\section{Passo 3}
+\section*{3. selezionaEvento(\underline{evento}: Evento):}
+
+\paragraph{Pre-condizioni:}
+\begin{itemize}
+     \item \underline{\textit{evento}} è \textbf{assegnato a} {\textit{org}}.
+\end{itemize}
+
+\paragraph{Post-condizioni:}
+
+\section{Passo 4}
+\section*{4. impostaOrarioServizio(\underline{turnoServizio}: TurnoServizio, \underline{orario}: numerico, \underline{scadenza?}: numerico):}
+
+\paragraph{Pre-condizioni:}
+\begin{itemize}
+    \item \underline{\textit{evento}} è \textbf{assegnato a} {\textit{org}};
+    \item è in corso la modifica di un Evento e.
+\end{itemize}
+
+\paragraph{Post-condizioni:}
+ \begin{itemize}
+    \item\underline{\textit{evento}.orario} = \underline{\textit{orario}};
+
+    \item $[$ se \underline{\textit{scadenza}} è specificato $]$ \underline{\textit{evento}.scadenza} = \underline{\textit{scadenza}}.
+\end{itemize}
+
+\section{Passo 5}
+\section*{5. modificaScadenza(\underline{turnoServizio}: TurnoServizio, \underline{nuovaScadenza}: numerico):}
+
+\paragraph{Pre-condizioni:}
+\begin{itemize}
+     \item \underline{\textit{evento}} è \textbf{assegnato a} {\textit{org}};
+    \item è in corso la modifica di un Evento e;
+\end{itemize}
+
+\paragraph{Post-condizioni:}  se \underline{\textit{evento}.scadenza} != 0
+
+\begin{itemize}
+    \item \underline{\textit{evento}.scadenza} = \underline{\textit{nuovaScadenza}}.
+\end{itemize}
+
+\section*{5a.1 rimuoviScadenza(\underline{turnoServizio}: TurnoServizio):}
+
+\paragraph{Pre-condizioni:}
+\begin{itemize}
+     \item \underline{\textit{turnoServizo}} è \textbf{assegnato a} {\textit{org}};
+    \item è in corso la modifica di un Evento e.
+\end{itemize}
+
+\paragraph{Post-condizioni:}  se \underline{\textit{evento}.scadenza} != 0
+
+\begin{itemize}
+    \item \underline{\textit{evento}.scadenza} = \underline{0}.
+\end{itemize}
+
+\section*{5b.1 aggiungiScadenza(\underline{turnoServizio}: TurnoServizio, \underline{nuovaScadenza}: numerico):}
+
+\paragraph{Pre-condizioni:}
+\begin{itemize}
+     \item \underline{\textit{turnoServizo}} è \textbf{assegnato a} {\textit{org}};
+    \item è in corso la modifica di un Evento e.
+\end{itemize}
+
+\paragraph{Post-condizioni:}
+
+\begin{itemize}
+    \item \underline{\textit{evento}.scadenza} = \underline{\textit{nuovaScadenza}}.
+\end{itemize}
+
+\section{Passo 6}
+\section*{6. modificaOrario(\underline{turnoServizio}: TurnoServizio, \underline{nuovoOrario}: numerico):}
+
+\paragraph{Pre-condizioni:}
+\begin{itemize}
+     \item \underline{\textit{turnoServizo}} è \textbf{assegnato a} {\textit{org}};
+    \item è in corso la modifica di un Evento $e$.
+\end{itemize}
+
+\paragraph{Post-condizioni:}  se \underline{\textit{evento}.scadenza} non è stata superata
+
+\begin{itemize}
+    \item \underline{\textit{evento}.orario} = \underline{\textit{nuovoOrario}}.
+\end{itemize}
+
+\section*{6a.1 cancellaTurnoServizio(\underline{turnoServizio}: TurnoServizio):}
+
+\paragraph{Pre-condizioni:}
+\begin{itemize}
+     \item \underline{\textit{turnoServizo}} è \textbf{assegnato a} {\textit{org}};
+    \item è in corso la modifica di un Evento $e$.
+\end{itemize}
+
+\paragraph{Post-condizioni:} 
+
+\begin{itemize}
+    \item l'istanza $ts$ di TurnoServizio cessa di esistere.
+\end{itemize}
