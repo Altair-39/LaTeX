@@ -2,6 +2,12 @@
 
 My LaTeX documents. I started to write in LaTeX in my second year of university and I want this repository to be a collection of things that i do for my Bachelor and Master degrees.
 
+
+## Note per contribuire
+
+Tutte le PR (da typo a errori concettuali, etc.) sono le benvenute, però prima gradirei essere contattato su telegram (@altair1114)
+
+
 ## Folder
 
 + ***Appunti***: my personal notes take in LaTeX.
