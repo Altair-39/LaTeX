@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>140</x>
+      <y>220</y>
+      <w>140</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>Figure
+--
+
+--
++disegna()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>70</x>
+      <y>300</y>
+      <w>140</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;
+</panel_attributes>
+    <additional_attributes>10.0;160.0;120.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>460</y>
+      <w>140</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Cerchio
+--
+
+--
++disegna()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>170</x>
+      <y>460</y>
+      <w>140</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Rettangolo
+--
+
+--
++disegna()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>220</x>
+      <y>300</y>
+      <w>40</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;
+</panel_attributes>
+    <additional_attributes>20.0;160.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>390</x>
+      <y>460</y>
+      <w>140</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>FiguraColorata
+--
+
+--
++disegna()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>260</x>
+      <y>300</y>
+      <w>190</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;
+</panel_attributes>
+    <additional_attributes>170.0;160.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>270</x>
+      <y>230</y>
+      <w>450</w>
+      <h>280</h>
+    </coordinates>
+    <panel_attributes>component
+lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>260.0;260.0;360.0;260.0;360.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>290</x>
+      <y>640</y>
+      <w>140</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>ColoreBordo
+--
+
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>480</x>
+      <y>640</y>
+      <w>140</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>ColoreSfondo
+--
+
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>350</x>
+      <y>520</y>
+      <w>80</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;
+</panel_attributes>
+    <additional_attributes>10.0;120.0;60.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>490</x>
+      <y>520</y>
+      <w>50</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;
+</panel_attributes>
+    <additional_attributes>30.0;120.0;10.0;10.0</additional_attributes>
+  </element>
+</diagram>

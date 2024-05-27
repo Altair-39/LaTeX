@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>440</x>
+      <y>360</y>
+      <w>320</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>BankDetail
+--
+-bankName: String
+-accHolderName: String
+-accNumber: long
+--
++getBankName(): String
++setBankName(bankName: String)
++getAccHolderName(): String
++setAccHolderName(accHolderName: String)
++getAccNumber(): long
++setAccNumber(accNumber: long)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>70</x>
+      <y>160</y>
+      <w>230</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>CreditCard
+{interface}
+--
+
+--
++giveBankDetail()
++getCreditCard(): String</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>90</x>
+      <y>390</y>
+      <w>180</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>BankCustomer
+--
+
+--
++giveBankDetail()
++getCreditCard(): String</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>170</x>
+      <y>260</y>
+      <w>30</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;130.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>260</x>
+      <y>410</y>
+      <w>200</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;
+adaptee</panel_attributes>
+    <additional_attributes>10.0;20.0;180.0;20.0</additional_attributes>
+  </element>
+</diagram>

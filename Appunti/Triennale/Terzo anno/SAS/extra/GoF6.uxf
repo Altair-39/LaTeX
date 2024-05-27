@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <help_text/>
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>20</x>
+      <y>200</y>
+      <w>190</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>ShowMessage
+{interface}
+--
+
+--
++attach(o: MessageView)
++detach(o: MessageView)
++show(m: Message)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>400</y>
+      <w>310</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>MessageContainer
+--
+-listMessageView: ArrayList&lt;MessageView&gt;
+--
++attach(o: MessageView)
++detach(o: MessageView)
++show(m: Message)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>80</x>
+      <y>310</y>
+      <w>30</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;&gt;
+</panel_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>410</x>
+      <y>210</y>
+      <w>170</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>MessageView
+{interface}
+--
+
+--
++view(m: Message)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>200</x>
+      <y>230</y>
+      <w>230</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;
+</panel_attributes>
+    <additional_attributes>10.0;20.0;210.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>400</x>
+      <y>420</y>
+      <w>170</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>Message
+--
+
+--
++view(m: Message)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>470</x>
+      <y>290</y>
+      <w>30</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;&gt;
+</panel_attributes>
+    <additional_attributes>10.0;130.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>300</x>
+      <y>440</y>
+      <w>120</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;
+subject</panel_attributes>
+    <additional_attributes>100.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+</diagram>

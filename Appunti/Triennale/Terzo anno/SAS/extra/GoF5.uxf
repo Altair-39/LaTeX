@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>370</x>
+      <y>210</y>
+      <w>140</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>Behavior
+{interface}
+--
+
+--
++onEnter()
++observe()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>280</x>
+      <y>410</y>
+      <w>160</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>PeacefulBehavior
+--
+-mammoth: Mammoth
+--
++onEnter()
++observe()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>340</x>
+      <y>310</y>
+      <w>90</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.
+</panel_attributes>
+    <additional_attributes>70.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>490</x>
+      <y>410</y>
+      <w>160</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>AngryBehavior
+--
+-mammoth: Mammoth
+--
++onEnter()
++observe()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>460</x>
+      <y>310</y>
+      <w>80</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.
+</panel_attributes>
+    <additional_attributes>10.0;10.0;60.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>290</x>
+      <y>240</y>
+      <w>100</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-&gt;
+state
+</panel_attributes>
+    <additional_attributes>10.0;20.0;80.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>210</y>
+      <w>300</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>Mammoth
+--
+-behavior: Behavior
+--
++timePasses()
++changeBehavior(newBehavior: Behavior)</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
