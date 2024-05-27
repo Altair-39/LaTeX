@@ -1,11 +1,12 @@
 \documentclass[twoside]{report}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\input{enviroment/preamble}
-\input{enviroment/macros}
-\input{enviroment/letterfonts}
+\input{enviroment/preamble.sty}
+\input{enviroment/macros.sty}
+\input{enviroment/letterfonts.sty}
 \input{enviroment/titlepage.sty}
 \input{enviroment/toc.sty}
 \usepackage{fancyhdr}
+\usepackage{pgfornament}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \RequirePackage[times]{quotchap}
 \graphicspath{{images/}}
@@ -46,5 +47,8 @@
 \afterpage{\blankpage}
 
 %---------------------------------------
+
+%\bibliographystyle{unsrt}
+%\bibliography{bibl/bibl}
 
 \end{document}
