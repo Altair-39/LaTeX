@@ -5,7 +5,7 @@ My LaTeX documents. I started to write in LaTeX in my second year of university 
 
 ## Note per contribuire
 
-Tutte le PR (da typo a errori concettuali, etc.) sono le benvenute, però prima gradirei essere contattato su telegram (@altair1114)
+Tutte le PR (da typo a errori concettuali, etc.) sono le benvenute, però prima contattatemi su telegram (@altair1114)
 
 
 ## Folder
