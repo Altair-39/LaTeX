@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="15.1">
+<diagram program="umlet" version="15.0.0">
   <zoom_level>7</zoom_level>
   <element>
     <id>UMLActor</id>
     <coordinates>
-      <x>441</x>
+      <x>203</x>
       <y>56</y>
       <w>42</w>
       <h>77</h>
@@ -15,7 +15,7 @@
   <element>
     <id>UMLDeployment</id>
     <coordinates>
-      <x>672</x>
+      <x>434</x>
       <y>84</y>
       <w>77</w>
       <h>35</h>
@@ -26,7 +26,7 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>455</x>
+      <x>217</x>
       <y>119</y>
       <w>21</w>
       <h>525</h>
@@ -37,7 +37,7 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>700</x>
+      <x>462</x>
       <y>119</y>
       <w>21</w>
       <h>525</h>
@@ -48,19 +48,19 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>455</x>
+      <x>217</x>
       <y>147</y>
       <w>266</w>
       <h>28</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-1. aggiungiTurnoCucina(data, orario, luogo?) 	</panel_attributes>
+1. aggiungiTurnoCucina(turno, data, orario, luogo?) 	</panel_attributes>
     <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>455</x>
+      <x>217</x>
       <y>168</y>
       <w>266</w>
       <h>28</h>
@@ -72,7 +72,7 @@ ok</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>455</x>
+      <x>217</x>
       <y>217</y>
       <w>266</w>
       <h>28</h>
@@ -84,7 +84,7 @@ ok</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>420</x>
+      <x>182</x>
       <y>140</y>
       <w>329</w>
       <h>56</h>
@@ -97,7 +97,7 @@ layer=-1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>455</x>
+      <x>217</x>
       <y>238</y>
       <w>266</w>
       <h>28</h>
@@ -109,7 +109,7 @@ elenco degli eventi</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>455</x>
+      <x>217</x>
       <y>294</y>
       <w>266</w>
       <h>28</h>
@@ -121,7 +121,7 @@ elenco degli eventi</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>455</x>
+      <x>217</x>
       <y>315</y>
       <w>266</w>
       <h>28</h>
@@ -133,7 +133,7 @@ evento selezionato</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>399</x>
+      <x>161</x>
       <y>287</y>
       <w>371</w>
       <h>133</h>
@@ -146,7 +146,7 @@ layer=-1</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>420</x>
+      <x>182</x>
       <y>427</y>
       <w>329</w>
       <h>49</h>
@@ -159,7 +159,7 @@ layer=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>455</x>
+      <x>217</x>
       <y>357</y>
       <w>266</w>
       <h>28</h>
@@ -171,7 +171,7 @@ layer=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>455</x>
+      <x>217</x>
       <y>378</y>
       <w>266</w>
       <h>28</h>
@@ -183,7 +183,7 @@ ok</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>455</x>
+      <x>217</x>
       <y>427</y>
       <w>266</w>
       <h>28</h>
@@ -195,7 +195,7 @@ ok</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>455</x>
+      <x>217</x>
       <y>448</y>
       <w>266</w>
       <h>28</h>
@@ -207,7 +207,7 @@ ok</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>385</x>
+      <x>147</x>
       <y>483</y>
       <w>392</w>
       <h>119</h>
@@ -220,7 +220,7 @@ layer=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>455</x>
+      <x>217</x>
       <y>497</y>
       <w>266</w>
       <h>28</h>
@@ -232,7 +232,7 @@ layer=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>455</x>
+      <x>217</x>
       <y>518</y>
       <w>266</w>
       <h>28</h>
@@ -244,7 +244,7 @@ ok</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>420</x>
+      <x>182</x>
       <y>350</y>
       <w>329</w>
       <h>56</h>
@@ -257,7 +257,7 @@ layer=1</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>364</x>
+      <x>126</x>
       <y>273</y>
       <w>441</w>
       <h>343</h>
@@ -270,7 +270,7 @@ layer=-2</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>420</x>
+      <x>182</x>
       <y>210</y>
       <w>329</w>
       <h>56</h>
@@ -283,7 +283,7 @@ layer=1</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>420</x>
+      <x>182</x>
       <y>490</y>
       <w>329</w>
       <h>105</h>
@@ -312,20 +312,20 @@ layer=0
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>455</x>
+      <x>217</x>
       <y>553</y>
       <w>266</w>
       <h>28</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-6a.1. cancellaTurno(turnServ) 	
+6a.1. cancellaTurnoServizio(turnServ) 	
 fg=#9E1C8C</panel_attributes>
     <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>455</x>
+      <x>217</x>
       <y>567</y>
       <w>266</w>
       <h>28</h>
