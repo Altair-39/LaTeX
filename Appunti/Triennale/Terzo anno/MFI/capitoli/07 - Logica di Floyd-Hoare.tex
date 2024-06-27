@@ -8,11 +8,24 @@ Lo scopo della \fancyglitter{verifica dei programmi} è il controllo della soddi
 
 \nt{Il tipo \texttt{Set}$_1$ è l'\fancyglitter{universo} più piccolo tale che \texttt{Set} = \texttt{Set}$_0$ : \texttt{Set}$_1$.}
 
+
+
 \section{Il sistema della logica di Hoare}
 
 \dfn{Logica di Hoare}{
   La logica di Hoare è un'assiomatizzazione della nozione di correttezza parziale. Consiste di un sistema formale di regole di inferenza i cui giudizi sono triple più formule logiche.
 }
+
+\cor{Asserzione}{Un'asserzione è un predicato dello stato.}
+
+\cor{Tripla}{Una tripla \{P\} c \{Q\} significa che: quando in un certo stato vale la \textit{precondizione} P e l'esecuzione del \textit{comando} c in quello stato termina viene prodotto un nuovo stato che soddisfa la \textit{postcondizione} Q.
+
+  In modo formale: se \textit{P s} e \textit{((c, s)) $\rightarrow$ t} allora \textit{Q t}.
+}
+
+\qs{}{Quando un'asserzione è valida?}
+
+\paragraph{Risposta:} un'asserzione è valida quando è vera in tutti gli stati. 
 
 \subsection{Regole}
 
@@ -24,14 +37,32 @@ Lo scopo della \fancyglitter{verifica dei programmi} è il controllo della soddi
  \includegraphics[scale = 0.4]{images/IMP/T2}
 \end{center}
 
+\dfn{Regole}{
+  \begin{itemize}
+    \item [$\Rightarrow$] H-Skip: è un'assioma. P è sia precondizione che postcondizione;
+    \item [$\Rightarrow$] H-Loc: l'assegnazione, anche questo è un'assioma. Nella logica di Hoare si ragiona al rovescio, dalla postcondizione alla precondizione. Si vuole garantire la postcondizione P, per cui prima deve valere la precondizione P, ma nello stato precedente; 
+    \item [$\Rightarrow$] H-Comp: si utilizza la transitività avendo un predicato intermedio tra i due comandi;
+    \item [$\Rightarrow$] H-If: IF THEN ELSE esegue un comando diverso a seconda della precondizione, ossia se il booleano è vero o falso, ma alla fine la postcondizione è sempre Q;
+    \item [$\Rightarrow$] H-While: al termine del while la guardia deve essere diventata falsa. Per cui nella precondizione vale sia P che la guardia b;
+    \item [$\Rightarrow$] H-Conseq: P è un \textit{indebolimento} (implicato da un certo P') e Q è un \textit{rafforzamento} (implica un certo Q'). 
+  \end{itemize}
+}
+
 \nt{Per via della nostra definizione di asserzione ci sono alcune differenze con le regole originali.}
 
 \subsection{Regole derivate}
 
-
 \begin{center}
  \includegraphics[scale = 0.4]{images/IMP/T3}
 \end{center}
+
+\dfn{Regole derivate}{
+  \begin{itemize}
+    \item [$\Rightarrow$] H-Str: specializzazione della conseguenza in cui la precondizione viene rafforzata;
+    \item [$\Rightarrow$] H-Weak: specializzazione della conseguenza in cui la postcondizione viene indebolità;
+    \item [$\Rightarrow$] H-While': ;
+  \end{itemize}
+}
 
 \section{Esempi}
 
