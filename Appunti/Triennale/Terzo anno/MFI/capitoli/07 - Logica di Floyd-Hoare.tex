@@ -60,8 +60,9 @@ Lo scopo della \fancyglitter{verifica dei programmi} è il controllo della soddi
   \begin{itemize}
     \item [$\Rightarrow$] H-Str: specializzazione della conseguenza in cui la precondizione viene rafforzata;
     \item [$\Rightarrow$] H-Weak: specializzazione della conseguenza in cui la postcondizione viene indebolità;
-    \item [$\Rightarrow$] H-While': ;
-  \end{itemize}
+    \item [$\Rightarrow$] H-While': è necessaria alla verifica semi-automatica dei programmi.    Si sfrutta la regola per il while in combinazione con l'indebolimento.
+ 
+\end{itemize}
 }
 
 \section{Esempi}
@@ -122,4 +123,48 @@ Consideriamo \{T\} IF X $<$ Y THEN Z := Y ELSE Z := X \{Z = max(X,Y)\}\{T\} IF X
 \begin{center}
   \includegraphics[scale = 0.5]{images/IMP/pr1-5}
 \end{center}
+
+\section{Correttezza}
+
+\qs{}{Qual è la differenza tra \textit{vero} e \textit{valido}?}
+
+\paragraph{Risposta:} in logica, vero si riferisce a un determinato modello con una determinata interpretazione, valido si riferisce a tutti i modelli. Nel contesto di questo corso il concetto di modello è sostituito dal concetto di stato, per cui una tripla è valida se è vera in tutti gli stati.
+
+\begin{center}
+  \includegraphics[scale = 0.5]{images/IMP/Inv.png}
+\end{center}
+
+\dfn{Cicli}{
+
+  \begin{itemize}
+    \item [$\Rightarrow$] lemma-Hoare-inv: ;
+    \item [$\Rightarrow$] lemma-Hoare-loop-exit: ;
+\end{itemize}
+
+}
+
+\begin{center}
+  \includegraphics[scale = 0.5]{images/IMP/Sound.png}
+\end{center}
+
+\dfn{Lemma-Hoare-sound}{
+
+  \begin{itemize}
+    \item [$\Rightarrow$] caso SKIP: ;
+    \item [$\Rightarrow$] caso LOC: ;
+    \item [$\Rightarrow$] caso COMP: ;
+    \item [$\Rightarrow$] caso IF: ;
+    \item [$\Rightarrow$] caso WHILE: ;
+    \item [$\Rightarrow$] caso CONSEQ: ;
+\end{itemize}
+
+}
+
+\begin{center}
+  \includegraphics[scale = 0.5]{images/IMP/Sound2.png}
+\end{center}
+
+\dfn{Teorema-Hoare-sound}{}
+
+\section{Completezza}
 
