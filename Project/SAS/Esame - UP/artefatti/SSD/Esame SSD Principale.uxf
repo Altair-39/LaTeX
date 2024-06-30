@@ -4,7 +4,7 @@
   <element>
     <id>UMLActor</id>
     <coordinates>
-      <x>368</x>
+      <x>104</x>
       <y>64</y>
       <w>48</w>
       <h>88</h>
@@ -15,7 +15,7 @@
   <element>
     <id>UMLDeployment</id>
     <coordinates>
-      <x>632</x>
+      <x>368</x>
       <y>96</y>
       <w>88</w>
       <h>40</h>
@@ -26,29 +26,29 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>384</x>
+      <x>120</x>
       <y>136</y>
       <w>24</w>
-      <h>528</h>
+      <h>544</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;640.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;660.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>664</x>
+      <x>400</x>
       <y>136</y>
       <w>24</w>
-      <h>528</h>
+      <h>544</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;640.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;660.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>384</x>
+      <x>120</x>
       <y>168</y>
       <w>304</w>
       <h>32</h>
@@ -60,7 +60,7 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>384</x>
+      <x>120</x>
       <y>192</y>
       <w>304</w>
       <h>32</h>
@@ -72,7 +72,7 @@ ok</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>384</x>
+      <x>120</x>
       <y>248</y>
       <w>304</w>
       <h>32</h>
@@ -84,7 +84,7 @@ ok</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>344</x>
+      <x>80</x>
       <y>160</y>
       <w>376</w>
       <h>64</h>
@@ -98,7 +98,7 @@ layer=-1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>384</x>
+      <x>120</x>
       <y>272</y>
       <w>304</w>
       <h>32</h>
@@ -110,7 +110,7 @@ elenco degli eventi</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>384</x>
+      <x>120</x>
       <y>336</y>
       <w>304</w>
       <h>32</h>
@@ -122,7 +122,7 @@ elenco degli eventi</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>384</x>
+      <x>120</x>
       <y>360</y>
       <w>304</w>
       <h>32</h>
@@ -134,47 +134,47 @@ evento selezionato</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>320</x>
+      <x>32</x>
       <y>328</y>
-      <w>424</w>
-      <h>152</h>
+      <w>472</w>
+      <h>288</h>
     </coordinates>
     <panel_attributes>LOOP
 fg=blue
 bg=#8CB4FF
-layer=-1</panel_attributes>
+layer=-3</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>344</x>
-      <y>488</y>
+      <x>80</x>
+      <y>464</y>
       <w>376</w>
       <h>56</h>
     </coordinates>
     <panel_attributes>OPT
 fg=#128C86
 bg=#B8E0E0
-layer=1</panel_attributes>
+layer=-1</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>384</x>
+      <x>120</x>
       <y>408</y>
       <w>304</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-4. impostaOrarioServizio(turnServ, orario, scadenza?)</panel_attributes>
+4. aggiungiTurnoServizio(turnServ, orario)</panel_attributes>
     <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>384</x>
+      <x>120</x>
       <y>432</y>
       <w>304</w>
       <h>32</h>
@@ -186,20 +186,20 @@ ok</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>384</x>
-      <y>488</y>
+      <x>120</x>
+      <y>464</y>
       <w>304</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-5. modificaScadenza(turnServ, nuovaScadenza)</panel_attributes>
+5. aggiungiScadenza(turnServ, scadenza)</panel_attributes>
     <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>384</x>
-      <y>512</y>
+      <x>120</x>
+      <y>488</y>
       <w>304</w>
       <h>32</h>
     </coordinates>
@@ -210,22 +210,22 @@ ok</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>344</x>
-      <y>552</y>
+      <x>80</x>
+      <y>528</y>
       <w>376</w>
       <h>56</h>
     </coordinates>
     <panel_attributes>OPT
 fg=#128C86
 bg=#B8E0E0
-layer=1</panel_attributes>
+layer=-1</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>384</x>
-      <y>552</y>
+      <x>120</x>
+      <y>528</y>
       <w>304</w>
       <h>32</h>
     </coordinates>
@@ -236,8 +236,8 @@ layer=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>384</x>
-      <y>576</y>
+      <x>120</x>
+      <y>552</y>
       <w>304</w>
       <h>32</h>
     </coordinates>
@@ -248,24 +248,10 @@ ok</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>344</x>
+      <x>56</x>
       <y>400</y>
-      <w>376</w>
-      <h>64</h>
-    </coordinates>
-    <panel_attributes>LOOP
-fg=blue
-bg=#8CB4FF
-layer=1</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLFrame</id>
-    <coordinates>
-      <x>280</x>
-      <y>312</y>
-      <w>504</w>
-      <h>312</h>
+      <w>424</w>
+      <h>200</h>
     </coordinates>
     <panel_attributes>LOOP
 fg=blue
@@ -276,7 +262,7 @@ layer=-2</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>344</x>
+      <x>80</x>
       <y>240</y>
       <w>376</w>
       <h>64</h>
