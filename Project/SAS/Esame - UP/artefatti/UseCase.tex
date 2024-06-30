@@ -31,15 +31,16 @@
 
         \centering\textbf{3} & Sceglie un evento su cui lavorare. & Visualizza l'evento selezionato.\\\hline
         
-        \centering\textbf{4} & Imposta un orario per un turno di servizio e, opzionalmente, mette una scadenza oltre la quale non si può più togliere la disponibilità. & Registra l'orario del turno di servizio e, opzionalmente, la scadenza oltre la quale non si può togliere la disponibilità.\\\hline
+        \centering\textbf{4} & Aggiunge un turno di servizio, impostandone un orario. & Registra l'orario del turno di servizio.\\\hline
 
-        & \textit{Se vuole lavorare su altri servizi torna al punto 4} & \\\hline
-        
-        \centering\textbf{5} & Opzionalmente, modifica la scadenza. & Registra la modifica della scadenza.\\\hline
+       \centering\textbf{5} & Opzionalmente, aggiunge una scadenza oltre la quale non si può togliere la disponibilità. & Registra la scadenza.\\\hline
 
         \centering\textbf{6} & Opzionalmente, cambia l'orario del turno di servizio. & Registra le modifiche.\\\hline
 
+        & \textit{Se vuole lavorare su altri servizi torna al punto 4} & \\\hline
+
         & \textit{Se vuole lavorare su altri eventi torna al passo 3, altrimenti termina il Caso d'Uso} & \\\hline
+        
 
         \hline
         \end{longtable}
@@ -244,26 +245,6 @@
     \end{center}
 \end{flushleft}
 
-\section*{\huge\textbf{\textcolor{2}{Eccezione 5a}}}
-
-\begin{flushleft}
-    \begin{center}
-
-        \begin{longtable}{ | p{1.3cm} | p{7.5cm} | p{7.5cm} |}
-            \hline\hline
-            \rowcolor{mintgreen}
-            \multicolumn{1}{|>{\centering\arraybackslash}m{13mm}|}{\textbf{\huge\textcolor{castletongreen}{\texttt{\#}}}} & \multicolumn{1}{|>{\centering\arraybackslash}m{75mm}|}{\huge\textcolor{castletongreen}{\textbf{Attore}}} &\multicolumn{1}{|>{\centering\arraybackslash}m{75mm}|}{\huge\textcolor{castletongreen}{\textbf{Sistema}}} \\ \hline
-
-            \centering\textbf{\textcolor{2}{5a.1}} &  Opzionalmente, modifica la scadenza. & \cellcolor{RedPastel} Il turno non ha una scadenza impostata.\\\hline
-
-            & \textit{Torna al passo 5} & \\\hline
-
-            \hline
-            \end{longtable}
-          
-    \end{center}
-\end{flushleft}
-
 \section*{\huge\textbf{\textcolor{2}{Eccezione 5a.1a}}}
 
 \begin{flushleft}
@@ -294,7 +275,7 @@
             \rowcolor{mintgreen}
             \multicolumn{1}{|>{\centering\arraybackslash}m{13mm}|}{\textbf{\huge\textcolor{castletongreen}{\texttt{\#}}}} & \multicolumn{1}{|>{\centering\arraybackslash}m{75mm}|}{\huge\textcolor{castletongreen}{\textbf{Attore}}} &\multicolumn{1}{|>{\centering\arraybackslash}m{75mm}|}{\huge\textcolor{castletongreen}{\textbf{Sistema}}} \\ \hline
 
-            \centering\textbf{5b.1} & Aggiunge una scadenza. & Aggiunge una scadenza oltre la quale non si può più rimuovere la disponibilità.\\\hline
+            \centering\textbf{5b.1} & Modifica la scadenza. & Registra la nuova scadenza.\\\hline
 
             \hline
             \end{longtable}
