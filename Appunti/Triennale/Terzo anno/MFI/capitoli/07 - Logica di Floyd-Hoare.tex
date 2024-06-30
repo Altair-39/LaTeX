@@ -137,34 +137,37 @@ Consideriamo \{T\} IF X $<$ Y THEN Z := Y ELSE Z := X \{Z = max(X,Y)\}\{T\} IF X
 \dfn{Cicli}{
 
   \begin{itemize}
-    \item [$\Rightarrow$] lemma-Hoare-inv: ;
-    \item [$\Rightarrow$] lemma-Hoare-loop-exit: ;
+    \item [$\Rightarrow$] lemma-Hoare-inv: stabilisce che quando P è vera e b anche (in s') se  c eseguito in s' produce t' e P è vera in t' allora la tripla [P] WHILE b DO c [P] è valida;
+    \item [$\Rightarrow$] lemma-Hoare-loop-exit: gestisce l'uscita dal loop ossia la parte relativa alla valutazione di b come False al termine dell'esecuzione.
 \end{itemize}
 
 }
 
 \begin{center}
-  \includegraphics[scale = 0.5]{images/IMP/Sound.png}
+  \includegraphics[scale = 0.6]{images/IMP/Sound.png}
 \end{center}
 
 \dfn{Lemma-Hoare-sound}{
 
   \begin{itemize}
-    \item [$\Rightarrow$] caso SKIP: ;
-    \item [$\Rightarrow$] caso LOC: ;
-    \item [$\Rightarrow$] caso COMP: ;
-    \item [$\Rightarrow$] caso IF: ;
-    \item [$\Rightarrow$] caso WHILE: ;
-    \item [$\Rightarrow$] caso CONSEQ: ;
+    \item [$\Rightarrow$] caso SKIP: banalità, utilizza P s;
+    \item [$\Rightarrow$] caso LOC: banalità, utilizza P s;
+    \item [$\Rightarrow$] caso COMP: si applica l'ipotesi induttiva sia al primo elemento del COMP che al secondo (passandogli la prima ipotesi);
+    \item [$\Rightarrow$] caso IF True: si applica l'ipotesi induttiva;
+    \item [$\Rightarrow$] caso IF False: stesso procedimento usato per il true;
+    \item [$\Rightarrow$] caso WHILE: si utilizza il lemma-Hoare-inv applicato all'ipotesi induttiva e il lemma-Hoare-exit applicato al comando;
+    \item [$\Rightarrow$] caso CONSEQ: semplice applicazione dell'ipotesi induttiva.
 \end{itemize}
 
 }
+
+\pagebreak
 
 \begin{center}
   \includegraphics[scale = 0.5]{images/IMP/Sound2.png}
 \end{center}
 
-\dfn{Teorema-Hoare-sound}{}
+\dfn{Teorema-Hoare-sound}{Semplicemente si generalizza il lemma.}
 
 \section{Completezza}
 
