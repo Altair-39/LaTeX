@@ -171,3 +171,73 @@ Consideriamo \{T\} IF X $<$ Y THEN Z := Y ELSE Z := X \{Z = max(X,Y)\}\{T\} IF X
 
 \section{Completezza}
 
+La completezza è l'implicazione inversa della completezza. 
+
+\dfn{Completezza}{La completezza riguarda la capacità del sistema di catturare le cose vere. Se \{ P \} c \{ Q \} è valida allora è derivabile.}
+
+\nt{Se il teorema di completezza fosse dimostrabile si avrebbe un'assiomatizzazione corretta dell'aritmetica, ma ciò andrebbe in contrasto con il primo teorema d'incompletezza di G\"odel. Tuttavia, in IMP è dimostrabile perché non è un sistema formale (per via della regola H-Conseq).}
+
+\subsection{Weakest Liberal Precondition}
+
+\begin{center}
+  \includegraphics[scale = 0.5]{images/IMP/wlp.png}
+\end{center}
+
+\dfn{Weakest Liberal Precondition}{
+  Le Weakest Liberal Preconditio prendono un comando, un'asserzione e restituiscono un'asserzione. L'idea è: dato un comando e data una postcondizione si vuole risalire alla precondizione più debole. Questo perché altrimenti non si potrebbe fare direttamente induzione.
+}
+
+\cor{Condizione debole}{Una condizione è più debole rispetto agli altri se è valida in un numero maggiore di stati.}
+
+\nt{La condizione più debole  è quella che vale in qualsiasi stato (e. g. 0 == 0). }
+
+\begin{center}
+  \includegraphics[scale = 0.5]{images/IMP/Fatto.png}
+\end{center}
+
+\dfn{Fatto}{
+  Se \{ P \} c \{ Q \} è valido e ogni stato s soddisfa P allora è vero il wlp c Q s. 
+}
+
+
+\begin{center}
+  \includegraphics[scale = 0.5]{images/IMP/wlp1.png}
+\end{center}
+
+\dfn{Wlp-lemma - parte I}{
+  \begin{itemize}
+    \item [$\Rightarrow$] caso SKIP: la premessa da cui si parte consiste nella dimostrazione che wlp SKIP Q s implichi Q t. Per completare la dimostrazione si usa il rafforzamento con la premessa e la regola di Hoare per SKIP (H-Skip);
+    \item [$\Rightarrow$] caso LOC: il procedimento è analogo a quello per SKIP;
+    \item [$\Rightarrow$] caso COMP: si utilizza una composizione di funzioni. 
+  \end{itemize}
+}
+
+\begin{center}
+  \includegraphics[scale = 0.5]{images/IMP/wlp2.png}
+\end{center}
+
+\dfn{Wlp-lemma - parte II}{}
+
+\begin{center}
+  \includegraphics[scale = 0.5]{images/IMP/wlp3.png}
+\end{center}
+
+\dfn{Wlp-lemma - parte III}{}
+
+\section{Verification Conditions}
+
+\dfn{Verification Conditions}{}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
