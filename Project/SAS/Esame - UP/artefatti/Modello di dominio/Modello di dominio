@@ -1,0 +1,848 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.0.0">
+  <zoom_level>6</zoom_level>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>594</x>
+      <y>576</y>
+      <w>120</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>Se un compito è stato
+completato, obbligatoriamente 
+esso deve essere associato
+ad un cuoco e ad un turno
+
+style=wordwrap
+
+fg=gray
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>594</x>
+      <y>516</y>
+      <w>120</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>Se un compito non è da
+preparare, esso non deve
+essere associato né ad un 
+cuoco, né ad un turno
+
+
+style=wordwrap
+
+fg=gray
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>48</x>
+      <y>138</y>
+      <w>96</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>Menù
+--
+titolo: testo
+pubblicato: sì/no
+richiede cuoco: sì/no
+piatti caldi: sì/no
+richiede cucina: sì/no
+buffet: sì/no
+finger food: sì/no
+style=wordwrap
+layer=-1
+
+fg=GRAY</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>300</x>
+      <y>0</y>
+      <w>78</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>Sezione
+--
+nome: testo
+
+fg=gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>564</x>
+      <y>318</y>
+      <w>78</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>Ricettario
+--
+
+fg=gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>300</x>
+      <y>216</y>
+      <w>72</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>Ricetta
+--
+nome: testo
+fg=GRAY</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>300</x>
+      <y>120</y>
+      <w>78</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>Voce
+--
+descrizione: testo
+fg=gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>54</x>
+      <y>390</y>
+      <w>78</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>Evento
+--
+informazioni</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>90</x>
+      <y>6</y>
+      <w>222</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+contiene &gt;
+m2=*
+m1=1
+fg=gray</panel_attributes>
+    <additional_attributes>10.0;220.0;10.0;20.0;350.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>336</x>
+      <y>48</y>
+      <w>66</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;&gt;&gt;&gt;
+appartiene ^
+m2=0..1
+m1=*
+fg=gray
+</panel_attributes>
+    <additional_attributes>10.0;120.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>138</x>
+      <y>138</y>
+      <w>174</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+appartiene &gt;
+m2=*
+m1=0..1
+fg=gray
+</panel_attributes>
+    <additional_attributes>10.0;20.0;270.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>114</x>
+      <y>222</y>
+      <w>60</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>lt=-
+in uso in v
+m2=*
+m1=0..1
+fg=GRAY</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>336</x>
+      <y>168</y>
+      <w>84</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=-
+ fa riferimento a v
+m2=*
+m1=1
+fg=gray</panel_attributes>
+    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>426</x>
+      <y>330</y>
+      <w>150</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=-
+&lt; si trova in 
+m2=1
+m1=*
+fg=gray</panel_attributes>
+    <additional_attributes>10.0;20.0;230.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>24</x>
+      <y>558</y>
+      <w>78</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>Chef
+--
+
+fg=GRAY</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>36</x>
+      <y>408</y>
+      <w>78</w>
+      <h>162</h>
+    </coordinates>
+    <panel_attributes>lt=-
+assegnato a ^
+m2=0..1
+m1=*
+fg=GRAY</panel_attributes>
+    <additional_attributes>30.0;10.0;20.0;10.0;20.0;250.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>144</x>
+      <y>48</y>
+      <w>144</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>Una voce puo' comparire in un 
+menu' all'interno di una sezione
+oppure come voce "libera" quindi 
+verrà valorizzata  una e una sola 
+delle due  relazioni appartiene
+fg=gray
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>114</x>
+      <y>312</y>
+      <w>60</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+
+m2=1..n
+prevede ^
+fg=GRAY</panel_attributes>
+    <additional_attributes>10.0;130.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>90</x>
+      <y>276</y>
+      <w>78</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>Servizio
+--
+
+fg=GRAY</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>162</x>
+      <y>288</y>
+      <w>126</w>
+      <h>114</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=0..1
+riferito a v
+fg=GRAY</panel_attributes>
+    <additional_attributes>10.0;20.0;160.0;20.0;160.0;170.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>216</x>
+      <y>390</y>
+      <w>78</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>Foglio riepilogativo
+--
+
+fg=GRAY</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>288</x>
+      <y>396</y>
+      <w>108</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=*
+m2=0..1
+contiene &gt;
+fg=GRAY</panel_attributes>
+    <additional_attributes>10.0;20.0;160.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>384</x>
+      <y>390</y>
+      <w>96</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>Compito
+--
+extra: sì/no
+completato: sì/no
+Porzioni/Quantità: testo
+Tempo: numero
+fg=BLACK</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>474</x>
+      <y>408</y>
+      <w>102</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=*
+m2=0..1
+eseguito da &gt;
+fg=GRAY</panel_attributes>
+    <additional_attributes>10.0;20.0;150.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>564</x>
+      <y>402</y>
+      <w>78</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>Cuoco
+--
+Disponibile: sì/no
+fg=GRAY</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>558</x>
+      <y>438</y>
+      <w>102</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=*
+m2=*
+&lt; lavora in 
+fg=GRAY</panel_attributes>
+    <additional_attributes>10.0;90.0;80.0;90.0;80.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>486</x>
+      <y>474</y>
+      <w>78</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>Turno di cucina
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>396</x>
+      <y>444</y>
+      <w>102</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=*
+m2=0..1
+                 svolto in &gt;
+fg=BLACK</panel_attributes>
+    <additional_attributes>60.0;10.0;60.0;80.0;150.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>534</x>
+      <y>510</y>
+      <w>60</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=*
+contiene ^
+fg=BLACK</panel_attributes>
+    <additional_attributes>10.0;160.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>498</x>
+      <y>606</y>
+      <w>78</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>Tabellone dei turni
+--
+
+fg=BLACK</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>408</x>
+      <y>216</y>
+      <w>78</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>Preparazione
+--
+
+fg=GRAY</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>330</x>
+      <y>252</y>
+      <w>54</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>lt=-
+
+fg=GRAY</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0;70.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>366</x>
+      <y>252</y>
+      <w>90</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>lt=-
+
+fg=GRAY</panel_attributes>
+    <additional_attributes>10.0;70.0;130.0;70.0;130.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>384</x>
+      <y>288</y>
+      <w>18</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+
+
+fg=GRAY</panel_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>354</x>
+      <y>312</y>
+      <w>78</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>Procedura di cucina
+--
+
+fg=GRAY</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>426</x>
+      <y>252</y>
+      <w>120</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=*
+m2=*
+&lt; è ingrediente di 
+
+fg=gray</panel_attributes>
+    <additional_attributes>70.0;10.0;70.0;110.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>420</x>
+      <y>348</y>
+      <w>66</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+consiste in ^
+m2=*
+fg=gray
+</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Text</id>
+    <coordinates>
+      <x>258</x>
+      <y>0</y>
+      <w>54</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>{ordered}
+style=wordwrap
+layer=-2
+fg=GRAY</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Text</id>
+    <coordinates>
+      <x>300</x>
+      <y>102</y>
+      <w>54</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>{ordered}
+style=wordwrap
+layer=-2
+fg=GRAY</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Text</id>
+    <coordinates>
+      <x>318</x>
+      <y>408</y>
+      <w>54</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>{ordered}
+style=wordwrap
+layer=-2
+fg=GRAY</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>60</x>
+      <y>222</y>
+      <w>60</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>lt=-
+
+
+
+ 
+ in uso in v
+m2=*
+m1=*
+fg=GRAY</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;280.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>180</x>
+      <y>222</y>
+      <w>96</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>Un Menu è /in uso in un Evento se e solo se è in uso in uno dei Servizi previsti dall'Evento stesso
+style=wordwrap
+
+fg=gray
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>426</x>
+      <y>60</y>
+      <w>156</w>
+      <h>138</h>
+    </coordinates>
+    <panel_attributes>una Procedura di Cucina proc /serve per un Menù m se e solo se vale una delle seguenti condizioni:
+--
+ - esiste una Voce v appartenente a m tale che v fa riferimento a proc
+ 
+ - esistono una Sezione s e una Voce v tali che m contiene s, v appartiene a s e v fa riferimento a proc
+
+ - esiste un’altra Procedura proc2 che /serve per m tale che proc è ingrediente di proc2
+
+
+style=wordwrap
+
+fg=gray
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>0</x>
+      <y>180</y>
+      <w>78</w>
+      <h>414</h>
+    </coordinates>
+    <panel_attributes>lt=-
+è proprietà di v
+m2=1
+m1=*
+
+
+fg=GRAY</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0;10.0;660.0;40.0;660.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>120</x>
+      <y>558</y>
+      <w>78</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>Organizzatore
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>402</x>
+      <y>552</y>
+      <w>84</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>Turno
+--
+data: numero
+orario: numero
+luogo: testo
+Concluso: sì/no
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>438</x>
+      <y>528</y>
+      <w>18</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+
+fg=BLACK</panel_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>432</x>
+      <y>510</y>
+      <w>96</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>lt=-
+fg=BLACK</panel_attributes>
+    <additional_attributes>10.0;40.0;140.0;40.0;140.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>378</x>
+      <y>510</y>
+      <w>72</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>lt=-
+fg=BLACK</panel_attributes>
+    <additional_attributes>100.0;40.0;10.0;40.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>336</x>
+      <y>474</y>
+      <w>78</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>Turno di servizio
+--
+
+fg=BLACK</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>192</x>
+      <y>576</y>
+      <w>222</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=-
+&lt; gestito da
+m2=0..1
+m1=*
+</panel_attributes>
+    <additional_attributes>350.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>120</x>
+      <y>426</y>
+      <w>84</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>lt=-
+organizzato da v
+m2=0..1
+m1=*
+fg=BLACK</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;220.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>216</x>
+      <y>474</y>
+      <w>78</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>Scadenza
+--
+data: numero
+fg=BLACK</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>288</x>
+      <y>486</y>
+      <w>60</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m2=1
+m1=1
+&lt; ha una 
+fg=BLACK</panel_attributes>
+    <additional_attributes>10.0;20.0;80.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>126</x>
+      <y>408</y>
+      <w>288</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=*            
+         si svolge in &gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;130.0;10.0;130.0;250.0;460.0;250.0</additional_attributes>
+  </element>
+  <element>
+    <id>Text</id>
+    <coordinates>
+      <x>198</x>
+      <y>150</y>
+      <w>54</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>{ordered}
+style=wordwrap
+layer=-2
+fg=GRAY</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

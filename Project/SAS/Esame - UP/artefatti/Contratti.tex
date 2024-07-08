@@ -9,12 +9,12 @@
     \item è in corso la modifica di $tt$ \underline{TabelloneDeiTurni}.
 \end{itemize}
 
-\paragraph{Post-condizioni:} Se \underline{\textit{turno}} è \textbf{gestito da} {\textit{org}} e non esiste un altro turno con \underline{data} == \underline{\textit{turno}.data} 
+\paragraph{Post-condizioni:} Se \underline{\textit{turno}} è \textbf{gestito da} \textit{org} e non esiste un altro turno con \underline{data} == \underline{\textit{turno}.data} 
 
 \begin{itemize}
     \item è stata creata un'istanza $tc$ di TurnoCucina;
     \item $tc$ è \textbf{contenuto in} $tt$;
-    \item è stata creata un'associazione \textbf{si svolge in} tra \underline{\textit{turnoCucina}} e \textif{Evento};
+    \item è stata creata un'associazione \textbf{si svolge in} tra \underline{\textit{turnoCucina}} e \textit{Evento};
     \item \underline{\textit{turno}.data} = \underline{\textit{data}};
     \item \underline{\textit{turno}.orario} = \underline{\textit{orario}};
     \item $[$ se \underline{\textit{luogo}} è specificato $]$ \underline{\textit{turno}.luogo} = \underline{\textit{luogo}};
@@ -31,7 +31,7 @@
  \item $[$ se \underline{\textit{orario}} è specificato $]$ non esiste un $tc$ con lo stesso \underline{\textit{orario}}.
 \end{itemize}
 
-\paragraph{Post-condizioni:} Se \underline{\textit{turno}} è \textbf{gestito da {\textit{org}}
+\paragraph{Post-condizioni:} Se \underline{\textit{turno}} è \textbf{gestito da} \textit{org}:
 
 \begin{itemize}
     \item $[$ se \underline{\textit{data}} è specificato $]$ \underline{\textit{turno}.data} = \underline{\textit{data}};
@@ -100,8 +100,8 @@
         \item l'associazione tra $c$ e \underline{turno} è stata eliminata.
     \end{itemize}
     \item l'associazione \textbf{contiene} tra \underline{\textit{turno}} e $tt$ è stata eliminata;
-    \item l'associazione \textbf{gestito da} tra \underline{\textit{turnoServizio}} e \textif{org} è stata eliminata;
-\item l'associazione \textbf{si svolge in} tra \underline{\textit{turnoCucina}} e \textif{Evento} è stata eliminata;
+    \item l'associazione \textbf{gestito da} tra \underline{\textit{turnoServizio}} e \textit{org} è stata eliminata;
+\item l'associazione \textbf{si svolge in} tra \underline{\textit{turnoCucina}} e \textit{Evento} è stata eliminata;
     \item l'istanza $tc$ di TurnoCucina cessa di esistere.
 \end{itemize}
 
@@ -133,7 +133,7 @@
 \paragraph{Post-condizioni:}
 \begin{itemize}
     \item è stata creata un'istanza $ts$ di TurnoServizio;
-   \item è stata creata un'associazione \textbf{si svolge in} tra \underline{\textit{turnoServizio}} e \textif{Evento};
+   \item è stata creata un'associazione \textbf{si svolge in} tra \underline{\textit{turnoServizio}} e \textit{Evento};
     \item \underline{\textit{turnoServizio}.orario} = \underline{\textit{orario}};
     \item \textit{turnoServizio}.concluso  = no.
 \end{itemize}
@@ -209,7 +209,7 @@
 \begin{itemize}
     \item $[$ se esiste l'associazione \textbf{ha una} tra \underline{\textit{turnoServizio}} e un'istanza $s$ di Scadenza $]$ questa è stata eliminata;
  \item l'istanza $s$ di Scadenza cessa di esistere;
- \item l'associazione \textbf{gestito da} tra \underline{\textit{turnoServizio}} e \textif{org} è stata eliminata;
-\item l'associazione \textbf{si svolge in} tra \underline{\textit{turnoServizio}} e \textif{Evento} è stata eliminata;
+ \item l'associazione \textbf{gestito da} tra \underline{\textit{turnoServizio}} e \textit{org} è stata eliminata;
+\item l'associazione \textbf{si svolge in} tra \underline{\textit{turnoServizio}} e \textit{Evento} è stata eliminata;
  \item l'istanza $ts$ di TurnoServizio cessa di esistere.
 \end{itemize}
