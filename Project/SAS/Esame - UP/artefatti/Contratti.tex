@@ -129,7 +129,9 @@
 \section*{4. aggiungiTurnoServizio(\underline{turnoServizio}: TurnoServizio, \underline{orario}: Numero):}
 
 \paragraph{Pre-condizioni:}
- \item è in corso la modifica di $tts$ \underline{TabelloneTurniServizio}.
+\begin{itemize}
+    \item è in corso la modifica di $tts$ \underline{TabelloneTurniServizio}.
+\end{itemize}
 
 \paragraph{Post-condizioni:}
 \begin{itemize}
@@ -172,7 +174,7 @@
 \paragraph{Post-condizioni:} Se esiste l'associazione \textbf{ha una} tra \underline{\textit{turnoServizio}} e un'istanza $s$ di Scadenza
 
 \begin{itemize}
-\item l'associazione \textbf{ha una} tra \underline{\textit{turnoServizio} $s$ è stata eliminata;
+\item l'associazione \textbf{ha una} tra \underline{\textit{turnoServizio}} $s$ è stata eliminata;
  \item l'istanza $s$ di Scadenza cessa di esistere.
 \end{itemize}
 
