@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="15.0.0">
+<diagram program="umlet" version="15.1">
   <zoom_level>7</zoom_level>
   <element>
     <id>UMLActor</id>
@@ -165,7 +165,7 @@ layer=1</panel_attributes>
       <h>28</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-4. aggiungiTurnoServizio(turnServ, orario)</panel_attributes>
+4. aggiungiTurnoServizio(servizio, orario)</panel_attributes>
     <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
   </element>
   <element>
@@ -189,7 +189,7 @@ ok</panel_attributes>
       <h>28</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-5. aggiungiScadenza(turnServ, scadenza)</panel_attributes>
+5. aggiungiScadenza( scadenza)</panel_attributes>
     <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
   </element>
   <element>
@@ -225,7 +225,7 @@ fg=GRAY</panel_attributes>
       <h>28</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-6. modificaOrario(turnServ, nuovoOrario)</panel_attributes>
+6. modificaOrario(nuovoOrario)</panel_attributes>
     <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
   </element>
   <element>
@@ -265,7 +265,7 @@ layer=1</panel_attributes>
 fg=#761C8C
 bg=#e7bfff
 lw=2
-layer=1
+layer=0
 --
 
 
@@ -291,7 +291,7 @@ layer=1
       <h>28</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-6a.1. cancellaTurnoServizio(turnServ) 	
+6a.1. cancellaTurnoServizio() 	
 fg=#9E1C8C</panel_attributes>
     <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
   </element>

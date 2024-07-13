@@ -837,7 +837,7 @@ fg=gray</panel_attributes>
     <coordinates>
       <x>870</x>
       <y>864</y>
-      <w>210</w>
+      <w>234</w>
       <h>174</h>
     </coordinates>
     <panel_attributes>ShiftManager
@@ -849,6 +849,12 @@ fg=gray</panel_attributes>
 
 --
 *operations methods*
++addKitchenShift(shift: KitchenShift, date: int, time: int, 
+  location?: String): KitchenShift
++editKitchenShift(shift: KitchenShift, date?: int, time?: int,
+ location?: String): KitchenShift
++deleteKitchenShift(shift: KitchenShift): KitchenShift
+ 
 fg=gray</panel_attributes>
     <additional_attributes/>
   </element>
@@ -887,21 +893,21 @@ fg=gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1074</x>
+      <x>1098</x>
       <y>924</y>
-      <w>72</w>
+      <w>54</w>
       <h>30</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 shifts
 m1=0..n
 fg=gray</panel_attributes>
-    <additional_attributes>100.0;20.0;10.0;20.0</additional_attributes>
+    <additional_attributes>70.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1134</x>
+      <x>1140</x>
       <y>912</y>
       <w>72</w>
       <h>54</h>
@@ -932,7 +938,7 @@ fg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1278</x>
+      <x>1272</x>
       <y>1008</y>
       <w>144</w>
       <h>72</h>
@@ -947,26 +953,26 @@ fg=gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1200</x>
+      <x>1206</x>
       <y>936</y>
-      <w>42</w>
+      <w>36</w>
       <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-
 fg=gray</panel_attributes>
-    <additional_attributes>10.0;10.0;50.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;40.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>1224</x>
       <y>888</y>
-      <w>66</w>
+      <w>60</w>
       <h>168</h>
     </coordinates>
     <panel_attributes>lt=-
 fg=gray</panel_attributes>
-    <additional_attributes>80.0;10.0;10.0;10.0;10.0;260.0;90.0;260.0</additional_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0;10.0;260.0;80.0;260.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
