@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="15.1">
+<diagram program="umlet" version="15.0.0">
   <zoom_level>8</zoom_level>
   <element>
     <id>UMLActor</id>
     <coordinates>
-      <x>104</x>
-      <y>64</y>
+      <x>392</x>
+      <y>96</y>
       <w>48</w>
       <h>88</h>
     </coordinates>
@@ -15,8 +15,8 @@
   <element>
     <id>UMLDeployment</id>
     <coordinates>
-      <x>368</x>
-      <y>96</y>
+      <x>816</x>
+      <y>128</y>
       <w>88</w>
       <h>40</h>
     </coordinates>
@@ -26,67 +26,67 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>120</x>
-      <y>136</y>
-      <w>24</w>
-      <h>544</h>
-    </coordinates>
-    <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;660.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>400</x>
-      <y>136</y>
-      <w>24</w>
-      <h>544</h>
-    </coordinates>
-    <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;660.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>120</x>
+      <x>408</x>
       <y>168</y>
-      <w>304</w>
+      <w>24</w>
+      <h>544</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;660.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>848</x>
+      <y>168</y>
+      <w>24</w>
+      <h>544</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;660.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>408</x>
+      <y>200</y>
+      <w>464</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-1. aggiungiTurnoCucina(turno, data, orario, luogo?) 	</panel_attributes>
-    <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
+1. aggiungiTurnoCucina(turno, data, giorno, settimana, orarioInizio, orarioFine, luogo?) 	</panel_attributes>
+    <additional_attributes>10.0;20.0;560.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>120</x>
-      <y>192</y>
-      <w>304</w>
+      <x>408</x>
+      <y>224</y>
+      <w>464</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
 ok</panel_attributes>
-    <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;560.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>120</x>
-      <y>248</y>
-      <w>304</w>
+      <x>408</x>
+      <y>280</y>
+      <w>464</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
 2. consultaEventi()	</panel_attributes>
-    <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;560.0;20.0</additional_attributes>
   </element>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>80</x>
-      <y>160</y>
-      <w>376</w>
+      <x>368</x>
+      <y>192</y>
+      <w>536</w>
       <h>64</h>
     </coordinates>
     <panel_attributes>LOOP
@@ -98,45 +98,45 @@ layer=-1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>120</x>
-      <y>272</y>
-      <w>304</w>
+      <x>408</x>
+      <y>304</y>
+      <w>464</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
 elenco degli eventi</panel_attributes>
-    <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;560.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>120</x>
-      <y>336</y>
-      <w>304</w>
+      <x>408</x>
+      <y>368</y>
+      <w>464</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
 3. selezionaEvento(evento)</panel_attributes>
-    <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;560.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>120</x>
-      <y>360</y>
-      <w>304</w>
+      <x>408</x>
+      <y>392</y>
+      <w>464</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
 evento selezionato</panel_attributes>
-    <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;560.0;20.0</additional_attributes>
   </element>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>32</x>
-      <y>328</y>
-      <w>472</w>
+      <x>320</x>
+      <y>360</y>
+      <w>632</w>
       <h>288</h>
     </coordinates>
     <panel_attributes>LOOP
@@ -148,9 +148,9 @@ layer=-3</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>80</x>
-      <y>464</y>
-      <w>376</w>
+      <x>368</x>
+      <y>496</y>
+      <w>536</w>
       <h>56</h>
     </coordinates>
     <panel_attributes>OPT
@@ -162,95 +162,95 @@ layer=-1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>120</x>
-      <y>408</y>
-      <w>304</w>
+      <x>408</x>
+      <y>440</y>
+      <w>464</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-4. aggiungiTurnoServizio(servizio, orario)</panel_attributes>
-    <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
+4. aggiungiTurnoServizio(turnServ, data, orarioInizio, orarioFine)</panel_attributes>
+    <additional_attributes>10.0;20.0;560.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>120</x>
+      <x>408</x>
+      <y>464</y>
+      <w>464</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+ok</panel_attributes>
+    <additional_attributes>10.0;20.0;560.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>408</x>
+      <y>496</y>
+      <w>464</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;&gt;
+5. aggiungiScadenza(turnServ, scadenza)</panel_attributes>
+    <additional_attributes>10.0;20.0;560.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>408</x>
+      <y>520</y>
+      <w>464</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+ok</panel_attributes>
+    <additional_attributes>10.0;20.0;560.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLFrame</id>
+    <coordinates>
+      <x>368</x>
+      <y>560</y>
+      <w>536</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>OPT
+fg=#128C86
+bg=#B8E0E0
+layer=-1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>408</x>
+      <y>560</y>
+      <w>464</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;&gt;
+6. modificaOrario(turnServ, nuovoOrarioInizio?, nuovoOrarioFine?)</panel_attributes>
+    <additional_attributes>10.0;20.0;560.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>408</x>
+      <y>584</y>
+      <w>456</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+ok</panel_attributes>
+    <additional_attributes>10.0;20.0;550.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLFrame</id>
+    <coordinates>
+      <x>344</x>
       <y>432</y>
-      <w>304</w>
-      <h>32</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;.
-ok</panel_attributes>
-    <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>120</x>
-      <y>464</y>
-      <w>304</w>
-      <h>32</h>
-    </coordinates>
-    <panel_attributes>lt=-&gt;&gt;&gt;
-5. aggiungiScadenza(scadenza)</panel_attributes>
-    <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>120</x>
-      <y>488</y>
-      <w>304</w>
-      <h>32</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;.
-ok</panel_attributes>
-    <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLFrame</id>
-    <coordinates>
-      <x>80</x>
-      <y>528</y>
-      <w>376</w>
-      <h>56</h>
-    </coordinates>
-    <panel_attributes>OPT
-fg=#128C86
-bg=#B8E0E0
-layer=-1</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>120</x>
-      <y>528</y>
-      <w>304</w>
-      <h>32</h>
-    </coordinates>
-    <panel_attributes>lt=-&gt;&gt;&gt;
-6. modificaOrario(nuovoOrario)</panel_attributes>
-    <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>120</x>
-      <y>552</y>
-      <w>304</w>
-      <h>32</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;.
-ok</panel_attributes>
-    <additional_attributes>10.0;20.0;360.0;20.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLFrame</id>
-    <coordinates>
-      <x>56</x>
-      <y>400</y>
-      <w>424</w>
+      <w>584</w>
       <h>200</h>
     </coordinates>
     <panel_attributes>LOOP
@@ -262,9 +262,9 @@ layer=-2</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>80</x>
-      <y>240</y>
-      <w>376</w>
+      <x>368</x>
+      <y>272</y>
+      <w>536</w>
       <h>64</h>
     </coordinates>
     <panel_attributes>OPT

@@ -1,12 +1,12 @@
 \chapter{DSD - Design Sequence Diagram}
 
-\section*{1. generateSummarySheet}
+\section*{1. generateSummarySheet(event, service)}
 
 \begin{center}
   \includegraphics[scale = 0.22]{images/DSD/DSD 1.png}
 \end{center}
 
-\section*{1a.1 openSheet}
+\section*{1a.1 openSheet(event, service)}
 
 \begin{center}
   \includegraphics[scale = 0.35]{images/DSD/DSD 1a.png}
@@ -14,7 +14,7 @@
 
 \pagebreak
 
-\section*{1b.1 restoreSheet}
+\section*{1b.1 restoreSheet(event, service)}
 
 \begin{center}
   \includegraphics[scale = 0.25]{images/DSD/DSD 1b.png}
@@ -22,7 +22,7 @@
 
 \pagebreak
 
-\section*{2. addProcedure}
+\section*{2. addProcedure(procedure)}
 
 \begin{center}
   \includegraphics[scale = 0.22]{images/DSD/DSD 2.png}
@@ -30,7 +30,7 @@
 
 \pagebreak
 
-\section*{2a.1 removeProcedure}
+\section*{2a.1 removeProcedure(procedure)}
 
 \begin{center}
   \includegraphics[scale = 0.25]{images/DSD/DSD 2a.png}
@@ -38,7 +38,7 @@
 
 \pagebreak
 
-\section*{3. sortTask}
+\section*{3. sortTask(task, position)}
 
 \begin{center}
   \includegraphics[scale = 0.35]{images/DSD/DSD 3.png}
@@ -46,7 +46,7 @@
 
 \pagebreak
 
-\section*{4. getKitchenShifts}
+\section*{4. getKitchenShifts()}
 
 \begin{center}
   \includegraphics[scale = 0.5]{images/DSD/DSD 4.png}
@@ -54,7 +54,7 @@
 
 \pagebreak
 
-\section*{5. assignTask}
+\section*{5. assignTask(task, kitchenShift. cook?, timeRequired?, quantity?)}
 
 \begin{center}
   \includegraphics[scale = 0.25]{images/DSD/DSD 5.png}
@@ -62,7 +62,7 @@
 
 \pagebreak
 
-\section*{5a.1}
+\section*{5a.1 editTask(task, kitchenShift?, cook?, timeRequired?, quantity?)}
 
 \begin{center}
   \includegraphics[scale = 0.23]{images/DSD/DSD 5a.png}
@@ -70,13 +70,13 @@
 
 \pagebreak
 
-\section*{5b.1}
+\section*{5b.1 deleteTask(task)}
 
 \begin{center}
   \includegraphics[scale = 0.25]{images/DSD/DSD 5b.png}
 \end{center}
 
-\pagebreak\section*{5c.1 markAsReady}
+\pagebreak\section*{5c.1 markAsReady(task)}
 
 \begin{center}
   \includegraphics[scale = 0.27]{images/DSD/DSD 5c.png}
