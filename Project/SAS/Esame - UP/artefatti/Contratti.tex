@@ -2,7 +2,7 @@
 \paragraph{Pre-condizione generale:} L'attore è identificato con un'istanza \textit{org} di Organizzatore.
 
 \section{Passo 1}
-\section*{1. aggiungiTurnoCucina(\underline{turno}: TurnoCucina, \underline{data}: Data, \underline{orario}: Orario, \underline{luogo?}: Testo):}
+\section*{1. aggiungiTurnoCucina(\underline{turno}: TurnoCucina, \underline{data}: numero, \underline{giorno}: testo, \underline{settimana}: numero, \underline{inizio}: numero, \underline{fine}: numero,\underline{luogo?}: Testo):}
 
 \paragraph{Pre-condizioni:} 
 
@@ -11,6 +11,8 @@
 
 \begin{itemize}
     \item è stata creata un'istanza $tc$ di TurnoCucina;
+    \item è stata creata un'istanza $t$ di Tempo;
+    \item  è stata creata un'associazione \textbf{ha} \underline{\textit{turnoCucina}} e $t$;
     \item è stata creata un'associazione \textbf{contiene} \underline{\textit{turnoCucina}} e \textit{TabelloneTurniCucina};
     \item \underline{\textit{turno}.data} = \underline{\textit{data}};
     \item \underline{\textit{turno}.orario} = \underline{\textit{orario}};
