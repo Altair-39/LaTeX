@@ -2,39 +2,43 @@
 \paragraph{Pre-condizione generale:} L'attore è identificato con un'istanza \textit{org} di Organizzatore.
 
 \section{Passo 1}
-\section*{1. aggiungiTurnoCucina(\underline{turno}: TurnoCucina, \underline{data}: numero, \underline{giorno}: testo, \underline{settimana}: numero, \underline{inizio}: numero, \underline{fine}: numero,\underline{luogo?}: Testo):}
+\section*{1. aggiungiTurnoCucina(\underline{turno}: TurnoCucina, \underline{data}: numero, \underline{giorno}: testo, \underline{settimana}: numero, \underline{orarioInizio}: numero, \underline{orarioFine}: numero, \underline{luogo?}: Testo):}
 
 \paragraph{Pre-condizioni:} 
 
 
-\paragraph{Post-condizioni:} Se \underline{\textit{turno}} è \textbf{gestito da} \textit{org} e non esiste un altro turno con \underline{data} == \underline{\textit{turno}.data} 
+\paragraph{Post-condizioni:} Se \underline{\textit{turno}} è \textbf{gestito da} \textit{org} e non esiste un altro turno con \underline{data} == \underline{\textit{turno}.data}, \underline{orarioInizio} $>=$ \underline{\textit{turno.orario}.orarioInizio} e \underline{orarioFine} $<=$ \underline{\textit{turno.orario}.orarioFine}
 
 \begin{itemize}
     \item è stata creata un'istanza $tc$ di TurnoCucina;
-    \item è stata creata un'istanza $t$ di Tempo;
-    \item  è stata creata un'associazione \textbf{ha} \underline{\textit{turnoCucina}} e $t$;
+    \item è stata creata un'istanza $o$ di Orario;
+    \item è stata creata un'associazione \textbf{ha} \underline{\textit{turnoCucina}} e $o$;
     \item è stata creata un'associazione \textbf{contiene} \underline{\textit{turnoCucina}} e \textit{TabelloneTurniCucina};
     \item \underline{\textit{turno}.data} = \underline{\textit{data}};
-    \item \underline{\textit{turno}.orario} = \underline{\textit{orario}};
+    \item \underline{\textit{turno}.giorno} = \underline{\textit{giorno}};
+    \item \underline{\textit{turno}.settimana} = \underline{\textit{settimana}};
     \item $[$ se \underline{\textit{luogo}} è specificato $]$ \underline{\textit{turno}.luogo} = \underline{\textit{luogo}};
-    \item \textit{turno}.concluso  = no.
+    \item \underline{\textit{turno}.concluso}  = no;
+    \item \underline{\textit{o}.inizio}  = \underline{\textit{orarioInizio}};
+    \item \underline{\textit{o}.fine}  = \underline{\textit{orarioFine}}.
+    
 \end{itemize}
 
-\section*{1a.1 modificaTurnoCucina(\underline{turno}: TurnoCucina, \underline{data?}: Data, \underline{orario?}: Orario, \underline{luogo?}: Testo):}
+\section*{1a.1 modificaTurnoCucina(\underline{turno}: TurnoCucina, \underline{orarioInizio?}: numero, \underline{orarioFine?}: numero, \underline{luogo?}: Testo):}
 
 \paragraph{Pre-condizioni:}
 
 \begin{itemize}
  \item TabelloneTurniCucina $ttc$ \textbf{contiene} \underline{turno};
- \item $[$ se \underline{\textit{orario}} è specificato $]$ non esiste un $tc$ tale che $tc$.orario.inizio $>$ \underline{\textit{orario}} e $tc$.orario.fine $<$ \underline{\textit{orario}}.
+ \item $[$ se \underline{\textit{orarioInizio} o \underline{\textit{orarioFine}} è specificato $]$ non esiste un $tc$ tale che $tc$.orario.inizio $>$ \underline{\textit{orario}} e $tc$.orario.fine $<$ \underline{\textit{orario}}.
 \end{itemize}
 
 \paragraph{Post-condizioni:} Se \underline{\textit{turno}} è \textbf{gestito da} \textit{org}:
 
 \begin{itemize}
-    \item $[$ se \underline{\textit{data}} è specificato $]$ \underline{\textit{turno}.data} = \underline{\textit{data}};
+    \item $[$ se \underline{\textit{orarioInizio}} è specificato $]$ \underline{\textit{turno}.orario.inizio} = \underline{\textit{orarioInizio}};
 
-    \item $[$ se \underline{\textit{orario}} è specificato $]$ \underline{\textit{turno}.orario} = \underline{\textit{orario}};
+    \item $[$ se \underline{\textit{orarioFine}} è specificato $]$ \underline{\textit{turno}.orario.fine} = \underline{\textit{orarioFine}};
 
     \item $[$ se \underline{\textit{luogo}} è specificato $]$ \underline{\textit{turno}.luogo} = \underline{\textit{luogo}}.
 
@@ -55,29 +59,36 @@
     \begin{itemize}
         \item l'associazione \textbf{svolto in} tra $c$ e \underline{turno} è stata eliminata.
     \end{itemize}
-    \item l'associazione \textbf{contiene} tra \underline{\textit{turno}} e $ttc$ è stata eliminata;
+    \item l'associazione \textbf{contiene} tra $tc$ e $ttc$ è stata eliminata;
+    \item l'associazione \textbf{gestito da} tra $tc$ e \textit{org} è stata eliminata;
+\item l'associazione \textbf{si svolge in} tra $tc$ e \textit{Evento} è stata eliminata;
+    \item l'associazione \textbf{ha} tra $tc$ e $o$ è stata eliminata;
+    \item l'istanza $o$ di Orario cessa di esistere;
     \item l'istanza $tc$ di TurnoCucina cessa di esistere.
 \end{itemize}
 
-\section*{1c.1 modificaTuttiTurniCucina(\underline{giorno?}: Testo, \underline{settimana?}: numero, \underline{orario?}: Orario, \underline{luogo?}: Testo):}
+\section*{1c.1 modificaTuttiTurniCucina(\underline{giorno?}: Testo, \underline{settimana?}: numero, \underline{orarioInizio?}: numero, \underline{orarioFine?}: numero, \underline{luogo?}: Testo):}
 
 \paragraph{Pre-condizioni:}
 
-\paragraph{Post-condizioni:} 
+\paragraph{Post-condizioni:} Se \underline{\textit{turno}} è \textbf{gestito da} {\textit{org}}
  \begin{itemize}
    \item $[$ se \underline{\textit{giorno}} e \underline{\textit{settimana}} sono specificati $]$ \textlangle per ogni TurnoCucina $tc$ presente in $ttc$ con $tc$.data.giorno == \underline{\textit{giorno}} e $tc$.data.settimana == \underline{\textit{settimana}} \textrangle:
 \begin{itemize}
-  \item $tc$.orario = $tc$.orario;
+  \item $[$ se \underline{\textit{orarioInizio}} è specificato $]$ \underline{\textit{turno}.orario.inizio} = \underline{\textit{orarioInizio}};
+    \item $[$ se \underline{\textit{orarioFine}} è specificato $]$ \underline{\textit{turno}.orario.fine} = \underline{\textit{orarioFine}};
   \item $[$ se \underline{\textit{luogo}} è specificato $]$ $tc$.luogo = \underline{\textit{luogo}}.
 \end{itemize}
    \item $[$ se \underline{\textit{giorno}} è specificato $]$ \textlangle per ogni TurnoCucina $tc$ presente in $ttc$ con $tc$.data.giorno == \underline{\textit{giorno}} \textrangle:
 \begin{itemize}
-  \item $tc$.orario = \underline{\textit{orario}};
+  \item $[$ se \underline{\textit{orarioInizio}} è specificato $]$ \underline{\textit{turno}.orario.inizio} = \underline{\textit{orarioInizio}};
+    \item $[$ se \underline{\textit{orarioFine}} è specificato $]$ \underline{\textit{turno}.orario.fine} = \underline{\textit{orarioFine}};
   \item $[$ se \underline{\textit{luogo}} è specificato $]$ $tc$.luogo = \underline{\textit{luogo}}.
 \end{itemize}
-   \item $[$ se \underline{\textit{settimana}} è specificata $]$ \textlangle per ogni TurnoCucina $tc$ presente in $ttc$ con $tc$.data.settimana == \underline{\textit{settimana}} \textrangle:
+   \item $[$ se \underline{\textit{settimana}} è specificato $]$ \textlangle per ogni TurnoCucina $tc$ presente in $ttc$ con $tc$.data.settimana == \underline{\textit{settimana}} \textrangle:
 \begin{itemize}
-  \item $tc$.orario = \underline{\textit{orario}};
+  \item $[$ se \underline{\textit{orarioInizio}} è specificato $]$ \underline{\textit{turno}.orario.inizio} = \underline{\textit{orarioInizio}};
+    \item $[$ se \underline{\textit{orarioFine}} è specificato $]$ \underline{\textit{turno}.orario.fine} = \underline{\textit{orarioFine}};
   \item $[$ se \underline{\textit{luogo}} è specificato $]$ $tc$.luogo = \underline{\textit{luogo}}.
 \end{itemize}
 
@@ -94,22 +105,26 @@
    \item \textlangle $ $ per ogni Compito $c$ \textbf{presente in} $t$ \textrangle:
     \begin{itemize}
         \item l'associazione tra $c$ e $tc$ è stata eliminata.
+        \end{itemize}
     \item l'associazione \textbf{contiene} tra $tc$ e $ttc$ è stata eliminata;
     \item l'associazione \textbf{gestito da} tra $tc$ e \textit{org} è stata eliminata;
 \item l'associazione \textbf{si svolge in} tra $tc$ e \textit{Evento} è stata eliminata;
-    \item l'istanza $tc$ cessa di esistere.
-    \end{itemize}
+  \item l'associazione \textbf{ha} tra $tc$ e $o$ è stata eliminata;
+    \item l'istanza $o$ di Orario cessa di esistere;
+    \item l'istanza $tc$ di TurnoCucina cessa di esistere.
 \end{itemize}
    \item $[$ se \underline{\textit{giorno}} è specificato $]$ \textlangle per ogni TurnoCucina $tc$ presente in $ttc$ con $tc$.data.giorno == \underline{\textit{giorno}} \textrangle:
 \begin{itemize}
    \item \textlangle $ $ per ogni Compito $c$ \textbf{presente in} $t$ \textrangle:
     \begin{itemize}
         \item l'associazione tra $c$ e $tc$ è stata eliminata.
+    \end{itemize}
     \item l'associazione \textbf{contiene} tra $tc$ e $ttc$ è stata eliminata;
     \item l'associazione \textbf{gestito da} tra $tc$ e \textit{org} è stata eliminata;
 \item l'associazione \textbf{si svolge in} tra $tc$ e \textit{Evento} è stata eliminata;
-    \item l'istanza $tc$ cessa di esistere.
-    \end{itemize}
+    \item l'associazione \textbf{ha} tra $tc$ e $o$ è stata eliminata;
+    \item l'istanza $o$ di Orario cessa di esistere;
+    \item l'istanza $tc$ di TurnoCucina cessa di esistere.
 \end{itemize}
 
    \item $[$ se \underline{\textit{settimana}} è specificata $]$ \textlangle per ogni TurnoCucina $tc$ presente in $ttc$ con $tc$.data.settimana == \underline{\textit{settimana}} \textrangle:
@@ -117,11 +132,13 @@
    \item \textlangle $ $ per ogni Compito $c$ \textbf{presente in} $t$ \textrangle:
     \begin{itemize}
         \item l'associazione tra $c$ e $tc$ è stata eliminata.
+        \end{itemize}
     \item l'associazione \textbf{contiene} tra $tc$ e $ttc$ è stata eliminata;
     \item l'associazione \textbf{gestito da} tra $tc$ e \textit{org} è stata eliminata;
 \item l'associazione \textbf{si svolge in} tra $tc$ e \textit{Evento} è stata eliminata;
-    \item l'istanza $tc$ cessa di esistere.
-    \end{itemize}
+    \item l'associazione \textbf{ha} tra $tc$ e $o$ è stata eliminata;
+    \item l'istanza $o$ di Orario cessa di esistere;
+    \item l'istanza $tc$ di TurnoCucina cessa di esistere.
 \end{itemize}
 
 \end{itemize}
@@ -146,7 +163,7 @@
 \paragraph{Post-condizioni:}
 
 \section{Passo 4}
-\section*{4. aggiungiTurnoServizio(\underline{servizio}: Servizio, \underline{orario}: Numero):}
+\section*{4. aggiungiTurnoServizio(\underline{turnoServizio}: TurnoServizio, \underline{data}: numero, \underline{orarioInizio}: numero, \underline{orarioFine}: numero):}
 
 \paragraph{Pre-condizioni:}
 \begin{itemize}
@@ -157,8 +174,12 @@
 \paragraph{Post-condizioni:}
 \begin{itemize}
    \item è stata creata un'istanza $ts$ di TurnoServizio;
-    \item è stata creata un'associazione \textbf{contiene} \underline{\textit{turnoServizio}};
-    \item \underline{\textit{turnoServizio}.orario} = \underline{\textit{orario}};
+   \item è stata creata un'istanza $o$ di Orario;
+   \item è stata creata un'associazione \textbf{ha} \underline{\textit{turnoServizio}} e $o$;
+    \item è stata creata un'associazione \textbf{contiene} tra \underline{\textit{turnoServizio}} e \underline{\textit{TabelloneTurniServizio}};
+   \item \underline{\textit{turnoServizio}.data} = \underline{\textit{data}};
+    \item \underline{\textit{o}.inizio}  = \underline{\textit{orarioInizio}};
+    \item \underline{\textit{o}.fine}  = \underline{\textit{orarioFine}}.
     \item \underline{\textit{turnoServizio}.concluso}  = no.
 \end{itemize}
 
@@ -213,7 +234,7 @@
 \end{itemize}
 
 \section{Passo 6}
-\section*{6. modificaOrario(\underline{turnoServizio}: TurnoServizio, \underline{nuovoOrario}: Orario):}
+\section*{6. modificaOrario(\underline{turnoServizio}: TurnoServizio, \underline{nuovoOrarioInizio?}: numero, \underline{nuovoOrarioFine?}: numero,):}
 
 \paragraph{Pre-condizioni:}
 \begin{itemize}
@@ -226,7 +247,8 @@
 \paragraph{Post-condizioni:}
 
 \begin{itemize}
-    \item \underline{\textit{turnoServizio}.orario} = \underline{\textit{nuovoOrario}}.
+    \item $[$ se \underline{\textit{orarioInizio}} è specificato $]$ \underline{\textit{turnoServizio}.Orario.inizio} = \underline{\textit{orarioInizio}};
+    \item $[$ se \underline{\textit{orarioFine}} è specificato $]$ \underline{\textit{turnoServizio}.Orario.fine} = \underline{\textit{orarioFine}};
 \end{itemize}
 
 \section*{6a.1 cancellaTurnoServizio(\underline{turnoServizio}: TurnoServizio):}
@@ -241,10 +263,17 @@
 
 \paragraph{Post-condizioni:} 
 \begin{itemize}
-    \item $[$ se esiste l'associazione \textbf{ha una} tra \underline{\textit{turnoServizio}} e un'istanza $s$ di Scadenza $]$ questa è stata eliminata;
- \item l'istanza $s$ di Scadenza cessa di esistere;
-  \item l'associazione \textbf{contiene} tra \underline{\textit{turnoServizio}} e $tts$ è stata eliminata;
- \item l'associazione \textbf{gestito da} tra \underline{\textit{turnoServizio}} e \textit{org} è stata eliminata;
-\item l'associazione \textbf{si svolge in} tra \underline{\textit{turnoServizio}} e \textit{Evento} è stata eliminata;
- \item l'istanza $ts$ di TurnoServizio cessa di esistere.
+    \item $[$ se esiste l'associazione \textbf{ha una} tra \underline{\textit{turnoServizio}} e un'istanza $s$ di Scadenza $]$:
+    \begin{itemize}
+    \item questa è stata eliminata;
+    \item l'istanza $s$ di Scadenza cessa di esistere.
+    \end{itemize}
+  \item l'associazione \textbf{contiene} tra $ts$ e $tts$ è stata eliminata;
+ \item l'associazione \textbf{gestito da} tra $ts$ e \textit{org} è stata eliminata;
+\item l'associazione \textbf{si svolge in} tra $ts$ e \textit{Evento} è stata eliminata;
+ \item l'associazione \textbf{ha} tra $ts$ e $o$ è stata eliminata;
+    \item l'istanza $o$ di Orario cessa di esistere;
+    \item l'istanza $tc$ di TurnoServizio cessa di esistere.
+
+ 
 \end{itemize}
