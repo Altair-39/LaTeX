@@ -54,7 +54,7 @@
       <h>20</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-1. aggiungiTurnoCucina(turno, data, giorno, settimana, orarioInizio, orarioFine, luogo?) 	</panel_attributes>
+1. aggiungiTurnoCucina(data, giorno, settimana, orarioInizio, orarioFine, luogo?) 	</panel_attributes>
     <additional_attributes>10.0;20.0;630.0;20.0</additional_attributes>
   </element>
   <element>
@@ -153,7 +153,7 @@ layer=1</panel_attributes>
       <h>20</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-4. aggiungiTurnoServizio(turnServ, data, orarioInizio, orarioFine)</panel_attributes>
+4. aggiungiTurnoServizio(data, orarioInizio, orarioFine)</panel_attributes>
     <additional_attributes>10.0;20.0;630.0;20.0</additional_attributes>
   </element>
   <element>
@@ -358,7 +358,7 @@ fg=red</panel_attributes>
       <h>20</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-1a.1. modificaTurnoCucina(turno, data?, giorno?, settimana?, orarioInizio?, orarioFine?, luogo?) 	
+1a.1. modificaTurnoCucina(turno, orarioInizio?, orarioFine?, luogo?) 	
 fg=#9E1C8C</panel_attributes>
     <additional_attributes>10.0;20.0;630.0;20.0</additional_attributes>
   </element>
@@ -516,7 +516,7 @@ fg=#9E1C8C</panel_attributes>
       <h>20</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-1c.1. modificaTuttiTurniCucina(data?, giorno?, settimana?, orarioInizio?, orarioFine?, luogo?) 	
+1c.1. modificaTuttiTurniCucina(giorno?, settimana?, orarioInizio?, orarioFine?, luogo?) 	
 fg=#9E1C8C</panel_attributes>
     <additional_attributes>10.0;20.0;630.0;20.0</additional_attributes>
   </element>
@@ -573,7 +573,7 @@ fg=#9E1C8C</panel_attributes>
       <h>20</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-1d.1 eliminaTuttiTurniCucina(giorno?, settimaan?) 	
+1d.1 eliminaTuttiTurniCucina(giorno?, settimana?) 	
 fg=#9E1C8C</panel_attributes>
     <additional_attributes>10.0;20.0;630.0;20.0</additional_attributes>
   </element>

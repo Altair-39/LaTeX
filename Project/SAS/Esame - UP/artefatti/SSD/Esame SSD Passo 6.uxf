@@ -54,7 +54,7 @@
       <h>28</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-1. aggiungiTurnoCucina(turno, data, giorno, settimana, orarioInizio, orarioFine, luogo?) 	</panel_attributes>
+1. aggiungiTurnoCucina(data, giorno, settimana, orarioInizio, orarioFine, luogo?) 	</panel_attributes>
     <additional_attributes>10.0;20.0;600.0;20.0</additional_attributes>
   </element>
   <element>
@@ -165,7 +165,7 @@ layer=1</panel_attributes>
       <h>28</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-4. aggiungiTurnoServizio(turnServ, data, orarioInizio, orarioFine)</panel_attributes>
+4. aggiungiTurnoServizio(data, orarioInizio, orarioFine)</panel_attributes>
     <additional_attributes>10.0;20.0;600.0;20.0</additional_attributes>
   </element>
   <element>

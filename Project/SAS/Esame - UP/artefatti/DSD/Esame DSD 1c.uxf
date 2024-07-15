@@ -408,7 +408,7 @@ add(shift)
       <h>20</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-create(shift, date, day, week, startTime, endTime, location?)</panel_attributes>
+create(date, day, week, startTime, endTime, location?)</panel_attributes>
     <additional_attributes>10.0;20.0;400.0;20.0</additional_attributes>
   </element>
   <element>
@@ -536,20 +536,7 @@ layer=0</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>830</x>
-      <y>270</y>
-      <w>65</w>
-      <h>30</h>
-    </coordinates>
-    <panel_attributes>lt=-&gt;&gt;&gt;
-this.shift = 
-shift</panel_attributes>
-    <additional_attributes>10.0;10.0;50.0;10.0;50.0;40.0;10.0;40.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>830</x>
-      <y>295</y>
+      <y>275</y>
       <w>65</w>
       <h>30</h>
     </coordinates>
@@ -562,7 +549,7 @@ date</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>830</x>
-      <y>320</y>
+      <y>305</y>
       <w>65</w>
       <h>30</h>
     </coordinates>
@@ -575,7 +562,7 @@ day</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>830</x>
-      <y>345</y>
+      <y>335</y>
       <w>70</w>
       <h>30</h>
     </coordinates>
@@ -588,7 +575,7 @@ week</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>830</x>
-      <y>370</y>
+      <y>365</y>
       <w>70</w>
       <h>30</h>
     </coordinates>

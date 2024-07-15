@@ -823,10 +823,10 @@ fg=blue</panel_attributes>
   <element>
     <id>UMLPackage</id>
     <coordinates>
-      <x>702</x>
-      <y>810</y>
-      <w>930</w>
-      <h>414</h>
+      <x>618</x>
+      <y>798</y>
+      <w>1020</w>
+      <h>468</h>
     </coordinates>
     <panel_attributes>ShiftManagement
 fg=gray</panel_attributes>
@@ -835,35 +835,39 @@ fg=gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>732</x>
+      <x>654</x>
       <y>864</y>
       <w>258</w>
-      <h>174</h>
+      <h>186</h>
     </coordinates>
     <panel_attributes>ShiftManager
 --
-
 --
 *event sender methods*
-
-
++addReceiver(er: KitchenTaskEventReceiver)
++removeReceiver(er: KitchenTaskEventReceiver)
+-notifyKitchenShiftAdded(s: Shift)
+-notifyShiftEdited(s: Shift)
+-notifyTermAdded(s: Shift)
 --
 *operations methods*
 +addKitchenShift(shift: KitchenShift, date: String, day: String 
   ,week: int, startTime: int, endTime: int,
   location?: String): KitchenShift
 +editAllKShift(shift: KitchenShift, date: String, day: String,
-   week: int, startTime: int, endTime: int, location?: String): KitchenShift
+   week: int, startTime: int, endTime: int, location?: String): 
+   KitchenShift
 +addTerm(serviceShift: ServiceShift, term: Term): ServiceTable
- 
++editTime(serviceShift: ServiceShift, newStartTime?: int,
+ newEndTime?: int): ServiceTable
 fg=gray</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>726</x>
-      <y>1128</y>
+      <x>648</x>
+      <y>1086</y>
       <w>222</w>
       <h>84</h>
     </coordinates>
@@ -872,7 +876,10 @@ fg=gray</panel_attributes>
 --
 
 --
-
+/+updateKitchenShiftAdded(s: KitchenShift)/
+/+updateShiftEditeded(s: KitchenShift)/
+/+updateTermAdded(s: ServiceShift)/
+/+updateTimeChanged(s : ServiceShift)/
 fg=gray
 </panel_attributes>
     <additional_attributes/>
@@ -880,37 +887,37 @@ fg=gray
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>816</x>
-      <y>1032</y>
+      <x>738</x>
+      <y>1044</y>
       <w>78</w>
-      <h>108</h>
+      <h>54</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 eventReceivers
 m1=0..n
 fg=gray</panel_attributes>
-    <additional_attributes>10.0;160.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>1206</x>
-      <y>852</y>
-      <w>48</w>
-      <h>78</h>
+      <y>846</y>
+      <w>120</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 shifts
 m1=0..n
 fg=gray</panel_attributes>
-    <additional_attributes>30.0;110.0;30.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>160.0;120.0;160.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1224</x>
+      <x>1218</x>
       <y>918</y>
-      <w>72</w>
+      <w>156</w>
       <h>48</h>
     </coordinates>
     <panel_attributes>/Shift/
@@ -918,13 +925,14 @@ fg=gray</panel_attributes>
 --
 
 --
-fg=gray</panel_attributes>
+fg=gray
++create(shift: Shift, date, day, week, startTime, endTime, location?)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1356</x>
+      <x>1488</x>
       <y>882</y>
       <w>144</w>
       <h>72</h>
@@ -939,7 +947,7 @@ fg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1350</x>
+      <x>1488</x>
       <y>1008</y>
       <w>144</w>
       <h>72</h>
@@ -948,88 +956,91 @@ fg=blue</panel_attributes>
 --
 
 --
++addTerm(term: Term): ServiceTable
 fg=gray</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1290</x>
+      <x>1368</x>
       <y>936</y>
-      <w>24</w>
+      <w>42</w>
       <h>18</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-
 fg=gray</panel_attributes>
-    <additional_attributes>10.0;10.0;20.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;50.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1296</x>
+      <x>1392</x>
       <y>888</y>
-      <w>72</w>
+      <w>108</w>
       <h>168</h>
     </coordinates>
     <panel_attributes>lt=-
 fg=gray</panel_attributes>
-    <additional_attributes>100.0;10.0;10.0;10.0;10.0;260.0;90.0;260.0</additional_attributes>
+    <additional_attributes>160.0;10.0;10.0;10.0;10.0;260.0;160.0;260.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1416</x>
-      <y>660</y>
-      <w>42</w>
-      <h>234</h>
+      <x>1434</x>
+      <y>636</y>
+      <w>156</w>
+      <h>258</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 m1=1
 execIn
 fg=blue</panel_attributes>
-    <additional_attributes>10.0;370.0;10.0;10.0</additional_attributes>
+    <additional_attributes>200.0;410.0;200.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>984</x>
+      <x>906</x>
       <y>876</y>
-      <w>90</w>
+      <w>108</w>
       <h>30</h>
     </coordinates>
     <panel_attributes>lt=-&gt;
 currentKitchenTable
 m2=0..1</panel_attributes>
-    <additional_attributes>10.0;20.0;130.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;160.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>984</x>
+      <x>906</x>
       <y>1008</y>
-      <w>96</w>
+      <w>174</w>
       <h>30</h>
     </coordinates>
     <panel_attributes>lt=-&gt;
 currentServiceTable
 m2=0..1</panel_attributes>
-    <additional_attributes>10.0;20.0;140.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;270.0;20.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1062</x>
-      <y>852</y>
-      <w>150</w>
-      <h>60</h>
+      <x>1002</x>
+      <y>822</y>
+      <w>210</w>
+      <h>108</h>
     </coordinates>
     <panel_attributes>KitchenTable
 --
-
++shifts: ArrayList&lt;kitchenShift&gt;
 --
 +checkUniqueDate(shift: KitchenShift,
-date: String )
-</panel_attributes>
+date: String ): boolean
++addKitchenShift(shift: KitchenShift, date: String, 
+day: String, week: int, startTime: int, endTime: int,
+  location?: String): KitchenShift</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -1045,8 +1056,8 @@ date: String )
 
 --
 +addTerm(serviceShift: ServiceShift, 
- term: Term)
-</panel_attributes>
+ term: Term): ServiceTable
+ </panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -1066,30 +1077,30 @@ fg=gray</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1224</x>
-      <y>1056</y>
+      <x>1302</x>
+      <y>1062</y>
       <w>84</w>
       <h>60</h>
     </coordinates>
     <panel_attributes>Time
 --
--startTime
--endTime
+-startTime: int
+-endTime: int
 --
-</panel_attributes>
++create(startTime: int, endTime: int)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1260</x>
+      <x>1338</x>
       <y>960</y>
       <w>36</w>
-      <h>108</h>
+      <h>114</h>
     </coordinates>
     <panel_attributes>lt=-&gt;
 time</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;160.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;170.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -1121,14 +1132,39 @@ term</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>984</x>
+      <x>906</x>
       <y>936</y>
-      <w>252</w>
+      <w>324</w>
       <h>30</h>
     </coordinates>
     <panel_attributes>lt=-&gt;
 currentShift
 m2=0..1</panel_attributes>
-    <additional_attributes>10.0;20.0;400.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;520.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>174</x>
+      <y>690</y>
+      <w>132</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>KitcheShiftException
+--
+fg=gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>246</x>
+      <y>648</y>
+      <w>18</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+fg=gray</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
   </element>
 </diagram>
