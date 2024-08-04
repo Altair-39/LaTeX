@@ -1,0 +1,200 @@
+\chapter{Concetti di Base}
+
+\section{Introduzione}
+
+In questo corso verrà studiata l'architettura interna e il funzionamento dei processori moderni (con riferimento a cache e RAM).
+
+\nt{Lo scopo del corso è quello di spiegare il passaggio al multi-core, subito dopo la "Rivoluzione RISC".}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.9]{01-ConcettiDiBase/Evoluzione.jpg}
+    \caption{Nel 1986 ha inizio la "Rivoluzione RISC", mentre all'inizio degli anni 2000 si inizia a sfruttare l'idea di avere più "core".}
+\end{figure}
+
+\subsection{Tassonomia delle architetture}
+
+Il contenuto del corso può essere descritto dalla "Tassonomia di Flynn". 
+
+\dfn{Tassonomia di Flynn}{
+  La Tassonomia di Flynn organizza i vari tipi di processori in base a determinate caratteristiche che verranno approfondite in questo corso.
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics{01-ConcettiDiBase/TassonomiaDiFlynn.png}
+    \caption{La Tassonomia di Flynn}
+\end{figure}
+
+\section{Alcuni concetti fondamentali}
+
+\dfn{Micoarchitettura}{
+  L'architettura interna di un processore: com'è fatto a partire dal suo datapath.
+}
+
+\cor{Datapath}{
+  Il percorso che compiono le istruzioni all'interno del processore per venire eseguite.
+}
+
+\nt{Diversi tipi di istruzioni percorrono diverse parti del datapath per venire eseguite.}
+
+\dfn{ISA}{
+  L'Instruction Set Architetture (ISA) è l'insieme di istruzioni macchina di un processore.
+}
+
+\nt{Due processori possono avere lo stesso ISA, ma microarchitetture diverse (e.g. AMD e Intel).}
+
+\section{Una semplice macchina RISC}
+
+\qs{}{Qual è la differenza tra un processore a 32 bit e un processore a 64 bit?}
+
+\paragraph{Risposta:} il processore a 64 bit manipola in maniera naturale informazione scritta con 64 bit e il processore a 32 bit manipola in maniera naturale informazione scritta con 32 bit.
+
+\subsubsection{Caratteristiche fondamentali dell'architettura RISC:}
+
+\begin{itemize}
+  \item [$\Rightarrow$] le istruzioni hanno tutte la stessa lunghezza (o a 32 bit o a 64 bit);
+  \item [$\Rightarrow$] le istruzioni sono semplici;
+  \item [$\Rightarrow$] la Control Unit è semplice (poche porte logiche, quindi frequenze di clock più elevate).
+\end{itemize}
+
+\nt{Ciò che verrà descritto in questa sezione è una versione semplificata di MIPS, la prima macchina RISC.
+
+  Si considerano 32 registri a 32 bit e si ignorano le operazioni floating point.
+}
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{01-ConcettiDiBase/MIPS.png}
+    \caption{Istruzione MIPS}
+\end{figure}
+
+\dfn{Istruzioni di tipo-R}{
+  Le istruzioni di tipo-R usano due registri e restituiscono il risultato a un terzo registro. La convenzione prevede che il campo OP sia 0. L'operazione specifica si trova nel campo func.
+}
+
+\nt{Solitamente si usa la lettera D quando si parla di dati interi (DADD, DSUB, etc.), F per i floating point.}
+
+\dfn{Istruzioni di tipo-I}{
+  Le istruzioni di tipo-I usano un valore immediato. La convenzione prevede che il campo op sia 8.
+}
+
+\dfn{LOAD e STORE}{
+  La LOAD carica in un registro un valore che si trova in memoria (op = 35). La STORE salva in memoria il valore di un registro (op = 43).
+}
+
+\dfn{Salti condizionati (BRANCH)}{
+  Salta solo se si verifica una determinata condizione (op = 5). 
+}
+
+\dfn{Salti incondizionati (JUMP)}{
+  Salta sempre (op = 4). 
+}
+
+\subsection{MIPS - Versione monociclo}
+
+Generalmente i primi due passi di ogni istruzione sono:
+
+\begin{enumerate}
+  \item usa il Program Counter (PC) per prelevare dalla "memoria di istruzioni\footnote{Cache di primo livello.}" la prossima istruzione da eseguire;
+  \item Decodifica l'istruzione e contemporaneamente legge i registri.
+\end{enumerate}
+
+\nt{I passi successivi dipendono dal tipo di istruzione (tutte usano la ALU.}
+
+\begin{itemize}
+  \item [$\Rightarrow$] LOAD e STORE accedono alla memoria dati e nel caso di LOAD viene aggiornato un registro;
+  \item [$\Rightarrow$] le istruzioni logico-aritmetiche aggiornano un registro;
+  \item [$\Rightarrow$] le istruzioni di salto possono alterare il valore di PC.
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.8]{01-ConcettiDiBase/MIPS2.png}
+    \caption{Schema ad alto livello del datapath MIPS}
+\end{figure}
+
+\nt{Il fluire delle informazioni nel datapath deve essere controllato da una "Control Unit".}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.8]{01-ConcettiDiBase/MIPS3.png}
+    \caption{Versione modificata del MIPS con una Control Unit}
+\end{figure}
+
+\nt{L'esecuzione di ciascuna istruzione può avvenire in un unico ciclo di clock, purché sia stato adeguatamente dimensionato.}
+
+\subsubsection{Per capire come funziona il datapath di una macchina monociclo si osserva che esso è composto da due tipi di elementi logici:}
+
+\begin{itemize}
+  \item [$\Rightarrow$] gli elementi di \textit{stato};
+  \item [$\Rightarrow$] gli elementi di tipo \textit{combinatorio}.
+\end{itemize}
+
+\dfn{Elementi di stato}{
+  Gli elementi di stato sono quelli in grado di memorizzare uno \textit{stato} (e.g. flip flop, registri e memorie). Un elemento di stato possiede almeno 2 ingressi e un'uscita. Gli ingressi richiedono:
+  \begin{itemize}
+    \item [$\Rightarrow$] il valore da scrivere nell'elemento;
+    \item [$\Rightarrow$] il clock per determinare quando scriverlo.
+  \end{itemize}
+
+  Il dato presente in uscita è sempre quello scritto in un ciclo di clock precedente.
+}
+
+\nt{Solitamente esiste un terzo ingresso "di controllo" che stabilisce se l'elemento di stato può effettivamente memorizzare l'input.}
+
+\dfn{Elementi combinatori}{
+  Gli elementi combinatori sono quelli in cui le uscite dipendono solamente dai valori d'ingresso in un dato istante (e.g. ALU e Multiplexer). 
+}
+
+\subsection{Banco dei registri}
+
+\dfn{Banco dei registri}{
+  Nelle immagini precedenti i registri della CPU sono rappresentati da un'unità funzionale detta \textit{register file} (o banco dei registri). Essa è un'unità di memoria molto piccola e veloce.
+}
+
+\nt{Si può accedere a ognuno dei 32 registri (da 0 a 31) specificando il suo indirizzo. Ogni registro può essere letto o scritto.}
+
+\paragraph{Operazione di scrittura:} quando il segnale di controllo (RegWrite) è a 1, il valore proveniente dalla ALU o dalla Data Memory e presente in input in \textit{DST data} viene memorizzato nel registro di destinazione specificato da \textit{DST addr}.
+ 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{01-ConcettiDiBase/scrittura.png}
+    \caption{Operazione di scrittura}
+\end{figure}
+
+\paragraph{Operazione di lettura:} le letture sono immediate. In qualunque momento alle uscite \textit{SRC1 data} e \textit{SRC2 data} è presente il contenuto dei registri i cui numeri sono specificati da \textit{SRC1 addr} e \textit{SRC2 addr}.
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{01-ConcettiDiBase/lettura.png}
+    \caption{Operazione di lettura}
+\end{figure}
+
+\subsection{Una semplice Control Unit}
+
+\dfn{Control Unit}{
+  La Control Unit riceve in input i 6 bit del campo op dell'istruzione e deve generare in output i segnali per comandare:
+
+    \begin{itemize}
+    \item [$\Rightarrow$] la scrittura dei registri;
+    \item [$\Rightarrow$] la lettura/scrittura della memoria dati (MemRead/MemWrite);
+    \item [$\Rightarrow$] i Multiplexer che selezionano gli input da usare;
+    \item [$\Rightarrow$] la ALU (ALUOp) che deve eseguire ciascuna operazione aritmetico-logica appropriata per la specifica istruzione in esecuzione.
+  \end{itemize}
+}
+
+\cor{Segnale ALUOp}{
+  Il segnale ALUOp dipende:
+  \begin{itemize}
+    \item [$\Rightarrow$] dal tipo di istruzione in esecuzione, specificato nel campo op;
+    \item [$\Rightarrow$] dalla specifica operazione da eseguire, determinata dal campo funct.
+  \end{itemize}
+}
+
+
+
+
