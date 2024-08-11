@@ -95,6 +95,58 @@ Per prevedere l'esito di un fenomeno o simulare l'andamento di un processo si co
   \end{itemize}
 }
 
+\nt{Le perturbazioni relative tengono conto della dimensione del dato che si sta perturbando.}
+
+\ex{Perturbazione}{
+  Calcolare il numero di condizionamento (relativo) del prodotto tra 2 numeri $x$ e $y$ con perturbazione.
+
+$$|E_x| \leq T$$
+
+$$|E_y| \leq T$$
+
+Prodotto calcolando con dati perturbati (con $E_x E_y$ molto piccolo):
+
+$$x (1 + E_x) y (1 + E_y) = x y (1 + E_x + E_y + E_x E_y) = x y (1 + E_x + E_y) $$
+
+La perturbazione sul prodotto è $E_{xy} = E_x + E_y$ con  $|E_{xy}| = |E_x + E_y| \leq |E_x| + |E_y| \leq 2 T$,
+per cui il numero di condizionamento è 2.
+
+}
+
+\subsection{Algoritmi}
+
+\dfn{Algoritmo}{
+  Un algoritmo è una \textit{sequenza univoca} di un \textit{numero finito} di \textit{operazioni elementari} che stabilisce come calcolare la soluzione di un problema, assegnati certi dati iniziali.
+}
+
+\cor{Sequenza univoca}{
+  Formule + Ordine con cui eseguire le operazioni.
+}
+
+\cor{Operazioni elementari}{
+  Di semplice comprensione.
+}
+
+\cor{Numero finito}{
+  Se l'algoritmo è iterativo bisogna introdurre almeno un criterio d'arresto. 
+}
+
+\cor{Input/Output}{
+  Il numero e il tipo di dati richiesti dall'algoritmo e di dati generati da esso.
+}
+
+\dfn{Algoritmo stabile}{
+  Un algoritmo è stabile quando la successione delle operazioni che lo compone non amplifica eccessivamente gli errori presenti sui dati. Il caso opposto è un algoritmo instabile.  
+}
+
+\dfn{Complessità computazionale}{
+  In analisi numerica è il numero delle operazioni in virgola mobile (flop) necessarie per risolvere il problema mediante l'algoritmo dato.
+}
+
+\nt{In questo corso tratteremo problemi ben posti, ben condizionati e algoritmi stabili con bassa complessità computazionale e occupazione di memoria.}
+
+
+
 
 
 
