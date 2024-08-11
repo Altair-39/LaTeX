@@ -26,7 +26,7 @@ Il contenuto del corso può essere descritto dalla "Tassonomia di Flynn".
     \caption{La Tassonomia di Flynn}
 \end{figure}
 
-\section{Alcuni concetti fondamentali}
+\subsection{Alcuni concetti fondamentali}
 
 \dfn{Micoarchitettura}{
   L'architettura interna di un processore: com'è fatto a partire dal suo datapath.
@@ -194,6 +194,99 @@ Generalmente i primi due passi di ogni istruzione sono:
     \item [$\Rightarrow$] dalla specifica operazione da eseguire, determinata dal campo funct.
   \end{itemize}
 }
+
+\ex{Istruzioni di tipo-R}{
+  \begin{itemize}
+    \item [$\Rightarrow$] Se op == load || op == store allora la ALU deve eseguire una \textit{somma};
+    \item [$\Rightarrow$] se op == beq allora la ALU deve eseguire una \textit{sottrazione} (per controllare se il risultato è 0);
+    \item [$\Rightarrow$] Se op == tipo-R allora è il campo \textit{func} a stabilire l'operazione che deve eseguire la ALU.
+  \end{itemize}
+
+}
+
+\dfn{ALU Control}{
+  Parte della Control Unit che indica le operazioni da eseguire. 
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.34]{01-ConcettiDiBase/MIPS4.png}
+    \caption{Versione modificata del MIPS la ALU Control}
+\end{figure}
+
+\subsection{L'esecuzione di un'istruzione}
+
+\begin{enumerate}
+  \item Il contenuto del PC viene utilizzato per indirizzare la instruction memory e produrre in output l'istruzione da eseguire;
+  \item Il campo \textit{op} dell’istruzione viene mandato in input alla Control
+    Unit, mentre i campi \textit{reg\_1} e \textit{reg\_2} vengono usati per indirizzare il
+register file;
+\item La CU produce in output i nove segnali di controllo relativi ad una
+operazione di tipo-R, ed in particolare ALUOp=10, che, dati in
+input alla ALU control insieme al campo \textit{funct} dell’istruzione
+stabiliscono l’effettiva operazione di tipo-R che deve eseguire la
+ALU;
+\item Nel frattempo, il register file produce in output i valori dei due
+  registri \textit{reg\_1} e \textit{reg\_2}, mentre il segnale ALUSrc=0 stabilisce che il
+secondo input della ALU deve provenire dal secondo output del
+register file;
+\item La ALU produce in output il risultato della computazione, che
+  attraverso il segnale \textit{MemtoReg} viene presentato in input al register
+file (Write data).
+\end{enumerate}
+
+\nt{Tutti questi passi devono essere eseguiti nello stesso ciclo di clock.}
+
+\section{Dal monociclo al multiciclo}
+
+Le macchine monociclo sono estremamente inefficienti perché portano a sprecare cicli di clock nel caso di operazioni semplici. 
+Per trasformare una macchina da monociclo in multiciclo si scompone l'esecuzione di ciascuna istruzione in un insieme di passi ognuno dei quali eseguibile in un singolo ciclo di clock (per cui ogni passo deve richiedere più o meno lo stesso tempo di esecuzione, perché la durata del clock va commisurata alla durata del passo più lungo). 
+
+\nt{Le parole "passo", "fase", "stadio" e "stage" sono intercambiabili.}
+
+\subsection{MIPS - Versione multiciclo}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.43]{01-ConcettiDiBase/MIPS5.png}
+    \caption{Il Datapath suddiviso nelle 5 fasi standard}
+\end{figure}
+
+\nt{Instruction Memory e Data Memory corrispondono alla cache di primo livello (L1).}
+
+\begin{enumerate}
+  \item \textit{Instruction Fetch}: il PC indirizza le istruzioni (IR) e contemporaneamente incrementa il PC di 4 (salvato in NPC che verrà instradato alla ALU per eventuali istruzioni di salto). Da notare che la ALU non viene utilizzata quindi si potrebbe pensare di usarla al posto dell'adder, ma quando si introdurrà il concetto di \textit{pipeline} si vedrà che la ALU sarà occupata dalla fase di esecuzione di un'altra istruzione;
+  \item \textit{Instruction Decode / Register Fetch}: vengono sempre prelevati i valori dei 2 registri di destinazione (anche se l'istruzione non è di tipo-R) e messi in 2 \textit{registri nascosti} A e B. Inoltre il registro Imm viene memorizzato nell'eventualità che sia un'istruzione di tipo-I. Oltre a ciò si memorizza un'eventuale salto (usando un adder apposta);
+  \item \textit{Execute / Address Calculation}: la ALU fa i suoi calcoli in base al tipo di istruzione;
+  \item \textit{Memory Access}: nei casi di load e store si accede alla memoria. Per la load si preleva il risultato della fase di esecuzione e viene salvato nel registro MDR. Se si sta eseguendo un'istruzione di tipo-R o di tipo-I questa fase viene saltata;
+  \item \textit{Write Back:} il risultato viene scritto sul registro di destinazione. Non è necessaria per le store.
+\end{enumerate}
+
+\nt{Non necessariamente l'esecuzione di un'istruzione racchiude tutte le fasi. Ogni fase avviene in un ciclo di clock.}
+
+\dfn{Registro "nascosto"}{
+  I risultati di ciascuna fase sono memorizzati da registri "nascosti" in cui viene salvato il risultato dell'output di una fase in modo che diventi l'output della fase successiva. Non sono indirizzabili e servono solo a velocizzare l'esecuzione delle istruzioni.
+}
+
+\qs{}{Quali fasi sono coinvolte nell'esecuzione di una "load"?}
+
+\paragraph{Risposta:} tutte.
+
+\qs{}{Quali fasi sono coinvolte nell'esecuzione di un'istruzione di tipo-R?}
+
+\paragraph{Risposta:} 4, perché non si deve accedere alla memoria.
+
+\qs{}{Quali fasi sono coinvolte nell'esecuzione di una "store"?}
+
+\paragraph{Risposta:} 4, perché non esiste la frase di Write Back.
+
+\qs{}{Quali fasi sono coinvolte nell'esecuzione di un'istruzione di salto?}
+
+\paragraph{Risposta:} 3, Instruction Fetch, Instruction Decode e Address Calculation.
+
+\nt{Tutto questo è più efficiente della versione monociclo perché ogni fase usa circa $\frac{1}{5}$ del ciclo di clock e non sempre si devono attraversare tutte le fasi.}
+
+
 
 
 
