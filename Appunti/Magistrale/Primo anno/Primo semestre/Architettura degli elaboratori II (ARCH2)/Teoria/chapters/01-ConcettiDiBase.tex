@@ -286,6 +286,111 @@ Per trasformare una macchina da monociclo in multiciclo si scompone l'esecuzione
 
 \nt{Tutto questo è più efficiente della versione monociclo perché ogni fase usa circa $\frac{1}{5}$ del ciclo di clock e non sempre si devono attraversare tutte le fasi.}
 
+\subsection{Control Unit multiciclo}
+
+\dfn{Control Unit - multiciclo}{
+  Ogni fase sarà descritta da una tabella di verità i cui input sono:
+      \begin{itemize}
+    \item [$\Rightarrow$] il tipo di istruzione in esecuzione;
+    \item [$\Rightarrow$] la fase corrente nella sequenza di esecuzione dell'istruzione.
+  \end{itemize}
+
+  L'output invece sarà:
+      \begin{itemize}
+    \item [$\Rightarrow$] l'insieme di segnali da asserire in quella fase;
+    \item [$\Rightarrow$] la fase successiva nella sequenza di esecuzione dell'esecuzione.
+  \end{itemize}
+
+}
+
+\nt{
+  Gli output della Control Unit sono una descrizione informale di una macchina di Moore.
+}
+
+\cor{Macchina di Moore}{
+  La macchina di Moore è un automa a stati finiti in cui: 
+      \begin{itemize}
+    \item [$\Rightarrow$] a ogni stato è associato un output che dipende solo da quello stato (i segnali da asserire);
+    \item [$\Rightarrow$] la transizione nello stato successivo dipende solo dallo stato corrente e dall'input.
+  \end{itemize}
+
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{01-ConcettiDiBase/CU.png}
+    \caption{Unità di Controllo multiciclo}
+\end{figure}
+
+\subsection{Macchine a stati finiti e Microprogrammi}
+
+\qs{}{Che differenza c'è tra un datapath controllato da un DFA e uno controllato da un Microprogramma?}
+
+\paragraph{Risposta:} nessuna, è solo un modo di descrivere l'informazione. 
+
+\dfn{Microprogrammazione}{
+  Tecnica per descrivere il funzionamento della Control Unit mediante una rappresentazione simbolica del controllo in forma di microistruzioni indirizzate da un micro Program Counter.
+}
+
+\nt{Un microprogramma è solamente una rappresentazione testuale di una macchina di Moore, ogni microistruzione corrisponde a uno stato e il micro PC rappresenta il registro degli stati.}
+
+\qs{}{Perché usare una rappresentazione o un'altra?}
+
+\paragraph{Risposta:} è una questione di convenienza in base alla complessità della funzione (dipende sia dalle istruzioni
+ISA che dalla loro scomposizione)..
+
+\nt{Per motivi storici le prime Control Unit furono descritte tramite microprogrammazione.}
+
+\subsection{Complex Instruction Set Computer (CISC)}
+
+Negli anni '60 e '70 l'instruction set diventa molto grande e, a posteriori, sarà chiamato CISC. In alcuni casi si raggiungevano centinaia di istruzioni.
+
+\dfn{Completa ortogonalità}{
+  Ogni argomento di ogni istruzione poteva indirizzare la memoria usando una qualsiasi modalità di indirizzamento possibile\footnote{Visto in "Storia dell'informatica".}.
+}
+
+\nt{Questa caratteristica permetteva molta flessibilità, ma al tempo stesso rendeva la Control Unit complicata e molto lenta.}
+
+\qs{}{Perché si utilizzava un ISA così complesso?}
+
+\begin{enumerate}
+  \item All'epoca l'accesso alla RAM erano molto più elevati di quelli dell'accesso alla ROM che conteneva i microprogrammi per le istruzioni;
+  \item Non esistevano CPU dotate di cache (introdotte solo nel 1968 e divennero di uso comune solo dopo molti anni); 
+  \item Per semplificare il lavoro del programmatore;
+  \item La RAM era poca e costosa, istruzioni più espressive generano eseguibili più corti;
+  \item I microprogramma permettavano di aggiungere istruzioni all'instruction set.
+\end{enumerate}
+
+\subsection{Restricted Instruction Set Architetture (RISC)}
+
+Tra la fine degli anni '70 e l'inizio degli anni 80' la concezione delle architetture inizia a mutare. Nel 1980, D. Patterson e C. Sequin progettano una CPU la cui Control Unit non è descritta da un microprogramma e coniano i termini CISC e RISC.
+Il loro progetto si evolvera nelle architetture SPARC (Scalable Processor ARChitecture), usate dalla SUN Microsystem. 
+
+Contemporaneamente, J. Hennessy lavora a un'architettura simile per ottimizzare il \textit{pipeline}: MIPS (Microprocessor \textit{without} Interlocked Pipelines Stages), visto precedentemente. 
+
+\qs{}{Qual è l'idea alla base delle architetture RISC?}
+
+\begin{enumerate}
+  \item La CPU esegue un numero limitato di istruzioni macchina semplici (che richiedono datapath più corti e una Control Unit semplice) e quindi avere un ciclo di clock più corto;
+  \item L'accesso alla RAM va limitato il più possibile;
+  \item Le istruzioni devono principalmente usare registri come argomenti.
+\end{enumerate}
+
+\subsubsection{In dettaglio:}
+
+\begin{itemize}
+  \item [$\Rightarrow$] Rinunciare a un sofisticato livello di microcodice;
+  \item [$\Rightarrow$] Definire istruzioni di lunghezza fissa e facili da decodificare;
+  \item [$\Rightarrow$] La memoria RAM deve essere indirizzata solo da operazioni di LOAD e STORE;
+  \item [$\Rightarrow$] Avere molti registri;
+  \item [$\Rightarrow$] Sfruttare la pipeline.
+\end{itemize}
+
+\nt{Questo contribuì al successo dei processori RISC che porto alla scomparsa dei CISC.}
+
+\section{Pipeline}
+
+
 
 
 
