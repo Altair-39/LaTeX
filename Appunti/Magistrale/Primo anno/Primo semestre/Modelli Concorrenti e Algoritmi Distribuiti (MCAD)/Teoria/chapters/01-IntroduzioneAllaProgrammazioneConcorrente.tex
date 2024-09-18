@@ -59,7 +59,7 @@ La programmazione concorrente nasce con i \fancyglitter{sistemi concorrenti} nel
 
 \section{Parallelismo}
 
-\subsection{Interleaving di istruzioni atomiche}
+\subsection{Interleaving di Istruzioni Atomiche}
 
 \dfn{Processo}{
   Modulo \newfancyglitter{sequenziale} di un programma concorrente (a volte si usa il termine thread).
@@ -115,7 +115,7 @@ Alla fine della simulazione verrà stampato il valore 200? Dipende.
   Un'istruzione viene detta atomica se viene sempre eseguita interamente senza possibilità di interruzioni\footnote{No interleaving.}.
 }
 
-\nt{Il risultato dell'esecuzione "simultanea" di due istruzioni atomiche è lo stesso che so otterrebbe dalla loro esecuzione sequenziale indipendentemente dall'ordine. In generale si assumerà che gli assegnamenti e le valutazioni di espressioni logiche siano operazioni atomiche.} 
+\nt{Il risultato dell'esecuzione "simultanea" di due istruzioni atomiche è lo stesso che si otterrebbe dalla loro esecuzione sequenziale indipendentemente dall'ordine. In generale si assumerà che gli assegnamenti e le valutazioni di espressioni logiche siano operazioni atomiche.} 
 
 \ex{Possibile computazione}{
 
@@ -145,7 +145,7 @@ In questo secondo algoritmo l'ordine di esecuzione influenza il risultato. Per c
 
 \nt{Il comportamento osservato nel secondo algoritmo prende il nome di \fancyglitter{race condition} (condizione di corsa).}
 
-\subsection{Sistemi monoprocessore e Sistemi multiprocessore}
+\subsection{Sistemi Monoprocessore e Sistemi Multiprocessore}
 
 \subsubsection{Sistemi monoprocessore (parallelismo apparente):}
 
@@ -222,9 +222,9 @@ In questo secondo algoritmo l'ordine di esecuzione influenza il risultato. Per c
 
 }
 
-\section{Correttezza di programmi concorrenti}
+\section{Correttezza di Programmi Concorrenti}
 
-\subsection{Introduzione e proprietà}
+\subsection{Introduzione e Proprietà}
 
 La definizione di \fancyglitter{correttezza totale} di un programma sequenziale richiede che il programma \fancyglitter{termini} e che, per ogni input, il \fancyglitter{risultato} restituito dal programma sia il valore della funzione che il programma deve calcolare. Purtoppo questa definizione non è adeguata al caso dei programmi concorrenti:
 
@@ -269,7 +269,7 @@ La definizione di \fancyglitter{correttezza totale} di un programma sequenziale 
 
 \nt{Imporre le \fancyglitter{ipotesi di fairness} a un programma concorrente significa escludere dalle sue computazioni quelle che non soddisfano la proprietà di fairness.}
 
-\subsection{La correttezza di programmi}
+\subsection{La Correttezza di Programmi}
 
 \subsubsection{La correttezza di un \fancyglitter{programma sequenziale} richiede:}
 
@@ -298,7 +298,7 @@ La definizione di \fancyglitter{correttezza totale} di un programma sequenziale 
   \item \fancyglitter{Model checker}: un programma che costituisce il diagramma degli stati di un programma concorrente e simultaneamente verifica le proprietà. 
 \end{itemize}
 
-\subsection{Il problema della mutua esclusione}
+\subsection{Il Problema della Mutua Esclusione}
 
 \dfn{Problema della mutua esclusione}{
   Se un proceso esegue la propria sezione critica, nessun altro processo esegue la propria.
@@ -343,7 +343,7 @@ La definizione di \fancyglitter{correttezza totale} di un programma sequenziale 
 
 }
 
-\subsection{Specifiche di correttezza}
+\subsection{Specifiche di Correttezza}
 
 \subsubsection{Approccio di Dijkstra (storico):}
 
@@ -478,7 +478,7 @@ Per l'assenza di starvation si suppone che il processo p voglia entrare in CS e 
 \end{itemize}
 }
 
-\subsection{Statement atomici particolari}
+\subsection{Statement Atomici Particolari}
 
 Fino a ora abbiamo supposto l'utilizzo di istruzioni atomiche di assegnamento (write e read). Esistono istruzioni atomiche particolari che permettono di realizzare facili ed efficienti meccanismi di sincronizzazione:
 
@@ -496,6 +496,83 @@ Fino a ora abbiamo supposto l'utilizzo di istruzioni atomiche di assegnamento (w
     \includegraphics[scale=0.4]{01-IntroduzioneAllaProgrammazioneConcorrente/TS.png}
 \end{center}
 }
+
+\subsection{Invarianti e Predicati}
+
+Per provare la correttezza di un programma concorrente si può usare l'induzione su \fancyglitter{proprietà invarianti}.
+
+\dfn{Invariante}{
+  Un \newfancyglitter{invariante} è una formula A in un qualche sistema formale che ha la proprietà di \newfancyglitter{essere sempre vera in ogni punto di qualsiasi computazione}.
+}
+
+\cor{Predicato}{
+  Un \fancyglitter{predicato}, chiamato anche \fancyglitter{proposizione atomica}, è un'espressione booleana che può essere valutata avendo a disposizione la tupla delle variabili di stato dei processi, e i loro control pointers.
+}
+
+\nt{Le formule A che verranno utilizzate sono anche proposizioni atomiche.}
+
+\clm{Predicati e invarianti}{
+  Un predicato (proprietà) A è invariante se è vera in ogni punto di qualsiasi computazione.
+}
+
+\qs{}{
+  Come si dimostra che una proprietà A è un'invariante?
+}
+
+\paragraph{Risposta:} la prova che A è un'invariante si fa \fancyglitter{per induzione} sugli stati di tutte le computazioni. Si prova che A vale nello stato iniziale (passo base) e si suppone che A valga in uno stato s e in tutti gli stati precedenti a s (ipotesi induttiva) e si dimostra che vale anche in ciascuno dei possibili stati successivi (passo induttivo).
+
+\nt{In uno programma concorrente gli stati successori possono essere più di uno (per via dell'interleaving) quindi il passo induttivo deve essere verificato per tutti i possibili successori.}
+
+\ex{Invarianti}{
+
+Consideriamo il programma costituito da un unico processo plus; siano:
+
+\begin{itemize}
+  \item \textbf{val(x)} il valore della variabile x in uno stato s della computazione;
+\item \textbf{val(y)} il valore della variabile y in uno stato s della computazione;
+\end{itemize}
+
+Si vuole provare che la formula:
+
+$$0 \leq val(x) - val(y) \leq 1$$
+è un \fancyglitter{invariante} del programma.
+
+\begin{center}
+    \includegraphics[scale=0.25]{01-IntroduzioneAllaProgrammazioneConcorrente/INV.png}
+\end{center}
+
+Si introducono le notazioni:
+
+\begin{itemize}
+  \item Npi (i:1..2): variabili intere che in ogni stato indicano il numero N di esecuzioni di pi fino a quel punto completate;
+  \item pi (i:1..2): proposizione atomica vera se il control pointer del processo plus vale pi.
+\end{itemize}
+
+\begin{center}
+    \includegraphics[scale=0.5]{01-IntroduzioneAllaProgrammazioneConcorrente/INV1.png}
+\end{center}
+
+Dal Lemma 1 si può dedurre che in ogni stato vale l'Invariante
+
+$$0 \leq Np1 - Np2 \leq 1$$
+
+Un'invariante che si basa sull'ordine delle istruzioni di un processo viene indicato come \fancyglitter{invariante topologico}.
+
+
+\begin{center}
+    \includegraphics[scale=0.5]{01-IntroduzioneAllaProgrammazioneConcorrente/INV2.png}
+\end{center}
+
+
+}
+
+
+
+
+
+
+
+
 
 
 
