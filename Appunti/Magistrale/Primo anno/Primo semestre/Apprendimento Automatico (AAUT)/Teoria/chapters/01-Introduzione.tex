@@ -148,6 +148,133 @@ Nei modelli probabilistici si fanno delle stime con dei classificatori probabili
   Due rappresentazioni della funzione coseno: a destra si utilizza una variabile di regressione, a destra un'approssimazione lineare.
 }
 
+\section{Tasks}
+
+\subsubsection{I task più comuni sono:}
+
+\begin{itemize}
+  \item \fancyglitter{classificazione};
+  \item \fancyglitter{Punteggio e classifica};
+  \item \fancyglitter{Stima probabilistica};
+  \item \fancyglitter{Regressione}.
+\end{itemize}
+
+\subsection{classificazione}
+
+\dfn{classificazione}{
+  La classificazione è il task in cui si ha come obiettivo la costruzione di un modello \^c: $\bbX \to \bbC$ in cui $\bbC = \{C_1, C_2, ..., C_k\}$. Questo modello è un'approssimazione
+   del mondo reale. 
+
+   Un esempio è una coppia $(x, c(x)) \in \bbX x \bbC$.  
+}
+
+\clm{Il problema dell'induzione}{}{
+  L'induzione partendo dai dati di un dataset è generalmente infondata senza ulteriori informazioni.
+}
+
+\nt{Il mondo non è semplice, per cui il rasoio di Occame non sempre funziona. Spesso però si utilizzano preconcetti e bias induttivi per avere apprendimento automatico.}
+
+\dfn{classificazione binaria}{
+  La classificazione binaria è il caso in cui si hanno solo 2 opzioni (spesso 0 e 1).
+}
+
+\nt{Dalla classificazione binaria si può passare alla classificazione multi-classe senza sviluppare nuovi algoritmi.}
+
+  
+  \begin{center} 
+    \includegraphics[scale=0.5]{01-Introduzione/Graph.png}
+  \end{center}
+
+\dfn{Alberi di decisione}{
+  Alberi per visualizzare i dati. Ogni nodo corrisponde a una features.
+}
+
+\dfn{Alberi di Features}{
+  Alberi per visualizzare i dati. Si ha una suddivisione dei vari esempi divisi per etichette.
+}
+
+
+\begin{center} 
+ \includegraphics[scale=0.5]{01-Introduzione/AD.png}
+\end{center}
+
+\dfn{Tavola di contingenza}{
+  Tavola in cui le colonne corrispondono alle predizioni e le righe al mondo reale. Nella loro intersezione si ha il numero di esempi predetti in un certo modo e hanno una certa etichetta (TP, TN, FT, FN).
+}
+
+
+\begin{center} 
+ \includegraphics[scale=0.5]{01-Introduzione/TC.png}
+\end{center}
+
+\dfn{Grafico di copertura}{
+  Grafico per visualizzare le informazioni della tavola di contingenza.
+}
+
+
+\begin{center} 
+ \includegraphics[scale=0.5]{01-Introduzione/GC.png}
+\end{center}
+
+\nt{I classificatori che si trovano sulla bisettrice del piano cartesiano sono imprevedibili e quindi poco interessanti. Più un classificatore ha la coordinata x bassa e y alta più è preciso.}
+
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[scale=0.47]{01-Introduzione/ROCHEAVEN.png}
+  \end{minipage}\hfill
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[scale=0.47]{01-Introduzione/ROCHELL.png}
+  \end{minipage}
+\end{figure}
+
+\nt{Tutti i classificatori che stanno su una retta con pendenza 1 hanno la stessa \fancyglitter{accuratezza}.}
+
+\dfn{Avg recall}{
+  \newfancyglitter{avg recall} = (recall + specificity) / 2 = (TP/POS + TN/NEG)/2
+
+  Se due classificatori hanno la stessa avg recall allora sono su linee parallele alla diagonale principale.
+}
+
+\begin{center} 
+ \includegraphics[scale=0.5]{01-Introduzione/avg.png}
+\end{center}
+
+\subsubsection{Roc Plots Properties}
+
+Se si vogliono confrontare le performance di un classificatore su un dataset o su un altro si deve \fancyglitter{normalizzare} gli assi dividendo l'asse x per il numro di esempi negativi e l'asse y per il numero di esempi positivi. Così facendo si otterrà un quadrato con gli assi compresi tra 0 e 1.
+
+\begin{center} 
+ \includegraphics[scale=0.5]{01-Introduzione/Trasl.png}
+\end{center}
+
+\nt{Il clr è il class ratio.}
+
+\subsubsection{Più di un Classificatore per una Singola Feature.}
+
+\begin{center} 
+ \includegraphics[scale=0.53]{01-Introduzione/MDT.png}
+\end{center}
+
+\qs{}{Come si considera il caso in cui il costo per FP (falsi positivi) e FN (falsi negativi) sono differenti?}
+
+\begin{center} 
+ \includegraphics[scale=0.53]{01-Introduzione/FPFN.png}
+\end{center}
+
+\subsection{Scoring e ranking}
+
+\dfn{Scoring classifier}{
+  Uno sscoring classifier è una mappatura \^s: $\bbX \to \bbR^k$ il cui output è un vettore (\^s (x) = \^s1(x),...,\^si(x)) dove i-esimo componente è lo score assegnato alla classe Ci per l'istanza x.
+}
+
+\nt{Se si hanno solo due classi si può considerare solo uno score. Gli score vanno interpretati nel contesto di un classificatore, sono misure della confidenza in una determinata predizione.}
+
+\begin{center} 
+ \includegraphics[scale=0.53]{01-Introduzione/ST.png}
+\end{center}
 
 
 
