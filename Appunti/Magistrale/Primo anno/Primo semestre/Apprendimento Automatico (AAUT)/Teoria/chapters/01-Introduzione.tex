@@ -267,14 +267,224 @@ Se si vogliono confrontare le performance di un classificatore su un dataset o s
 \subsection{Scoring e ranking}
 
 \dfn{Scoring classifier}{
-  Uno sscoring classifier è una mappatura \^s: $\bbX \to \bbR^k$ il cui output è un vettore (\^s (x) = \^s1(x),...,\^si(x)) dove i-esimo componente è lo score assegnato alla classe Ci per l'istanza x.
+  Uno scoring classifier è una mappatura \^s: $\bbX \to \bbR^k$ il cui output è un vettore (\^s (x) = \^s1(x),...,\^si(x)) dove i-esimo componente è lo score assegnato alla classe Ci per l'istanza x.
 }
 
 \nt{Se si hanno solo due classi si può considerare solo uno score. Gli score vanno interpretati nel contesto di un classificatore, sono misure della confidenza in una determinata predizione.}
 
 \begin{center} 
- \includegraphics[scale=0.53]{01-Introduzione/ST.png}
+ \includegraphics[scale=0.5]{01-Introduzione/ST.png}
 \end{center}
+
+\dfn{Margine}{
+  Il margine assegnato dallo scoring classifier è positivo se \^s è corretto, negativo altrimenti. Il margine è il prodotto tra la classe dell'esempio e lo score.
+
+  $$z(x) = c(x)\text{\^s}(x) =  \begin{cases}
+  z(x) > 0 & \text{se la classificazione è corretta (cioè, } c(x) \text{ corrisponde alla classe prevista)} \\
+  z(x) < 0 & \text{se la classificazione è incorretta (cioè, } c(x) \text{ non corrisponde alla classe prevista)} \\
+  z(x) = 0 & \text{se lo score è esattamente al confine di decisione}
+  \end{cases}$$
+
+}
+
+
+\subsubsection{Loss Function}
+
+\dfn{Loss Function}{
+  La funzione di loss cerca di pesare l'impatto degli esempi negativi. In 0 la funzione di loss vale 1, tende a infinito con margini molto piccoli (molto negativi).
+  \[
+  L: \mathbb{R} \to [0, \infty)
+  \]
+}
+
+\nt{Le loss function sono importanti durante l'apprendimento perché sono usate per guidare la ricerca della soluzione ottimale. }
+
+\subsubsection{Tipi di loss}
+
+\cor{0-1 loss}{
+  Si perde un'unità se si sbaglia e non si perde nulla se si indovina.
+}
+
+\begin{center} 
+ \includegraphics[scale=0.53]{01-Introduzione/01Loss.png}
+\end{center}
+
+\cor{Hinge loss}{
+  La Hinge loss è una loss che è lineare per valori minori di 1 e vale 0 per valori maggiori di 1.
+}
+
+\begin{center} 
+ \includegraphics[scale=0.53]{01-Introduzione/Hinge loss.png}
+\end{center}
+
+\cor{Logistic loss}{Approssimazione continua della Hinge loss.}
+
+\begin{center} 
+ \includegraphics[scale=0.53]{01-Introduzione/Logistic loss.png}
+\end{center}
+
+\cor{Loss esponenziale}{Cresce rapidamente quando si stanno facendo errori.}
+
+\begin{center} 
+ \includegraphics[scale=0.53]{01-Introduzione/Exp Loss.png}
+\end{center}
+
+\cor{Loss quadratica}{Se viene ottimizzata troppo si hanno modelli incogniti, funziona meglio con la regressione.}
+
+\begin{center} 
+ \includegraphics[scale=0.53]{01-Introduzione/Quad loss.png}
+\end{center}
+
+\subsubsection{Ranking}
+
+\dfn{Ranking}{Ordina sulla base di uno score. Dall'esempio che è di classe più positiva a quello di classe meno positiva.}
+
+\cor{Ranking Error Rate}{
+\begin{center} 
+ \includegraphics[scale=0.53]{01-Introduzione/Rank.png}
+\end{center}
+}
+
+\ex{Ranking Error Rate}{
+\begin{center} 
+ \includegraphics[scale=0.53]{01-Introduzione/Rank1.png}
+\end{center}
+
+}
+
+\ex{Spam}{
+  \begin{center} 
+ \includegraphics[scale=0.53]{01-Introduzione/Spam6.png}
+\end{center}
+
+}
+
+\subsection{Stima Probabilistica}
+
+\dfn{Stimatore probabilistico di classi}{
+  Uno stimatore probabilistico di classi è un classificatore di scoring il cui output è un vettore di probabilità. 
+
+  \[
+    \hat{p}: \bbX \to [0, 1]^k
+  \]
+
+Scriviamo:
+
+\[
+  \hat{p}(x) = (\hat{p}_1(x),\dots,\hat{p}_k(x))
+\]
+
+dove l'i-esimo componente è la probabilità assegnata alla classe $C_i$ e $\displaystyle\sum_{i=1}^{k}\hat{p}_i(x) = 1$
+}
+
+\nt{Se si hanno solo 2 classi allora \^p(x) denota la probabilità stimata per le classi positive.}
+
+  \begin{center} 
+    \includegraphics[scale=0.53]{01-Introduzione/prob.png}
+\end{center}
+
+\cor{Squared Error}{
+    \begin{center} 
+ \includegraphics[scale=0.4]{01-Introduzione/SE.png}
+\end{center}
+}
+
+\cor{Mean Squared Error}{
+ Il mean squared error è la media aritmetica degli squared error.
+}
+
+\dfn{Probabilità Empiriche}{
+  Le probabilità empiriche consentono di ottenere probabilità stimate da classificatori o rankers. Se si ha un insieme S di esempi etichettati e il numero di esempi in S di classe $C_i$ è scritto $n_i$ il vettore di probabilità empiriche associato ad S sarà:
+
+  \[
+    \hat{p}(S) = (n_1/|S|,\dots, n_k/|S|)
+  \]
+}
+
+\cor{Correzione di Laplace}{
+  Se si ha un insieme S e dentro si hanno $n_i$ elementi di classe $C_i$ per ogni classe si fa finta di avere un esempio aggiuntivo.
+
+  \[
+    \hat{p}_i(S) = \frac{n_i + 1}{|S| + k}
+  \]
+
+Si può applicare anche:
+
+  \[
+    \hat{p}_i(S) = \frac{n_i + m*\pi_i}{|S| + m}
+  \]
+La Correzione di Laplace è un caso speciale in cui $m = k$ e la distribuzione è uniforme ($\pi_i = \frac{1}{k}$)
+}
+
+\subsection{Oltre la Classificazione Binaria}
+
+    \begin{center} 
+ \includegraphics[scale=0.42]{01-Introduzione/Multi.png}
+\end{center}
+
+\subsubsection{Schemi per estendere la classificazione binaria al caso multi-classe:}
+
+
+\begin{itemize}
+  \item one-vs-rest:
+    \begin{itemize}
+      \item apprendimento non ordinato;
+      \item apprendimento in ordine fisso.
+    \end{itemize}
+  \item one-vs-one:
+    \begin{itemize}
+      \item simmetrici;
+      \item asimmetrici.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{One-vs-Rest (non ordinato)}
+
+\begin{center} 
+ \includegraphics[scale=0.5]{01-Introduzione/ovro.png}
+\end{center}
+
+\nt{Si può costruire una matrice con il codice di output: in ogni riga si mette una classe, in ogni colonna si mette un classificatore che si vuole costruire e in ogni cella il valore che si vuole in output.}
+
+\begin{center} 
+ \includegraphics[scale=0.35]{01-Introduzione/ovro1.png}
+\end{center}
+
+\subsubsection{One-vs-Rest (ordinato)}
+
+\begin{center} 
+ \includegraphics[scale=0.35]{01-Introduzione/ovro2.png}
+\end{center}
+
+\subsubsection{One-vs-one (simmetrico)}
+
+\begin{center} 
+ \includegraphics[scale=0.35]{01-Introduzione/ovos.png}
+\end{center}
+
+\subsubsection{One-vs-one (asimmetrico)}
+
+\begin{center} 
+ \includegraphics[scale=0.35]{01-Introduzione/ovoa.png}
+\end{center}
+
+\nt{Per classificare un nuovo esempio (vettore) si cerca la riga più simile.}
+
+\clm{Difficoltà nell'applicare one-vs-rest e one-vs-one}{}{
+
+  \begin{itemize}
+    \item   Nel caso one-vs-rest il singolo classificatore vede un dataset molto sbilanciato sebbene il dataset di partenza fosse bilanciato. 
+    \item Nel caso one-vs-one il problema è mitigato assegnando 0 agli esempi che non appartengono alle due etichette scelte. Però è problematico quando si ha scarsità nei dati. 
+  \end{itemize}
+}
+
+\qs{}{Come si rompono i pareggi?}
+
+\begin{enumerate}
+  \item Si aggiungono classificatori;
+  \item Se si ha un algoritmo di apprendimento in grado di assegnare uno score si può scegliere il valore su cui si è più confidenti.
+\end{enumerate}
+
 
 
 
