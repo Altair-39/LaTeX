@@ -28,7 +28,7 @@ Il contenuto del corso può essere descritto dalla "Tassonomia di Flynn".
 
 \subsection{Alcuni concetti fondamentali}
 
-\dfn{Micoarchitettura}{
+\dfn{Microarchitettura}{
   L'architettura interna di un processore: com'è fatto a partire dal suo datapath.
 }
 
@@ -36,10 +36,10 @@ Il contenuto del corso può essere descritto dalla "Tassonomia di Flynn".
   Il percorso che compiono le istruzioni all'interno del processore per venire eseguite.
 }
 
-\nt{Diversi tipi di istruzioni percorrono diverse parti del datapath per venire eseguite.}
+\nt{Diversi tipi d'istruzioni percorrono diverse parti del datapath per venire eseguite.}
 
 \dfn{ISA}{
-  L'Instruction Set Architetture (ISA) è l'insieme di istruzioni macchina di un processore.
+  L'Instruction Set Architetture (ISA) è l'insieme d'istruzioni macchina di un processore.
 }
 
 \nt{Due processori possono avere lo stesso ISA, ma microarchitetture diverse (e.g. AMD e Intel).}
@@ -97,11 +97,11 @@ Il contenuto del corso può essere descritto dalla "Tassonomia di Flynn".
 Generalmente i primi due passi di ogni istruzione sono:
 
 \begin{enumerate}
-  \item usa il Program Counter (PC) per prelevare dalla "memoria di istruzioni\footnote{Cache di primo livello.}" la prossima istruzione da eseguire;
+  \item Usa il Program Counter (PC) per prelevare dalla "memoria d'istruzioni\footnote{Cache di primo livello.}" la prossima istruzione da eseguire;
   \item Decodifica l'istruzione e contemporaneamente legge i registri.
 \end{enumerate}
 
-\nt{I passi successivi dipendono dal tipo di istruzione (tutte usano la ALU).}
+\nt{I passi successivi dipendono dal tipo d'istruzione (tutte usano la ALU).}
 
 \begin{itemize}
   \item [$\Rightarrow$] LOAD e STORE accedono alla memoria dati e nel caso di LOAD viene aggiornato un registro;
@@ -190,8 +190,8 @@ Generalmente i primi due passi di ogni istruzione sono:
 \cor{Segnale ALUOp}{
   Il segnale ALUOp dipende:
   \begin{itemize}
-    \item [$\Rightarrow$] dal tipo di istruzione in esecuzione, specificato nel campo op;
-    \item [$\Rightarrow$] dalla specifica operazione da eseguire, determinata dal campo funct.
+    \item [$\Rightarrow$] dal tipo d'istruzione in esecuzione, specificato nel campo op;
+    \item [$\Rightarrow$] dalla specifica operazione da eseguire, determinata dal campo func.
   \end{itemize}
 }
 
@@ -221,9 +221,9 @@ Generalmente i primi due passi di ogni istruzione sono:
   \item Il campo \textit{op} dell’istruzione viene mandato in input alla Control
     Unit, mentre i campi \textit{reg\_1} e \textit{reg\_2} vengono usati per indirizzare il
 register file;
-\item La CU produce in output i nove segnali di controllo relativi ad una
-operazione di tipo-R, ed in particolare ALUOp=10, che, dati in
-input alla ALU control insieme al campo \textit{funct} dell’istruzione
+\item La CU produce in output i nove segnali di controllo relativi a una
+operazione di tipo-R, e in particolare ALUOp=10, che, dati in
+input alla ALU control insieme al campo \textit{func} dell’istruzione
 stabiliscono l’effettiva operazione di tipo-R che deve eseguire la
 ALU;
 \item Nel frattempo, il register file produce in output i valori dei due
@@ -256,8 +256,8 @@ Per trasformare una macchina da monociclo in multiciclo si scompone l'esecuzione
 
 \begin{enumerate}
   \item \textit{Instruction Fetch}: il PC indirizza le istruzioni (IR) e contemporaneamente incrementa il PC di 4 (salvato in NPC che verrà instradato alla ALU per eventuali istruzioni di salto). Da notare che la ALU non viene utilizzata quindi si potrebbe pensare di usarla al posto dell'adder, ma quando si introdurrà il concetto di \textit{pipeline} si vedrà che la ALU sarà occupata dalla fase di esecuzione di un'altra istruzione;
-  \item \textit{Instruction Decode / Register Fetch}: vengono sempre prelevati i valori dei 2 registri di destinazione (anche se l'istruzione non è di tipo-R) e messi in 2 \textit{registri nascosti} A e B. Inoltre il registro Imm viene memorizzato nell'eventualità che sia un'istruzione di tipo-I. Oltre a ciò si memorizza un'eventuale salto (usando un adder apposta);
-  \item \textit{Execute / Address Calculation}: la ALU fa i suoi calcoli in base al tipo di istruzione;
+  \item \textit{Instruction Decode / Register Fetch}: vengono sempre prelevati i valori dei 2 registri di destinazione (anche se l'istruzione non è di tipo-R) e messi in 2 \textit{registri nascosti} A e B. Inoltre il registro Imm viene memorizzato nell'eventualità che sia un'istruzione di tipo-I. Oltre a ciò si memorizza un eventuale salto (usando un adder apposta);
+  \item \textit{Execute / Address Calculation}: la ALU fa i suoi calcoli in base al tipo d'istruzione;
   \item \textit{Memory Access}: nei casi di load e store si accede alla memoria. Per la load si preleva il risultato della fase di esecuzione e viene salvato nel registro MDR. Se si sta eseguendo un'istruzione di tipo-R o di tipo-I questa fase viene saltata;
   \item \textit{Write Back:} il risultato viene scritto sul registro di destinazione. Non è necessaria per le store.
 \end{enumerate}
@@ -291,7 +291,7 @@ Per trasformare una macchina da monociclo in multiciclo si scompone l'esecuzione
 \dfn{Control Unit - multiciclo}{
   Ogni fase sarà descritta da una tabella di verità i cui input sono:
       \begin{itemize}
-    \item [$\Rightarrow$] il tipo di istruzione in esecuzione;
+    \item [$\Rightarrow$] il tipo d'istruzione in esecuzione;
     \item [$\Rightarrow$] la fase corrente nella sequenza di esecuzione dell'istruzione.
   \end{itemize}
 
@@ -337,16 +337,16 @@ Per trasformare una macchina da monociclo in multiciclo si scompone l'esecuzione
 \qs{}{Perché usare una rappresentazione o un'altra?}
 
 \paragraph{Risposta:} è una questione di convenienza in base alla complessità della funzione (dipende sia dalle istruzioni
-ISA che dalla loro scomposizione)..
+ISA che dalla loro scomposizione).
 
 \nt{Per motivi storici le prime Control Unit furono descritte tramite microprogrammazione.}
 
 \subsection{Complex Instruction Set Computer (CISC)}
 
-Negli anni '60 e '70 l'instruction set diventa molto grande e, a posteriori, sarà chiamato CISC. In alcuni casi si raggiungevano centinaia di istruzioni.
+Negli anni '60 e '70 l'instruction set diventa molto grande e, a posteriori, sarà chiamato CISC. In alcuni casi si raggiungevano centinaia d'istruzioni.
 
 \dfn{Completa ortogonalità}{
-  Ogni argomento di ogni istruzione poteva indirizzare la memoria usando una qualsiasi modalità di indirizzamento possibile\footnote{Visto in "Storia dell'informatica".}.
+  Ogni argomento di ogni istruzione poteva indirizzare la memoria usando una qualsiasi modalità d'indirizzamento possibile\footnote{Visto in "Storia dell'informatica".}.
 }
 
 \nt{Questa caratteristica permetteva molta flessibilità, ma al tempo stesso rendeva la Control Unit complicata e molto lenta.}
@@ -358,13 +358,13 @@ Negli anni '60 e '70 l'instruction set diventa molto grande e, a posteriori, sar
   \item Non esistevano CPU dotate di cache (introdotte solo nel 1968 e divennero di uso comune solo dopo molti anni); 
   \item Per semplificare il lavoro del programmatore;
   \item La RAM era poca e costosa, istruzioni più espressive generano eseguibili più corti;
-  \item I microprogramma permettavano di aggiungere istruzioni all'instruction set.
+  \item I microprogramma permettevano di aggiungere istruzioni all'instruction set.
 \end{enumerate}
 
 \subsection{Reduced Instruction Set Computer (RISC)}
 
 Tra la fine degli anni '70 e l'inizio degli anni 80' la concezione delle architetture inizia a mutare. Nel 1980, D. Patterson e C. Sequin progettano una CPU la cui Control Unit non è descritta da un microprogramma e coniano i termini CISC e RISC.
-Il loro progetto si evolvera nelle architetture SPARC (Scalable Processor ARChitecture), usate dalla SUN Microsystem. 
+Il loro progetto si evolverà nelle architetture SPARC (Scalable Processor ARChitecture), usate dalla SUN Microsystem. 
 
 Contemporaneamente, J. Hennessy lavora a un'architettura simile per ottimizzare il \textit{pipeline}: MIPS (Microprocessor \textit{without} Interlocked Pipelines Stages), visto precedentemente. 
 
@@ -377,7 +377,7 @@ Contemporaneamente, J. Hennessy lavora a un'architettura simile per ottimizzare 
 \qs{}{Qual è l'idea alla base delle architetture RISC?}
 
 \begin{enumerate}
-  \item La CPU esegue un numero limitato di istruzioni macchina semplici (che richiedono datapath più corti e una Control Unit semplice) e quindi avere un ciclo di clock più corto;
+  \item La CPU esegue un numero limitato d'istruzioni macchina semplici (che richiedono datapath più corti e una Control Unit semplice) e quindi avere un ciclo di clock più corto;
   \item L'accesso alla RAM va limitato il più possibile;
   \item Le istruzioni devono principalmente usare registri come argomenti.
 \end{enumerate}
@@ -446,7 +446,7 @@ In una macchina multiciclo mentre una certa fase di un'istruzione occupa una cer
   In un'implementazione reale ogni stage della pipeline è separato e collegato allo stage successivo da opportuni registri della pipeline\footnote{Un po' come una catena di montaggio.}. Alla fine di un ciclo di clock il risultato viene memorizzato in uno di questi registri. 
 }
 
-\nt{Questi registri servono anche a trasportare dati di istruzioni non adiacenti.}
+\nt{Questi registri servono anche a trasportare dati d'istruzioni non adiacenti.}
 
 \begin{figure}[h]
     \centering
@@ -463,7 +463,7 @@ In una macchina multiciclo mentre una certa fase di un'istruzione occupa una cer
     \includegraphics[scale=0.6]{01-ConcettiDiBase/L1.png}
     \caption{IF.}
 \end{figure}
-  \item \textbf{Instruction Decode:} il registro IF/ID viene letto per indirizzare il register file. Vengono letti i due registri, anche se se ne userà uno solo. I 16 bit del valore immediato vengono convertiti a valore 32 bit, e i 3 valori vengono scritti in ID/EX insieme al valore incrementato del PC;
+  \item \textbf{Instruction Decode:} il registro IF/ID viene letto per indirizzare il register file. Vengono letti i due registri, indipendentemente dal fatto che se ne userà uno solo oppure entrambi. I 16 bit del valore immediato vengono convertiti a valore 32 bit, e i 3 valori vengono scritti in ID/EX insieme al valore incrementato del PC;
     \begin{figure}[h]
     \centering
     \includegraphics[scale=0.6]{01-ConcettiDiBase/L2.png}
@@ -493,7 +493,7 @@ In una macchina multiciclo mentre una certa fase di un'istruzione occupa una cer
 \pagebreak
 \qs{}{Dov'è il numero del registro da modificare?}
 
-\paragraph{RIsposta:} è andato perso (sovrascritto). Per evitare ciò bisogna far sì che il numero passi attraverso tutti i registri della pipeline fino a WB.
+\paragraph{Risposta:} è andato perso (sovrascritto). Per evitare ciò bisogna far sì che il numero passi attraverso tutti i registri della pipeline fino a WB.
 
 \begin{figure}[h]
     \centering
@@ -508,7 +508,7 @@ In una macchina multiciclo mentre una certa fase di un'istruzione occupa una cer
 Purtroppo la pipeline presenta alcuni problemi che ne limitano la produttività:
 
 \begin{itemize}
-  \item \textbf{Problemi Strutturali:} alcune combinazioni di istruzioni non possono essere eseguite simultaneamente (e.g. se si ha una sola ALU non la si può usare nello stesso ciclo di clock per fare più cose diverse);
+  \item \textbf{Problemi Strutturali:} alcune combinazioni d'istruzioni non possono essere eseguite simultaneamente (e.g. se si ha una sola ALU non la si può usare nello stesso ciclo di clock per fare più cose diverse);
   \item \textbf{Problemi sui Dati:} se un'istruzione A ha bisogno del risultato di un'istruzione B precedente che non ha ancora terminato;
   \item \textbf{Problemi di Controllo:} quando vengono eseguiti salti che possono cambiare il valore di PC.
 \end{itemize}
@@ -516,8 +516,8 @@ Purtroppo la pipeline presenta alcuni problemi che ne limitano la produttività:
 \dfn{Stall}{
   Se si verifica uno di questi problemi è necessario fermare la pipeline (stall). Se un'istruzione generica I genera un problema:
   \begin{itemize}
-    \item le istruzioni avviate prima di I possono proseguire fino a essere completate;
-    \item le istruzioni avviate dopo I devono essere fermate, fino a che non viene risolto il problema di I.
+    \item le istruzioni avviate prima dell'istruzione I possono proseguire fino a essere completate;
+    \item le istruzioni avviate dopo I devono essere fermate, fino a che non viene risolto il problema dell'istruzione I.
   \end{itemize}
 }
 
@@ -550,7 +550,7 @@ Purtroppo la pipeline presenta alcuni problemi che ne limitano la produttività:
 \subsubsection{Problemi di Controllo}
 
 \dfn{Problemi di Controllo}{
-  I problemi di controllo sono dovuti al fatto che, nel caso di istruzioni di salto, il PC può cambiare. 
+  I problemi di controllo sono dovuti al fatto che, nel caso d'istruzioni di salto, il PC può cambiare. 
 }
 
 \nt{Si sprecano cicli di clock quando si salta. Per mitigare questo problema si usa una predizione statica: si dà per scontato che i salti in indietro vengano sempre presi e i salti in avanti no.}
