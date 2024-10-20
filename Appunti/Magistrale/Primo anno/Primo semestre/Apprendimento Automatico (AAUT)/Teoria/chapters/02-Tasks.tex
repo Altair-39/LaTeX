@@ -3,17 +3,17 @@
 \subsubsection{I task più comuni sono:}
 
 \begin{itemize}
-  \item \fancyglitter{classificazione};
-  \item \fancyglitter{Punteggio e classifica};
-  \item \fancyglitter{Stima probabilistica};
+  \item \fancyglitter{Classificazione}.
+  \item \fancyglitter{Punteggio e classifica}.
+  \item \fancyglitter{Stima probabilistica}.
   \item \fancyglitter{Regressione}.
 \end{itemize}
 
 \section{Classificazione}
 
-\dfn{classificazione}{
-  La classificazione è il task in cui si ha come obiettivo la costruzione di un modello \^c: $\bbX \to \bbC$ in cui $\bbC = \{C_1, C_2, ..., C_k\}$. Questo modello è un'approssimazione
-   del mondo reale. 
+\dfn{Classificazione}{
+  La classificazione è il task in cui si ha come obiettivo la costruzione di un modello \^c: $\bbX \to \bbC$ in cui $\bbC = \{C_1, C_2, ..., C_k\}$. 
+  Questo modello è un'approssimazione del mondo reale. 
 
    Un esempio è una coppia $(x, c(x)) \in \bbX x \bbC$.  
 }
@@ -22,9 +22,9 @@
   L'induzione partendo dai dati di un dataset è generalmente infondata senza ulteriori informazioni.
 }
 
-\nt{Il mondo non è semplice, per cui il rasoio di Occame non sempre funziona. Spesso però si utilizzano preconcetti e bias induttivi per avere apprendimento automatico.}
+\nt{Il mondo non è semplice, per cui il rasoio di Occam non sempre funziona. Spesso però si utilizzano preconcetti e bias induttivi per avere apprendimento automatico.}
 
-\dfn{classificazione binaria}{
+\dfn{Classificazione binaria}{
   La classificazione binaria è il caso in cui si hanno solo 2 opzioni (spesso 0 e 1).
 }
 
@@ -94,7 +94,7 @@
 
 \subsection{Roc Plots Properties}
 
-Se si vogliono confrontare le performance di un classificatore su un dataset o su un altro si deve \fancyglitter{normalizzare} gli assi dividendo l'asse x per il numro di esempi negativi e l'asse y per il numero di esempi positivi. Così facendo si otterrà un quadrato con gli assi compresi tra 0 e 1.
+Se si vogliono confrontare le performance di un classificatore su un dataset o su un altro si deve \fancyglitter{normalizzare} gli assi dividendo l'asse x per il numero di esempi negativi e l'asse y per il numero di esempi positivi. Così facendo si otterrà un quadrato con gli assi compresi tra 0 e 1.
 
 \begin{center} 
  \includegraphics[scale=0.5]{01-Introduzione/Trasl.png}
@@ -337,7 +337,7 @@ La Correzione di Laplace è un caso speciale in cui $m = k$ e la distribuzione �
 \qs{}{Come si rompono i pareggi?}
 
 \begin{enumerate}
-  \item Si aggiungono classificatori;
+  \item Si aggiungono classificatori.
   \item Se si ha un algoritmo di apprendimento in grado di assegnare uno score si può scegliere il valore su cui si è più confidenti.
 \end{enumerate}
 
@@ -382,7 +382,7 @@ La Correzione di Laplace è un caso speciale in cui $m = k$ e la distribuzione �
 \]
 
 \begin{itemize}
-  \item $(f - E[\hat{f}])^2$, zero se il regressore è mediamente corretto, altrimenti ha un bias sistematico;
+  \item $(f - E[\hat{f}])^2$, zero se il regressore è mediamente corretto, altrimenti ha un bias sistematico.
   \item $E[(\hat{f} - E[\hat{f}])^2]$, errore dovuto alla fluttuazione attorno alla media (errore dovuto alla varianza).
 \end{itemize}
 
@@ -392,7 +392,7 @@ La Correzione di Laplace è un caso speciale in cui $m = k$ e la distribuzione �
  \includegraphics[scale=0.45]{02-Tasks/BV.png}
 \end{center}
 \cor{Bias}{
-  Errore sistematico dovuto al fatt che il modello on è in grado di "fittare" perfettamente i dati (e.g. si sta cercando di "fittare" una parabola usando una retta).
+  Errore sistematico dovuto al fatto che il modello on è in grado di "fittare" perfettamente i dati (e.g. si sta cercando di "fittare" una parabola usando una retta).
 }
 
 \cor{Variance}{
@@ -417,7 +417,7 @@ La Correzione di Laplace è un caso speciale in cui $m = k$ e la distribuzione �
     \hat{q}: \bbX \to \bbC
   \]
 
-dove $\bbC = \{\bbC_1,\dots, \bbC_k\}$ è un nuovo insieme di etichette.
+Dove $\bbC = \{\bbC_1,\dots, \bbC_k\}$ è un nuovo insieme di etichette.
 
 }
 
