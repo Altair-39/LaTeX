@@ -567,6 +567,66 @@ Purtroppo la pipeline presenta alcuni problemi che ne limitano la produttività:
     \caption{Delayed Branch.}
 \end{figure}
 
+\subsection{Multiple Pipeline}
+
+\qs{}{Se una pipeline è efficiente, perché non usarne 2?} 
+
+\paragraph{Bisogna che:} 
+
+\begin{itemize}
+  \item Si riescano a prelevare due istruzioni dalla instruction memory.
+  \item Le due istruzioni non generino conflitti. 
+  \item Le due istruzioni sono indipendenti.
+\end{itemize}
+
+
+Un'architettura a due pipeline era adottata dal primo pentium (80586). Una pipeline $u$ poteva eseguire qualsiasi istruzione macchina, mentre la pipeline $v$ solo istruzioni intere. 
+
+Le istruzioni venivano eseguite \fancyglitter{in-order}, ossia nell'ordine in cui comparivano nell'eseguibile e alcune regole stabilivano se erano compatibili. Esistevano specifici compilatori per il pentium in grado di generare codice con un alto numero di istruzioni compatibili. 
+
+
+\nt{Ovviamente è possibile avere più di due pipeline in parallelo.}
+
+\paragraph{Tuttavia alcune fasi di execute sono molto lunghe rispetto alla semplice addizione tra interi:} 
+
+\begin{itemize}
+  \item Somma/sottrazione di numeri floating point. 
+  \item Moltiplicazione/divisione tra numeri interi. 
+  \item Moltiplicazione/divisione tra numeri floating point.
+\end{itemize}
+
+\nt{Si potrebbe adottare un ciclo di clock sufficentemente lungo per le operazioni più lente, ma ciò penalizzerebbe le operazrazioni più veloci. Conviene suddividere la execute in più fasi.} 
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{01-ConcettiDiBase/pipf.png}
+    \caption{Pipeline con più unità fufunzionali.}
+\end{figure}
+
+\paragraph{ In questo schema si vede:} 
+
+\begin{enumerate}
+  \item Il numero di stage della pipeline dipende dalla complessità dell'operazione. 
+  \item Ci possono essere più istruzioni in fase di execute contemporaneamente.
+\end{enumerate}
+
+\subsection{Scheduling della Pipeline}
+
+Fin'ora si è sempre assunta l'esecuzione delle istruzioni in-order, però se si verifica un problema strutturale o sui dati la pipeline viene temporaneamente fermata. Questo tipo di pipeline è detto \fancyglitter{schedulata staticamente}. 
+
+Le CPU moderne implementano una qualche forma di \fancyglitter{scheduling dinamico}, per limitare gli stall sulla pipeline.
+
+\dfn{IPC}{\newfancyglitter{Instruction Per Clock (cycle)}: il numero medio di istruzioni eseguite per ciclo di clock.} 
+
+\nt{Si calcola facendo girare un benchmark di N istruzioni in C cicli di clock. 
+
+$$IPC = N/C$$
+}
+
+\dfn{CPI}{\newfancyglitter{Clock Per Instruction} ossia il numero medio di cicli di clock necessari per eseguire un'istruzione. 
+$$CPI = 1 /IPC$$
+}
 
 
 

@@ -1,1 +1,45 @@
 \chapter{Instruction Level Parallelism (ILP)}
+
+\section{Introduzione}
+
+\dfn{Instruction Level Parallelism (ILP)}{
+I processori che tratteremo sono pipelined e superscalari: 
+
+\begin{enumerate}
+  \item Eseguono le istruzioni in pipeline.
+  \item Avviano all'esecuzione in parallelo più istruzioni per ciclo di clock.
+\end{enumerate} 
+} 
+
+\subsection{Aumentare la Frequenza del Clock della CPU} 
+
+Ciò significa un ciclo di clock più corto con una divisione in un maggiore numero di fasi. Se aumenta il numero di fasi (\fancyglitter{profondità}) allora ci saranno più istruzioni in esecuzione contemporaneamente. 
+
+\nt{Questa relazione tra numero di fasi e ciclo di clock fu pesantemente sfruttata nel pentium IV in cui si sfioravano i 4 GHz con pipeline di quasi 30 stadi.} 
+
+\subsubsection{Tuttavia non è possibile sfruttare all'infinito questa tecnica perché:}
+
+\begin{enumerate}
+  \item Maggiore è il numero di fasi, maggiore è la complessità della pipeline e quindi la sua control unit. 
+  \item Frequenze di clock maggiori producono interferenze tra le piste, consumi e conseguenti problemi di dissipazione del calore.
+\end{enumerate}
+
+\dfn{Overclocking}{ 
+Il progettista di una CPU non tara il ciclo di clock sulla durata esatta del tempo necessario all'impulso elettrico per attraversare una parte del datapath, ma lo rende un po' più lungo. Su quella differenza gli smanettoni possono "giocare" per 
+aumentare le prestazioni della CPU.
+}
+
+\pagebreak
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.4]{02-ILP/lain.png}
+    \caption{Io che faccio overclock del case.}
+\end{figure}
+
+\subsection{Multiple Issue}
+
+
+
+
+
