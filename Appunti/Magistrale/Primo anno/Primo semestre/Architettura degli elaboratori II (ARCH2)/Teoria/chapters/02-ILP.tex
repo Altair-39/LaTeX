@@ -11,6 +11,16 @@ I processori che tratteremo sono pipelined e superscalari:
 \end{enumerate} 
 } 
 
+\subsubsection{Per implementare ILP:} 
+
+\begin{enumerate}
+  \item Deve essere disponibile un numero sufficiente di unità funzionali. 
+  \item Deve essere possibile prelevare dalla instruction memory più istruzioni e 
+    dalla data memory più operandi (le cache servono a facilitare questo). 
+  \item Deve essere possibile indirizzare in parallelo più registri 
+    della CPU e deve essere possibile leggere/scrivere i registri usati  dalle diverse istruzioni   in esecuzione nello stesso ciclo di clock.
+\end{enumerate}
+
 \subsection{Aumentare la Frequenza del Clock della CPU} 
 
 Ciò significa un ciclo di clock più corto con una divisione in un maggiore numero di fasi. Se aumenta il numero di fasi (\fancyglitter{profondità}) allora ci saranno più istruzioni in esecuzione contemporaneamente. 
@@ -29,8 +39,6 @@ Il progettista di una CPU non tara il ciclo di clock sulla durata esatta del tem
 aumentare le prestazioni della CPU.
 }
 
-\pagebreak
-
 \begin{figure}[!h]
     \centering
     \includegraphics[scale=0.4]{02-ILP/lain.png}
@@ -38,6 +46,213 @@ aumentare le prestazioni della CPU.
 \end{figure}
 
 \subsection{Multiple Issue}
+
+\dfn{Multiple Issue}{ 
+ Il Multiple Issue consiste nell'aumentare il numero di istruzioni eseguite in parallelo a ogni ciclo di clock. 
+ Le architetture che  implementano un multiple issue dinamico vengono dette \newfancyglitter{superscalari}.
+}
+
+\nt{ 
+  Si può vedere il multiple issue come più pipeline che eseguono istruzioni in parallelo. 
+} 
+
+\clm{}{}{ 
+\begin{itemize}
+  \item In un'architettura pipelined senza multiple issue, in assenza di stall, il CPI è uguale a 1. 
+  \item Introducendo il multiple issue il CPI diventa minore di 1 (più istruzioni per ciclo di clock). 
+  \item Tuttavia, nel caso reale, anche implementando multiple issue si ha un CPI maggiore di 1 per via dei problemi strutturali sui dati e sul controllo.
+\end{itemize}
+}
+
+Per implementare il multiple issue è necessario determinare quali e quante istruzioni possono 
+essere avviate all'esecuzione in un dato ciclo di clock. La ricerca è effettuata tra le istruzioni \fancyglitter{in attesa} di essere eseguite e ci sono limiti a quante istruzioni possono essere
+analizzate contemporaneamente. Una volta individuate vengono impacchettate in un \fancyglitter{issue packet} e avviate all'esecuzione nello stesso \fancyglitter{issue slot} (ciclo di clock).
+I processori multiple issue si possono dividere in due categorie a seconda di come e quando vengono risolti questi problemi: 
+
+\begin{itemize}
+  \item \fancyglitter{Multiple Issue statico:} è il compilatore, a livello software, a decidere quali istruzioni mandare in esecuzione in parallelo. Quando il processore preleva dalla Instruction Memory un pacchetto di istruzioni sa già che potrà eseguirle in parallelo. Il numero di istruzioni per pacchetto è stabilito a priori, nella fase di progettazione del processore (adottato principalmente da processori embedded). 
+\item \fancyglitter{Multiple Issue dinamico:} è la CPU stessa che analizza, a runtime, le istruzioni e decide quali mandare in esecuzione in parallelo nello stesso ciclo di clock. C'è un limite al numero massimo di istruzioni analizzabile, di solito 3 o 4 (adottato principalmente da processori moderni dei PC).
+\end{itemize} 
+
+\nt{ILP dinamico e ILP statico non sono interamente distinti. I processori di una categoria adottano sempre anche qualche tecnica dell'altra.}
+
+\section{ILP Dinamico}
+
+Per avvicinare una pipeline alle sue prestazioni ideali si utilizzano tre tecniche:
+
+\begin{enumerate}
+  \item \fancyglitter{Scheduling dinamico della pipeline}. 
+  \item \fancyglitter{Branch prediction}. 
+  \item \fancyglitter{Speculazione hardware}.
+\end{enumerate}
+
+\subsection{Scheduling Dinamico, Branch Prediction e Speculazione Hardware}
+
+Consideriamo questo programma  e supponiamo che 100(R2) non si trovi nella cache. 
+
+\begin{center} 
+  \includegraphics[scale=0.5]{02-ILP/es.png}
+\end{center} 
+
+L'esecuzione della DADD dipende dalla LD, ma in una pipeline le istruzioni procedono una dopo l'altra. Però la DSUB rimane bloccata anche se non sta aspettando alcun valore dalla LD e dalla DADD
+
+\dfn{Scheduling dinamico della pipeline}{ 
+Nello scheduling dinamico della pipeline l'ordine con cui le istruzioni vengono avviate alla fase EX può essere diverso dall'ordine in cui sono state prelevate dalla memoria di istruzioni. 
+}
+
+\nt{ 
+  Nell'esempio precedente la DADD deve aspettare la LD, ma la DSUB può essere eseguita indipendentemente. 
+}
+
+\cor{Out-of-order}{ 
+  Lo scheduling dinamico della pipeline permette sia l'esecuzione out-of-order che il completamento out-of-order. Le istruzioni possono eseguire la fase WB in un ordine diverso da quello in cui compaiono nel programma. 
+}
+
+In un sistema che implementa ILP statico è il compilatore ad accorgersicdi una situazione di potenziale stallo e genera un codice oggetto in cui la DSUB e posta prima della LD. 
+
+\dfn{Branch Prediction Dinamica}{ 
+Per ogni salto condizionato si memorizza l'esito della sua esecuzione. Se lo stesso salto viene eseguito di nuovo si utilizza il risultato precedente per fare una predizione.
+}
+
+\nt{ Utile con i cicli, soprattutto se vengono eseguiti molte volte. }
+
+\dfn{Speculazione Hardware}{ 
+Estensione della branch prediction: si presuppone che le istruzioni vengano eseguite dopo un salto. Se la predizione è corretta si è fatto del lavoro in anticipo, altrimenti si devono cancellare gli effetti di questa speculazione. 
+}
+
+\subsection{I Problemi di Fondo}
+
+\subsubsection{Le istruzioni dipendono l'una dall altre.}
+
+\dfn{True Data Dependence}{Le istruzioni hanno bisogno di argomenti, ma quegli argomenti possono essere il risultato di altre istruzioni.}
+
+\cor{Istruzioni Indipendenti}{ 
+  Due istruzioni sono \fancyglitter{indipendenti} tra loro se possono essere eseguite simultaneamente e/o in qualsiasi ordine a condizione che ci siano risorse sufficienti. 
+} 
+
+\cor{Istruzioni Dipendenti}{ 
+  Due istruzioni sono \fancyglitter{dipendenti} se non possono essere eseguite in modo sovrapposto e quindi devono essere eseguite in ordine.
+}
+
+\subsubsection{Le istruzioni devono riutilizzare i registri.}
+
+Dato che il numero di registri è limitato alcuni registri devono essere riutilizzati terminata la loro funzione. 
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.4]{02-ILP/namedep.png}
+    \caption{Name Dependence.}
+\end{figure}
+
+\nt{In questo caso non c'è un passaggio di valori tra la PRINT e la LOAD, ma finché la PRINT non è stata completata il registro R7 non può essere riutilizzato.}
+
+\dfn{Name Dependence}{ 
+Stessi registri vengono utilizzati da istruzione che altrimenti sarebbero indipendenti tra di loro.
+}
+
+Data l'istruzione $i$ che precede l'istruzione $j$ si possono avere: 
+
+\begin{itemize}
+  \item \fancyglitter{Antidipendenza} se $i$ legge in un registro che $j$ deve scrivere. L'istruzione $i$ deve aver tempo di leggere il registro prima che venga sovrascritto da $j$, altrimenti legge un valore sbagliato.
+  \item \fancyglitter{Dipendenza in output} se $i$ e $j$ scrivono nello stesso registro. Il valore finale deve essere quello di $j$.
+\end{itemize}
+
+\ex{}{ 
+\begin{center} 
+  \includegraphics[scale=0.5]{02-ILP/dip.png}
+\end{center} 
+
+Tra ADD e SUB si ha un antidipenza, mentre tra ADD e MUL si ha una dipendenza in output.
+}
+
+\clm{}{}{ 
+\begin{itemize}
+  \item La dipendenza sui nomi non è una vera dipendenza perché non ci sono valori trasmessi tra le istruzioni. 
+  \item Le istruzioni coinvolte in una dipendenza sui nomi potrebbero essere eseguite in parallelo se il nome del registro usato venisse cambiato. 
+  \item La ridenominazione può essere fatta staticamente dal compilatore o dinamicamente dalla CPU mentre esegue le istruzioni.
+\end{itemize}
+
+}
+
+\ex{}{ 
+\begin{center} 
+  \includegraphics[scale=0.5]{02-ILP/dip2.png}
+\end{center} 
+
+}
+
+\nt{ 
+  Una tecnica alternativa è quella di utilizzare registri aggiuntivi \fancyglitter{nascosti}.
+}
+
+\subsection{L'Approccio di Tomasulo}
+
+Nel 1967, Robert Tomasulo (ricercatore dell'IBM), sviluppo una tecnica per lo scheduling dinamico della pipeline: 
+
+\begin{itemize}
+  \item Per minimizzare le dipendenze sui dati tiene traccia di quando gli operandi delle istruzioni sono disponibili, indipendentemente dall'ordine in cui le istruzioni sono entrate nella CPU. 
+  \item Per minimizzare le dipendenze sui nomi un insieme di registri interni alla CPU, invisibili a livello ISA viene usato per implementare la ridenominazione dei registri.
+\end{itemize}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.6]{02-ILP/Schema di Tomasulo.png}
+    \caption{Lo schema di Tomasulo.}
+\end{figure}
+
+\cor{Reservation Station}{
+  Le \fancyglitter{stazioni di prenotazione} servono da stallo per le istruzioni che verranno eseguite quando gli operandi saranno disponibili.
+
+}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{02-ILP/Schema di Tomasulo 2.png}
+    \caption{Sezione dello schema di Tomasulo che si occupa delle operazioni floating point.}
+\end{figure}
+
+Ogni stazione di prenotazione è fatta da una o più entry. Quando un'entry contiene un'istruzione,
+per ogni operando dell'istruzione l'entry memorizza anche: 
+
+\begin{itemize}
+  \item Se già disponibile: il valore dell'operando stesso. 
+  \item Se l'operando non è ancora stato calcolato: l'identificativo della entry della stazione di prenotazione che contiene l'istruzione che dovrà produrre il valore dell'operando mancante.
+\end{itemize}
+
+\cor{Common Data Bus}{ 
+Il common data bus permette di trasferire in parallelo il risultato prodotto in output da una unità funzionale a tutte le stazioni di prenotazione che lo stanno aspettando e al register file.
+}
+
+\paragraph{Nello schema di Tomasulo l'esecuzione di un'istruzione è divisa in tre macropassi:} 
+
+\begin{enumerate}
+  \item \fancyglitter{Issue:} prelievo, decodifica e inserimento dell'istruzione in una entry della stazione di prenotazione associata all'unità funzionale che dovrà eseguire quell'istruzione. Se non ci sono entry vuote disponibili si ha stall della pipeline. Se gli operandi dell'istruzione sono disponibili nel register file o in qualche altra stazione di prenotazione vengono prelevati e mandati nella entry in cui è stata messa l'istruzione. 
+    Per ogni operando che manca, nella entry dell'istruzione viene scritto l'identificativo della entry/stazione di prenotazione in cui è presente l'istruzione che dovrà produrre quell'operando. 
+
+    La logica di controllo della CPU ha dovuto tenere conto delle istruzioni prelevate in precedenza e già instradate verso le varie stazioni di prenotazione e da cui l'istruzione corrente potrebbe dipendere.
+  \item \fancyglitter{Execute:}  l'istruzione si trova in una entry di una stazione di prenotazione. Può essere inoltrata all'unità funzionale associata quando i suoi operandi sono disponibili. Quando un operando viene prodotto come risultato dell'esecuzione di un'altra istruzione tramite il CDB viene inviato al register file e a tutte le entry in cui sono presenti le istruzioni che lo stanno aspettando. Quando tutti gli operandi sono disponibili l'istruzione può essere inoltrata all'unità funzionale che esegue la fase EX. Se più istruzioni sono contemporaneamente pronte a una determinata unità funzionale vengono eseguite una dopo l'altra in pipeline. 
+
+  Le istruzioni LOAD e STORE, che usano la data memory, vengono inserite nelle entry di specifiche stazioni di prenotazione chiamate load/store buffer. Prima viene calcolato l'indirizzo di memoria a cui operare e l'indirizzo è memorizzato nella entry della LOAD/STORE relativa. A questo punto le LOAD possono prelevare il dato nella DM che tramite il CDB verrà distribuito in tutte le entry che lo attendono. Le istruzioni di STORE possono dover ancora attendere il valore da depositare in DM. 
+  
+  Per gestire eventuali dipendenze sui dati e sui nomi per gli indirizzi in RAM l'ordine di esecuzione di LOAD e STORE sottostà ad alcuni vincoli aggiuntivi. 
+  \item \fancyglitter{Write Result:} quando termina la fase di execute il risultato viene scritto sul CDB e da qui inoltrato al register file e a tutte le entry delle stazioni di prenotazione che stanno attendendo quel risultato. Le istruzioni di STORE scrivono nella memoria dati in questa fase , quando sia l'indirizzo che il dato da mandare in memoria siano disponibili. Le LOAD prelevano il dato dalla RAM e, tramite il CDB, lo scrivono nel registro di destinazione e in qualsiasi entry che lo stia aspettando. 
+\end{enumerate}
+
+\nt{Per implementare questo meccanismo si ha bisogno di Hardware molto sofisticato.}
+
+\section{ILP Statico} 
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
