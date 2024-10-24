@@ -162,7 +162,7 @@ Data l'istruzione $i$ che precede l'istruzione $j$ si possono avere:
   \includegraphics[scale=0.5]{02-ILP/dip.png}
 \end{center} 
 
-Tra ADD e SUB si ha un antidipenza, mentre tra ADD e MUL si ha una dipendenza in output.
+Tra ADD e SUB si ha un antidipedenza, mentre tra ADD e MUL si ha una dipendenza in output.
 }
 
 \clm{}{}{ 
@@ -238,7 +238,60 @@ Il common data bus permette di trasferire in parallelo il risultato prodotto in 
   \item \fancyglitter{Write Result:} quando termina la fase di execute il risultato viene scritto sul CDB e da qui inoltrato al register file e a tutte le entry delle stazioni di prenotazione che stanno attendendo quel risultato. Le istruzioni di STORE scrivono nella memoria dati in questa fase , quando sia l'indirizzo che il dato da mandare in memoria siano disponibili. Le LOAD prelevano il dato dalla RAM e, tramite il CDB, lo scrivono nel registro di destinazione e in qualsiasi entry che lo stia aspettando. 
 \end{enumerate}
 
-\nt{Per implementare questo meccanismo si ha bisogno di Hardware molto sofisticato.}
+\nt{Per implementare questo meccanismo si ha bisogno di hardware molto sofisticato.}
+
+\clm{}{}{ 
+\begin{itemize}
+  \item I registri interni di cui sono datte le entry delle stazioni di prenotazione svolgono il compito dei registri temporanei e vengono usati per implementare la rinominazione dei registri. \item Un'istruzione può essere eseguita appena i suoi operandi diventano disponibili.
+  \item Se due istruzioni indipendenti devono usare la stessa unità fuznionale non possono essere eseguite in parallelo. 
+\end{itemize}
+}
+
+\subsubsection{Per far funzionare questo meccanismo ogni entry di ogni stazione di prenotazione è suddivisa in:} 
+
+\begin{itemize}
+  \item Op: l'operazione da eseguire sugli operandi. 
+  \item Qj, Qk: le entry delle stazioni che produrranno il risultato atteso da Op. Uno zero indica che l'operando è già presente in Vj o Vk. 
+  \item Vj, Vk: il valore dei due operandi. 
+  \item A: presente solo nei load/store buffer, contiene prima il valore immediato per la LOAD o STORE e, dopo che è stato calcolato, l'indirizzo effettivo in RAM in cui leggere/scrivere il dato. 
+  \item Busy: indica che la stazione è attualmente in uso. 
+\end{itemize}
+
+\subsubsection{Ogni registro del file dei registri ha associato un campo:}
+
+\begin{itemize}
+  \item Qi: l'entry della stazione di prenotazione che deve produrre l'istruzione il cui risultato dovrà andare in quel registro. 
+  \item Se Qi vale 0 non c'è alcuna istruzione che sta calcolando un valore che deve andare in quel registro.
+\end{itemize}
+
+\clm{}{}{ 
+Lo schema di Tomasulo ha due caratteristiche fondamentali:
+
+\begin{enumerate}
+  \item L'accesso agli operandi avviene in maniera distribuita: 
+    \begin{itemize}
+      \item Quando più istruzioni stanno aspettando un operando A per passare alla fase EX, non appena A è disponibile tutte le istruzioni possono essere avviate, perché A viene distribuito a tutte mediante il CDB. 
+      \item Se si prelevasse A da un registro del register file, ogni unità
+funzionale dovrebbe accedere sequenzialmente al registro R
+che contiene A, e nel frattempo nessuna istruzione potrebbe
+sovrascrivere R.
+    \end{itemize}
+  \item Antidipendenze e dipendenze in output vengono risolte.
+\end{enumerate} 
+}
+
+\nt{Lo schema di Tomasulo è particolarmente efficacie nella gestione di dipendenze sui dati e i nomi nei cicli.}
+
+\dfn{Srotolamento Dinamico}{ 
+A regime sono in esecuzione le istruzioni appartenenti a più iterazioni successive del ciclo.
+}
+
+\nt{LOAD e STORE possono essere eseguite indipendentemente se utilizzano registri diversi. Altrimenti: 
+\begin{itemize}
+  \item Se la STORE è eseguita prima della LOAD si verifica una dipendenza sui dati. 
+  \item Se la STORE è eseguita dopo la LOAD si verifica un'antidipendenza.
+\end{itemize}
+}
 
 \section{ILP Statico} 
 
