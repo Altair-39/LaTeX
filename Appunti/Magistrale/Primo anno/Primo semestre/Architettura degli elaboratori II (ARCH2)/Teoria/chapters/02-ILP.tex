@@ -293,6 +293,190 @@ A regime sono in esecuzione le istruzioni appartenenti a più iterazioni success
 \end{itemize}
 }
 
+\clm{}{}{ 
+ \begin{itemize}
+   \item Implementare ILP dinamico richiede hardware complesso e costoso insieme a una logica di controllo molto sofisticata. 
+   \item Il CDB è implementato con hardware complesso. 
+   \item Una pipeline schedulata dinamicamente può fornire prestazioni molto elevate purché i salti vengano predetti in modo accurato.
+ \end{itemize}
+}  
+
+\subsubsection{Branch Prediction}
+
+Come si è accennato in precedenza si utilizza una predizione statica: se è giusta non si sprecano cicli di clock. In caso di errore la pipeline va svuotata, mediante opportuni segnali alla CU, di tutte le istruzioni nella pipeline successive al branch che non dovevano essere eseguite.
+La branch prediction dinamica funziona perchè spesso le istruzioni nei branch vengono eseguite più volte.
+
+\dfn{Branch Prediction Buffer}{ 
+  Una memoria con $2^n$ entry indirizzate dagli ultimi n bit meno significativi dell'indirizzo di un'istruzione di branch. Ogni entry del buffer memorizza un \newfancyglitter{bit di predizione} che indica se la volta precedente in cui è stato eseguito quel branch il salto è stato preso o no. 
+}
+
+\nt{Il buffer si comporta come una cache di informazioni sulle istruzioni del branch.}
+
+\qs{}{Cosa succede se il bit di predizione dice che il salto va fatto?} 
+
+\qs{}{Cosa succede se la predizione che diceva di saltare e sbagliata?} 
+
+\qs{}{Le informazioni in una certa entry del buffer sono relative a quello specifico branch che si sta eseguendo?}
+
+\clm{}{}{ 
+\begin{itemize}
+  \item Questa forma di predizione può produrre errori. 
+  \item Se si considera un ciclo che deve eseguire 10 volte la decima predizione sarà sbagliata. \item Però se il programma rientrerà nel futuro in quello stesso ciclo si avrà di nuovo una predizione sbagliata. 
+\end{itemize}
+}
+
+\dfn{Local 2 bit predictor}{ 
+ Uno \newfancyglitter{schema di predizione a due bit} consiste nell'aspettare che una predizione sia sbagliata due volte prima di modificarla.
+}
+
+\nt{Può essere implementato con un automa a stati finiti. }
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.35]{02-ILP/2BP.png}
+    \caption{Schema di predizione a due bit.}
+\end{figure}
+
+\nt{Questo schema è più complicato da implementare, ma funziona bene se il rapporto tra salti effettuati e non effettuati è molto sbilanciato. 
+
+  Sistemi a più di 2 bit non aumentano di molto l'efficienza.
+}
+
+\clm{}{}{ 
+  \begin{itemize}
+    \item L'efficacia di questo schema dipende dal numero di entry nella memoria associativa che contiene i bit di predizione per le istruzioni di branch.
+    \item Solitamente vengono usate cache da 4096 entry, sufficienti per la maggior parte delle istruzioni.
+  \end{itemize}
+}
+
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.35]{02-ILP/2BP example.png}
+    \caption{Percentuale di errori di predizione per banche prediction buffer a 2 bit e 4096 entry.}
+\end{figure}
+
+\nt{I processori moderni usano varianti di questa tecnica.}
+
+\dfn{Schema a Predittori Correlati}{ 
+  Uno \newfancyglitter{schema a predittori correlati} combina i predittori a due bit di due salti consecutivi, combinando così la storia locale di un salto con il comportamento dei salti circostanti.
+}
+
+\dfn{Schema a torneo}{ 
+  Uno \newfancyglitter{schema a torneo} utilizza due predittori diversi per ciascun salto (uno a un bit, l'altro a due bit) e viene usato ogni volta quello che si è comportato meglio la volta precedente.
+}
+
+\nt{ 
+Se il predittore dice che il salto va effettuato la CPU non può immediatamente iniziare la fase di fetch dell'istruzione puntata dal salto perché il suo indirizzo non è ancora noto e va calcolato (PC + offset specificato nell'istruzione di branch).
+}
+
+\dfn{Branch Prediction Cache}{ 
+  Un \newfancyglitter{Branch Prediction Cache} (o Branch Prediction Buffer), per ogni controllo del branch, memorizza anche l'indirizzo a cui trasferire il controllo se il salto viene predetto come eseguito. Il valore PC + offset viene calcolato e messo nel buffer solo la prima volta che un branch viene eseguito.
+} 
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{02-ILP/BTB.png}
+    \caption{Branch Prediction Buffer.}
+\end{figure}
+
+\subsubsection{Speculazione Hardware}
+
+\dfn{Speculazione Hardware}{ 
+  La \newfancyglitter{speculazione hardware} è la tecnica utilizzata nell'ILP dinamico per gestire e sfruttare vantaggiosamente situazioni in cui un dato non è presente in cache, ma deve essere recuperato dalla memoria primaria.
+}
+
+\cor{Istruzioni Speculative}{ 
+Le istruzioni controllate dal branch vengono eseguite come se la predizione sul branch fosse corretta.
+}
+
+\nt{La speculazione hardware fa consumare corrente in più.} 
+
+\cor{Unità di Commit}{ 
+  Un insieme di entry interne alla CPU chiamato \fancyglitter{reorder buffer} (ROB) in cui vengono parcheggiate le istruzioni eseguite speculativamente, in attesa di sapere se dovessero essere effettivamente eseguite.
+}
+
+Quando il risultato di un'istruzione eseguita speculativamente è disponibile, viene inserito nel ROB e associato alla entry che contiene l'istruzione che lo ha prodotto. Le entry del ROB fungono da supporto alla ridenominazione dei registri. 
+Quando la CPU sa che un'istruzione nel ROB doveva effettivamente essere eseguita ne esegue il commit: la toglie dal ROB e permette che il registro di destinazione dell'istruzione venga aggiornato. Se invece l'istruzione non doveva essere eseguita viene semplicemente rimossa da ROB.
+
+\nt{L'esecuzione delle istruzioni può avvenire out-of-order, ma il commit deve avvenire nell'ordine in cui le istruzioni sono entrate nella CPU. Questo diminuisce la quantità di lavoro.}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{02-ILP/Speculazione Hardware.png}
+    \caption{Speculazione hardware.}
+\end{figure}
+
+\paragraph{Il ROB è composto da:} 
+
+\begin{itemize}
+  \item \fancyglitter{Il tipo di istruzione:} 
+    \begin{itemize}
+      \item \textit{Branch}, che non produce un risultato. 
+      \item \textit{Store}, che scrive in RAM. 
+      \item \textit{ALU o Load}, che scrivono in un registro.
+    \end{itemize}
+  \item \fancyglitter{Il campo di destinazione:} ossia il numero del registro o l'indirizzo della locazione di memoria modificati dall'istruzione, se questa riuscirà a passare la fase di commit. 
+  \item \fancyglitter{Il campo valore:} memorizza temporaneamente il risultato dell'esecuzione dell'istruzione fino al commit. 
+  \item \fancyglitter{Il campo ready:} indica che l'istruzione ha terminato l'esecuzione e il contenuto del campo valore è valido.
+\end{itemize}
+
+\paragraph{Con la speculazione si hanno 4 macropassi:}
+
+\begin{enumerate}
+  \item \fancyglitter{Issue:} dopo le fasi IF e ID, l’istruzione I viene avviata ad una entry di
+una stazione di prenotazione. \textit{I viene anche inserita in fondo
+al ROB, facendo scalare verso la cima tutte le istruzioni già
+presenti nel ROB.} Se disponibili, gli operandi di I vengono inviati alla entry che
+contiene I, prelevandoli da uno dei registri, da un’altra stazione
+di prenotazione, \textit{o da una entry del ROB}. 
+
+\textit{Il numero della entry del ROB che contiene I viene scritto
+nella stazione di prenotazione di I} (così alla fine della fase EX
+di I, il risultato di I potrà essere inviato a quella entry del ROB).
+
+  \item \fancyglitter{Execute:} quando gli operandi sono tutti disponibili l’istruzione I viene
+inoltrata all’Unità Funzionale corrispondente. 
+
+\item \fancyglitter{Write Result:} quando il risultato di I è pronto, viene scritto sul CDB, e da qui
+viene inoltrato ad ogni stazione di prenotazione che lo stava
+aspettando (ma, notate, non nel register file o in RAM).
+  
+\textit{Il risultato di I viene anche inoltrato verso il ROB e scritto
+nel campo valore della entry che contiene una copia
+dell’istruzione I} (il numero della entry del ROB da usare è
+quello associato ad I durante la fase Issue).
+
+\item \fancyglitter{Commit:} quando una istruzione nel ROB raggiunge la cima della coda
+(perché altre istruzioni sono state inserite in fondo alla coda), il
+commit può avvenire. Se: 
+\begin{itemize}
+  \item L’istruzione non è un branch, il contenuto del campo valore
+è trasferito nel registro o nella locazione di RAM opportuni.
+L’istruzione viene rimossa dal ROB. 
+\item L’istruzione è un branch con predizione sbagliata, tutto
+il ROB viene svuotato, e la computazione è riavviata
+dall’istruzione corretta.
+\end{itemize}
+\end{enumerate}
+
+\subsection{Multiple Issue con ILP dinamico}
+
+Se alle tecniche già accennate sull'ILP dinamico si aggiunge il multiple issue si ha la descrizione della maggior parte dei processori moderni (single core). Il numero di istruzioni lanciate in parallelo dal multiple issue è anch'esso dinamico: varia a ogni ciclo di clock. 
+
+\paragraph{Il multiple issue richiede:} 
+
+\begin{itemize}
+  \item Un numero sufficiente di unità funzionali
+per l’esecuzione di più istruzioni in parallelo. Per esempio, più
+ALU, più unità di moltiplicazione intera / Floating Point, e così via.
+\item Possibilità di prelevare dalla Instruction Memory più
+istruzioni, e dalla Data Memory più operandi, per ciclo di clock. 
+\item Possibilità di indirizzare in parallelo più registri della CPU,
+e deve essere possibile leggere e/o scrivere i registri usati da diverse
+istruzioni in esecuzione nello stesso ciclo di clock.
+\end{itemize}
+
 \section{ILP Statico} 
 
 
