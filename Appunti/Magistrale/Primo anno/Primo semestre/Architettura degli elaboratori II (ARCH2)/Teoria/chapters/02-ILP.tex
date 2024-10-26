@@ -531,6 +531,47 @@ della pipeline, tipo di predizione dei branch (processori Intel e
 AMD).
 \end{itemize}
 
+\subsubsection{Limiti Teorici dell'ILP Dinamico}
+
+Tutte le limitazioni, a eccezione delle true data dependence, possono essere eliminate se si ha hardware sufficientemente potente. Si possono fare le seguenti assunzioni: 
+
+\begin{itemize}
+  \item \fancyglitter{Register Renaming:} la CPU ha un numero infinito di registri rinominabili. 
+  \item \fancyglitter{Branch Prediction:} perfetta. 
+  \item \fancyglitter{Memory-Address alias analysis:} tutti gli indirizzi di RAM sono noti, per cui si possono sempre evitare le dipendenze sui nomi in RAM.
+\item \fancyglitter{Multiple Issue:} illimitato. 
+\item \fancyglitter{Cache Memory:} non si verificano miss.
+\end{itemize}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{02-ILP/limiti teorici.png}
+    \caption{Alcuni Benchmark.}
+\end{figure}
+
+Ritornando a un processore più realistico si limita il numero massimo di istruzioni consecutive che possono essere contemporaneamente prese in considerazione per cercare dipendenze sui dati.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{02-ILP/limiti 2.png}
+    \caption{Alcuni Benchmark con la limitazione sul multiple issue.}
+\end{figure}
+
+Successivamente possiamo introdurre la possibilità di errore nella branch prediction. 
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{02-ILP/limiti 3.png}
+    \caption{Alcuni Benchmark con la limitazione sul multiple issue (con 2k istruzioni) e sulla branch prediction.}
+\end{figure}
+
+\nt{Aggiungendo anche tutte le altre limitazioni le performance calano drasticamente. 
+I progettisti sono ormai convinti che i processori moderni abbiano
+già da alcuni anni raggiunto il massimo livello possibile di
+sfruttamento dell’ILP, e che ulteriori migliorie possano venire solo
+da avanzamenti tecnologici.
+}
+
 \section{ILP Statico} 
 
 
