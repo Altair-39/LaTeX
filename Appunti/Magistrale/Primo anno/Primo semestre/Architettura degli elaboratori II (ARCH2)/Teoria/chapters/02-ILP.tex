@@ -460,7 +460,7 @@ dall’istruzione corretta.
 \end{itemize}
 \end{enumerate}
 
-\subsection{Multiple Issue con ILP dinamico}
+\subsection{Multiple Issue con ILP Dinamico}
 
 Se alle tecniche già accennate sull'ILP dinamico si aggiunge il multiple issue si ha la descrizione della maggior parte dei processori moderni (single core). Il numero di istruzioni lanciate in parallelo dal multiple issue è anch'esso dinamico: varia a ogni ciclo di clock. 
 
@@ -475,6 +475,60 @@ istruzioni, e dalla Data Memory più operandi, per ciclo di clock.
 \item Possibilità di indirizzare in parallelo più registri della CPU,
 e deve essere possibile leggere e/o scrivere i registri usati da diverse
 istruzioni in esecuzione nello stesso ciclo di clock.
+\end{itemize}
+
+\nt{Un Processore con tutte queste caratteristiche è detto processore superscalare.} 
+
+\subsubsection{Funzionamento di un Processore Superscalare:}
+
+\begin{enumerate}
+  \item Preleva dalla IM (cache di primo livello) N istruzioni per ciclo di clock, dove N è il numero di istruzioni che la IM riesce a fornire in parallelo. 
+  \item Le istruzioni vengono messe in una Instruction queue (IQ) per poter essere analizzate dalla logica della CU che deve controllare la presenza di eventuali dipendenze. 
+  \item Una volta analizzate le istruzioni nella IQ, vengono avviate
+all’esecuzione, cioè instradate verso le stazioni di prenotazione, alcune delle istruzioni indipendenti, liberando così spazio nella
+Instruction Queue. 
+\item Al successivo ciclo di clock viene prelevato dalla IM un altro
+gruppo N di istruzioni. 
+\item A regime quindi, la IQ tende riempirsi di istruzioni, e se ad un certo
+ciclo di clock M istruzioni vengono avviate all’esecuzione, al
+massimo M $\leq$ N altre istruzioni possono essere prelevate dalla IM al
+successivo ciclo di clock.
+\item Se la IQ è piena, e a causa delle dipendenze
+nessuna istruzione è stata inviata alla fase EXECUTE al ciclo
+precedente, nessuna istruzione potrà essere prelevata dalla IM
+al ciclo successivo. 
+
+\end{enumerate}
+
+\clm{}{}{ 
+\begin{itemize}
+  \item A regime, la CPU deve controllare la presenza
+di dipendenze tra qualche decina di istruzioni, il che può richiedere
+migliaia di confronti incrociati, che devono essere fatti in uno o due
+cicli di clock. 
+\item Se è implementata la speculazione hardware la
+CPU deve anche essere in grado di eseguire il commit di più
+istruzioni nel ROB per ciclo di clock, che altrimenti diviene il collo
+di bottiglia del sistema.
+\end{itemize}
+} 
+
+\qs{}{Perché ILP dinamico funziona?} 
+
+\begin{itemize}
+  \item I miss cache non sono prevedibili staticamente, e l’ILP dinamico
+può parzialmente nasconderli eseguendo altre istruzioni, mentre una
+istruzione attende dalla RAM il dato mancante in cache.  
+\item I branch non sono prevedibili con accuratezza in modo statico
+e il BP dinamico e la speculazione aumentano la probabilità di
+riuscire a sbrigare del lavoro utile in anticipo rispetto al momento
+in cui si conosce l’esito dell’esecuzione delle istruzioni di branch. 
+\item L’ILP statico funziona bene solo su una specifica architettura. Invece,
+con l’ILP dinamico i programmi possono essere eseguiti su
+architetture diverse (purché con ISA compatibili) per numero di
+unità funzionali, numero di registri rinominabili, numero di stage
+della pipeline, tipo di predizione dei branch (processori Intel e
+AMD).
 \end{itemize}
 
 \section{ILP Statico} 
