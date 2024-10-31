@@ -512,7 +512,7 @@ Un'invariante che si basa sull'ordine delle istruzioni di un processo viene indi
 
   
 \begin{center}
-    \includegraphics[scale=0.5]{01-IntroduzioneAllaProgrammazioneConcorrente/INV2.png}
+    \includegraphics[scale=0.7]{01-IntroduzioneAllaProgrammazioneConcorrente/INV2.png}
 \end{center}
 
 }
@@ -521,12 +521,124 @@ Un'invariante che si basa sull'ordine delle istruzioni di un processo viene indi
 
 \section{Costrutti per la Programmazione Concorrente}
 
+Un programma concorrente è costituito da un insieme di \fancyglitter{processi sequenziali asincroni interagenti}. Un linguaggio concorrente dovrà contenere: 
+
+\begin{itemize}
+  \item Costrutti che permettano di dichiarare moduli di programma destinati a essere eseguiti concorrentemente come \fancyglitter{processi sequenziali}. 
+  \item Strumenti linguistici per specificare le \fancyglitter{interazioni} tra i processi.
+\end{itemize}
+
+\subsection{Costrutti Elementari}
+
+\begin{minipage}{0.45\textwidth}
+    \dfn{Fork}{ 
+        L'esecuzione di una \newfancyglitter{fork} coincide con la creazione e l'attivazione di un processo che inizia la propria esecuzione in parallelo con quella del processo chiamante. 
+    }
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+    \begin{center}
+        \includegraphics[scale=0.6]{02-ProgrammazioneConcorrente/fork.png}
+    \end{center}
+\end{minipage}
+
+\nt{La fork corrisponde al modello di avvio dei processi in UNIX.}
+
+\begin{minipage}{0.45\textwidth}
+    \begin{center}
+        \includegraphics[scale=0.6]{02-ProgrammazioneConcorrente/join.png}
+    \end{center}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+  \dfn{Join}{Una \newfancyglitter{join} serve per sincronizzare i processi. Il processo che fa la join aspetta la terminazione dell'altro processo.}
+\end{minipage}
+
+\nt{In UNIX l'operazione join si chiama \textit{waitpid()}.}
 
 
+\begin{minipage}{0.5\textwidth}
+  \dfn{Cobegin/Coend}{La concorrenza può essere espressa in modo strutturato con $n$ processi che eseguono in parallelo.}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+    \begin{center}
+        \includegraphics[scale=0.6]{02-ProgrammazioneConcorrente/CBCE1.png}
+    \end{center}
+\end{minipage}
+
+\subsection{La Concorrenza nei Sistemi Operativi}
+
+\dfn{Processo}{ 
+Costrutto linguistico per individuare, in modo sintatticamente preciso, quali
+moduli di un programma possono essere eseguiti come processi autonomi.
+Specializza quindi il concetto di funzione, indicando esplicitamente che andranno
+in esecuzione concorrente.
+}
+
+\begin{center}
+   \includegraphics[scale=0.5]{02-ProgrammazioneConcorrente/processo.png}
+\end{center}
+
+\nt{Quando i programmi sono concorrenti, i task possono essere \fancyglitter{kernel thread} (con supporto del SO) o \fancyglitter{user thread} (senza supporto del SO).}
+
+\begin{center}
+   \includegraphics[scale=0.6]{02-ProgrammazioneConcorrente/ust1.png}
+\end{center}
+
+\nt{Se il linguaggio utilizza gli \fancyglitter{user thread} è il runtime stesso che fornisce tutte le procedure per la gestione dei processi concorrenti di quel programma.}
+
+\begin{center}
+   \includegraphics[scale=0.6]{02-ProgrammazioneConcorrente/ust2.png}
+\end{center}
+\pagebreak
+\subsection{Interazioni tra Processi}
+
+\paragraph{Le \fancyglitter{interazioni tra processi} possono essere classificate in due modi.} 
+\paragraph{}
+\begin{minipage}{0.5\textwidth}
+\dfn{Cooperazione}{La \newfancyglitter{cooperazione} è un'interazione prevedibile e desiderata (sincronizzazione diretta ed esplicita): 
+\begin{itemize}
+  \item Scambio di segnali temporali. 
+  \item Scambio di informazione.
+\end{itemize}
+}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
+  \dfn{Competizione}{La \newfancyglitter{competizione} è un'interazione imprevedibile e non desiderata, ma necessaria (sincronizzazione indiretta o implicita): 
+\begin{itemize}
+  \item Mutua esclusione.
+\end{itemize}
+  }
+\end{minipage}
 
 
+\paragraph{La macchina su cui un programma concorrente va in esecuzione deve essere in grado di:} 
 
+\begin{itemize}
+  \item Eseguire in concorrenza un certo numero $n$ di processi sequenziali ($n>1$). 
+  \item Permettere hai processi di sincronizzarsi offrendo primitive adeguate. 
+\end{itemize}
 
+\begin{center}
+   \includegraphics[scale=0.6]{02-ProgrammazioneConcorrente/MVMF.png}
+\end{center}
+
+\paragraph{Si hanno due diverse organizzazioni logiche:}
+
+\begin{itemize}
+  \item \fancyglitter{Modello a Memoria Comune:} i processi comunicano tramite variabili condivise. 
+  \item \fancyglitter{Modelli a Rete:} i processi comunicano attraverso una sottorete di comunicazione.
+\end{itemize}
+
+\clm{}{}{ 
+\begin{itemize}
+  \item L'esecuzione di un programma concorrente non è il modo migliore per studiarne la concorrenza. 
+  \item Si possono utilizzare dei simulatori di concorrenza: strumenti software che permettono di controllare l'interleaving di azioni atomiche. 
+  \item I simulatori mantengono le strutture dati per emulare l'esecuzione concorrente e si aggiornano dopo aver interpretato un singolo statement.
+\end{itemize}
+}
 
 
 
