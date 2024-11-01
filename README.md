@@ -5,7 +5,7 @@ My LaTeX documents. A collection of things that i do for my Bachelor and Master 
 
 ## Note per contribuire
 
-Tutte le PR (da typo a errori concettuali, etc.) sono le benvenute, però prima contattatemi su telegram (@altair1114)
+Every PR (typo, concepts, etc.) are welcome, but before do it contact me on telegram (@altair1114)
 
 
 ## Folder
@@ -15,8 +15,6 @@ Tutte le PR (da typo a errori concettuali, etc.) sono le benvenute, però prima 
 + ***Consegne***: type of homeworks for university.
 
 + ***Project***: a sample of my university project.
-
-+ ***Template***: a template for LaTeX documents.
 
 + ***Tesi***: my bachelor thesis.
 
