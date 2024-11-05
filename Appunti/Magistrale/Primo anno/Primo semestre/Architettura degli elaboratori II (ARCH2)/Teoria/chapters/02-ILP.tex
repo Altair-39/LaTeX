@@ -697,7 +697,7 @@ Questo approccio prende il nome di VLIW (Very Long Instruction World).
 \begin{figure}[!h]
     \centering
     \includegraphics[scale=0.5]{02-ILP/VLIW.png}
-    \caption{Esecuzione ccon approccio VLIW.}
+    \caption{Esecuzione con approccio VLIW.}
 \end{figure}
 
 \clm{}{}{ 
@@ -793,7 +793,64 @@ Gli Itanium sono i primi processore della Intel completamente RISC, basati su IA
   \item 128 registri floating point a 82 bit.
   \item 64 registri predicativi da 1 bit ciascuno. 
   \item 128 registri speciali usati per vari scopi.
+  \item 3 livelli di cache. 
 \end{itemize}
+
+\nt{Dei 128 registri general-purpose i primi 32 sono sempre disponibili, mentre gli altri sono usati come stack di registri.}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{02-ILP/itan.png}
+    \caption{Unità funzionali dell'Itanium.}
+\end{figure}
+
+\cor{Instruction Group}{
+  Il compilatore di una architettura IA-64 organizza le istruzioni
+macchina del programma che sta compilando come una sequenza
+di instruction groups.
+}
+
+\clm{}{}{
+  Le istruzioni di un instruction group:
+  \begin{itemize}
+    \item Non confliggono nell'uso delle unità funzionalità. 
+    \item Non confliggono nell'uso dei registri. 
+    \item Non hanno dipendenze sui dati e sui nomi.
+  \end{itemize}
+  La CPU può schedulare come vuole questi instruction group, ma devono essere esguiti in sequenza e nell'ordine in cui sono stati prodotti dal compilatore. Il compilatore usa anche un'istruzione speciale detta \fancyglitter{stop} che separa gruppi di istruzioni.
+
+}
+
+\cor{Bundle}{ 
+  In fase di esecuzione le istruzioni vengono prelevate dal processore in blocchi di lunghezza fissa detti \fancyglitter{bundle}.
+}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{02-ILP/bundle.png}
+    \caption{Organizzazione di un bundle.}
+\end{figure}
+
+\cor{Advanced Load}{ 
+  L'advanced load (o LDA) è una forma limitata di speculazione hardware che utilizza le load speculative. Quando viene eseguita una LDA viene creata una nuova entry in una tavola detta \fancyglitter{ALAT} contenente: 
+
+  \begin{itemize}
+    \item Il numero del registro di destinazione dela load. 
+    \item l'indirizzo della locazione di memoria usata dalla load (noto solo a run time).
+  \end{itemize}
+}
+
+\nt{Una advanced load è una load che è stata speculativamente spostata prima di una store da cui potrebbe potenzialmente dipendere.}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Quando viene eseguita una store viene fatto anche un controllo associativo sull'ALAT. 
+    \item Prima che una qualsiasi istruzione usi il registro caricato da una LDA, l’entry della ALAT contenente quel registro viene controllata.
+    \item Se la entry non è valida, la load viene rieseguita.
+  \end{itemize}
+}
+
+
 
 
 
