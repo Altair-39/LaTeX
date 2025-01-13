@@ -16,6 +16,7 @@
 \usepackage{mathtools}
 \usepackage{bookmark}
 \usepackage{enumitem}
+\usepackage{listings}
 \usepackage{hyperref,theoremref}
 \hypersetup{
 	pdftitle={Assignment},
@@ -860,4 +861,24 @@
     filecolor=black,
     linkcolor=black,
     urlcolor=black
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LISTING
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\lstset{
+  language=C++, % Linguaggio base (CUDA usa la sintassi di C++)
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{green!60!black}\itshape,
+  stringstyle=\color{red},
+  numbers=left, % Numeri di linea a sinistra
+  numberstyle=\tiny,
+  stepnumber=1,
+  breaklines=true, % Ritorno a capo automatico
+  frame=single, % Bordo intorno al codice
+  captionpos=b, % Posizione della didascalia (b=bottom)
+  tabsize=2, % Dimensione tabulazione
 }
