@@ -340,7 +340,7 @@ si attiva ogni 200 millisecondi, e ogni qualvolta si svuota la coda di
 un processore.}.
 \end{itemize}
 
-\subsection{Tipi di Architetture Multiprocessore}
+\subsection{UMA}
 
 Esistono sostanzialmente due classi di architetture multiprocessore: 
 
@@ -359,21 +359,474 @@ Esistono sostanzialmente due classi di architetture multiprocessore:
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.8]{04-ArchitettureParallele/UMA.png}
+    \includegraphics[scale=0.6]{04-ArchitettureParallele/UMA.png}
     \caption{Schema UMA.}
 \end{figure}
+
+\clm{}{}{
+  \begin{itemize}
+    \item I sistemi multiprocessore UMA costituiscono il primo tipo di
+sistemi multiprocessore, e nella sua forma più semplice un sistema
+UMA prevede un unico bus su cui si affacciano almeno due CPU e
+una memoria (condivisa da tutti i processori). 
+\item Quando una CPU vuole leggere una locazione di memoria verifica
+prima che il bus sia libero, invia la richiesta al modulo di interfaccia
+della memoria e attende sul bus che arrivi il valore richiesto. 
+\item La memoria condivisa può però facilmente diventare un collo di
+bottiglia per le prestazioni del sistema, visto che tutti i processori
+devono sincronizzarsi sull’uso di un singolo bus e memoria. 
+  \end{itemize}
+}
+
+\nt{I moderni processori multi-core sono semplici architetture UMA in cui la prima cache condivisa da tutti i core (solitamente L3) costituisce un canale di comunicazione più efficiente della RAM: se un core modifica un dato un altro core potra vedere la modifica in una linea di L3 anziché dover arrivare fino alla linea di RAM corrispondente.}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{04-ArchitettureParallele/memory.png}
+    \caption{Ogni processore dispone di una sua memoria privata.}
+\end{figure}
+
+\cor{Coerenza della Cache}{
+  La visione che ogni processore ha della memoria primaria passa
+attraverso la propria cache, e due processori possono vedere valori
+diversi per la stessa locazione.
+}
+
+\nt{Sono stati proposti vari \fancyglitter{protocolli di coerenza della cache}, e tutti
+hanno come scopo quello di evitare che versioni differenti della
+stessa linea di RAM possano essere contemporaneamente presenti
+in due o più cache (un problema noto come \fancyglitter{false sharing}).}
+
+\dfn{Snooping del Bus}{
+  A livello hardware il controller di ogni cache è in grado di monitorare, sul bus, tutte le richieste di RAM che provengono dalle altre CPU.
+}
+
+\cor{Write Through}{
+Una cache 1:
+  \begin{itemize}
+  \item \fancyglitter{Read miss}: il cache controller della CPU preleva la linea mancante dalla RAM e la mette nella cache. Ulteriori letture dello stesso dato
+avverranno nella cache (quindi, le successive letture saranno dei
+read hit). 
+\item \fancyglitter{Write miss}: il dato modificato viene direttamente scritto in RAM: la
+linea contenente il dato non viene prima caricata nella cache locale. 
+\item \fancyglitter{Write hit}: la cache line viene aggiornata e l’aggiornamento viene
+anche propagato alla RAM. 
+\end{itemize}
+
+Nel frattempo, un'ipotetica cache 2: 
+\begin{itemize}
+  \item \fancyglitter{Read miss}: la cache 2 vede cache 1 prelevare una linea dalla
+memoria, ma non fa nulla (in caso di read hit la cache 2 non
+se ne accorge nemmeno).
+\item \fancyglitter{Write miss/hit}: cache 2 verifica se ha una copia del dato
+modificato: in caso negativo, non fa nulla. Se però il dato è
+presente, la linea che lo contiene viene marcata come invalida
+nella cache 2.
+\end{itemize}
+
+}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Poiché tutte le cache sorvegliano tutte le operazioni compiute dalle
+altre cache, quando in una cache viene modificato un dato, la
+modifica viene fatta nella cache stessa (se c’è), in RAM, e in più la
+“vecchia” linea viene marcata come invalida da tutte le altre cache.
+    \item In questo modo nessuna cache può contenere dati inconsistenti rispetto alle altre cache.
+      \item Il problema fondamentale dei protocolli \fancyglitter{write through based} è l'inefficienza perché ogni operazione di write viene propagata alla RAM e il bus di comunicazione può diventare un collo di bottiglia.
+      \item Per limitare questo problema non tutte le write vengono immediatamente propagate in RAM, per cui un bit nella cache viene settato per indicare che la linea nella cache è aggiornata rispetto a quella nella RAM.
+\end{itemize}
+}
+
+\dfn{Protocollo MESI}{
+  Il protocollo di tipo write back più diffuso, usato dai processori moderni. Ogni entry può essere in uno di 4 diversi stati:
+  \begin{itemize}
+    \item \newfancyglitter{Invalid}: l'entry nella cache non contiene dati validi.  
+    \item \newfancyglitter{Shared}: più cache possono contenere la linea e la memoria RAM è aggiornata.
+    \item \newfancyglitter{Exclusive}: nessun'altra cache contiene la linea e la memoria cache è aggiornata.
+    \item \newfancyglitter{Modified}: la linea è valida, la memoria RAM contiene un valore vecchio, non esistono altre copie.
+  \end{itemize}
+}
+
+\paragraph{Nel protocollo MESI:}
+
+\begin{itemize}
+  \item La prima volta che una linea viene letta nella cache di CPU 1 viene
+marcata E: exclusive, poiché è l’unica cache a contenere quella
+linea. 
+\item Successive letture del dato da parte della stessa CPU useranno la
+copia in cache, e non impegneranno il bus. 
+\item Se un'altra CPU legge la stessa linea, lo snooper della prima CPU se ne accorge e
+annuncia sul bus che anche la prima CPU ha una copia della linea.
+Entrambe le entry nelle cache vengono marcate S: Shared.
+\item Successive letture del dato da parte della prima CPU o della seconda CPU avverranno
+nelle rispettive cache, e non useranno il BUS.
+\item Se la seconda CPU modifica una linea marcata S, invia sul bus un segnale di
+invalidazione della linea, in modo che le altre CPU possano
+invalidarla nella loro cache. La linea viene marcata M: modified, e
+non viene scritta in RAM. 
+\item Notiamo che se la linea era marcata E, il segnale di avviso alle altre
+CPU non è necessario, perché non esistono altre copie della linea in
+altre cache. 
+\end{itemize}
+
+\qs{}{
+  Cosa succede se una terza CPU tenta di leggere la stessa linea?
+}
+
+\begin{itemize}
+  \item Lo snooper
+della seconda CPU se ne accorge, sa di possedere l’unica copia valida della
+linea, per cui invia un segnale su bus per avvertire la terza CPU di
+aspettare, mentre la copia valida viene usata per aggiornare
+memoria.
+\item A fine aggiornamento la terza CPU può prelevare la linea richiesta, e nelle
+due cache la linea viene marcata S, shared.
+\item Se a questo punto la seconda CPU rimodifica la linea, nella sua
+cache, invierà di nuovo un segnale di invalidazione sul bus, e tutte
+le altre copie vengono marcate come
+I: invalid. La linea nella cache della seconda CPU è di nuovo marcata M:
+modified.
+\item Se la prima CPU cerca di scrivere un dato nella linea, la seconda CPU vede
+il tentativo di write e invia un segnale sul bus per dire alla prima CPU 
+di aspettare mentre aggiorna la linea in memoria. Alla fine, la seconda CPU 
+marca la propria copia della linea come invalida, perché sa che
+un’altra CPU sta per modificarla.
+\item Se si sta usando una politica \fancyglitter{write-allocate}, la linea sarà caricata
+nella cache della prima CPU e marcata M. In caso contrario, la write ha effetto direttamente in RAM, e la linea
+continua a non essere in nessuna cache.
+\end{itemize}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Anche usando un protocollo come il MESI, l’uso di un bus singolo
+su cui si affacciano tutti i processori che comunicano con la RAM
+limita la dimensione di sistemi multiprocessore UMA ad un
+massimo che di solito si indica in 32 CPU. 
+\item Per andare al di là di questo limite, è necessario usare un diverso
+sistema di interconnessione tra le CPU e la RAM. Lo schema più
+semplice per connettere n CPU a k memorie è a commutatori
+incrociati (\fancyglitter{crossbar switch}), un sistema simile a quello usato per
+decenni nelle centrali telefoniche.
+  \end{itemize}
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{04-ArchitettureParallele/crossbar.png}
+    \caption{Nell’esempio, tre switch sono chiusi, e connettono le coppie CPU-
+memoria (001-000), (101-101) e (110-010).}
+\end{figure}
+
+\dfn{UMA a Crossbar Switch}{
+  È possibile configurare gli switch  in modo che ciascuna CPU possa connettersi a ciascun banco di memoria. Il numero di switch necessari per realizzare questo schema però
+cresce quadraticamente col numero di CPU (memorie) coinvolte:
+n CPU e $4n$ memorie richiedono $n^2$ switch. La cosa è accettabile per sistemi di media grandezza (vari sistemi
+multiprocessore della Sun usano questo schema), ma certamente
+non è usabile in un sistema con 256 CPU (sarebbero
+necessari $256^2$ switch).
+}
+
+\nt{Quando il numero di CPU è alto, si può usare un sistema
+basato su switch bidirezionali con due ingressi e due uscite: in
+questi switch ciascun ingresso può essere rediretto su
+ciascuna uscita.}
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.5]{04-ArchitettureParallele/bi.png}
+        \caption{Sistema di switch bidirezionali.}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.25]{04-ArchitettureParallele/bi2.png}
+        \caption{Switch bi-???}
+    \end{minipage}
+\end{figure}
+
+\paragraph{Nei sistemi UMA che usano switch bidirezionali i messaggi
+scambiati tra CPU e memoria sono fatti di quattro parti:}
+
+\begin{itemize}
+  \item \fancyglitter{Module}: quale memoria usare, quale CPU richiede il dato. 
+  \item \fancyglitter{Address}: specifica un indirizzo all'interno del modulo di memoria. 
+  \item \fancyglitter{Opcode}: l'operazione da eseguire. 
+  \item \fancyglitter{Value} (opzionale): il valore da scrivere nel caso di write.
+\end{itemize}
+
+\nt{Lo switch può essere programmato in modo da analizzare il
+Module e determinare su quale output instradare il messaggio.}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{04-ArchitettureParallele/Omega.png}
+    \caption{Gli switch 2 x 2 possono essere usati in molti modi per costruire reti
+a commutazione a più stadi. Un semplice esempio è il modello di
+rete omega.}
+\end{figure}
+
+\begin{itemize}
+  \item Nell’esempio, 8 CPU sono connesse a 8 memorie, usando in tutto
+12 switch in tre stadi. In generale, $n$ CPU e $n$ memorie richiedono
+$log_2n$ stadi, con $\frac{n}{2}$ switch per stadio, per un totale di $(\frac{n}{2})log_2n$
+switch: molto meglio che nel caso dei crossbar switch ($n^2$). 
+\item La CPU 011
+vuole leggere un dato nel modulo di RAM 110. La CPU invia una
+READ allo switch 1D con Module = 110 -- 011. 
+\item Lo switch preleva il bit più significativo (quello più a sinistra) e lo
+usa per l’instradamento: 0 instrada la richiesta sull’output superiore,
+1 instrada la richiesta sull’output inferiore. 
+\item Lo switch 2D si comporta allo stesso modo: analizza il secondo bit
+più significativo (quello centrale) e instrada la richiesta verso 3D. 
+\item Infine, il bit meno significativo viene usato per l’ultimo
+instradamento, verso il modulo 110 (percorso a nella figura). 
+\item A questo punto, il dato letto deve essere reinstradato alla CPU 011:
+viene usato il suo “indirizzo”, leggendo però i bit da destra verso
+sinistra. 
+\item Allo stesso tempo, la CPU 001 vuole eseguire una WRITE nel
+modulo 001. Avviene un processo simile a quello visto (percorso b
+nella figura). Siccome i percorsi a e b non usano gli stessi switch, le
+due richieste possono procedere in parallelo. 
+\end{itemize}
+
+\nt{Al contrario di quello che accade con le reti che usano crossbar
+  switch, le reti omega sono \fancyglitter{reti bloccanti}: non tutte le sequenze di
+richieste possono essere servite contemporaneamente.}
+
+\subsection{NUMA}
+
+I sistemi UMA a bus singolo sono limitati dal numero di processori,
+e per connettere più processori è necessario dell’hardware
+comunque costoso. Allo stato attuale, non è conveniente costruire
+sistemi UMA con più di qualche centinaio di processori. Per costruire sistemi più grandi è necessario accettare un
+compromesso: che non tutti i moduli di memoria abbiano
+lo stesso tempo di accesso rispetto a ciascuna CPU.
 
 \dfn{NUMA}{ 
 Non Uniform Memory Access (NUMA) è un tipo di architettura in cui la memoria fisica è distribuita tra le varie CPU e quindi i tempi di accesso ai dati variano a seconda che siano nella RAM locale o in una remota.
 }
 
-\nt{Questi sistemi vengono anche chiamati DSM (Distribuited Shared-Memory)}
+\nt{Questi sistemi vengono anche chiamati DSM (Distribuited Shared-Memory).}
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.8]{04-ArchitettureParallele/NUMA.png}
+    \includegraphics[scale=0.6]{04-ArchitettureParallele/NUMA.png}
     \caption{Schema NUMA.}
 \end{figure}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Come per i UMA, nei sistemi NUMA tutte le CPU vedono lo stesso
+spazio di indirizzamento ma, ogni processore è dotato di una sua
+propria memoria locale, vista anche da tutti gli altri processori. 
+\item Al contrario dei sistemi UMA quindi, nei sistemi NUMA l’accesso
+ai moduli di memoria locale è più veloce dell’accesso ai moduli di
+memoria remoti. 
+\item Come conseguenza, i programmi scritti per sistemi UMA possono
+comunque girare senza dover apportare alcun cambiamento su
+macchine NUMA, possibilmente con prestazioni diverse a causa dei
+diversi tempi di accesso ai vari moduli remoti di RAM.
+\item Poiché le macchine NUMA hanno uno spazio di indirizzamento
+logico unico visto da tutte le CPU, mentre la memoria fisica è in
+realtà suddivisa tra i vari processori, emerge il concetto di memoria
+locale e remota.   
+\end{itemize}
+}
+
+\paragraph{Esistono due tipi di sistemi NUMA:}
+
+\begin{itemize}
+  \item \fancyglitter{Non-Caching NUMA (NC-NUMA)}. 
+  \item \fancyglitter{Cache-Coherent NUMA (CC-NUMA)}.
+\end{itemize}
+
+\dfn{NC-NUMA}{
+  In un sistema NC-NUMA i processori non hanno cache locale. Ogni accesso alla memoria è gestito da una MMU modificata, che
+controlla se la richiesta è diretta alla memoria locale o a un modulo
+remoto, nel qual caso la richiesta viene instradata al nodo che
+contiene il dato richiesto. 
+}
+
+\nt{I programmi che usano dati remoti risulteranno più lenti che se i dati fossero memorizzati nella memoria locale.}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Nei sistemi NC-NUMA il problema della coerenza
+della cache è automaticamente risolto perché non c’è nessuna forma
+di caching: ogni dato della memoria è presente esattamente in una
+locazione ben precisa.
+\item Rimane il problema dell’inefficienza dell’accesso alla memoria
+remota. Per questo, le macchine NC-NUMA possono usare software
+elaborato per spostare le pagine di memoria da un modulo all’altro
+in modo da minimizzare gli accessi remoti e massimizzare le
+prestazioni. 
+\item Un page scanner può attivarsi ogni pochi secondi, esaminare le
+statistiche sull’indirizzamento della memoria, e spostare le pagine
+da un modulo all’altro per cercare di migliorare le prestazioni.
+\item Nei sistemi NC-NUMA, ogni processore può avere anche
+una memoria locale privata e una cache, e solo i dati privati del
+processore (ossia quelli nella memoria locale privata) possono
+risiedere nella cache. Questa soluzione aumenta ovviamente le prestazioni di ciascun
+processore.
+  \end{itemize}
+}
+
+\dfn{CC-NUMA}{
+  Aggiungere il caching diminuisce ovviamente i tempi di accesso
+ai dati remoti, ma introduce il problema della coerenza della cache.
+Un modo di garantire la coerenza sarebbe ovviamente lo snooping
+sul bus di sistema, ma questa tecnica diventa troppo inefficiente
+oltre un certo numero di CPU, ed è comunque troppo difficile da
+implementare nei sistemi che non usano un bus comune di
+interconnessione. 
+
+L’approccio più usato per costruire sistemi CC-NUMA con molte
+CPU assicurando la coerenza della cache è noto come schema o
+protocollo \newfancyglitter{directory-based} (multiprocessor).
+L’idea di base è di associare ad ogni nodo del sistema una directory
+per le linee della sua RAM: un database che registra in quale cache
+di quale nodo si trova ogni linea, e qual è il suo stato.
+}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Quando viene indirizzata una linea di RAM, la directory del nodo a
+cui quella linea appartiene viene interrogata per sapere se la linea si
+trova in qualche cache e se questa sia stata modificata rispetto alla
+copia in RAM. 
+\item Poiché una directory viene interrogata ogni volta che una istruzione
+accede la corrispondente memoria, deve essere implementata con un
+hardware molto veloce, per esempio una memoria associativa.
+\item Come esempio di protocollo directory based, consideriamo un
+sistema con 256 nodi, ognuno formato da una CPU e una RAM
+locale da 16 MB. Ci sono in tutto 232 = 4 GB di RAM, e ogni nodo contiene 218 linee
+da 64 byte ciascuna (218 x 26 = 224 = 16 MB). Lo spazio di indirizzamento è unico, col nodo zero che contiene la
+memoria con indirizzi da 0 a 16 MB, il nodo 1 la memoria con
+indirizzi da 16 a 32 MB, e così via. Un indirizzo fisico è quindi scritto su 32 bit (gli 8 bit più significativi indirizzano di fatto il numero del nodo a
+cui appartiene il banco di RAM che contiene il dato indirizzato, i successivi 18 bit indicano la linea indirizzata all’interno del banco
+da 16 MB e i restanti 6 bit meno significativi indirizzano il byte all’interno della
+linea).
+  \end{itemize}
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{04-ArchitettureParallele/CC_NUMA.png}
+    \caption{Esempio di CC-NUMA.}
+\end{figure}
+
+\paragraph{In un sistema reale, l'architetturà directory-based:}
+
+\begin{itemize}
+  \item Le linee di RAM possono essere contemporaneamente nella cache di più nodi. 
+  \item Si tiene traccia del fatto che una cache line sia stata modificata o meno e si possono limitare le comunicazioni tra CPU e memorie. 
+  \item Se una cache line non è stata modificata la linea originale in RAM è ancora valida e una read da una CPU remota per quellls line può essere soddisfatta dalla RAM stessa, senza dover andare a recuperare la linea della cache che ne contiene una copia.
+\end{itemize}
+
+\subsection{Sincronizzazione tra Processi}
+
+In un sistema monoprocessore, i vari processi si sincronizzano fra
+loro usando opportune system call o costrutti del linguaggio in uso:
+semafori, regioni critiche condizionali, monitors. Questi meccanismi di sincronizzazione sono costruiti a partire da
+opportune primitive di sincronizzazione hardware: spesso una
+istruzione macchina non interrompibile in grado di prelevare e
+modificare un valore, o di scambiare il contenuto di un registro e
+una cella di memoria. In un sistema multiprocessore abbiamo bisogno di primitive di
+sincronizzazione simili: i processi vedono un unico spazio di
+indirizzamento e la sincronizzazione deve avvenire sfruttando
+questo spazio comune, e non meccanismi a scambio di messaggi.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{04-ArchitettureParallele/Lock.png}
+    \caption{Spin lock, il processo cicla sulla variabile di lock fino a quando non la trova libera.}
+\end{figure}
+
+\nt{In questo caso è presente un problema di \fancyglitter{attesa attiva} per cui i test della variabile sprecano il quanto di tempo dei processi.}
+
+\subsubsection{}
+
+Tuttavia, in un ambiente in cui i processi che usano una variabile
+condivisa per sincronizzarsi possono girare su CPU diverse,
+l’atomicità delle istruzioni di sincronizzazione non è sufficente. 
+
+\qs{}{
+  Su un processore, l’istruzione atomica sarà eseguita senza
+interruzioni, ma che succede sugli altri processori? Avrebbe senso disabilitare tutte le operazioni sulla memoria dal
+momento in cui una primitiva di sincronizzazione viene avviata a
+quando ha finito di modificare la variabile di sincronizzazione?
+}
+
+\paragraph{Risposta:} Funzionerebbe, ma questo danneggerebbe le operazioni delle CPU
+non coinvolte nella sincronizzazione. La soluzione adottata in molti processori usa una coppia di
+istruzioni macchina eseguite una dopo l’altra. La prima istruzione cerca di scrivere in uno dei registri della CPU
+il valore della variabile condivisa. La seconda istruzione cerca di modificare la variabile condivisa, e
+restituisce un valore da cui si può capire
+se la coppia di istruzioni è stata eseguita in modo atomico,
+il che in un sistema multiprocessore, significa: 
+
+
+\begin{itemize}
+  \item Nessun altro processo attivo su qualsiasi processore ha modificato
+il valore della variabile usata per la sincronizzazione prima della
+terminazione della seconda istruzione della coppia.
+\item Durante l’esecuzione delle due istruzioni non si è verificato alcun
+context switch nel processore che le ha eseguite.
+\end{itemize}
+
+\ex{Sincronizzazione}{
+  Sia $[0(R1)]$ il valore della cella di memoria di indirizzo $0(R1)$,
+usata come variabile condivisa di sincronizzazione.
+\begin{center}
+  \includegraphics[scale =0.55]{04-ArchitettureParallele/ex1.png}
+\end{center}
+L’esecuzione delle due istruzioni rispetto a 0(R1) è vincolata a ciò
+che accade tra l’esecuzione delle due istruzioni:
+
+\begin{itemize}
+  \item Se $0(R1)$ viene modificata da un altro processo prima della
+terminazione della SC, la SC fallisce, ossia:
+$0(R1)$ non viene modificata dalla SC e viene scritto 0 in R3.
+Se invece la SC non fallisce, allora:
+$R3$ viene copiato in $0(R1)$ e in $R3$ viene scritto 1.
+  \item Analogamente, se la CPU su cui la coppia di istruzioni viene
+eseguita esegue un context switch tra le due istruzioni, la SC
+fallisce, con gli stessi effetti del punto 1.
+\end{itemize}
+Una exchange “atomica” tra R4 e
+0( R1) in un sistema multiprocessore (simile ad uno spin lock):
+\begin{center}
+  \includegraphics[scale =0.55]{04-ArchitettureParallele/ex2.png}
+\end{center}
+Quando la MOV viene eseguita, $R4$ e $0(R1)$ sono stati scambiati in
+modo “atomico”, e si è certi che il contenuto di $0(R1)$ non è stato
+modificato da altri processi prima del completamento della
+exchange. Chiamiamo EXCH l’operazione eseguita da questo
+codice.
+
+Una volta in possesso di un’operazione atomica EXCH, la si può
+usare per implementare spin locks: accessi ad una sezione critica
+che ogni processore cerca di acquisire ciclando sulla variabile di
+lock, che controlla appunto l’accesso mutuamente esclusivo. 
+}
+\subsubsection{}
+Se le CPU non sono dotate di cache, la variabile di lock viene
+ovviamente tenuta in memoria: un processore cerca di acquisire il
+lock con una exchange atomica, e verifica se il lock è libero. 
+Se le CPU sono dotate di cache allora è presente un meccanismo per
+mantenere la coerenza della cache, e ogni processore coinvolto nella
+sincronizzazione userà la copia della variabile di lock che ha portato
+nella propria cache.
+Questo rende il meccanismo dello spin lock più efficiente, perché
+tutte le operazioni dei vari processori che cercano di acquisire il
+lock operano sulle rispettive cache, in modo più efficiente. Il codice dello spin lock va però modificato: ogni processore esegue
+una read sulla copia in cache del lock, fino a quando non vede che il
+lock è libero. A questo punto tenta di acquisire il lock con la exchange atomica.
+
+
 
 
 
