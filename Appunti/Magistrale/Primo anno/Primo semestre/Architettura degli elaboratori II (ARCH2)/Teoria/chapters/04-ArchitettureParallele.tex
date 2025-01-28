@@ -826,21 +826,335 @@ lock operano sulle rispettive cache, in modo più efficiente. Il codice dello sp
 una read sulla copia in cache del lock, fino a quando non vede che il
 lock è libero. A questo punto tenta di acquisire il lock con la exchange atomica.
 
+\ex{Sincronizzazione con Cache}{
+\begin{center}
+  \includegraphics[scale =0.45]{04-ArchitettureParallele/SinCache.png}
+\end{center}
+\begin{enumerate}
+  \item CPU 0 ha il lock, CPU 1 e CPU 2 testano ripetutamente la copia della variabile di
+lock nelle rispettive cache. 
+\item CPU 0 rilascia il lock, e il MESI genera un segnale di invalidazione della copia
+della variabile di lock nelle cache di CPU 1 e CPU 2. 
+\item Le LOAD eseguite da CPU 1 e CPU 2 generano un cache miss, e il MESI
+interviene per recuperare il valore aggiornato della variabile di lock che si
+trova nella cache di CPU 0 e aggiornare la RAM. 
+\item Il MESI serve il cache miss di CPU 2, CPU 1 deve aspettare (l’ordine con cui
+vengono servite le richieste segue l’ordine con cui sono state ricevute). 
+\item CPU 2 inizia ad eseguire la EXCH, mentre viene servito il cache miss di CPU 1. 
+\item Anche CPU 1 inizia ad eseguire la EXCH, ma nel frattempo CPU 2 completa
+la sua EXCH modificando il valore del lock nella sua cache. Il MESI deve
+intervenire per invalidare la copia del lock nella cache di CPU 1. 
+\item CPU 1 completa la sua EXCH ma trova lock = 1 (settato da CPU 2) dunque il
+MESI interviene di nuovo per invalidare le copie del lock nelle varie cache
+(questo “invalidate” è inutile se non ci sono altre CPU con il lock in cache). 
+\item CPU 1 torna a testare il valore del lock in attesa che venga modificato da CPU 2.
+\end{enumerate}
+}
+
+\nt{La tecnica vista funziona senza troppo overhead (ossia, l’attesa
+attiva non spreca troppi cicli di clock) solo per sistemi con poche
+CPU, o perlomeno con poche CPU coinvolte nel tentativo di
+acquisire il lock. Quando il numero di CPU coinvolte nel tentativo di acquisire il lock
+può essere “alto” (diciamo, da 10 CPU in su), vengono usati
+meccanismi un pò più sofisticati, ma sempre basati sulle primitive
+di sincronizzazione LL e SC già viste.}
+
+\subsection{Modelli di Consistenza della Memoria}
+
+In un sistema multiprocessore tutte le CPU hanno accesso a uno
+spazio di memoria primaria condiviso, e quando una CPU modifica
+una cella di memoria, un’altra CPU vedrà prima o poi quella
+modifica.
+
+\qs{}{In che ordine una CPU deve vedere le modifiche effettuate sulle
+celle di RAM effettuate dalle altre CPU?}
+
+\paragraph{Risposta:} La questione non è banale, dato che il sistema può essere costituito
+da centinaia di CPU e centinaia o migliaia di banchi di memoria, il
+tutto messo in comunicazione da reti a tipologia diversa, con
+conseguenti tempi variabili di completamento delle scritture/letture
+in RAM. Persino in un semplice sistema UMA con poche CPU che si
+affacciano su un unico bus di comunicazione, il problema esiste.
+
+\dfn{Consistenza stretta}{
+  La forma più ovvia (ma non implementabile) di consistenza è che qualsiasi lettura a una
+cella X restituisce sempre il valore dovuto alla scrittura più recente
+effettuata nella stessa cella.
+}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Sfortunatamente, è anche la forma di consistenza più difficile e
+inefficiente da garantire: è necessaria un’interfaccia tra le varie
+CPU e la memoria che gestisca tutte le richieste di accesso alla
+memoria stessa in modalità first come first served. 
+\item La memoria diviene così un collo di bottiglia che rallenta in modo
+inaccettabile un sistema costruito per lavorare il più possibile in
+parallelo.
+  \end{itemize}
+}
+
+\dfn{Consistenza del Processore}{
+  \begin{itemize}
+    \item \newfancyglitter{Le scritture da parte di una qualsiasi CPU sono viste dalle altre
+CPU nell’ordine in cui sono state avviate}: se CPU 1 scrive A, B e
+C in una locazione var, una CPU 2 che legga var in sequenza più
+volte leggerà prima A, poi B e poi C.
+\item \newfancyglitter{Per ogni locazione di memoria, qualsiasi CPU vede tutte le
+scritture effettuate da ogni singola CPU in quella locazione
+nello stesso ordine}.
+  \end{itemize}
+}
+
+\nt{Diverse CPU che leggano più volte var potranno leggere sequenze
+diverse. Ciò che viene garantito è che nessuna CPU vedrà una
+sequenza in cui, per esempio, B viene prima di A o Z viene prima di
+Y: l’ordine in cui ciascuna CPU esegue le sue scritture, viene
+visto allo stesso modo da tutte le altre.}
+
+\section{Multicomputer a scambio di
+messaggi (e miscellanea)}
+
+\subsection{Introduzione}
+
+Il limite alla scalabilità dei sistemi multiprocessore è dovuto alla
+difficoltà di connettere fra loro molti nodi (single o multi-core)
+fornendo a ciascuno la visibilità dell’intero spazio di memoria. Anche risolvendo il problema della rete di connessione, l’uso di una
+memoria condivisa in cui centinaia di CPU stanno cercando di
+accedere alle stesse variabili crea un collo di bottiglia che limita
+fortemente la scalabilità di questo tipo di architetture. 
+Nei sistemi multicomputer i programmi che girano su ciascun nodo
+interagiscono scambiandosi informazioni attraverso primitive come
+SEND e RECEIVE anziché con istruzioni come LOAD e STORE. Ogni nodo del sistema è composto di una o pochi processori, ormai
+sempre multi-core, della RAM condivisa solo dai core locali,
+eventualmente un disco (e/o altri dispositivi di I/O), e un processore
+per la comunicazione attraverso una rete di interconnessione.
+
+\dfn{NORMA}{
+  Quando c’è bisogno di una potenza computazionale maggiore di
+quella che possono fornire i sistemi a memoria condivisa, è
+necessario ricorrere ad architetture in cui i vari nodi comunicano
+solo attraverso lo scambio di messaggi, e non esiste uno spazio di
+indirizzamento comune. A causa di questa caratteristica, queste
+architetture sono a volte chiamate \newfancyglitter{NO Remote Memory Access}
+(NORMA).
+}
+
+\subsection{Massively Parallel Processor (MPP)}
+
+Le architetture MPP sono sistemi con un costo dell’ordine dei
+milioni o decine di milioni di dollari, usati per applicazioni
+scientifiche, finanziarie e militari. Gli MPP sono tipicamente costituiti da centinaia di migliaia o
+milioni di nodi formati da processori standard o prodotti
+appositamente, connessi da una rete privata ad alte prestazioni. Gli MPP hanno di solito anche una alta capacità di I/O, dovuta al
+tipo di problemi trattati che richiedono la capacità di processare
+grosse quantità di dati (dell’ordine dei terabytes) e di spostarli
+velocemente da una macchina all’altra. Spesso usano software di gestione del sistema appositamente
+sviluppato per la sincronizzazione e la comunicazione fra i processi:
+librerie dedicate e/o sistema operativo. Infine, gli MPP devono avere una alta tolleranza ai guasti, che non
+possono che essere frequenti, dato l’elevatissimo numero di
+processori, banchi di memoria, e dischi coinvolti.
+
+\nt{Devono così essere previsti specifici meccanismi hardware e
+software per monitorare il sistema, gestire i guasti, ed evitare che il
+lavoro fatto fino a quel punto vada perso. Questi sistemi sono prodotti in quantità ovviamente limitate, così
+che non esistono dei principi generali di progettazione: ogni sistema
+ha le sue proprie peculiarità.}
+
+\dfn{BlueGene}{
+  Il progetto BlueGene dell’IBM nasce nel 1999 con l’obiettivo di
+produrre un supercomputer adatto a risolvere problemi che
+richiedono un elevato sforzo computazionale: nell’analisi della
+struttura delle proteine umane, nei modelli climatici, in campo
+astronomico, finanziario e militare. L’idea era quella di costruire non solo il sistema più veloce in
+termini di potenza di calcolo (teraflops), ma anche il più efficiente
+in termini di teraflops/\$, teraflops/watt, teraflops/$m^3$.
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{04-ArchitettureParallele/BlueGene.png}
+    \caption{Nel progetto iniziale, il cuore di BlueGene era un chip (prodotto a
+partire dalla metà del 2003) formato da due PowerPC 440 con un
+clock a “soli” 700 MHz.}
+\end{figure}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Il PowerPC 440 è un processore superscalare, usato principalmente
+in sistemi embedded, in grado di avviare fino a 4 istruzioni anche
+floating point) per ciclo di clock. La versione usata in BlueGene è
+stata arricchita con istruzioni FP di tipo vettoriale. 
+\item I due core su ogni chip sono identici, ma uno è usato per le
+computazioni vere e proprie, e l’altro per le comunicazioni tra i vari
+nodi del sistema. 
+\item Ogni coppia di core ha a disposizione 512MB di RAM privata
+(condivisa dai due core), estendibili fino a 2 GB. Per la coerenza
+delle cache tra i due core viene usata una logica di snooping.
+  \end{itemize}
+}
+
+\paragraph{Progettazione del BlueGene:}
+
+\begin{itemize}
+  \item Una scheda custom ospita due chip e la RAM per ciascun chip. 
+  \item 16 schede custom sono montate su una motherboard, per un totale
+di 32 chip (ossia 32 core per la computazione) e almeno 16GB. 
+\item 32 motherboard sono ospitate in un cabinet, per un totale di 1024
+core per la computazione. 
+\item Infine, un sistema
+completo è formato da
+64 cabinet, per un totale
+di 65,536 core per la
+computazione e almeno
+32TB di RAM.
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{04-ArchitettureParallele/BG.png}
+    \caption{Il sistema BlueGene.}
+\end{figure}
+\subsubsection{}
+
+Ogni core ha accesso diretto solo alla propria RAM, e
+che non esistono dischi “locali”: Il sistema ha invece 1024 nodi di
+I/O, connessi ai dischi e ad altre periferiche. La rete di interconnessione tra i nodi
+è un toroide a tre dimensioni:
+Un toroide a due dimensioni è una griglia
+con i nodi ai lati connessi fra loro. In un toroide 3D, ogni nodo è all’intersezione
+di 3 assi anziché 2, e ha due vicini ai due lati di ogni asse. Ogni chip comunica quindi con sei vicini, con una connessione
+punto a punto ad una velocità di 1,4 Gbit/sec, con una ampiezza di
+banda totale (la quantità di informazione che può essere spostata
+nell’intero sistema nell’unità di tempo) di 275 terabit/sec. 
+
+La comunicazione tra i nodi è sostanzialmente a commutazione di
+pacchetto, ma il sistema è connesso anche attraverso altre reti (tra
+cui una Gigabit Ethernet), per gestire la manutenzione e la
+comunicazione con i dispositivi di memorizzazione di massa
+(dischi e sistemi a nastro magnetico). Su ogni chip gira un SO molto semplice, appositamente
+sviluppato, che supporta un solo utente ed un solo processo
+suddiviso in due thread: uno per ciascun core del chip. Questa
+soluzione garantisce alte prestazioni e bassi errori software.
+Attraverso software opportuno, il sistema è in grado di eseguire dei
+checkpoint, ai quali l’intero stato della computazione viene salvato
+su disco. In caso di crash del sistema, la computazione può
+riprendere dall’ultimo check point.
+
+\nt{Oggigiorno i successori dei BlueGene raggiungono ormai le
+centinaia di PetaFLOPS e combinano processori custom e GPU (se ne parlerà nel sesto capitolo)
+per massimizzare la potenza di calcolo.}
+
+\subsection{Cluster Of Workstation (COW)}
+
+Un cluster è tipicamente formato da un insieme di macchine
+connesse in rete. In genere, le unità
+computazionali di un MPP sono tutte uguali, e sono
+“impacchettate” in modo molto “denso” in una struttura
+progettata appositamente. I processori comunicano fra loro mediante una rete ad alte
+prestazioni, spesso progettata specificamente per quella architettura. La singola unità computazionale non potrebbe “funzionare dasola”. Al contrario, un cluster è innanzi tutto costituito da macchine che
+possono essere anche molto diverse fra loro: PC e workstations con
+processori diversi. In alcuni casi, ciascuna unità computazionale costituisce un sistema
+che potrebbe anche funzionare da solo (al massimo mancano il
+video e la tastiera/mouse). I vari nodi sono connessi da una rete non progettata esplicitamente
+per quell’applicazione: una rete Ethernet o anche Internet. Ancor meno che con i MPP, non esiste un criterio di progettazione
+specifico per i cluster, e il numero di nodi connessi è estremamente
+variabile: si va da qualche PC ai milioni di core di un sistema
+distribuito geograficamente come Google. 
+
+\subsection{Processori Vettoriali}
+
+La quantità di hardware necessaria per eseguire in parallelo più
+istruzioni cresce più che linearmente (più o meno quadraticamente)
+con il numero di istruzioni eseguite in parallelo. Questo limita praticamente il numero di istruzioni avviabili per
+ciclo di clock e il numero di stadi di una pipeline. 
+
+\dfn{Processori Vettoriali}{
+I \newfancyglitter{processori vettoriali}, commercializzati a partire da metà anni 70
+(i più famosi sono certamente i vari modelli prodotti dalla Cray),
+rappresentano una alternativa allo sfruttamento dell’ILP tipico dei
+classici processori superscalari – multiple issue moderni. Queste architetture mettono a disposizione istruzioni che lavorano
+su vettori di dati, ossia, in sostanza, su array di numeri.
+L’istruzione vettoriale è quindi equivalente a un intero loop in cui
+ad ogni iterazione verrebbe calcolato uno dei 64 elementi di output,
+verrebbero aggiornati gli indici e si salterebbe indietro all’inizio del
+ciclo per operare sull’elemento successivo.
+}
+
+\clm{}{}{
+  Le istruzioni vettoriali hanno quindi delle importanti caratteristiche: 
+  \begin{itemize}
+    \item \fancyglitter{Una singola istruzione vettoriale specifica molto lavoro,
+      equivalente a eseguire un intero loop}: In particolare, una istruzione può rappresentare decine di operazioni
+più semplici, e intere unità funzionali posso essere tenute
+completamente occupate prelevando ed eseguendo una sola di tali
+istruzioni (invece che preoccuparsi di prelevare e lanciare molte
+istruzioni potenzialmente dipendenti tra loro ad ogni ciclo di clock). 
+\item \fancyglitter{L’uso di una istruzione vettoriale indica che la computazione
+di ogni elemento del vettore risultato è indipendente dalla
+computazione di altri risultati nel vettore}: Come conseguenza, l’hardware della CPU non deve controllare
+nessun data hazard all’interno di una istruzione vettoriale, e gli
+elementi del vettore possono essere elaborati usando un array di
+unità funzionali in parallelo. 
+\item \fancyglitter{È necessario controllare le alee tra due istruzioni vettoriali solo
+una volta per ogni vettore operando, e non per ogni elemento
+dei due vettori}: La logica di controllo è quindi molto più semplice, a parità di potere
+espressivo delle istruzioni.
+\item \fancyglitter{Le istruzioni vettoriali accedono di solito a locazioni adiacenti di
+memoria, quelle che ospitano i vari elementi del vettore}: Gli accessi alla memoria (sia questa la RAM o la cache) sono in
+generale più efficienti, perché è più probabile che valga il principio
+di località.
+\item \fancyglitter{Un intero loop viene sostituito da un’unica istruzione vettoriale}: Come conseguenza, scompaiono tutti gli hazard sul controllo, e la
+necessità di gestire il branch prediction. 
+  \end{itemize}
+}
+
+\nt{I processori vettoriali trovano un naturale impiego in vari campi
+scientifici e industriali in cui sia necessario manipolare grandi
+quantità di dati che hanno una naturale “forma” vettoriale: ad
+esempio, le previsioni metereologiche, simulazioni di crash test,
+applicazioni multimediali.}
 
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{04-ArchitettureParallele/Vet.png}
+    \caption{Architettura di base di un processore vettoriale.}
+\end{figure}
 
+\paragraph{Un processore vettoriale è composto da:}
 
+\begin{itemize}
+  \item Registri vettoriali: 8 registri vettoriali, ciascuno dei quali contiene 64 elementi da 32 o 64 bit ciascuno. 
+  \item Unità funzionali vettoriali: Ogni unità è pipelined, è può far
+partire una nuova operazione ad ogni ciclo di clock. Una unità di
+controllo verifica gli eventuali conflitti nell’uso delle unità
+funzionali (hazard strutturali) e nell’accesso ai registri (Hazard sui
+dati). 
+\item Unità vettoriali load-store: Possono operare in modo tale da
+spostare l’intero contenuto di più celle adiacenti di RAM nei
+registri vettoriali, e viceversa.
+\item Registri scalari. Che possono essere usati per calcolare indirizzi di
+RAM o per eseguire operazioni tra vettori e scalari.
+\end{itemize}
 
+\qs{}{Perché i processori vettoriali non hanno preso il sopravvento sulle
+classiche architetture superscalari?}
 
-
-
-
-
-
-
-
-
-
-
-
+\paragraph{Risposta:} Innanzi tutto, i processori vettoriali hanno una architettura
+inerentemente più complessa, che limita verso l’alto la velocità del
+clock: nel 2001 la più veloce architettura vettoriale aveva un clock
+di 500 MHz. La complessità dell’architettura è dovuta proprio al modo in cui
+operano i processori vettoriali. Come conseguenza, la domanda del mercato è sempre rimasta
+limitata e non sono state possibili produzioni su larga scala che
+ne avrebbero abbattuto i prezzi. Per contro, l’aumento delle prestazioni delle classiche CPU
+superscalari degli anni 80 e 90 ha permesso ai processori
+tradizionali di diminuire le differenze rispetto alle prestazioni dei
+processori vettoriali anche su problemi tipicamente “vettoriali”. Per tutte queste ragioni, i processori vettoriali sono ormai diventati
+prodotti di nicchia. Tuttavia l’esperienza progettuale dei processori
+vettoriali è stata almeno parzialmente trasferita nei processori
+superscalari moderni. Infatti, molte applicazioni multimediali contengono codice che può
+essere naturalmente vettorizzato, e molti processori moderni hanno
+arricchito il loro set di istruzioni macchina con estensioni
+multimediali che ricalcano lo stile delle istruzioni vettoriali.
 
