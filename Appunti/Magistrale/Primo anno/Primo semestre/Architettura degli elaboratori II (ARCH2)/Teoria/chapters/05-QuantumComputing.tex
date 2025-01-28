@@ -1,1 +1,341 @@
 \chapter{Quantum Computing}
+
+\section{Introduzione}
+
+La rivoluzione scientifica che diede origine al corpo di conoscenze
+che va sotto il nome di Fisica Quantistica ebbe luogo all’incirca nei
+primi trenta/quaranta anni del XX secolo. Tra i protagonisti di questa rivoluzione, ricordiamo Max Planck,
+Niels Bohr, Albert Einstein, Erwin Schr\"odinger, Louis de Broglie,
+Werner Heisenberg, Paul Dirac, John von Neumann. Gli esperimenti condotti in quegli anni mostravano che, a livello
+subatomico, la materia si comportava in modo radicalmente diverso
+da come invece faceva a livello macroscopico, e gli scienziati
+svilupparono opportuni formalismi matematici in grado di rendere
+conto delle osservazioni sperimentali e delle nuove scoperte. A livello subatomico la materia manifesta proprietà e comportamenti
+in molti casi bizzarri e controintuitivi, se confrontati con le proprietà
+e i comportamenti che osserviamo a livello macroscopico (livello del
+quale si occupa la fisica classica). 
+
+\dfn{Fisica Quantistica}{
+  La Fisica Quantistica è quella branca della fisica
+che si occupa dello studio dei fenomeni fisici che hanno luogo
+a livello atomico e subatomico.
+}
+
+\clm{}{}{
+  \begin{itemize}
+    \item A livello microscopico le entità atomiche e
+subatomiche hanno un comportamento probabilistico, ciò significa
+che il loro comportamento (per esempio la loro posizione in un certo
+istante, o in che direzione e con che velocità si stanno muovendo) può
+essere predetto solo con una legge probabilistica.
+\item La formula matematica che riassume il comportamento probabilistico
+di una entità atomica prende il nome di funzione d’onda, secondo la
+teoria sviluppata da Erwin Schr\"odinger nel 1926.
+
+  \end{itemize}
+}
+
+\dfn{Quantum Computing}{
+  Col termine \newfancyglitter{Quantum Computing} si indica la disciplina all’intersezione tra Fisica Quantistica
+e Informatica che studia come implementare algoritmi sfruttando
+alcune caratteristiche manifestate dalla materia a livello subatomico.
+}
+
+\nt{Alcune di queste caratteristiche rendono le potenzialità della QC
+molto promettenti, anche se dietro gli aspetti teorici si nascondono
+difficoltà realizzative non ancora risolte in modo soddisfacente.}
+
+\paragraph{Breve Recap:}
+
+\begin{itemize}
+  \item Nell’anno zero dell’era quantica, il 1900, Max Planck riesce
+finalmente a modellare matematicamente il modo in cui i metalli,
+riscaldati a diverse temperature, emettono una quantità ben precisa
+di energia elettromagnetica. La soluzione di Planck
+consiste nell’ipotizzare che
+la radiazione elettromagnetica
+(di cui la luce fa parte) venga
+emessa dai metalli non in
+modo continuo ma in
+pacchetti di dimensione
+prestabilita.
+\item Nel 1905 Albert Einstein, sfruttando l’idea di Planck, spiega l’effetto
+fotoelettrico ipotizzando una natura corpuscolare per la luce: le
+particelle di luce (che verranno poi chiamate fotoni, o quanti di
+luce), bombardano i metalli e strappano elettroni dalla loro superficie:
+un fotone per ciascun elettrone.
+\item Nel 1911 Ernest Rutheford, dopo aver scoperto che gli atomi sono
+quasi completamente vuoti, ipotizza che assomiglino a microscopici
+sistemi solari. 
+\item Nel 1913 Niels Bohr, ricorrendo ancora all’idea dei pacchetti di
+energia, spiega perché gli elettroni non precipitano sul nucleo fatto di
+protoni: gli elettroni si muovono su orbite quantizzate, e possono spostarsi da
+un’orbita all’altra solo assorbendo o emettendo un pacchetto di
+energia (l’idea di “orbita” è ormai
+superata, ma l’idea di stati quantici
+rimane valida).
+\item Negli stessi anni, lo studio del decadimento radioattivo e del
+comportamento degli elettroni negli atomi mostra che atomi in
+condizioni apparentemente identiche si comportano in modo diverso. Il loro comportamento può essere predetto solo facendo ricorso a
+leggi probabilistiche. 
+\item Intorno al 1922-1923, tutti i fisici sono più o meno convinti della
+natura corpuscolare della luce: quando un fascio di luce attraversa un
+gas, fotoni ed elettroni si scontrano fra di loro con un comportamento
+simile a quello delle palle da bigliardo. 
+\item Viene utilizzato un esperimento (delle due fenditure) per dimostrare che la luce possa essere contemporaneamente sia un'onda che un insieme di particelle.
+\item Nel 1924, nella sua tesi di dottorato Louis de Broglie argomenta che
+se le onde elettromagnetiche hanno anche una natura corpuscolare,
+allora la materia può avere una natura ondulatoria, e mostra come
+calcolare le lunghezze d’onda della materia. E infatti negli anni a venire l’esperimento a due fenditure sarà ripetuto
+con elettroni, protoni, interi atomi, e infine con molecole complesse. 
+\item La dicotomia classica che aveva regnato per centinaia di anni:
+la realtà fisica fatta di materia e campi di forza, o equivalentemente,
+particelle e onde, sembrava dissolversi in una unica “sostanza
+quantica” che manifestava le proprietà di entrambe.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.3\textwidth]{05-QuantumComputing/meme.jpg}
+    \caption{"È solo A o B ahhh rhetoric".}
+\end{figure}
+\item Tra il 1925 e il 1926 Werner Heisenberg, Erwin Schrödinger e
+Paul Dirac formulano in modo indipendente addirittura tre modelli
+matematici equivalenti in grado di descrivere e prevedere
+il comportamento di questa “sostanza quantica”.
+\end{itemize}
+
+\section{Il Problema della Misurazione}
+
+ La funzione d’onda associata ad una entità atomica o subatomica,
+nota anche come equazione di Schr\"odinger codifica / sintetizza /
+permette di calcolare, con un’unica espressione matematica:
+\begin{itemize}
+  \item Tutti i valori che possono assumere gli attributi di quella entità. 
+  \item La probabilità con cui ciascun valore tra quelli possibili potrà
+manifestarsi durante una misurazione.
+\end{itemize}
+
+La formulazione appena data, apparentemente semplice, nasconde al
+suo interno alcune peculiarità singolari, che i fisici non hanno ancora
+saputo spiegare, pur riuscendo a modellarle correttamente con un
+appropriato formalismo matematico. Non a caso, uno dei grandi fisici del novecento, Richard Feynman (tra
+l’altro il primo a intuire le potenzialità della quantum computing), ha
+affermato che “nessuno capisce la fisica quantistica”, e prima di lui, a
+Niels Bohr, uno dei padri della fisica quantistica, veniva attribuita
+l’opinione secondo cui “lo scopo della scienza non era più di spiegare
+la natura, ma solo di descrivere ciò che si può dire sulla natura”. Uno degli aspetti controintuitivi (e importante per la QC) ha
+a che fare con il concetto di misura in fisica quantistica, dove
+è fondamentale evitare di cercare paralleli con la fisica classica. 
+
+\ex{La Fisica Classica}{
+  Se sappiamo che una sfera di ferro si può trovare in uno di n
+punti diversi dello spazio, nel momento in cui misuriamo la posizione
+della sfera veniamo a conoscenza del punto specifico, tra gli n
+possibili, in cui la sfera si trova. Ma diamo per scontato che la sfera fosse in quel particolare punto
+anche immediatamente prima che la misurazione avesse luogo. In altre parole, la misurazione compiuta non ha alcuna influenza sul
+sistema misurato, e il sistema viene lasciato nello stesso stato in cui
+si trovava prima di essere misurato: dopo la misurazione la sfera si
+troverà nello stesso punto in cui si trovava prima della misurazione. 
+}
+
+\ex{Fisica Quantistica}{
+  In fisica quantistica le cose funzionano diversamente. Supponiamo
+che un elettrone possa trovarsi in una di n posizioni possibili con
+probabilità $c_0, c_1, … c_{n-1}$. Indichiamo con $X = [c_0, c_1, c_2, …c_{n-1}]$ lo
+stato dell’elettrone. (dove sarà: $c_0 + c_1 + …+ c_{n-1} = 1$).
+
+Questo non significa (come saremmo tentati di assumere), che
+l’elettrone si trova in posizione $k$ con probabilità $c_k$.
+Dire che il sistema è nello stato $X$ significa dire che l’elettrone si
+trova contemporaneamente in tutte le possibili posizioni ammesse.
+
+Fino a che non decidiamo di misurare la posizione dell’elettrone per
+sapere dove si trova, dobbiamo accettare che l’elettrone si trovi
+non in una delle posizioni possibili, ma in tutte: più propriamente
+diciamo che l’elettrone si trova in una sovrapposizione di stati.
+
+Sarà solo quando decideremo di effettuare una misurazione, che
+troveremo l’elettrone in una specifica posizione. È solo nell’atto della
+misurazione di un oggetto quantistico che la sovrapposizione di
+stati in cui si trova collassa in un singolo stato in senso ordinario.
+
+Ma prima di essere misurato, un sistema quantistico si trova
+contemporaneamente in più stati, e in questo risiede il potenziale
+della computazione quantistica: corrisponde ad avere un
+computer capace di eseguire un algoritmo processando in
+parallelo (un parallelismo reale, non simulato) tutti i possibili
+input ammessi per quell’algoritmo.
+}
+
+\nt{In fisica quantistica dire che un sistema si trova nello stato $X$ significa dire che, solo
+dopo averlo misurato, lo troveremo in posizione k con probabilità $c_k$.}
+
+\subsection{Bit e Qubit}
+
+Un bit ordinario descrive un sistema che può trovarsi in uno di due
+possibili stati: aperto/chiuso, acceso/spento, vero/falso. I due stati in
+cui si può trovare il sistema vengono di solito indicati con 0 e 1. Il formalismo matematico alla base della fisica quantistica fa un uso
+esteso di matrici e vettori, dunque proviamo a usare quel formalismo
+per rappresentare un bit ordinario a 0 oppure a 1 mediante matrici
+2 x 1. Indicheremo il valore 0 con $|0>$ e il valore 1 con $|1>$. 
+
+\nt{La notazione $|x>$, detta \fancyglitter{ket}, è stata introdotta da Paul Dirac. 
+Possiamo leggere la notazione matriciale che abbiamo introdotto in
+questo modo: $|0>$ significa che il bit si trova nello stato “0” con
+probabilità 1, e si trova nello stato “1” con probabilità 0. $|1>$ significa
+che il bit si trova nello stato “0” con probabilità 0 e nello stato “1” con
+probabilità 1.
+}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Usare probabilità per rappresentare bit “normali” è inutilmente
+pesante, ma è perfetto per rappresentare un qubit, ossia un sistema
+quantistico che può trovarsi in una di due possibili configurazioni:
+0 e 1, con probabilità diverse. 
+\item Poiché il sistema quantistico che rappresenta un qubit può assumere,
+una volta misurato, uno di due valori possibili, descriviamo il
+sistema mediante una matrice a valori complessi con due righe e una
+colonna. 
+\item Un qubit, fino a che non viene misurato, si trova
+sempre in una sovrapposizione di due stati, corrispondenti ai valori 0 e
+1. Alla misurazione, lo stato del qubit collasserà in uno dei due stati
+possibili, trasformandosi così in un bit ordinario di valore 0 o 1.
+\item non è possibile “vedere” un qubit, perché nel
+momento in cui lo si osserva, ossia lo si misura, questo si trasforma in
+un normale bit, con un valore ben preciso 0 o 1. Non di meno i qubit
+esistono in un senso molto reale.
+\end{itemize}
+}
+
+\subsubsection{}
+
+Nei computer ordinari, un bit viene implementato mediante due livelli
+di tensione diversi, associati alle due informazioni 0 e 1. Per costruire un qubit, nella quantum computing si sfruttano alcune
+caratteristiche delle particelle subatomiche. Per esempio, un fotone
+può trovarsi in uno di due possibili stati di polarizzazione, oppure un
+elettrone è dotato di una caratteristica fisica chiamata spin che può
+assumere due possibili valori diversi, che possiamo associare a 0 e 1.
+Ogni stato di un sistema formato da 8 bit, ossia un qubyte deve
+essere scritto con una matrice di
+256 numeri complessi che soddisfano la proprietà:
+$|c_0|^2 + … +|c_{106}|^2 + |c_{107}|^2 + |c_{108}|^2 + … + |c_{255}|^2
+=1$
+
+Dunque, nel mondo ordinario per indicare lo stato di un byte
+dobbiamo scrivere in tutto 8 bit. Ma nel mondo dei quanti, lo stato di
+otto qubit (appunto, un qubyte) deve essere descritto usando 256
+numeri complessi, perché ognuna delle 256 combinazioni possibili
+di 8 bit deve essere associata alla probabilità che ha di
+manifestarsi, quando viene misurata. Se volessimo simulare su un computer ordinario un
+computer quantistico dotato di un solo registro a 64 qubit avremmo
+bisogno di poter memorizzare 264 numeri complessi, ossia più di 18
+miliardi di miliardi di numeri complessi.
+Assumendo di usare 8 byte per scrivere un numero reale, e dato che
+ogni numero complesso è formato da una coppia di numeri reali,
+questo corrisponde ad uno spazio di più di 288 milioni di terabyte.
+
+\subsection{Porte Logiche}
+
+Un computer è in definitiva un circuito logico estremamente
+complesso, in cui dell’informazione in input scritta su $n$ bit viene
+trasformata in informazione in output scritta su $m$ bit passando
+attraverso un certo numero di porte logiche.
+Gli $n$ bit di informazione in input possono essere rappresentati come una matrice di $2^n$ righe x 1 colonna, e gli $m$ bit di output saranno rappresentati con una matrice di
+$2^m$ righe x 1 colonna (matrici con più righe e una colonna sono di
+solito chiamate vettori colonna, cioè vettori rappresentati in verticale). Dunque rappresenteremo sequenze di bit mediante vettori colonna, e porte logiche mediante matrici.
+
+È noto che qualsiasi circuito logico può essere formulato con una
+opportuna combinazione di porte NOT e porte AND. La matrice NOT deve trasformare il vettore colonna $|0>$ nel vettore colonna $|1>$, e viceversa. Abbastanza intuitivamente poi, moltiplicando la matrice NOT per la matrice AND otteniamo la matrice corrispondente alla porta logica
+NAND (ossia una porta AND con l’output negato da una porta logica NOT). La NAND è una porta logica universale: qualsiasi circuito logico
+può essere costruito con una opportuna combinazione di porte logiche
+NAND.
+
+In maniera del tutto analoga, anche nella Quantum Computing la
+computazione avviene usando porte logiche quantistiche, che
+manipolano qubit in input per trasformarli in qubit di output. Le porte logiche quantistiche devono soddisfare alcune condizioni matematiche, ma a
+parte questo, anche nella QC esistono particolari insiemi di porte
+logiche quantistiche che sono universali, ossia possono essere
+composte fra loro in opportune combinazioni e usate per eseguire
+qualsiasi tipo di computazione.
+Ma, pensando sempre alla descrizione di porta logica data mediante
+una opportuna matrice, la differenza fondamentale tra una porta logica
+ordinaria e una porta logica quantistica è che in quest’ultima la
+matrice che la descrive può essere composta da numeri diversi da 0 e
+1 (e nel caso più generale complessi).
+
+\dfn{Matrice di Hadamard}{
+  La \newfancyglitter{matrice di Hadamard}, che ha la proprietà di mettere
+un qubit in input in una sovrapposizione di stati per cui il qubit di
+output è per metà nello stato $|0>$ e per metà nello stato $|1>$.
+}
+
+\nt{In altre parole, se misuriamo ripetutamente il qubit $|0>$ lo troveremo
+sempre nello stato 0. Se invece misuriamo ripetutamente il qubit $H|0>$ (a cui è stata applicata la matrice di Hadamard) lo troveremo metà delle volte nello stato 0 e lo troveremo metà delle
+volte nello stato 1.}
+
+\subsubsection{}
+Proprio come nel caso classico, più porte logiche quantistiche
+possono essere combinate assieme per portare avanti computazioni
+più complesse. Ciò equivale a moltiplicare fra loro le matrici
+corrispondenti. Ma notiamo una differenza fondamentale col caso classico: nel
+momento in cui li misuriamo, i qubit si trasformano in bit ordinari,
+e qualsiasi vantaggio della computazione quantistica scompare.
+Se dovessimo effettuare la misurazione tra le porte A e B, la nostra
+computazione quantistica si fermerebbe in quel momento.
+Dunque, la misurazione va posticipata fino a quando non sono stati
+eseguiti tutti i calcoli desiderati in modalità quantistica.
+
+\dfn{Decoerenza Quantistica}{
+  Le particelle subatomiche che implementano i qubit tendono spontaneamente a
+interagire con l’ambiente circostante e, così facendo, in tempi
+brevissimi si trasformano in bit ordinari e perdono l’informazione che
+veicolavano.
+}
+
+\nt{Più è complesso il calcolo quantistico da portare avanti, maggiore è
+il numero di porte logiche quantistiche da attraversare, e maggiore
+sarà la probabilità che la decoerenza avvenga prima del
+completamento del calcolo, vanificandolo. Mitigare questo problema
+richiede soluzioni tecniche complesse e di difficile implementazione.}
+
+\section{Algoritmi Quantistici}
+
+Gli algoritmi quantistici non sono veri e propri algoritmi, almeno non
+nel senso in cui normalmente intendiamo un algoritmo. Non esistono criteri generali per la scrittura degli algoritmi quantistici,
+e la soluzione a un certo problema è sempre un po’ ad hoc, studiata
+specificamente per quel problema e non immediatamente estendibile
+ad altri problemi. 
+Nei casi in cui l’algoritmo quantistico si dimostra inerentemente
+superiore a una soluzione classica, ciò si deve alla possibilità di
+sfruttare il concetto di sovrapposizione degli stati. In questo modo,
+i diversi casi che un algoritmo classico dovrebbe considerare uno
+per uno, nella versione quantistica possono essere processati tutti
+insieme contemporaneamente.
+
+\dfn{Algoritmo Quantistico di Deutsch}{
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
