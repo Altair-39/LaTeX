@@ -1,16 +1,19 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PACKAGE IMPORTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
+\usepackage{titleps}
+\usepackage[table]{xcolor}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{subfig}
+\usepackage{bbding}
+\usepackage[linguistics]{forest}
+\usepackage{forest} 
+\usepackage{longtable}
 \usepackage[tmargin=2cm,rmargin=1in,lmargin=1in,margin=0.85in,bmargin=2cm,footskip=.2in]{geometry}
 \usepackage{amsmath,amsfonts,amsthm,amssymb,mathtools}
 \usepackage[varbb]{newpxmath}
 \usepackage{xfrac}
-\usepackage[linguistics]{forest}
-\usepackage{forest} 
-\usepackage{blindtext}
-\usepackage{multicol}
 \usepackage[makeroom]{cancel}
 \usepackage{mathtools}
 \usepackage{bookmark}
@@ -18,7 +21,7 @@
 \usepackage{hyperref,theoremref}
 \hypersetup{
 	pdftitle={Assignment},
-	colorlinks=true, linkcolor=black,
+	colorlinks=true, linkcolor=BrownPastel,
 	bookmarksnumbered=true,
 	bookmarksopen=true
 }
@@ -27,19 +30,19 @@
 \usepackage{varwidth}
 \usepackage{varwidth}
 \usepackage{etoolbox}
-%\usepackage{authblk}
 \usepackage{nameref}
+\usepackage{array}
 \usepackage{multicol,array}
 \usepackage{tikz-cd}
 \usepackage[ruled,vlined,linesnumbered]{algorithm2e}
-\usepackage{comment} % enables the use of multi-line comments (\ifx \fi) 
+\usepackage{comment} 
 \usepackage{import}
 \usepackage{xifthen}
 \usepackage{pdfpages}
 \usepackage{transparent}
 \usepackage{afterpage}
-
-\newcommand\mycommfont[1]{\footnotesize\ttfamily\textcolor{blue}{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+\newcommand\mycommfont[1]{\footnotesize\ttfamily\textcolor{BrownPastel}{#1}}
 \SetCommentSty{mycommfont}
 \newcommand{\incfig}[1]{%
     \def\svgwidth{\columnwidth}
@@ -49,11 +52,6 @@
 \usepackage{tikzsymbols}
 \renewcommand\qedsymbol{$\Laughey$}
 
-
-%\usepackage{import}
-%\usepackage{xifthen}
-%\usepackage{pdfpages}
-%\usepackage{transparent}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % TEX LIVE PACKAGES
@@ -69,15 +67,39 @@
 \newcommand\blankpage{%
     \null
     \thispagestyle{empty}%
-    \addtocounter{page}{-1}%
     \newpage
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SOME COOL COLORS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\definecolor{RedPastel}{RGB}{255, 204, 204}
+\definecolor{OrangePastel}{RGB}{255, 224, 204}
+\definecolor{BrownPastel}{RGB}{229, 204, 170}
+\definecolor{GreenPastel}{RGB}{204, 255, 204}
+\definecolor{BluePastel}{RGB}{204, 229, 255}
+\definecolor{PurplePastel}{RGB}{229, 204, 255}
+
+\newcommand{\evidence}[1]{%
+    \textcolor{cyan}{\textit{#1}}%
+}
+
+\newcommand{\glitter}[1]{%
+    \textcolor{green}{\textit{#1}}%
+}
+
+\newcommand{\fancyglitter}[1]{%
+    \textcolor{red}{\textit{#1}}%
+}
+
+\newcommand{\newfancyglitter}[1]{%
+    \textcolor{violet}{\textit{#1}}%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SELF MADE COLORS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 
 \definecolor{myg}{RGB}{56, 140, 70}
 \definecolor{myb}{RGB}{45, 111, 177}
@@ -96,11 +118,10 @@
 \definecolor{notesred}{RGB}{0,162,0}
 \definecolor{myp}{RGB}{197, 92, 212}
 \definecolor{mygr}{HTML}{2C3338}
-\definecolor{myred}{RGB}{127,0,0}
+\definecolor{BrownPasteled}{RGB}{127,0,0}
 \definecolor{myyellow}{RGB}{169,121,69}
 \definecolor{myexercisebg}{HTML}{F2FBF8}
 \definecolor{myexercisefg}{HTML}{88D6D1}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % TCOLORBOX SETUPS
@@ -169,6 +190,7 @@
 %================================
 % Corollery
 %================================
+
 \tcbuselibrary{theorems,skins,hooks}
 \newtcbtheorem[number within=section]{Corollary}{Corollario}
 {%
@@ -214,7 +236,7 @@
 %================================
 
 \tcbuselibrary{theorems,skins,hooks}
-\newtcbtheorem[number within=section]{Lenma}{Lenma}
+\newtcbtheorem{Lenma}{Lemma}
 {%
 	enhanced,
 	breakable,
@@ -234,7 +256,7 @@
 {th}
 
 \tcbuselibrary{theorems,skins,hooks}
-\newtcbtheorem[number within=chapter]{lenma}{Lenma}
+\newtcbtheorem[number within=chapter]{lenma}{Lemma}
 {%
 	enhanced,
 	breakable,
@@ -279,7 +301,7 @@
 {th}
 
 \tcbuselibrary{theorems,skins,hooks}
-\newtcbtheorem[number within=chapter]{prop}{Proposition}
+\newtcbtheorem[number within=chapter]{prop}{Proposizioneo}
 {%
 	enhanced,
 	breakable,
@@ -297,14 +319,90 @@
 	segmentation style={solid, mypropfr},
 }
 {th}
+%================================
+% PATTERN
+%================================
 
+\usepackage[most]{tcolorbox}
 
+\definecolor{mypatternbg}{RGB}{255,248,220} 
+\definecolor{mypatternfr}{RGB}{139,69,19} 
+
+\tcbuselibrary{theorems,skins,hooks}
+
+\newtcbtheorem[number within=section]{Pattern}{Pattern}
+{%
+    enhanced,
+    breakable,
+    colback = mypatternbg,
+    boxrule = 0.75mm,
+    colframe = mypatternfr,
+    colbacktitle = mypatternfr!20,
+    coltitle = black,
+    fonttitle = \bfseries,
+    sharp corners,
+    detach title,
+    before upper = \tcbtitle\par\smallskip,
+    description font = \mdseries\itshape,
+    separator sign none,
+    segmentation style={solid, mypatternfr},
+    theorem style=plain,
+}
+{th}
+
+%================================
+% OBSERVATION
+%================================
+
+\definecolor{myg}{RGB}{0,128,0} % Define your color myg
+
+\tcbuselibrary{theorems,skins,hooks}
+\definecolor{mytheorembg}{RGB}{255,248,220}
+\definecolor{mytheoremfr}{RGB}{139,69,19}
+\definecolor{myb}{RGB}{0,0,255}
+
+\tcbuselibrary{theorems,skins,hooks}
+
+\newtcbtheorem[number within=section]{Observation}{Osservazione}
+{%
+    enhanced,
+    breakable,
+    colback = mytheorembg,
+    frame hidden,
+    boxrule = 0sp,
+    borderline west = {2pt}{0pt}{mytheoremfr},
+    sharp corners,
+    detach title,
+    before upper = \tcbtitle\par\smallskip,
+    coltitle = mytheoremfr,
+    fonttitle = \bfseries\sffamily,
+    description font = \mdseries,
+    separator sign none,
+    segmentation style={solid, mytheoremfr},
+    attach boxed title to top left={yshift*=-\tcboxedtitleheight},
+    fonttitle=\bfseries,
+    boxed title size=title,
+    boxed title style={%
+        sharp corners,
+        rounded corners=northwest,
+        colback=myb!80!black,
+        boxrule=0pt,
+    },
+    underlay boxed title={%
+        \path[fill=myb!80!black] (title.south west)--(title.south east)
+        to[out=0, in=180] ([xshift=5mm]title.east)--
+        (title.center-|frame.east)
+        [rounded corners=\kvtcb@arc] |-
+        (frame.north) -| cycle
+    },
+}
+{th}
 %================================
 % CLAIM
 %================================
 
 \tcbuselibrary{theorems,skins,hooks}
-\newtcbtheorem[number within=section]{claim}{Claim}
+\newtcbtheorem[number within=section]{claim}{Osservazioni}
 {%
 	enhanced
 	,breakable
@@ -330,7 +428,7 @@
 %================================
 
 \tcbuselibrary{theorems,skins,hooks}
-\newtcbtheorem[number within=section]{Exercise}{Exercise}
+\newtcbtheorem[number within=section]{Exercise}{Problema}
 {%
 	enhanced,
 	breakable,
@@ -459,7 +557,7 @@
 %================================
 
 \makeatletter
-\newtcbtheorem{question}{Domanda}{enhanced,
+\newtcbtheorem[number within=chapter]{question}{Domanda}{enhanced,
 	breakable,
 	colback=white,
 	colframe=myb!80!black,
@@ -494,7 +592,7 @@
 	colback=white,
 	colframe=myg!80!black,
 	attach boxed title to top left={yshift*=-\tcboxedtitleheight},
-	title=Solution,
+	title=Risposta,
 	boxed title size=title,
 	boxed title style={%
 			sharp corners,
@@ -507,7 +605,7 @@
 			to[out=0, in=180] ([xshift=5mm]title.east)--
 			(title.center-|frame.east)
 			[rounded corners=\kvtcb@arc] |-
-			(frame.north) -| cycle;
+			(frame.north) -| cycle
 		},
 }
 \makeatother
@@ -517,7 +615,7 @@
 %================================
 
 \makeatletter
-\newtcbtheorem{qstion}{Domanda}{enhanced,
+\newtcbtheorem{qstion}{Question}{enhanced,
 	breakable,
 	colback=white,
 	colframe=mygr,
@@ -536,13 +634,13 @@
 			to[out=0, in=180] ([xshift=5mm]title.east)--
 			(title.center-|frame.east)
 			[rounded corners=\kvtcb@arc] |-
-			(frame.north) -| cycle;
+			(frame.north) -| cycle
 		},
 	#1
 }{def}
 \makeatother
 
-\newtcbtheorem[number within=chapter]{wconc}{Wrong Concept}{
+\newtcbtheorem[number within=chapter]{wconc}{Concetto sbagliato}{
 	breakable,
 	enhanced,
 	colback=white,
@@ -563,6 +661,46 @@
 }{def}
 
 
+%================================
+% CODE BOX
+%================================
+
+\usetikzlibrary{arrows,calc,shadows.blur}
+\tcbuselibrary{skins}
+\newtcolorbox{code}[1][]{%
+	enhanced jigsaw,
+	colback=pink,%
+	colframe=pink,
+	size=small,
+	before skip=2mm, after skip=2mm,
+	boxrule=1pt,
+	title=\textbf{Struttura del Pattern},
+	halign title=flush center,
+	coltitle=black,
+	breakable,
+	drop shadow=black!50!white,
+	attach boxed title to top center = {yshift=-\tcboxedtitleheight/2},
+	minipage boxed title=5cm,
+	boxed title style={%
+			colback=OrangePastel,
+			size=fbox,
+			boxrule=1pt,
+			boxsep=2pt,
+			underlay={%
+					\coordinate (dotA) at ($(interior.west) + (-0.5pt,0)$)
+					\coordinate (dotB) at ($(interior.east) + (0.5pt,0)$)
+					\begin{scope}
+						\clip (interior.north west) rectangle ([xshift=3ex]interior.east)
+						\filldraw [OrangePastel, blur shadow={shadow opacity=60, shadow yshift=-.75ex}, rounded corners=2pt] (interior.north west) rectangle (interior.south east)
+					\end{scope}
+					\begin{scope}[gray!80!black]
+						\fill (dotA) circle (2pt)
+						\fill (dotB) circle (2pt)
+					\end{scope}
+				},
+		},
+	#1,
+}
 
 %================================
 % NOTE BOX
@@ -614,7 +752,7 @@
 \newcommand{\mlenma}[2]{\begin{Lenma}{#1}{}#2\end{Lenma}}
 \newcommand{\mprop}[2]{\begin{Prop}{#1}{}#2\end{Prop}}
 \newcommand{\clm}[3]{\begin{claim}{#1}{#2}#3\end{claim}}
-\newcommand{\wc}[2]{\begin{wconc}{#1}{}\setlength{\parindent}{1cm}#2\end{wconc}}
+\newcommand{\wc}[2]{\begin{wconc}{#1}{}#2\end{wconc}}
 \newcommand{\thmcon}[1]{\begin{Theoremcon}{#1}\end{Theoremcon}}
 \newcommand{\ex}[2]{\begin{Example}{#1}{}#2\end{Example}}
 \newcommand{\dfn}[2]{\begin{Definizione}[colbacktitle=red!75!black]{#1}{}#2\end{Definizione}}
@@ -622,9 +760,12 @@
 \newcommand{\qs}[2]{\begin{question}{#1}{}#2\end{question}}
 \newcommand{\pf}[2]{\begin{myproof}[#1]#2\end{myproof}}
 \newcommand{\nt}[1]{\begin{note}#1\end{note}}
+\newcommand{\cd}[1]{\begin{code}#1\end{code}}
+\newcommand{\mypattern}[2]{\begin{Pattern}{#1}{}#2\end{Pattern}}
+\newcommand{\obs}[2]{\begin{Observation}{#1}{}#2\end{Observation}}
 
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
-		\node[shape=circle,draw,inner sep=1pt] (char) {#1};}}
+		\node[shape=circle,draw,inner sep=1pt] (char) {#1}}}
 \newcommand\getcurrentref[1]{%
 	\ifnumequal{\value{#1}}{0}
 	{??}
@@ -702,100 +843,23 @@
 \providecommand*{\pdv}[3][]{\frac{\partial^{#1}#2}{\partial#3^{#1}}}
 %  - others
 \DeclareMathOperator{\Lap}{\mathcal{L}}
-\DeclareMathOperator{\Var}{Var} % varience
-\DeclareMathOperator{\Cov}{Cov} % covarience
-\DeclareMathOperator{\E}{E} % expected
+\DeclareMathOperator{\Var}{Var} 
+\DeclareMathOperator{\Cov}{Cov} 
+\DeclareMathOperator{\E}{E} 
 
-% Since the amsthm package isn't loaded
-
-% I prefer the slanted \leq
 \let\oldleq\leq % save them in case they're every wanted
 \let\oldgeq\geq
 \renewcommand{\leq}{\leqslant}
 \renewcommand{\geq}{\geqslant}
 
-% % redefine matrix env to allow for alignment, use r as default
-% \renewcommand*\env@matrix[1][r]{\hskip -\arraycolsep
-%     \let\@ifnextchar\new@ifnextchar
-%     \array{*\c@MaxMatrixCols #1}}
-
-
-%\usepackage{framed}
-%\usepackage{titletoc}
-%\usepackage{etoolbox}
-%\usepackage{lmodern}
-
-
-%\patchcmd{\tableofcontents}{\contentsname}{\sffamily\contentsname}{}{}
-
-%\renewenvironment{leftbar}
-%{\def\FrameCommand{\hspace{6em}%
-%		{\color{myyellow}\vrule width 2pt depth 6pt}\hspace{1em}}%
-%	\MakeFramed{\parshape 1 0cm \dimexpr\textwidth-6em\relax\FrameRestore}\vskip2pt%
-%}
-%{\endMakeFramed}
-
-%\titlecontents{chapter}
-%[0em]{\vspace*{2\baselineskip}}
-%{\parbox{4.5em}{%
-%		\hfill\Huge\sffamily\bfseries\color{myred}\thecontentspage}%
-%	\vspace*{-2.3\baselineskip}\leftbar\textsc{\small\chaptername~\thecontentslabel}\\\sffamily}
-%{}{\endleftbar}
-%\titlecontents{section}
-%[8.4em]
-%{\sffamily\contentslabel{3em}}{}{}
-%{\hspace{0.5em}\nobreak\itshape\color{myred}\contentspage}
-%\titlecontents{subsection}
-%[8.4em]
-%{\sffamily\contentslabel{3em}}{}{}  
-%{\hspace{0.5em}\nobreak\itshape\color{myred}\contentspage}
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% TABLE OF CONTENTS
+% HYPERLINK
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\usepackage{tikz}
-\definecolor{doc}{RGB}{0,60,110}
-\usepackage{titletoc}
-\contentsmargin{0cm}
-\titlecontents{chapter}[3.7pc]
-{\addvspace{30pt}%
-	\begin{tikzpicture}[remember picture, overlay]%
-		\draw[fill=magenta,draw=magenta] (-7.3,-.1) rectangle (-0.5,.5);%
-		\pgftext[left,x=-3.7cm,y=0.2cm]{\color{white}\Large\sc\bfseries Capitolo\ \thecontentslabel};%
-	\end{tikzpicture}\color{magenta}\large\sc\bfseries}%
-{}
-{}
-{\;\titlerule\;\large\sc\bfseries Pagina \thecontentspage
-	\begin{tikzpicture}[remember picture, overlay]
-		\draw[fill=magenta,draw=magenta] (2pt,0) rectangle (4,0.1pt);
-	\end{tikzpicture}}%
-\titlecontents{section}[3.7pc]
-{\addvspace{2pt}}
-{\contentslabel[\thecontentslabel]{2pc}}
-{}
-{\hfill\small \thecontentspage}
-[]
-\titlecontents*{subsection}[3.7pc]
-{\addvspace{-1pt}\small}
-{}
-{}
-{\ --- \small\thecontentspage}
-[ \textbullet\ ][]
-
-\makeatletter
-\renewcommand{\tableofcontents}{%
-	\chapter*{%
-	  \vspace*{-20\p@}%
-	  \begin{tikzpicture}[remember picture, overlay]%
-		  \pgftext[right,x=15cm,y=0.2cm]{\color{magenta}\Huge\sc\bfseries \contentsname};%
-		  \draw[fill=magenta,draw=magenta] (13,-.75) rectangle (20,1);%
-		  \clip (13,-.75) rectangle (20,1);
-		  \pgftext[right,x=15cm,y=0.2cm]{\color{white}\Huge\sc\bfseries \contentsname};%
-	  \end{tikzpicture}}%
-	\@starttoc{toc}}
-\makeatother
-\renewcommand{\chaptername}{Capitolo}
-
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
