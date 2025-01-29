@@ -313,29 +313,372 @@ per uno, nella versione quantistica possono essere processati tutti
 insieme contemporaneamente.
 
 \dfn{Algoritmo Quantistico di Deutsch}{
-  
+ L’algoritmo quantistico di Deutsch-Jozsa verifica una specifica
+proprietà di alcune funzioni $\{0,1\}^n \Rightarrow \{0,1\}$. 
+
 }
 
 
+\nt{  L’algoritmo è costruito apposta per mostrare le potenzialità della
+quantum computing. Nel caso generale però, la soluzione quantistica
+di un problema non sempre è più efficiente di quella classica (e a volte
+neppure si sa se esiste…). Inoltre, un algoritmo quantistico è molto
+diverso da uno classico.
+}
 
+\pagebreak 
+\subsubsection{}
+Le funzioni sono in tutto quattro:
 
+\begin{figure}[h]
+  \includegraphics[scale = 0.5]{05-QuantumComputing/Deutsch.png}
+\end{figure}
+e data una funzione $f$: $\{0,1\} \Rightarrow \{0,1\}$ diciamo che $f$ è bilanciata
+se $f(0) <> f(1)$, mentre diciamo che $f(x)$ è costante se $f(0) = f(1)$. Delle quattro funzioni possibili due sono bilanciate
+e due sono costanti. L’algoritmo di Deutsch risolve il seguente problema: data una
+funzione come black box (non possiamo cioè sapere
+come è fatta dentro), determinare se è bilanciata o costante.
+Il problema equivale a: data la black box con dentro $f$
+determinare se corrisponde a una funzione bilanciata o costante.
+Un algoritmo classico risolverebbe il problema più o meno così: 
 
+\begin{itemize}
+  \item Calcola $f(0)$.
+  \item Calcola $f(1)$. 
+  \item Confronta i due risultati.
+\end{itemize}
 
+\subsection{Il Funzionamento di un Algoritmo Quantistico}
 
+\nt{Questa sezione è inserita solo per una questione di completezza, ma è molto tecnica e complicata.}
+\subsubsection{}
+Le porte logiche quantistiche devono essere
+reversibili: dato un qualsiasi output deve sempre essere possibile
+risalire all’input che lo ha prodotto. Nel caso della matrice: 
 
+\begin{figure}[h]
+    \centering
+    \includegraphics{05-QuantumComputing/a1.png}
+\end{figure}
+\subsubsection{}
+e quindi della funzione: 
 
+\begin{figure}[h]
+    \centering
+    \includegraphics{05-QuantumComputing/a2.png}
+\end{figure}
+\subsubsection{}
+il calcolo è reversibile, ma non lo sarebbe per: 
 
+\begin{figure}[!h]
+    \centering
+    \includegraphics{05-QuantumComputing/a3.png}
+    \includegraphics{05-QuantumComputing/a4.png}
+\end{figure}
 
+\subsubsection{}
+Per implementare l’algoritmo di Deutsch abbiamo allora bisogno di
+usare matrici un po’ più complesse, ma che corrisponderanno sempre
+ai quattro casi della funzione f. Vediamo come costruire una porta
+logica reversibile che calcoli il caso f(0) = 1; f(1) = 0. In modo
+analogo si procederà per gli altri tre casi.
+Consideriamo questo circuito quantistico:
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{05-QuantumComputing/a5.png}
+\end{figure}
 
+\subsubsection{}
 
+Valutiamo l’output di questo circuito per i due possibili valori di y: 
 
+\begin{itemize}
+  \item Se y = 0, allora l’input $|x, 0>$ deve produrre:
+    \begin{itemize}
+      \item L’output $|0, 1>$ se x = 0. 
+      \item L’output $|1, 0>$ se x = 1.
+    \end{itemize}
+  \item Se y = 1, allora l’input $|x, 1>$ deve produrre:
+    \begin{itemize}
+      \item L’output $|0, 0>$ se x = 0.
+      \item L’output |1, 1> se x = 1.
+    \end{itemize}
+\end{itemize}
+\subsubsection{}
+Il che porta a definire la matrice $U_f$,
+con i 4 input possibili sulle colonne e i 4 output
+sulle righe: un 1 all’incrocio indica che quell’input
+produce l’output corrispondente.
+Che $U_f$ sia reversibile si può dedurre da questo circuito logico:
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{05-QuantumComputing/a6.png}
+\end{figure}
+\subsubsection{}
+L’output del circuito è:
+$$|x, (y XOR f(x)) XOR f(x)> =
+|x, y XOR (f(x) XOR f(x))> = |x, y XOR 0> = |x, y>$$
+\subsubsection{}
+Ossia, due applicazioni successive della porta logica $U_f$ restituiscono
+l’input iniziale. E notiamo che $f(x)$ può essere sempre ricavata
+dall’output di $U_f$, dato che: $y XOR f(x) XOR y = f(x) XOR 0 = f(x)$.
+In modo analogo si possono costruire le $U_f$ delle altre 3 funzioni $f$.
+Ecco qui di seguito un riassunto delle quattro funzioni $f$ possibili:
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{05-QuantumComputing/a7.png}
+\end{figure}
+\subsubsection{}
+e le quattro porte logiche quantistiche reversibili corrispondenti:
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{05-QuantumComputing/a8.png}
+\end{figure}
+\subsubsection{}
+Dunque, supponiamo che sia $U_f$ la matrice che ci viene data, che è
+una della quattro $U_f$ possibili (e nel caso generale noi non sappiamo
+quale), e consideriamo questo circuito quantistico:
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{05-QuantumComputing/a9.png}
+\end{figure}
+\subsubsection{}
+Dove H è il segnale di misurazione, e il simbolo in basso a destra è la misurazione finale.
+Inizialmente il sistema è nello stato:
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{05-QuantumComputing/a10.png}
+\end{figure}
+\subsubsection{}
+Il qubit superiore, ossia l’input $|x>$ viene messo dalla matrice di
+Hadamard in una sovrapposizione di stati, e dunque avremo:
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{05-QuantumComputing/a11.png}
+\end{figure}
+\subsubsection{}
+E dopo aver applicato la matrice $U_f$, nel caso specifico di $f = f_{10}$,
+avremo:
 
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{05-QuantumComputing/a12.png}
+\end{figure}
 
+\nt{Ma se anche ora misuriamo più volte il qubit superiore in output lo
+troveremo il 50\% delle volte nello stato $|0>$ e il 50\% delle volte nello
+stato $|1>$, e la stessa cosa per il qubit inferiore, dunque, così com’è,
+questo circuito non sembra molto utile a risolvere il problema.}
+\subsubsection{}
+Proviamo allora con un algoritmo leggermente diverso:
 
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{05-QuantumComputing/a13.png}
+\end{figure}
+\subsubsection{}
+Dopo l’applicazione di $U_f$, avremo:
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{05-QuantumComputing/a14.png}
+\end{figure}
 
+\nt{Ma di nuovo, se valutiamo i qubit non otteniamo
+molto: il qubit superiore sarà nello stato $|x>$ e troveremo il qubit
+inferiore nello stato $|0>$ o nello stato $|1>$}
+\subsubsection{}
+Ma è combinando i due tentativi precedenti che otteniamo l’algoritmo
+di Deutsch: la soluzione consiste nel mettere entrambi i qubit di input
+in una sovrapposizione di stati attraverso la matrice di Hadamard,
+e così pure per l’output superiore:
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{05-QuantumComputing/a15.png}
+\end{figure}
 
+\subsubsection{}
+Da 
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{05-QuantumComputing/a16.png}
+\end{figure}
+\subsubsection{}
+Consideriamo ora la parte di espressione:
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{05-QuantumComputing/a17.png}
+\end{figure}
 
+\begin{itemize}
+  \item Se $f$ è costante, ossia se $f(0) = f(1)$, allora l’espressione si riduce a:
+    \begin{itemize}
+      \item $+1(|0> + |1>)$ se $f(0) = f(1) = 0$.
+      \item $–1(|0> + |1>)$ se $f(0) = f(1) =1$.
+    \end{itemize}
+  \item Se $f$ è bilanciata, ossia se $f(0 <> f(1))$, allora l’espressione si riduce a:
+    \begin{itemize}
+      \item $+1(|0> – |1>)se f(0) = 0$ mentre $f(1) = 1$.
+      \item $–1(|0> – |1>)se f(0) = 1$ mentre $f(1) = 0$.
+    \end{itemize}
+\end{itemize}
 
+\subsubsection{}
+Mettendo insieme i quattro casi abbiamo:
 
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{05-QuantumComputing/a18.png}
+\end{figure}
+\subsubsection{}
+Dopo l’applicazione della matrice di Hadamard al qubit
+superiore, avremo:
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{05-QuantumComputing/a19.png}
+\end{figure}
+\subsubsection{}
+A questo punto ci basta misurare il qubit superiore: se lo troviamo
+nello stato $|0>$ sappiamo che abbiamo a che fare con una funzione $f$
+costante, se lo troviamo nello stato $|1>$ sappiamo che $f$ è bilanciata.
 
+\nt{Non è assolutamente evidente a priori perché il circuito
+quantistico usato dovrebbe funzionare, e questo è tipico del modo di
+progettare algoritmi quantistici, e criteri generali come quelli usati
+per gli algoritmi classici non esistono}
+
+\subsection{Altri Algoritmi Quantistici}
+
+\begin{itemize}
+\item \fancyglitter{Algoritmo di Simon}: è in grado di trovare pattern che si ripetono in
+funzioni del tipo $f: {0,1}n \Rightarrow {0,1}n$. Mentre un algoritmo classico
+risolve il problema in tempo proporzionale a $2^n$ chiamate di $f$,
+l’algoritmo di Simon lo risolve in tempo proporzionale a n chiamate.
+\item \fancyglitter{Algoritmo di Grover}: sia data una funzione $f$ che riceve in input $n$ bit
+e restituisce 1 per una sola delle $2^n$ possibili combinazioni in input.
+L’algoritmo di Grover è in grado di trovare la combinazione $x$ per cui
+$f(x) = 1$ con un numero di interrogazioni di $f$ pari a $\sqrt[2][2^n]$.
+\item \fancyglitter{Algoritmo di Shor}: la sicurezza della crittografia a chiave pubblica è
+data dalla difficoltà di dedurre la chiave privata da quella pubblica. In
+altre parole, la difficoltà di fattorizzare un numero molto grande (ossia
+trovare l’insieme di numeri primi il cui prodotto dà il numero stesso).
+L’algoritmo di Shor è in grado di fattorizzare un numero N in un
+tempo proporzionale a $(log N)^3$.
+\end{itemize}
+
+\section{Computer Quantistici}
+
+La costruzione di computer quantistici attraverso cui implementare le
+idee teoriche che abbiamo visto va avanti ormai da più di 25 anni. Diverse tecniche sono state sperimentate e diverse soluzioni adottate
+per superare le difficoltà che si presentano quando si ha a che fare con
+il comportamento bizzarro della materia nell’infinitamente piccolo. 
+Innanzi tutto, occorre implementare il concetto di qubit, e come già
+accennato, diverse opzioni sono possibili, ciascuna con i propri pregi
+e i propri difetti. Possiamo usare lo spin degli elettroni, la polarizzazione dei fotoni, lo
+stato di eccitazione degli atomi, e molto altro ancora. Ogni opzione
+richiede di risolvere problemi tecnici molto complessi (per esempio,
+mantenere i circuiti a temperature vicine allo zero assoluto)
+
+Un problema molto serio che qualsiasi implementazione deve
+risolvere è quello della decoerenza, per cui il mezzo fisico usato per
+implementare i qubit perde l’informazione memorizzata a causa
+dell’interazione con l’ambiente circostante.
+Per far partire una computazione quantistica abbiamo bisogno di un
+certo numero di qubit inizializzati in una configurazione di input:
+ad esempio elettroni tutti con lo spin nello stesso verso, corrispondenti
+ognuno al qubit $|0>$. Il problema è che questi elettroni incominceranno immediatamente
+ad interagire con l’ambiente circostante, e con i miliardi di miliardi
+di elettroni di cui è composto, secondo un fenomeno noto ai fisici col
+termine di \fancyglitter{entaglement}. A causa dell’entanglement ha luogo la decoerenza: l’informazione
+trasportata dai qubits viene modificata in modo imprevedibile, con
+conseguenti errori nella computazione. Purtroppo, non è così ovvio
+sapere se, durante un calcolo, si sia verificata o meno la decoerenza. Vi sono sostanzialmente tre modi per cercare di minimizzare il
+problema della decoerenza:
+
+\begin{itemize}
+  \item A seconda delle implementazioni, la decoerenza si verifica più o
+meno tra i 100 microsecondi e alcuni secondi dalla fase di
+inizializzazione dei qubit nella configurazione di partenza, e dunque
+l’idea è di cercare di portare a termine la computazione quantistica
+prima che si verifichino la decoerenza e gli errori di calcolo.
+\item Usare una qualche forma di correzione degli errori, ossia usare alcuni
+qubit per correggere eventuali errori introdotti dalla decoerenza di
+altri qubit. 
+\item Ripetere più volte un calcolo e scegliere poi “a maggioranza” il
+risultato giusto.
+\end{itemize}
+
+\nt{Questi metodi non si escludono a vicenda: il progresso
+tecnologico cerca allo stesso tempo di tenere la decoerenza sotto
+controllo, e di costruire computer quantistici dotati di un maggior
+numero di qubits, una parte dei quali verrà usata per la correzione
+degli errori.}
+\clm{}{}{
+  \begin{itemize}
+    \item I computer quantistici attuali sono in grado di operare su un numero
+di qubit che arriva attualmente ai 105 qbit di Google (il precedente
+Sycamore ne usava 72), ma questi numeri hanno poca o nessuna
+relazione con i corrispondenti numeri di un computer classico, e i
+confronti sono improponibili. 
+\item Dei qubit disponibili, alcuni devono essere usati per correggere
+eventuali errori, e si può dimostrare che un singolo qubit logico
+deve essere implementato con non meno di 5 qubit effettivi per
+poter correggere qualsiasi errore dovuto alla decoerenza.
+  \end{itemize}
+}
+
+\subsection{Quantum Supremacy}
+
+Nell’autunno del 2019 Google annunciava di aver raggiunto la
+Quantum Supremacy: il Sycamore, aveva effettuato in circa 200
+secondi un calcolo che avrebbe richiesto più di diecimila anni al
+super computer Summit della IBM. A giugno 2020 il Summit risultava essere il secondo supercomputer
+più potente al mondo, con una potenza di calcolo di circa 200.000
+Teraflop al secondo. I ricercatori della IBM replicarono all’annuncio
+di Google che Summit, dotato di una quantità maggiore di memoria di
+massa (attualmente ha quasi 3 milioni di Gigabyte) avrebbe risolto lo
+stesso problema in 2 giorni e mezzo, e con maggiore precisione, e che
+dunque la presunta supremazia quantistica non era affatto stata
+raggiunta.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.25]{05-QuantumComputing/meme2.jpg}
+    \caption{"Questa non è la \textbf{\textit{supremazia quantistica}}, è soltanto l'opera di una \textbf{\textit{corporation infantile}} che crede di poter giudicare gli altri come se fosse Dio" - un ricercatore di IBM, probably.}
+\end{figure}
+\subsubsection{}
+Il punto controverso sta nella famigerata Quantum Supremacy,
+definita (nel 2012, da John Preskill) come l’obiettivo di dimostrare
+che un computer quantistico può risolvere un problema che nessun
+computer classico potrebbe risolvere in tempi ragionevoli.
+Tuttavia, la definizione di supremazia quantistica è insoddisfacente, in
+quanto non dice nulla sull’utilità del problema risolto, che quindi può
+anche essere costruito ad arte per essere particolarmente vantaggioso
+per un computer quantistico e particolarmente svantaggioso per un
+computer classico (l’algoritmo di Deutsch-Josza ne è un esempio). E la definizione è fuorviante in quanto tende erroneamente a suggerire
+che indichi il momento in cui i computer quantistici avranno superato
+in prestazioni i computer classici indipendentemente dal problema da
+risolvere. Allo stato attuale della ricerca, per applicazioni pratiche, la
+computazione quantistica risulta effettivamente superiore a quella
+classica solo per quei problemi in cui si può sfruttare il fenomeno
+della sovrapposizione degli stati (per esempio in crittografia e per la
+simulazione di sistemi quantistici). E in ogni caso, rimangono ancora da risolvere molti dei problemi
+pratici relativi alla difficoltà di costruire e far funzionare
+adeguatamente un computer quantistico, e i problemi relativi alla
+gestione degli errori introdotti durante una computazione quantistica. Sono ormai in molti a pensare che la computazione quantistica non
+sostituirà mai completamente quella classica, sia per la difficoltà di
+costruire e usare computer quantistici usabili dal grande pubblico e
+sia perché per molti problemi, non sembrano esistere (o almeno non
+sono ancora state trovate) soluzioni quantistiche superiori a quelle
+classiche. Al contrario, in molti sono convinti che lo scenario più probabile sarà
+quello in cui computer quantistici e computer classici lavoreranno
+insieme in modo da sfruttare di ciascuno le caratteristiche in cui
+eccellono e i rispettivi punti di forza. In effetti, per molti algoritmi è
+già così, e vengono implementati integrando una parte quantistica con
+una classica (è il caso dell’algoritmo di Shor). 
+
+\nt{Sono disponibili pochi dettagli tecnici su come sono costruiti i computer quantistici perché: 
+\begin{itemize}
+  \item In parte perché è una ricerca di frontiera. 
+  \item In parte perché le corporation ci tengono ai loro segretini. 
+\end{itemize}}
