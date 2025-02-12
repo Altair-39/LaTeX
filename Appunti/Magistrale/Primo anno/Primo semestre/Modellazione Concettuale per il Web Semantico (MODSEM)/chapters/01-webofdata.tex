@@ -447,9 +447,542 @@ o ai fatti.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.48]{01/mycin.png}
+    \includegraphics[scale=0.4]{01/mycin.png}
     \caption{Esempio di Mycin.}
 \end{figure}
+
+\section{Il Sistema SNePS}
+
+SNePs è una rete semantica e sistema proposizionale che supporta vari tipi di inferenza. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{01/SNePS.png}
+    \caption{Nella rappresentazione di SNwPS (a destra) la proposizione “Snoopy
+è un cane” è rappresentata da un nodo (M1!).
+Nessun arco denota una proposizione x isa (è un) y, come invece
+avviene nel grafo relazionale (a sinistra).}
+\end{figure}
+
+\clm{}{}{
+  \begin{itemize}
+  \item SNePS fu progettato per la \fancyglitter{robotica cognitiva}. 
+    \item Solo i nodi sono espressioni ben formate dotate di una
+semantica. 
+\item Ogni nodo denota un’\fancyglitter{entità mentale}.
+  \end{itemize}
+}
+
+\paragraph{Il sistema SNePS è un software dotato delle
+seguenti funzionalità:}
+
+\begin{itemize}
+  \item Rappresentare la rete: si utilizza un linguaggio utente
+    fatto di comandi che permettono di \fancyglitter{fare asserzioni}
+    (Socrate è un uomo), \fancyglitter{esprimere regole} (Gli uomini
+    sono mortali) e \fancyglitter{manipolare la rete} (creare
+proposizioni non asserite). 
+\item \fancyglitter{Cercare} nella rete nodi con certe caratteristiche (gli
+individui che sono uomini). 
+\item \fancyglitter{Inferire} nuove asserzioni a partire da quelle esistenti.
+\end{itemize}
+
+\paragraph{Input e Output:}
+
+\begin{itemize}
+  \item L'utente usa il \fancyglitter{linguaggio utente} per asserire una proposizione.
+  \item Il sistema crea una rete che rappresenta la proposizione: 
+    \begin{itemize}
+      \item Tipicamente, un nodo “proposizione” da cui emanano degli archi. 
+      \item La rappresentazione viene creata internamente al sistema e
+comunicata all’utente per mezzo di una particolare notazione
+(\fancyglitter{linguaggio del sistema}). 
+\item Alcune versioni del sistema erano dotate di un output grafico per
+rappresentare visivamente la rete. 
+    \end{itemize}
+  \item Un insieme di proposizioni può essere interrogata oppure può
+diventare la base per inferenze. Sia l’estrazione di proposizioni dalla rete che la deduzione di nuove
+proposizioni avvengono su richiesta dell’utente, cioè quando l’utente
+digita il comando corrispondente nel linguaggio utente. 
+\end{itemize}
+
+
+\paragraph{Tipi di nodo:}
+
+\begin{itemize}
+  \item I nodi molecolari (M$i$) hanno archi uscenti.
+Rappresentano proposizioni, incluse le regole di
+ragionamento, oppure individui. 
+\item I nodi base (B$i$) non hanno archi uscenti.
+Rappresentano individui che hanno certe
+caratteristiche, ma a cui non vogliamo dare un nome. 
+\item I nodi variabili non hanno archi uscenti ma
+rappresentano individui arbitrari o proposizioni, come
+le variabili logiche. 
+\end{itemize}
+
+\dfn{Relazioni}{
+  Le relazioni tra i nodi sono date dagli archi che li
+uniscono. Se non specificato diversamente una relazione tra
+un nodo A e uno B genera un arco diretto da A
+verso B con il nome della relazione specificata. 
+}
+
+\nt{
+  Il comando seguente definisce due relazioni, isa e
+ako (a kind of):
+\begin{center}
+ (define isa ako) 
+\end{center}
+
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{01/rel.png}
+    \caption{Alcune relazioni predefinite.}
+\end{figure}
+
+\dfn{Asserzione}{
+  Il comando \newfancyglitter{assert} permette di asserire una proposizione. 
+  Ha come argomento una lista di coppie, di cui: 
+  \begin{itemize}
+    \item Il primo elemento è una relazione. 
+    \item Il secondo è un node o una lista di nodi.
+  \end{itemize}
+}
+
+\ex{Assert}{
+  \begin{center}
+    (assert member Clyde class elephant)
+  \end{center}
+  Il sistema costruirà un nodo M1 con un arco member
+che punta all’identificativo Clyde e un arco class che
+punta un nodo elefante. M1! Significa che il nodo M1 è asserito.
+
+\begin{center}
+  \includegraphics[scale=0.45]{01/clide.png}
+\end{center}
+
+}
+
+\dfn{Contesti}{
+  Un nodo può essere asserito oppure non asserito. Allo scopo di rappresentare le credenze di più soggetti diversi, il sistema può contenere più
+\newfancyglitter{contesti}: 
+\begin{itemize}
+  \item Un contesto è formato da ipotesi. 
+  \item Un’\newfancyglitter{ipotesi} in un contesto è un nodo asserito oppure
+derivato via inferenza.
+\end{itemize}
+}
+
+\nt{Un contesto si crea con il comando: 
+\begin{center}
+  :context nodeset context-name
+\end{center}
+}
+
+\paragraph{Uso dei nodi di base:}
+
+\begin{itemize}
+  \item I nodi base vengono usati per rappresentare
+individui che soddisfano determinate descrizioni
+senza dargli un nome. 
+\item Non hanno archi uscenti; cioè non hanno
+informazioni strutturali. Tutto ciò che si sa di loro
+è ciò che viene asserito. 
+\item Un nodo base potrebbe essere descritto tale
+l’espressione “un entità tale che …”.
+\end{itemize}
+
+\ex{Nodi di base}{
+\begin{center}
+  \includegraphics[scale=0.45]{01/nodi di base.png}
+\end{center}
+
+}
+
+\subsection{Interrogare la Rete}
+
+\dfn{Find}{
+  Il comando utente \newfancyglitter{find} trova uno o più nodi nella rete.
+}
+
+\nt{In pratica, la rete si comporta come un database di fatti che può essere
+interrogato descrivendo il tipo di fatti cercato.}
+
+\ex{Find}{
+\begin{center}
+  (find class elephant)
+\end{center}
+Trova tutti i nodi che hanno un arco di tipo classe che esce dal nodo
+e punta al nodo elefante, ossia: \textit{trova tutte le proposizioni che esprimo che qualcosa è un
+elefante}.
+}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Il comando find permette di specificare uno o più percorsi per
+trovare i nodi cercati. 
+\item (find (member- class) canary (object- ability) fly): Trova i canarini (membri della classe canarino) che volano (che
+hanno l’abilità di volare). 
+\item Tutti i nodi che hanno un arco member entrante, collegato
+(tramite un nodo intermedio) a un arco class, e un arco object
+entrante, collegato (tramite un nodo intermedio) a un arco ability.
+  \end{itemize}
+}
+
+\subsection{Rappresentazione delle Credenze e Deduzioni}
+
+\begin{center}
+  (assert agent John
+act believe
+object (build object Opus ability fly))
+\end{center}
+
+\begin{itemize}
+  \item Attenzione: il sistema non crede che Opus possa
+volare ma crede che John creda che Opus possa volare. 
+\item Con un find si può scoprire cosa il sistema crede
+che John creda. 
+\end{itemize}
+
+\begin{center}
+  \includegraphics[scale=0.45]{01/john.png}
+\end{center}
+
+\dfn{Deduce}{
+  Il comando deduce permette di cercare
+proposizioni che non sono direttamente
+asserite dal sistema ma che il sistema è in
+grado di inferire. 
+}
+
+\ex{Deduce}{
+  \begin{center}
+    (deduce member \$x class canary)
+  \end{center}
+  Trova tutti gli x che appartengono alla classe
+dei canarini (\$ indica una variabile).
+}
+
+\subsection{Inferenze}
+
+\dfn{Riduzione}{
+  La riduzione consiste nel dedurre da un grafo una
+porzione contenuta in esso. 
+}
+
+\ex{Riduzione}{
+  \begin{center}
+    (assert agent john act gives object book-1
+recipient mary)
+  \end{center}
+  John dà un libro a Mary. 
+  \subsubsection{}
+  Può essere ridotto a: 
+  \begin{center}
+    (deduce agent john act gives object book-1)
+  \end{center}
+  John dà un libro. 
+  \begin{center}
+  \includegraphics[scale=0.45]{01/book.png}   
+  \end{center}
+}
+
+\dfn{Define-path}{
+  È possibile stabilire che un percorso fatto di certe
+relazioni è uguale a una relazione. Si usa il comando define-path.
+}
+
+\cor{Compose}{
+  Per definire un percorso si usa il comando compose
+che si può pensare come comporre una nuova
+relazione (arco) basandosi su un percorso di relazioni.
+}
+
+\nt{In pratica, si dice che un certo percorso (o meglio ogni
+percorso con certe caratteristiche) è uguale a un singolo
+arco.}
+
+\ex{Relazione isa transitiva}{
+  \begin{center}
+    (define-path isa (compose isa
+(kstar (compose object- isa))))
+  \end{center}
+  \begin{itemize}
+    \item kstar\footnote{Kleene star per chi si ricorda di LFT.} significa "zero o più occorrenze".
+    \item Si legge: isa è guale a isa composto con un percorso di zero o più percorsi
+ottenuti da un object- composto con un isa. 
+  \end{itemize}
+}
+
+\dfn{Regole di Ragionamento}{
+  Le regole sono definite dall’utente in modo arbitrario. Fanno parte della base di conoscenza. 
+  Permettono di aumentare drasticamente la conoscenza
+contenuta nella rete, perché aggiungono nuove
+proposizioni non implicite nella rete.
+}
+
+\ex{Regole}{
+  \begin{center}
+  \includegraphics[scale=0.45]{01/regole.png}     
+  \end{center}
+  \begin{itemize}
+\item Antecedente 1 (M85), Cassie parla: in un evento (M84)
+B1 è l’agente dell’esecuzione (act) dell’azione (M83)
+denominata parlare (lex talk). 
+\item Antecedente 2 (M82), Cassie è un robot: B1 è membro
+della classe (M22) denominata (lex) robot e ha come
+nome proprio (propername) Cassie (quest’ultimo fatto
+è asserito). 
+\item Conseguente (M87), Cassie è intelligente: B1 (Cassie)
+ha la proprietà (M86) di essere intelligente
+(denominate “intelligent”).
+  \end{itemize}
+}
+
+\section{RDF}
+
+\dfn{RDF}{
+  RDF è un formato che permette di descrivere risorse.
+Una risorsa può essere qualsiasi cosa: un documento, una persona, un
+oggetto fisico, un concetto astratto.
+}
+
+\dfn{RDFS}{
+  RDFS: permette di descrivere relazioni tra risorse. È un linguaggio “property-centric” ed è un'estensione di RDF.
+}
+
+\dfn{OWL}{
+  OWL (Ontology Web Language): permette di descrivere ontologie computazionali. Si colloca a un livello superiore di RDF. Permette di descrivere relazioni ricche e complesse tra entità
+(“complex knowledge about things, groups of things, and relations
+between things”).
+}
+
+\subsection{Introduzione}
+
+\paragraph{Carta d'Identità di RDF:}
+
+\begin{itemize}
+  \item Nato per \fancyglitter{descrivere} risorse
+digitali. 
+\item Il suo data model è basato sul
+  concetto di \fancyglitter{grafo}. 
+\item I \fancyglitter{nodi} rappresentano entità e
+  gli \fancyglitter{archi} relazioni tra di esse. 
+\item Possiede diverse
+\fancyglitter{serializzazioni}.
+\end{itemize}
+
+\paragraph{Elementi del data model di RDF:}
+
+\begin{itemize}
+  \item Triple (organizzate in grafi). 
+  \item IRI. 
+  \item Letterali. 
+  \item Blank nodes. 
+  \item Grafi.
+\end{itemize}
+
+\nt{L’unità di base di RDF è una tripla, composta di soggetto, predicato e
+oggetto. Il soggetto e oggetto possono essere IRI o blank nodes, l’oggetto
+può essere anche un letterale, il predicato può essere solo un IRI.}
+
+\dfn{Triple}{
+  RDF è formato di triple, che hanno la forma:
+Soggetto – Predicato – Oggetto
+}
+
+\ex{Triple}{
+  \begin{center}
+  \includegraphics[scale=0.45]{01/t.png}     
+  \end{center}
+}
+
+\ex{Dalla tripla al grafo}{
+  \begin{center}
+  \includegraphics[scale=0.45]{01/t2.png}     
+  \end{center}
+}
+
+\nt{Gli elementi della tripla devono essere riconducibili
+a entità presenti nel web.}
+
+\dfn{URI e IRI}{
+  Lo strumento scelto da RDF per rappresentare le
+entità è dato dal sistema degli IRI (URI Internazionalizzato).
+}
+
+\nt{Cosa rappresenti nella realtà un determinato IRI non è
+rilevante: l’importante è che sia de-referenziabile. 
+
+Il predicato è sempre rappresentato da un IRI. }
+
+\dfn{Letterali}{
+  Qualsiasi tipo di dato che non sia un IRI (stringhe, numeri, booleani, etc.)
+}
+
+\nt{Solo in posizione di oggetto nella tripla. Sostanzialmente coincidono con i data types di XML
+Schema, anche se il supporto può essere parziale in
+alcuni software.}
+
+\dfn{Blank Node}{Permettono di denotare risorse senza utilizzare un IRI.}
+
+\nt{Un blank node è come una variabile e può comparire in
+posizione di soggetto e oggetto nella tripla. Possono essere associati a un identificativo nella
+rappresentazione delle triple in un determinato store, ma
+non hanno significato al di fuori di esso.}
+
+\subsection{Vocabolari e Grafi}
+
+\dfn{Vocabolari Condivisi}{
+  Per descrivere una certa entità, la tripla si basa sull’utilizzo di vocabolari
+condivisi. Invece di "inventare" ogni volta i termini per descrivere le entità di cui parla la tripla, meglio usare tutti gli stessi termini.
+}
+
+\ex{Utilizzo di vocabolari condivisi}{
+    <Bob><http://www.my\_vocab\#like><The Mona Lisa>.
+
+<Bob><http://www.likesanddislikes/loves/adores><The Mona Lisa>.
+
+Questo causa confusione, meglio concordare in anticipo su un unico termine:
+<Bob><http://xmlns.com/foaf/0.1/topic\_interest ><The Mona Lisa>.
+
+}
+
+
+\clm{}{}{
+  \begin{itemize}
+    \item In molte serializzazioni di RDF, il vocabolario è
+identificato da un prefisso, che corrisponde a un
+namespace. 
+\item RDF non permette di specificare il
+significato dei predicati che
+mettono in relazione soggetto e
+oggetto. 
+\item Tuttavia, con RDF si può asserire
+che una risorsa appartiene a una
+certa tipologia (classe) utilizzando
+il predicato type.
+  \end{itemize}
+}
+
+\dfn{Grafi}{
+  Un grafo ha un identificativo dato da un IRI (o un
+blank node)
+\begin{center}
+  Grafo = IRI + triple
+\end{center}
+
+}
+
+\cor{Data Set}{
+  Un data set RDF è costituito da un insieme di grafi:
+  \begin{itemize}
+    \item Un grafo anonimo (\fancyglitter{default graph}). 
+  \item Zero o più grafi con un nome (\fancyglitter{named graphs}).
+  \end{itemize}
+}
+
+\section{Turtle}
+
+Storicamente il formato di
+serializzazione è stato XML (RDF/XML),
+tuttavia XML si è imposto come
+standard per la condivisione di
+documenti
+.
+\subsection{Introduzione}
+
+\dfn{Turtle}{
+Formato di serializzazione, preferito a RDF/XML per la maggiore
+coincisione e leggibilità.
+}
+
+\clm{}{}{
+\begin{enumerate}
+  \item Definizione di prefissi: il "base" diventa il prefisso di default a cui vengono ricondotti tutti gli IRI. 
+  \item Commenti: i "cancelletti". 
+  \item Triple: espresse secondo certe convenzioni.
+\end{enumerate}
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{01/turtle.png}
+    \caption{Il formato Turtle.}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{01/turtle2.png}
+    \caption{Rappresentazione a grafo.}
+\end{figure}
+
+\subsection{Sintassi}
+
+\nt{Gli IRI, se presenti per esteso, sono racchiusi tra $<$ e $>$.
+La parte finale che segue \# identifica un frammento (fragment identifier).
+}
+
+\dfn{Abbreviazione di Triple}{
+“;” indica che allo stesso soggetto si applicano più
+predicati (con diverso oggetto), equivale a ripetere il
+soggetto.
+}
+
+\clm{}{}{
+\begin{itemize}
+  \item “:”è il prefisso vuoto.
+  \item “,” equivale a ripetere soggetto e predicato.
+\end{itemize}
+}
+
+\nt{
+  La sintassi concreta dei blank node in
+Turtle è data dalle parentesi quadre $[]$. 
+
+$[]$ da solo indica un soggetto o oggetto
+non specificato.
+
+È possibile raggruppare nelle parentesi
+un insieme di triple che hanno il blank
+node come soggetto.
+}
+
+\dfn{Abbreviazione di Valori Numerici}{
+  I valori numerici possono essere scritti in modo esteso (forma
+lessicale seguita da datatype) oppure in modo abbreviato.
+}
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{01/numeri.png}
+    \caption{Abbreviazioni di numeri.}
+\end{figure}
+
+\nt{Lo stesso vale per i booleani (true/false).}
+
+\dfn{N-Triples}{
+Sottoinsieme di Turtle senza abbreviazioni e senza
+prefissi. Verboso e meno leggibile per la mancanza di
+abbreviazioni, ma è migliore per il trasferimento dei data set tra applicazioni. 
+}
+
+\nt{N-Quads è la sua estensione che aggiunge alla tripla un
+quarto elemento, il graph IRI.}
+
+
+
+
+
+
+
+
+
+
 
 
 
