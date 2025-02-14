@@ -956,7 +956,6 @@ node come soggetto.
 lessicale seguita da datatype) oppure in modo abbreviato.
 }
 
-
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.4]{01/numeri.png}
@@ -974,18 +973,257 @@ abbreviazioni, ma è migliore per il trasferimento dei data set tra applicazioni
 \nt{N-Quads è la sua estensione che aggiunge alla tripla un
 quarto elemento, il graph IRI.}
 
+\section{Schemi RDF}
+
+RDF permette di creare un grafo per
+descrivere risorse, ma non fornisce
+nessuna informazione sulle entità
+descritte né sul vocabolario utilizzato per descriverle. La \fancyglitter{descrizione del vocabolario} è affidata
+al livello successivo, Schemi RDF (RDFS). Attraverso il linguaggio degli \fancyglitter{schemi
+RDF} è possibile descrivere un semplice
+vocabolario di tipi entità (classi) e
+relazioni tra di esse (proprietà).
+
+\qs{}{Perché il focus sulle proprietà?}
+
+\paragraph{Con RDF si può:}
+
+\begin{itemize}
+  \item Definire classi e proprietà. 
+  \item Creare gerarchie di classi e proprietà. 
+  \item Fare asserzioni sulle singole risorse è di pertinenza di RDF. 
+\end{itemize}
+
+\paragraph{Si definisce property-centric perché il focus è sulle proprietà:}
+
+\begin{itemize}
+  \item Le classi compaiono nella definizione delle proprietà, ma non
+viceversa. 
+\item Questo rende possibile aggiungere proprietà senza modificare le
+classi (estensibilità). 
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{01/livelli.png}
+    \caption{Principali costrutti di RDF Schema.}
+\end{figure}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Gli elementi dei linguaggi RDF e RDFS sono contraddistinti dai prefissi rdf: e
+rdfs: che li identificano come tali. 
+\item Ogni serializzazione (tranne N-Triples) rappresenta i namespace e gli IRI
+secondo un formato specifico.
+  \end{itemize}
+}
+
+\subsection{Definizioni in RDF}
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.4]{01/classandsub.png}
+        \caption{Definizione di classi e sottoclassi in RDF.}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.4]{01/classandsub2.png}
+        \caption{Definizione di classi e sottoclassi in RDF/XML.}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.4]{01/p1.png}
+        \caption{Definizione di proprietà in RDF.}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.4]{01/p2.png}
+        \caption{Definizione di proprietà in RDF/XML.}
+    \end{minipage}
+\end{figure}
+
+\nt{La proprietà definita si chiama hasFourLegs (rdf:about), è una sottoproprietà di
+hasLegs (subPropertyOf).}
+
+\paragraph{In RDFS, è possibile definire domain e range delle
+proprietà.}
 
 
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.4]{01/ccp.png}
+        \caption{Collegare le classi tramite le
+proprietà.}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[scale=0.4]{01/ccp2.png}
+        \caption{Domain e range delle proprietà
+(RDFS).}
+    \end{minipage}
+\end{figure}
 
+\subsection{Vocabolari RDF}
 
+\begin{itemize}
+  \item \fancyglitter{FOAF (Friend Of A Friend)}: vocabolario per
+descrivere reti sociali. 
+\item \fancyglitter{Dublin Core}: un vocabolario di elementi
+(titolo, autore, ecc.) per descrivere risorse in
+termini editoriali.
+\item \fancyglitter{Schema.org}: vocabolario nato su iniziativa di
+un consorzio di industrie per descrivere gli
+argomenti delle pagine web secondo uno
+schema semantico. 
+\item \fancyglitter{SKOS}: W3C recommendation dal 2009,
+permette di descrivere e allineare
+terminologie diverse.
+\end{itemize}
 
+\dfn{Vocabolario RDF}{
+  La definizione di un insieme di classi e proprietà costituisce un
+vocabolario. Il vocabolario viene pubblicato a un certo IRI perché possa
+essere riferito da tutti. 
+}
 
+\nt{Uno o più vocabolari possono essere usati per descrivere i
+dati. }
 
+\clm{}{}{
+  \begin{itemize}
+    \item La descrizione di risorse in riferimento a uno o più vocabolari (es.
+Monna Lisa), con proprietà che collegano tra di loro le risorse è
+denominata Knowledge Graph. 
+\item Classi e proprietà $\Rightarrow$ Vocabolario. 
+\item Triple $\Rightarrow$ Knowledge graph.
+  \end{itemize}
+}
 
+\qs{}{Cosa non si può dire?}
+\begin{itemize}
+  \item Non si può dire che Zebre e Leoni sono classi
+disgiunte. Solo che sono tipi specifici di animali. 
+\item Non si può dire che la relazione ‘conoscente di’ è
+transitiva. 
+\item Non si può dire che esistono individui. Esistono solo risorse, cioè IRI creati esternamente al
+linguaggio.
+\end{itemize}
 
+\subsection{Dublin Core}
 
+\dfn{Dublin Core}{
+\begin{itemize}
+  \item In un archivio, i documenti sono descritti in base alle loro proprietà: i metadati. 
+  \item I documenti/opere (risorse per RDF) sono descritti in un catalogo. 
+  \item Il catalogo è un insieme di schede che descrivono le risorse.
+\end{itemize}
+}
 
+\nt{Dublin non è Dublino, ma una città dell'Ohio.}
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.3]{01/ohio.jpg}
+    \caption{Only in Ohio.}
+\end{figure}
 
+\qs{}{Ma quindi cos'è Dublin Core?}
 
+\begin{itemize}
+  \item È uno schema di \fancyglitter{metadati}: annotano risorse testuali e multimediali. 
+  \item Nasce per il web. 
+  \item Ha lo scopo esplicito di permettere il \fancyglitter{reperimento di risorse}.
+\end{itemize}
+
+\paragraph{Evoluzioni successive:}
+
+\begin{itemize}
+  \item Metadati in formato XML con mapping tra schemi diversi. 
+  \item Formato RDF con apporti da altri vocabolari. 
+  \item Linked Dara: diffusione dei termini di Dublin Core, supporto per l'estrazione della conoscenza.
+\end{itemize}
+
+\qs{}{Cosa permette di descrivere?}
+
+\begin{itemize}
+  \item Risorse che hanno un'identità. 
+  \item Collezioni, dataset, eventi, immagini, risorse interattive, servizi, software, suoni, testi, oggetti fisici.
+\end{itemize}
+
+\dfn{Dublin Core Metadata Element Set (DCMES)}{
+  L'insieme base di 15 descrittori e il loro significato.
+}
+
+\cor{DCTerms}{
+  I termini del vocabolario Dublin Core. Classi e proprietà  on namespace dc.
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{01/Descrittori.png}
+    \caption{I 15 descrittori DCMES.}
+\end{figure}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Domains e ranges specificano che tipo di risorse sono associate a una determinata proprietà. 
+    \item Domains e ranges specificano il significato implicito nel linguaggio naturale che è utilizzabile per la processazione automatica di inferenze logiche. 
+    \item Quando si trova una determinata proprietà, l'applicazione di un'inferenza può usare informazioni sui domains e i ranges assegnati alla proprietà in modo da derivare la risorsa descritta.
+  \end{itemize}
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{01/specificatermini.png}
+    \caption{Specifica dei termini.}
+\end{figure}
+
+\dfn{Europeana}{
+  Archivio europeo dei beni culturali. I dati sono descritti in un formato basato su Dublin Core. La semantica con cui sono descritti i dati permette di creare collezioni in modo semi-automatico.
+}
+
+\nt{Europeana è basata su OAI-PMH (Open Archives Initiative Protocol for Metadata Harvesting): raccoglie le schede e crea un catalogo.}
+
+\subsection{FOAF}
+
+\dfn{FOAF}{
+  FOAD è diviso in due sezioni: 
+  \begin{itemize}
+    \item Core: dati classici.
+    \item Social Web: riguardano gli aspetti dei social.
+  \end{itemize}
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{01/agent.png}
+    \caption{Esempio di classe.}
+\end{figure}
+
+\subsection{Schema.org}
+
+\dfn{Schema.org}{
+  Lo schema.org è un prodotto di un'attività collaborativa che ha lo scopo di creare, mantenere e promuovere schemi per strutture dati su internet.
+}
+
+\nt{Poiché è fondato da corporation come Google, Microsoft, Yahoo e Yandex fa schifo :P.}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Il vocabolario è suddiviso in un insieme di schemi (o types) organizzati in una tassonomia.
+    \item Vale l'ereditarietà. 
+    \item Il problema è che queste risorse riflettono gli interessi delle aziende e dei contributori.
+  \end{itemize}
+}
 
