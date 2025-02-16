@@ -333,11 +333,91 @@ definizioni e le loro conseguenze non
 siano contraddittorie.
 \end{itemize}
 
+\section{Il Linguaggio OWL}
 
+\dfn{OWL2}{
+OWL 2 (Web Ontology Language) è un linguaggio per creare
+ontologie per il Web Semantico con un significato definito
+formalmente.
+}
 
+\clm{}{}{
+  \begin{itemize}
+    \item Le ontologie scritte in OWL 2 contengono classi, proprietà,
+individui, e letterali; sono scritte in documenti il cui
+formato è definito dal Web Semantico. 
+\item Le ontologie OWL 2 possono essere utilizzate in
+associazione con documenti RDF, anzi sono essere stesse
+normalmente codificate come documenti RDF.
+  \end{itemize}
+}
 
+\paragraph{Ragionamento automatico:}
 
+\begin{itemize}
+  \item OWL si basa su logiche computazionali tali che la
+conoscenza espressa nell’ontologia può essere oggetto
+di ragionamento automatico da parte di \fancyglitter{software
+specifici (reasoner)} che ne verificano la non
+contradditorietà e sono in grado di rendere esplicita la
+conoscenza implicita contenuta nell’ontologia.
+\item La sintassi RDF/XML per OWL è normata da una
+specifica: “OWL 2 RDF Mapping”. Ci sono molte altre
+sintassi ma questa è l’unica che qualsiasi strumento
+software per OWL deve essere in grado di gestire.
+\end{itemize}
 
+\paragraph{Struttura di un documento OWL:}
+
+\begin{itemize}
+  \item OWL 2 non fornisce strumenti che descrivano
+in maniera prescrittiva la struttura di un
+documento OWL. 
+\item In particolare, non c’è modo per specificare
+che una determinata informazione (per
+esempio, il codice fiscale di una persona) deve
+essere necessariamente presente.
+\end{itemize}
+
+\paragraph{Elementi dell'ontologia:}
+
+\begin{itemize}
+  \item \fancyglitter{Entità}: gli elementi che si riferiscono al mondo reale. 
+  \item \fancyglitter{Assiomi}: le asserzioni generali contenute nell’ontologia
+(per esempio, il concetto di persona è un concetto più
+specifico di quello di essere vivente). 
+\item \fancyglitter{Espressioni}: combinazioni di entità che vanno a
+formare entità più complesse.
+\end{itemize}
+
+\paragraph{Tipi di entità:}
+
+\begin{itemize}
+  \item Gli oggetti sono individui. 
+  \item Le categorie sono le classi. 
+  \item Le relazioni sono le proprietà.
+\end{itemize}
+
+\paragraph{Le proprietà sono suddivise in:}
+
+\begin{itemize}
+  \item Object properties: che collegano individui ad individui (come una
+persona al suo coniuge).
+\item Datatype properties: che assegnano un dato a un individuo (per
+esempio l’età a una persona). 
+\item Annotation properties: che contengono commenti e descrizioni sulle
+entità.
+\end{itemize}
+
+\dfn{Assiomi}{
+  Gli assiomi, in OWL2, possono essere dichiarazioni, assiomi sulle classe, sugli oggetti o sulle proprietà dei dati, definizioni di tipi di dati, chiavi, asserzioni (anche chiamate fatti) e assiomi su annotazioni.
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{02/axioms.png}
+    \caption{Assiomi.}
+\end{figure}
 
 
 
