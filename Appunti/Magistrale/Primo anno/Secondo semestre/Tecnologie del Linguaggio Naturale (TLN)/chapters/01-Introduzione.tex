@@ -142,17 +142,171 @@ domande pertinenti al discorso.
 
 \nt{Jurafsky è un chad nerd.}
 
+\subsection{Strutture Linguistiche e Ambiguità}
 
+Analizzando i vari livelli si trovano diverse \fancyglitter{strutture linguistiche}. 
 
+\dfn{Struttura Linguistica}{
+Una struttura è un insieme su cui è definita una
+relazione: 
+\begin{itemize}
+  \item Relazione fonetico-fonologica sull'insieme dei foni-fonemi. 
+  \item Relazione morfologica sull'insieme dei morfemi.
+  \item Relazione sintattica sull'insieme delle parole. 
+  \item Relazione semantica sull'insieme dei significati delle parole. 
+  \item Relazione pragmatica sull'insieme dei significati delle parole e sul contesto. 
+  \item Relazione “discorsale” sull'insieme delle frasi.
+\end{itemize}
+}
 
+\nt{
+    Ci sono relazioni tra i componenti della frase. Inoltre le relazioni cambiano a seconda della lingua.
+}
 
+\ex{Struttura Sintattica}{
+  \begin{center}
+    \includegraphics[scale=0.8]{01/sintassi.png}
+  \end{center}
+}
 
+\dfn{Ambiguità}{
+  Il linguaggio  naturale presenta frasi che possono essere interpretate in modi differenti.
+}
 
+\ex{Ambiguità}{
+  \begin{center}
+    "I made her duck"
+  \end{center}
 
+  \begin{itemize}
+    \item Ho cucinato una papera per lei. 
+    \item Ho cucinato una papera che apparteneva a lei. 
+    \item Ho creato una papera con la stampante 3D e gliel'ho data a lei.
+    \item Ho fatto abbassare la sua testa.
+    \item In Harry Potter\footnote{Rowling merda.}: Ho trasformato lei in una papera.
+  \end{itemize}
+}
 
+\clm{}{}{
+  \begin{itemize}
+    \item Le parole "duck" e "her" sono morfologicamente ambigue nella loro parte del discorso. "Duck" può essere un verbo o un nome, "her" può essere un pronome dativo o possessivo. 
+    \item Il verbo "make" è sintetticamente ambiguo: può essere transitivo o intransitivo. 
+    \item Inoltre "make" è anche semanticamente ambiguo: può significare creare o cucinare. 
+    \item In una frase parlata c'è un altro livello per cui "her" può essere udito come "eye" e "make" come "maid".
+  \end{itemize}
+}
 
+\nt{Essere ambigui permette di essere brevi e coincisi.}
 
+\paragraph{Altre proprietà notevoli del linguaggio:}
 
+\begin{itemize}
+  \item Linguaggio non standard, evolve nel tempo. 
+    \begin{itemize}
+      \item Scialla bros $\rightarrow$ chill $\rightarrow$ è easy. 
+      \begin{center}
+    \includegraphics[scale=0.5]{01/burns.png}
+  \end{center}
+    \end{itemize}
+  \item Segmentazione. 
+    \begin{itemize}
+      \item Il treno Torino San Remo. 
+    \end{itemize}
+  \item Locuzioni, spesso l'interpretazione non è composizionale. 
+    \begin{itemize}
+      \item Pollica verde.
+    \end{itemize}
+  \item Neologismi. 
+    \begin{itemize}
+      \item Twettare\footnote{Musk merda.}
+    \end{itemize}
+  \item Conoscenza del mondo. 
+    \begin{itemize}
+      \item Lucia e Carola erano sorelle. 
+      \item Lucia e Carola erano madri.
+    \end{itemize}
+  \item Meta-linguaggio. 
+    \begin{itemize}
+      \item La prima cosa bella ha avuto un
+grandissimo successo.
+    \end{itemize}
+\end{itemize} 
 
+\subsection{Lo Stato dell'Arte}
+
+\begin{itemize}
+  \item 1976: In Canada un sistema riesce a stampare due bollettini meteo in due lingue diverse. \item BabelFish, di Yahoo, era un sistema "a regole" di trascrizione automatica, basato su Systran.
+  \item 2011: IBM costruisce un supercomputer per battere un essere umano a Jeopardy, Watson.  
+  \item Tecnologie vocali: Speech Recognition, TextToSpeech, HTML5 Speech API (pagine web vocali).
+\end{itemize}
+
+\nt{
+  Dopo sette milioni e mezzo di anni Pensiero Profondo fornisce la
+  risposta: "42"\footnote{Guida Galattica per gli Autostoppisti.}. 
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.75]{01/timeline2.png}
+    \caption{LLM. Tratto da "Hands-On Large Language Models", uscito nel Dicembre del 2024.}
+\end{figure}
+
+\nt{Well, Deepseek è open source e funziona meglio di ChatGPT (a patto che non chiedi cosa sia successo a piazza Tienanment nel 1989).}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{01/data.png}
+    \caption{Shifting di paradigma dovuto al Machine Learning.}
+\end{figure}
+
+\dfn{AI Generativa}{
+  Modello di linguaggio di reti neurali multi-task basate sui transformer addestrati su una grande quantità di dati utilizzando self training e feedback umano.
+}
+
+\begin{itemize}
+  \item Modello di Linguaggio: Text prediction $\rightarrow$ T9. 
+  \item Multi-task: Google Translator, Siri.
+\end{itemize}
+
+\qs{}{Come fare un LLM (M. Lapata)?}
+
+\begin{enumerate}
+  \item Collezionare una grande quantità di dati. 
+  \item Chiedere al LLM di predirre la nuova parola in una frase. 
+  \item Ripetere il tutto.
+\end{enumerate}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.8]{01/addestramento.png}
+    \caption{Auto addestramento di una rete neurale.}
+\end{figure}
+
+\qs{}{Come usare un LLM?}
+
+\begin{itemize}
+  \item Sintonizzazione a grana fine.
+  \item Prompting.
+\end{itemize}
+
+\paragraph{Si può usare un LLM per:}
+
+\begin{itemize}
+  \item Search Engine. 
+  \item Writer/Code assistant.
+\end{itemize}
+
+\nt{Noam Chomsky odia questi sistemi. Secondo lui servono per evitare l'apprendimento.}
+
+\paragraph{DeepSeek:}
+
+\begin{itemize}
+  \item Apprendimento rinforzato automatico (senza essere umani). 
+  \item Meno costoso $\rightarrow$ politicamente importante.
+\end{itemize}
+
+\paragraph{\fancyglitter{Il problema fondamentale}:} Convertire una frase o un testo in una forma che
+permetta l'applicazione di meccanismi di
+ragionamento automatico.
 
 
