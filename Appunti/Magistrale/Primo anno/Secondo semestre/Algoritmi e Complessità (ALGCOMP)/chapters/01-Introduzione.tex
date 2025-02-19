@@ -1,0 +1,74 @@
+\chapter{Introduzione}
+
+\section{Il Corso in Breve...}
+
+Questo corso ruota attorno alla parola "\fancyglitter{riduzione}": si evita di reinventare l'acqua calda. La riduzione si collega al concetto di \fancyglitter{intrattabilità}: non si conoscono algoritmi sufficientemente veloci per risolvere un determinato problema per ogni sua istanza (o non esistono ma non lo si sa dimostrare). Il corso è incentrato sulle tecniche per affrontare problemi intrattabili. 
+
+\begin{itemize}
+  \item Brute Force.
+  \item Backtracking.
+  \item Least Cost.
+  \item ...
+\end{itemize}
+
+\nt{La chiave di lettura per parlare di questi strumenti è proprio la riduzione.}
+
+\subsubsection{}
+
+Successivamente si parlerà di \fancyglitter{correttezza}: dimostrare che un programma restituisca l'output desiderato per qualsiasi istanza di input.
+
+\subsection{Problemi Motivazionali}
+
+\paragraph{Problema delle Valutazioni:} si devono valutare 8 parti di un esame con 50 domande totali per cui si può ottenere un massimo di 125 punti. Il problema consiste nel trovare il modo di massimizzare il voto dato, ma limitandolo a 100 punti.
+
+\qs{}{È facile verificare che l'insieme selezionato è una soluzione? (il voto assegnato è minore o uguale al massimo ammesso)}
+
+\qs{}{È facile verificare che l'insieme selezionato è una risposta? (il voto assegnato premia al massimo l'esaminando)}
+
+\qs{}{È facile scrivere un algoritmo che fornisce una soluzione?}
+
+\qs{}{È facile scrivere un algoritmo che fornisce una risposta?}
+
+\paragraph{Problema del Bando:} l'incubatore dell'azienda TDT bandisce l'assegnazione di 90 unità di denaro per finanziare 3 progetti, uno per ciascuna delle seguenti aree di intervallo:
+
+\begin{itemize}
+  \item Area 0. 
+  \item Area 1. 
+  \item Area 2.
+\end{itemize}
+
+\subsubsection{}
+
+I progetti sono classificati in base a un indice di utilità:
+
+\begin{itemize}
+  \item Criterio 1. 
+  \item Criterio 2. 
+  \item ...
+\end{itemize}
+
+\nt{Se si decide di finanziare un progetto lo si finanzia per intero.}
+
+\subsubsection{}
+
+\qs{}{È facile certificare un insieme soluzione? (il totale finanziato è minore o uguale 90)}
+
+\qs{}{È facile certificare un insieme risposta? (il totale finanziato è minore o uguale a 90, con utilità massima)}
+
+\qs{}{
+  Cosa ha in comune con gli algoritmi sintetizzati per le valutazioni?
+}
+
+\paragraph{Problema:} si vuole prestare denaro per un massimo di 220 unità. Il massimo rischio ammissibile è del 40\% (Rischio = $\frac{\text{Richiesta}}{\text{Affidabilità}}$ per singolo finanziamento). Si vuole massimizzare il guadagno. 
+
+\qs{}{È facile verificare che l'insieme selezionato è una soluzione? (il totale finanziamenti è minore o uguale a 220 e il rischio è minore o uguale al 40\%)}
+
+\qs{}{È facile verificare che l'insieme selezionato è una risposta? (il totale finanziamenti è minore o uguale a 220 e il rischio è minore o uguale al 40\%, massimizzando il guadagno)}
+
+
+
+
+
+
+
+
