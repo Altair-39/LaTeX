@@ -73,6 +73,75 @@ non monotono e del paradigma dell’Answer Set Programming.
 
 \paragraph{Risposta:} vengono trattate in altri corsi (TLN, RNDL, AAUT, ELIVA, AGINT).
 
+\section{Il Prolog}
+
+\dfn{Prolog}{
+  Prolog (Programming Logic) è un \newfancyglitter{linguaggio dichiarativo} basato sul \newfancyglitter{paradigma logico}: 
+  \begin{itemize}
+    \item Non si descrive cosa fare per risolvere un problema. 
+    \item Si descrive la situazione reale con \newfancyglitter{fatti} e \newfancyglitter{regole} e si chiede all'interprete di verificare se un \newfancyglitter{goal} segue oppure no secondo una logica classica.
+  \end{itemize}
+}
+
+\nt{Il prolog è equivalente alla logica dei predicati del primordine.}
+
+\subsection{Le Basi}
+
+\dfn{Fatti}{Si rappresenta con dei \newfancyglitter{fatti} un dominio di interesse.}
+
+\ex{Fatto}{
+  Fatto per descrivere che un alimento contiene più calorie di un altro: 
+  \begin{itemize}
+    \item piuCalorico(wurstel, banana). 
+    \item Rappresenta il fatto che il würstel è un alimento maggiormente
+calorico rispetto alla banana.
+  \end{itemize}
+}
+
+\dfn{Regole}{
+  Si rappresentano le possibili inferenze con delle \newfancyglitter{regole}: 
+  \begin{center}
+    \texttt{head := subgoal1, subgoal2, \dots, subgoaln}
+  \end{center}
+}
+
+\ex{Regola}{
+  \begin{center}
+    \texttt{felino(X) := gatto(X)}
+  \end{center}
+  Rappresenta la regola che permette di concludere che i gatti sono felini.
+}
+
+\paragraph{Idee di base del prolog:}
+
+\begin{itemize}
+  \item Regole ricorsive.
+  \item L'interprete analizza i fatti e le regole nell'ordine in cui si trovano nel programma. 
+  \item Meccanismo di pattern matching per uni care
+variabili e termini. 
+\item L’interprete, dato un programma, cerca di
+dimostrare un goal considerando fatti e applicando
+regole, nel secondo caso generando sotto-goal.
+\end{itemize}
+
+\dfn{Clausole}{
+  Le clausole sono i fatti o le regole.
+}
+
+\clm{}{}{
+  \begin{itemize}
+    \item L'estensione dei file prolog è 'pl'.
+    \item In prolog le variabili hanno l'iniziale maiuscola. 
+    \item L'unica struttura dati nativa è la lista.
+    \item Per eseguire swi: swipl. 
+    \item Per compilare: $[$'nomefile.pl'$]$.
+    \item Il comando ';' indica possibili alternative.
+    \item il comando 'trace.' consente un esecuzione passo per passo.
+  \end{itemize}
+}
+
+
+
 
 
 
