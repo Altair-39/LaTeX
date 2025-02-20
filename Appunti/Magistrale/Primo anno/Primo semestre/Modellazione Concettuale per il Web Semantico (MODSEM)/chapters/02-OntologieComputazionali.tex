@@ -415,11 +415,151 @@ entità.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.6]{02/axioms.png}
+    \includegraphics[scale=0.8]{02/axioms.png}
     \caption{Assiomi.}
 \end{figure}
 
+\nt{In OWL2 ogni IRI deve essere dichiarato nell'ontologia.}
 
+\paragraph{Ci sono 2 tipi di dichiarazioni:}
+
+\begin{itemize}
+  \item Che un certo IRI fa parte dell'ontologia. 
+  \item A che tipo di entità appartiene l'IRI:
+    \begin{itemize}
+      \item Class. 
+      \item Datatype. 
+      \item Object property. 
+      \item Data property. 
+      \item Annotation property. 
+      \item An individual.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Tipi di relazioni:}
+
+\begin{itemize}
+  \item \fancyglitter{SubClassOf}: ogni istanza di una classe è anche un'istanza di un'altra classe\footnote{Costruisce una gerarchia di classi.} 
+  \item \fancyglitter{EquivalentClasses}: diverse classi sono equivalenti tra di loro.
+  \item \fancyglitter{DisjointClasses}: classi che non hanno nessuna istanza in comune.
+  \item \fancyglitter{DisjointUnion}: una scomposizione esaustiva.
+\end{itemize}
+
+\ex{}{
+  \begin{itemize}
+    \item Sottoclasse: 
+      \begin{itemize}
+        \item SubClassOf(a:Boy a:Child). 
+        \item Boy è sottoclasse di Child.
+      \end{itemize}
+    \item Classi equivalenti: 
+      \begin{itemize}
+        \item EquivalentClasses(a:CatOwner a:PadroneDiGatti). 
+        \item Le due classi sono entrambe sottoclasse l'una dell'altra.
+      \end{itemize}
+    \item Disgiunzione: 
+      \begin{itemize}
+        \item DisjointClasses(a:Cat a:Dog).
+        \item Cat e Dog sono classi disgiunte. 
+      \end{itemize}
+    \item Disjoint Union:
+      \begin{itemize}
+        \item DisjointUnion(a: Person a:Child a:Adult). 
+        \item Person ha come sottoclassi le due classi disgiunte Child e Adult.
+      \end{itemize}
+  \end{itemize} 
+}
+
+\nt{In 1uesti esempi è stata usata la \fancyglitter{functional style syntax}.}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.8]{02/cl.png}
+    \caption{ClassAxiom}
+\end{figure}
+
+\dfn{Espressioni}{
+  In OWL2, classi e proprietà sono usate per costruire \newfancyglitter{espressioni di classe} (o descrizioni). 
+}
+
+\nt{Per esempio "Professoressa" può essere visto come l'unione di "Docente" e "Donna".}
+
+\paragraph{OWL2 fornisce un insieme di operatori per definire le classi:}
+
+\begin{itemize}
+  \item \fancyglitter{Connettivi booleani}. 
+  \item \fancyglitter{Quantificazione universale ed esistenziale}.
+  \item \fancyglitter{Restrizioni numeriche}. 
+  \item \fancyglitter{Enumerazione di individui}.
+\end{itemize}
+
+\subsection{Definizioni e Sintassi}
+
+\begin{itemize}
+  \item Si definisce una classe dichiarando che essa
+appartiene al tipo Classe di OWL. 
+\begin{center}
+  \textcolor{blue}{:Persone} \textcolor{red}{rdf:type owl:Class};
+\end{center}
+\item Mary appartiene alla classe Person. 
+  \begin{center}
+    \textcolor{blue}{:Mary} \textcolor{red}{rdf:type} \textcolor{blue}{:Person} .
+  \end{center}
+\item John appartiene alla classe Father. 
+  \begin{center}
+    \textcolor{blue}{:John} \textcolor{red}{rdf:type} \textcolor{blue}{:Father} .
+  \end{center}
+\item Assiomi di sottoclasse. 
+  \begin{center}
+    \textcolor{blue}{:Woman} \textcolor{red}{rdfs:subClassOf} \textcolor{blue}{:Person} .
+  \end{center}
+\item Due classi possono essere dichiarate equivalenti. 
+  \begin{center}
+    \textcolor{blue}{:Person} \textcolor{red}{owl:equivalentClass} \textcolor{blue}{:Human} .
+  \end{center}
+\item Un insieme di classi possono essere dichiarate
+disgiunte. 
+\item Si definisce una Object Property asserendo
+che essa appartiene al tipo ObjectProperty di
+OWL. 
+\begin{center}
+  \textcolor{blue}{:hasSpouse} \textcolor{red}{rdf:type owl:ObjectProperty} ;
+\end{center}
+\item Le proprietà di tipo Object Property rappresentano relazioni
+tra classi (e quindi, si asseriscono degli individui). 
+\begin{center}
+  \textcolor{blue}{:John} \textcolor{red}{:hasWife} \textcolor{blue}{:Mary}
+\end{center}
+\item Le data property hanno come domain una classe e come range un tipo
+di dato. 
+\begin{center}
+  \textcolor{blue}{:hasAge} \textcolor{red}{rdf:type owl:DatatypeProperty} ;
+\end{center}
+\end{itemize}
+
+\dfn{Restrizioni}{
+  Le restrizioni sono uno dei meccanismi principali
+per definire nuove classi a partire da quelle
+esistenti.
+}
+
+\paragraph{Esistono due tipi di restrizioni:}
+
+\begin{itemize}
+  \item Restrizioni su \fancyglitter{classi} mediante operatori insiemistici
+(intersezione-and, unione-or, complemento-not). 
+\item Restrizioni poste su \fancyglitter{proprietà} (esistenziale, universale,
+sulla cardinalità).
+\end{itemize}
+
+\dfn{Intersezione}{
+  L’intersezione permette di definire una classe come
+intersezione di due classi.
+}
+
+\dfn{Complemento}{
+  Una classe può essere definita come complemento di un’altra.
+}
 
 
 
