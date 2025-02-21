@@ -65,6 +65,39 @@ I progetti sono classificati in base a un indice di utilità:
 
 \qs{}{È facile verificare che l'insieme selezionato è una risposta? (il totale finanziamenti è minore o uguale a 220 e il rischio è minore o uguale al 40\%, massimizzando il guadagno)}
 
+\qs{}{Cosa ha in comune con gli algoritmi sintetizzati in precedenza?}
+
+\nt{Questi problemi possono essere ridotti al knapsack.}
+
+\subsection{Strategie di soluzione}
+
+\begin{itemize}
+  \item Calcolo classico: soluzione a problemi che coinvolgono funzioni, derivate e integrali. 
+\end{itemize}
+
+\paragraph{Dizionario di riferimento (Bellman):}
+
+\begin{itemize}
+  \item \fancyglitter{Risorsa economica}: denaro, persone, materiali, etc. disponibile in quantità $x$. 
+  \item \fancyglitter{Attività}: modi diversi, da 1 a $N$, in cui possiamo usare la risorsa economica. 
+  \item \fancyglitter{Quantità allocate}: $x_1, \dots, x_N$, una per ogni attività.
+  \item \fancyglitter{Ricavo singola attività}: $g_i(x_i)$ relativo all'attività $i$. 
+  \item \fancyglitter{Ricavo}: valore globale che dipende dal modo in cui ogni attività usa la porzione allocata della risorsa.
+\end{itemize}
+
+\ex{Valutazioni}{
+\begin{itemize}
+  \item \fancyglitter{Risorsa economica}: 100 unità
+  \item \fancyglitter{Attività}: 50 correzioni concorrenti. 
+  \item \fancyglitter{Quantità allocate}: inclusioni tra risposte per voto.
+  \item \fancyglitter{Ricavo singola attività}: voto effettivamente assegnabile da risposta. 
+  \item \fancyglitter{Ricavo}: voto finale.
+\end{itemize}
+
+}
+
+
+
 
 
 

@@ -247,7 +247,7 @@ grandissimo successo.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.75]{01/timeline2.png}
+    \includegraphics[scale=0.8]{01/timeline2.png}
     \caption{LLM. Tratto da "Hands-On Large Language Models", uscito nel Dicembre del 2024.}
 \end{figure}
 
@@ -309,4 +309,265 @@ grandissimo successo.
 permetta l'applicazione di meccanismi di
 ragionamento automatico.
 
+\section{I Livelli Linguistici}
+
+\subsection{Da Frase a Significato}
+
+\paragraph{Problema:} Convertire una frase o un testo in una forma che permetta l'applicazione di meccanismi di ragionamento automatico.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{01/fs.png}
+    \caption{Passaggio da frase a significato.}
+\end{figure}
+
+\nt{Però la situazione non è così semplice. Bisogna capire come funzionano i moduli e come comunicano}
+
+\paragraph{Nella linguistica computazionale c'è una divisione tra \fancyglitter{regole} e \fancyglitter{statistica}:}
+
+\begin{itemize}
+  \item Rules-driven. 
+  \item Data-driven.
+\end{itemize}
+
+\nt{Steedman sostiene che i due aspetti dovrebberò convivere tra loro (2008). Evitare il regionamento tribale.}
+
+\qs{}{Quando finisce una frase?}
+
+\dfn{Sentence splitting}{
+Task in cui si deve capire quando una frase finisce.
+}
+
+\begin{itemize}
+  \item "!", "?" $\rightarrow$ Okay, pongono fine alla frase.
+  \item ".":
+    \begin{itemize}
+      \item Fine frase. 
+      \item Abbreviazione (Doc., Mx.). 
+      \item Numeri (0.2).
+    \end{itemize}
+\end{itemize}
+
+\qs{}{Quindi come si costruisce un classificatore binario che decida EoS (End of String) o not EoS?}
+
+\begin{itemize}
+  \item Si possono scrivere regole a mano: 
+    \begin{itemize}
+      \item Espressioni regolari. 
+      \item Tokenizer (FA) e regole.
+    \end{itemize}
+  \item Addestrare un sistema di machine learning.
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{01/decision tree.png}
+    \caption{Albero di decisione.}
+\end{figure}
+
+\paragraph{Features più complesse:}
+
+\begin{itemize}
+  \item Caso di parole con ".".
+  \item Caso di parole dopo ".". 
+  \item Features numeriche: 
+    \begin{itemize}
+      \item Lunghezza di parole con ".". 
+      \item Probabilità che una parola con "." avvenga alla fine della frase. 
+      \item Probabilità che una parola dopo "." avvenga all'inizio di una frase.
+    \end{itemize}
+\end{itemize}
+
+\qs{}{Cos'è davvero un albero di decisione?}
+
+\begin{itemize}
+  \item Una serie di IF-THEN-ELSE incapsulati. 
+  \item Due possibilità per costruirlo: 
+    \begin{itemize}
+      \item \fancyglitter{By-hand}: solo in contesti semplici. 
+      \item \fancyglitter{Machine learning}: su un training corpus.
+    \end{itemize}
+  \item Il punto cruciale è la scelta delle features.
+\end{itemize}
+
+\clm{}{}{
+  \begin{itemize}
+    \item In questo corso ci concentreremo sullo studio delle
+feature linguistiche. 
+\item In alcuni casi l'approccio by-hand verrà privilegiato poiché
+è didatticamente più chiaro/semplice e poiché è più
+semplice verificarne la fondatezza cognitiva mediante
+introspezione.
+  \end{itemize}
+}
+
+\qs{}{Nei sistemi end-to-end cosa sono le feature linguistiche?}
+
+\dfn{Features Linguistiche Neurali}{
+  L’architettura neurale, ovvero il numero e il tipo di
+  connessioni, codifica in maniera \newfancyglitter{implicita} le features
+linguistiche.
+}
+
+\nt{La ricerca, in questo caso, si focalizza su quale scelta
+architetturale è più adatta alla modellazione implicita del
+fenomeno linguistico e alla creazione del corpus di
+training.}
+
+\subsection{Il Livello Morfologico e l'Analisi Lessicale}
+
+Il lessico è fondato sul concetto di \fancyglitter{parola}.
+
+\qs{}{Che cos'è una parola?}
+
+\begin{itemize}
+  \item Intuitivamente è una
+sequenza di caratteri delimitata da spazi o
+punteggiatura. 
+\item Sequenze di più parole, Es. passammela = passa a me essa. 
+\item Le parole hanno un significato unitario (semantica
+lessicale), ma volte sequenze di parole hanno un
+significato unitario. Es. di corsa, by the way. 
+\item In altre lingue il problema è più grave. 
+  \begin{itemize}
+    \item In tedesco: Lebenversicherungsgesellschaftangestellter = impiegato di una società di
+assicurazione sulla vita. 
+  \item In inglese: Wouldn't? = Would not.
+  \end{itemize}
+\end{itemize}
+
+\paragraph{Presenza di suffissi:}
+
+\begin{itemize}
+  \item CAPITANO (forma non declinabile). 
+  \item CAPITAN + O (nome o aggettivo o forma del verbo capitanare). 
+  \item CAPIT + ANO (forma del verbo capitanare).
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{01/analizzatore morfologico.png}
+    \caption{Analizzatore morfologico.}
+\end{figure}
+
+\nt{Non c'è una forma giusta a priori, ma c'è una forma giusta in base al contesto.}
+
+\dfn{Forme Composte}{
+  Generalmente una parola contenuto più una (o più)
+parole funzione.
+}
+
+\ex{Forme composte}{
+  \paragraph{STAMPAMELO:}
+  \begin{itemize}
+    \item STAMP è una radice verbale. 
+    \item A è un suffisso verbale. 
+    \item ME e LO sono forme pronominali\footnote{Per triggerare gli Alt-Right.}.
+  \end{itemize}
+}
+
+\dfn{Forme Multiple}{
+  Le diversi componenti sono nel dizionario ma la
+semantica non è composizionale.
+}
+
+\ex{Forme multiple}{
+  \begin{itemize}
+    \item Più o meno: puntatore tra le parole per recuperare la giusta semantica. 
+    \item Prendere un abbaglio: rimandare all'interprete semantico.
+  \end{itemize}
+}
+
+\dfn{Lemmatizzazione}{
+  Trasformare un lemma in forma normale.
+}
+
+\nt{La forma normale non è stabile nel tempo.}
+
+\dfn{Stemming}{
+  Estrarre la forma radice (detta tema) da una parola.
+}
+
+\dfn{Paradigmatico}{Si cambia una parte della parola con una equivalente si ha una frase morfologicamente corretta.}
+
+\dfn{Sintagmatico}{I rapporti che intercorrono tra gli elementi che si succedono nella frasei rapporti che intercorrono tra gli elementi che si succedono nella frase.}
+
+\paragraph{Nome:}
+
+\begin{itemize}
+  \item Persone, oggetti, luoghi. 
+  \item Proprietà sintagmatiche: 
+    \begin{itemize}
+      \item Comparire dopo gli articoli. 
+      \item Avere un possessivo. 
+      \item Avere un singolare o un plurale.
+    \end{itemize}
+  \item Comuni, propri, di massa, contabili.
+\end{itemize}
+
+\paragraph{Verbo:}
+
+\begin{itemize}
+  \item Eventi, azioni, processi. 
+  \item Molte forme morfologiche. 
+  \begin{itemize}
+    \item Tempo. 
+    \item Modo. 
+    \item Numero.
+  \end{itemize}
+\item Tante categorie (ausiliari, modali, copula, etc.).
+\end{itemize}
+
+\paragraph{Aggettivi:}
+
+\begin{itemize}
+  \item Proprietà. 
+\end{itemize}
+
+\paragraph{Avverbi:}
+
+\begin{itemize}
+  \item Modificano qualcosa, spesso verbi, ma anche altri avverbi o intere frasi.
+\end{itemize}
+
+\nt{Nomi, verbi, aggettivi e avverbi sono \fancyglitter{di contenuto}, che puntano a oggetti reali.}
+
+\dfn{Classi Aperte}{
+  Classi che aumentano o scompaiono nel tempo costantemente (nomi, verbi, aggettivi, avverbi).
+}
+
+\dfn{Classi Chiuse}{
+  Classi che aumentano o scompaiono con tempi lunghissimi.
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{01/opcl.png}
+    \caption{Parti aperte e parti chiuse.}
+\end{figure}
+
+\paragraph{Google Unviversal PoS:} 12 PoS: NOUN (nouns), VERB (verbs), ADJ (adjectives), ADV (adverbs), PRON
+(pronouns), DET (determiners and particles), ADP (prepositions and
+postpositions), NUM (numerals), CONJ (conjunctions), PRT (particles), ‘.’
+(punctuation marks) and X (a catch-all, e.g. abbreviations and foreign words). 
+
+\subsection{Il Livello Sintattico}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{01/paf.png}
+    \caption{Parsing sintattico.}
+\end{figure}
+
+\nt{Le due alternative derivano da prospettive diverse: 
+\begin{itemize}
+  \item Quella a sinistra è la struttura sintagmatica (o a costituenti). 
+  \item Quella a destra è la struttura a dipendenze.
+\end{itemize}
+Entrambe le alternative sono equivalenti.
+}
+
+\subsection{Il Livello Semantico}
+
+\subsection{Il Livello Pragmatico e del Discorso}
 
