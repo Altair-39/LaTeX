@@ -173,5 +173,146 @@ teoria se essa è vera in tutti i modelli della teoria.
   \end{center}
 }
 
+\begin{itemize}
+  \item Tuttavia il processo è molto laborioso già con poche formule e basi di conoscenza piccole. 
+  \item Metodo di prova: procedura/algoritmo che calcola/dimostra se una formula è
+conseguenza logica della teoria. 
+\begin{itemize}
+  \item \fancyglitter{Corretto}: se l’algoritmo dimostra F da K, allora F è
+conseguenza logica di K. 
+\item \fancyglitter{Completo}: se F è conseguenza logica di K, allora l’algoritmo
+dimostra F da K.
+\end{itemize}
+\end{itemize}
+
+\paragraph{Risoluzione:}
+
+\begin{itemize}
+  \item Si applica a formule in forma di \fancyglitter{clausole} (disgiunzioni di letterali\footnote{Formule atomiche o negazione di formule atomiche.}). 
+  \item Si basa su un'unica regola di inferenza: 
+    \begin{itemize}
+      \item Date due clausole $C_1=A_1 \lor \dots \lor A_n$ e $C_2=B_1 \lor \dots \lor B_m$. 
+      \item Se ci sono due letterali $A_i$ e $B_j$ tali che $A_i = \neg B_j$, allora posso derivare la clausola \fancyglitter{risolvente} $A_1 \lor \dots A_{i-1} \lor A_{i+1} \lor \dots \lor A_n \lor B_1 \lor \dots B_{j-1} \lor B_{j+1} \lor \dots \lor B_m$. 
+      \item Il risolvente è conseguenza logica di $C_1 \cup C_2$
+    \end{itemize}
+  \item Data una teoria (insieme di formule) $K$ e una formula $F$, dimostro
+che $F$ è conseguenza logica di $K$ per refutazione (dimostrare che $K \cup \neg F$ è inconsistente). 
+\item Si parte dalle clausole $K \cup \neg F$, risolvendo a ogni passo due
+clausole e aggiungendo il risolvente all’insieme di clausole. 
+\item Si conclude quando si ottiene la clausola vuota.
+\end{itemize}
+
+\ex{Risoluzione gatti}{
+  \begin{center}
+    \includegraphics[scale=0.5]{02/ris.png}
+  \end{center}
+}
+
+\paragraph{Inoltre:}
+
+\begin{itemize}
+  \item Se le due clausole $C_1=A_1 \lor \dots \lor A_n$ e $C_2=B_1 \lor \dots \lor B_m$ contengono variabili, i due letterali $A_i$ e $B_j$ devono essere tali che si possa fare l’\fancyglitter{unificazione} tra i due: 
+    \begin{itemize}
+      \item Unificazione: sostituzione $\alpha$ di variabili con termini o uguaglianza di variabili affinché $A_i=\neg B_j$.
+      \item Clausola risolvente $[A_1 \lor \dots A_{i-1} \lor A_{i+1} \lor \dots \lor A_n \lor B_1 \lor \dots B_{j-1} \lor B_{j+1} \lor \dots \lor B_m] \alpha$. 
+      \item Le sostituzioni di $\alpha$ sono applicate a $A_1 \lor \dots A_{i-1} \lor A_{i+1} \lor \dots \lor A_n \lor B_1 \lor \dots B_{j-1} \lor B_{j+1} \lor \dots \lor B_m$.
+    \end{itemize}
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{02/uni.png}
+    \caption{Unificazione di due termini.}
+\end{figure}
+
+\nt{Per ragioni d'efficienza, PROLOG non fa \fancyglitter{occur check}, ossia una variabile X unifica con f(X).}
+
+\subsection{Risoluzione SLD}
+
+Per arrivare a un linguaggio di programmazione PROLOG si vuole una strategia efficiente. 
+
+\dfn{Risoluzione SLD}{
+  Linear resolution with Selection function for Definite clauses: 
+  \begin{itemize}
+    \item K con clausole \newfancyglitter{definite}:
+      \begin{itemize}
+        \item Clausole di Horn: al più un letterale non negato. 
+        \item Strategia linear input: a ogni passo di risoluzione, una \newfancyglitter{variante} di
+una clausola è sempre scelta nella K di partenza (programma)
+mentre l’altra è sempre il risolvente del passo precedente (goal, la
+negazione di F al primo passo). 
+\item Variante: clausola con variabili rinominate.
+      \end{itemize}
+  \end{itemize}
+}
+
+\nt{\underline{\textbf{\textit{NON}}} LSD.}
+
+\qs{}{Ma perché ci si limita alle clausole di Horn?}
+
+\paragraph{Risposta:} si rimuove la parte "intuitiva" che non può essere implementata nel PROLOG. Inoltre le clausole di Horn garantiscono la completezza.
+
+\paragraph{Derivazione SLD per un goal $G_0$ da un insieme di clausole K è:}
+
+\begin{itemize}
+  \item Una sequenza di clausole goal $G_0, G_1, \dots, G_n$. 
+  \item Una sequenza di varianti di clausole di $K C_1, C_2, \dots, C_n$. 
+  \item Una sequenza di MGU $\alpha_1, \alpha_2, \dots, \alpha_n$, tali che $G_{i+1}$ è derivato da $G_i$ e da $C_{i+1}$
+    attraverso la sostituzione $\alpha_{i+1}$,
+\end{itemize}
+
+\paragraph{Tre possibili tipi di derivazioni:}
+
+\begin{itemize}
+  \item Successo se $G_n$ è vuoto (\texttt{true}). 
+  \item Fallimento finito, se non è possibile derivare da $G_n$ alcun risolvente e $G_n$ non è vuoto (\texttt{false}).
+  \item Fallimento infinito, se è sempre possibile derivare nuovi risolventi (loop infinito).
+\end{itemize}
+
+\paragraph{Due forme di non determinismo:}
+
+\begin{itemize}
+  \item Regola di calcolo per selezionare a ogni passo l’atomo $B_i$
+del goal da unificare con una clausola. 
+\item Scelta di quale clausola utilizzare a ogni passo di
+risoluzione. 
+\end{itemize}
+
+\dfn{Regola di calcolo}{
+Funzione che ha come dominio l’insieme dei
+goal e per ogni goal seleziona un suo atomo.
+}
+
+\nt{La regola di calcolo non influenza correttezza e completezza del metodo di prova.}
+
+\qs{}{Come si costruisce l'albero SLD?}
+
+\paragraph{Data una regola di calcolo, è possibile rappresentare tutte le
+derivazioni con un albero SLD:}
+
+\begin{itemize}
+  \item Nodo: goal. 
+  \item Radice: goal iniziale $G_0$. 
+  \item Ogni nodo $\leftarrow A_1, \dots, A_m, \dots, A_k$, dove $A_m$ è l’atomo
+selezionato dalla regola di calcolo, ha un figlio per ogni
+clausola A $\leftarrow B_1, \dots, B_k$ tale che $A$ e $A_m$ sono unificabili con
+MGU $\alpha$. Il nodo figlio è etichettato con il goal $\leftarrow [A_1, \dots, A_{m-1}, B_1, \dots, B_k, A_{m+1}, \dots, A_k] \alpha$. Il ramo dal padre al figlio è
+etichettato con $\alpha$ e con la clausola selezionata.
+\end{itemize}
+
+\paragraph{Scelte per rendere la strategia deterministica:}
+
+\begin{itemize}
+  \item Regola di computazione: \fancyglitter{leftmost} (viene sempre scelto il sottogoal più a sinistra). 
+  \item Clausole considerate nell’\fancyglitter{ordine in cui sono scritte nel programma}. 
+  \item Strategia di ricerca: \fancyglitter{in profondità con backtracking}. 
+    \begin{itemize}
+      \item Non è completa perché se una computazione che porta al successo si trova a destra di un ramo infinito l'interprete non la trova, perché entra, senza mai uscirne, nel ramo infinito.
+    \end{itemize}
+\end{itemize}
+
+\nt{Cercare di mettere a destra le computazioni che possano produrre eventuali casini.}
+
+
 
 
