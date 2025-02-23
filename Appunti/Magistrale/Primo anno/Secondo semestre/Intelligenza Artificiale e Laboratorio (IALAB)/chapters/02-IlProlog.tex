@@ -451,15 +451,53 @@ dell’agente.
     \caption{Operazioni possibili.}
 \end{figure}
 
+\paragraph{Altri predicati extra-logici (asserzioni):}
+
+\begin{itemize}
+  \item \texttt{assert(Fatto(X))}: aggiunge fatti alla base di conoscenza. 
+  \item Può essere inserito in una regola.
+  \item È un predicato \fancyglitter{dinamico}.
+  \item \texttt{asserta(Fatto(X))}: inserisce in testa (prima nell'ordine). 
+  \item \texttt{assertz(Fatto(X))}: inserisce in coda (dopo nell'ordine).
+  \item \texttt{retract(Fatto(X))}: rimuove un fatto dalla base di conoscenza (ATTENZIONE: vale solo per i fatti inseriti dinamicamente da assert/asserta/assertz).
+  \item \texttt{retractall(Fatto(\_))}: rimuove tutti i predicati relativi al fatto.
+\end{itemize}
+
 \subsection{Strategie di Ricerca}
 
+\dfn{Strategie non Informate}{
+  Strategie che non fanno assunzioni particolari sul dominio.
+}
 
+\paragraph{Strategie non informate:}
 
+\begin{itemize}
+  \item \fancyglitter{Ricerca in profondità}: 
+    \begin{itemize}
+      \item Espande sempre per primo il nodo più distante dalla radice
+dell’albero di ricerca. 
+\item i può realizzare facilmente in Prolog sfruttando il
+nondeterminismo del linguaggio. 
+    \end{itemize}
+  \item \fancyglitter{Ricerca a profondità limitata}:
+    \begin{itemize}
+      \item Come per la ricerca in profondità, ma utilizzando un parametro
+che vincola la profondità massima oltre la quale i nodi non
+vengono espansi.
+    \end{itemize}
+  \item \fancyglitter{Iterative deepening}: 
+    \begin{itemize}
+      \item Ripete la ricerca a profondità limitata, incrementando a ogni
+passo il limite. 
+\item Ottima nel caso di azioni dal costo unitario.
+    \end{itemize}
+\end{itemize}
 
+\dfn{Strategie Informate}{
+  Utilizzano una funzione euristica h(n)\footnote{Costo stimato del cammino più conveniente dal nodo n a uno stato finale.}. Si associa un costo a ciascuna azione e viene definita una funzione g(x)\footnote{Costo del cammino trovato dal nodo iniziale a n.}
+}
 
-
-
-
+\paragraph{Strategie Informate:}
 
 
 
