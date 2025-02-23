@@ -365,18 +365,93 @@ esecuzione.
 
 \nt{Non tutti i problemi hanno una naturale soluzione con la ricerca nello spazio degli stati.}
 
-
-
 \subsection{Ricerca nello Spazio degli Stati}
 
-\dfn{Soluzione a un Problema}{
+Lo spazio degli stati definito implicitamente dallo stato iniziale con un insieme delle azioni, ossia l'insieme di tutti gli stati raggiungibili a partire da quello iniziale.
 
+\dfn{Cammino}{
+  Sequenza di stati collegati da una sequenza di azioni.
+}
+
+\cor{Costo di un Cammino}{
+  Somma dei costi delle azioni che lo
+compongono.
+}
+
+\nt{Se non si hanno dei costi espliciti si assume che siano tutti uguali (e. g. tutti 1).}
+
+\dfn{Soluzione a un Problema}{
+Cammino dallo stato iniziale ad uno stato goal.
 }
 
 \cor{Soluzione Ottima}{
-
+Soluzione che ha il costo minimo tra tutte le soluzioni.
 }
 
+\nt{Non è detto che esista una soluzione. In generale possono esistere 0, 1 o più soluzioni.}
+
+\paragraph{Stati rappresentati come termini:}
+
+\begin{itemize}
+  \item Dipendono dal problema da rappresentare: 
+    \begin{itemize}
+      \item Mondo dei blocchi: on(a,b), clear(c), ecc. 
+      \item Puzzle dell'8: lista ordinata [3, 1, v, 4, 7, 8, 5, 6, 2].
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Azioni specificate tramite:}
+
+\begin{itemize}
+  \item Precondizioni: in quali stati un'azione può essere eseguita.
+  \item Effetti.
+  \item applicabile(AZ, S): l'azione AZ è eseguibile nello stato S. 
+  \item trasforma(AZ, S, NUOVO\_S): se l'azione AZ è applicabile a S, lo stato NUOVO\_S è il risultato dell'applicazione di AZ allo stato S.
+\end{itemize}
+
+\subsection{Cammini (Labirinto)}
+
+\paragraph{Specifiche:}
+
+\begin{itemize}
+  \item Trovare un cammino in una griglia rettangolare, con
+ostacoli in alcune celle. 
+\item Predicati num\_righe e num\_colonne speci cano la
+dimensione della griglia. 
+\item pos(Riga,Colonna) per rappresentare la posizione
+dell’agente. 
+\item occupata(pos(Riga,Colonna)) per rappresentategli ostacoli.
+\end{itemize}
+
+\paragraph{Azioni:}
+
+\begin{itemize}
+  \item Nord. 
+  \item Sud. 
+  \item Ovest. 
+  \item Est. 
+\end{itemize}
+
+\paragraph{Azione applicabile quando la sua esecuzione non porta l’agente:}
+
+\begin{itemize}
+  \item Fuori dalla griglia. 
+  \item In una cella occupata da un ostacolo.
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{02/lab.png}
+    \caption{Esempio di labirinto.}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{02/op.png}
+    \caption{Operazioni possibili.}
+\end{figure}
+
+\subsection{Strategie di Ricerca}
 
 
 
