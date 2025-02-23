@@ -491,6 +491,22 @@ vengono espansi.
 passo il limite. 
 \item Ottima nel caso di azioni dal costo unitario.
     \end{itemize}
+  \item \fancyglitter{Ricerca in ampiezza}: 
+    \begin{itemize}
+      \item Coda di nodi. 
+      \item A ogni passo, la procedura espande il nodo in testa
+        alla coda (\texttt{findall}) generando tutti i suoi successori,
+che vengono aggiunti in fondo alla coda. 
+\item Garantita l’individuazione della soluzione ottima.
+    \end{itemize}
+  \item \fancyglitter{Ricerca in ampiezza su grafi}:
+    \begin{itemize}
+      \item Come la ricerca in ampiezza, ma considerando la lista
+chiusa dei nodi già espansi. 
+\item Prima di espandere un nodo, si veri ca che non
+sia chiuso. 
+\item Il nodo chiuso non viene ulteriormente espanso.
+    \end{itemize}
 \end{itemize}
 
 \dfn{Strategie Informate}{
@@ -499,7 +515,26 @@ passo il limite.
 
 \paragraph{Strategie Informate:}
 
-
+\begin{itemize}
+  \item \fancyglitter{Ricerca in profondità IDA*}:
+    \begin{itemize}
+      \item Come iterative deepening, ma con soglia stimata a ogni
+passo in base all’euristica. 
+\item Al primo passo la soglia è h(si), dove si è lo stato iniziale. 
+\item A ogni iterazione, la soglia è il minimo f(n) = g(n) +
+h(n) per tutti i nodi n che superavano la soglia al passo
+precedente (backtracking). 
+\item si usa \texttt{assert} per salvare f(n) in caso di fallimento.
+    \end{itemize}
+  \item \fancyglitter{Ricerca in ampiezza con stima A*}: 
+    \begin{itemize}
+      \item Ricerca in ampiezza su gra che tiene conto della
+funzione euristica. 
+      \item A ogni passo si estrae per l’espansione dalla coda il
+nodo con minimo valore di f(n) = g(n) + h(n). 
+\item I nodi già espansi non vengono più espansi.
+    \end{itemize} 
+\end{itemize}
 
 
 
