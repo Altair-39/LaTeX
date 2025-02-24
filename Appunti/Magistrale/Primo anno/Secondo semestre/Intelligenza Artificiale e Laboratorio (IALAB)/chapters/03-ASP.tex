@@ -80,7 +80,29 @@ aggiungendo il vincolo :- p, -p.
 
 \section{Semantica}
 
+\dfn{Answer Set}{
+  Un Answer Set è un modello minimale (stabile).
+}
 
+\nt{Un programma ASP privo di letterali $not p_i$ ha un unico modello minimale che è il suo answer set.
+
+Potrebberò esserci più answer set, ma interessa solo quello minimale.}
+
+\qs{}{Che succede se è presente la negazione per fallimento?}
+
+\dfn{Ridotto}{
+  Il \newfancyglitter{ridotto} $P^S$ rispetto a un insieme di atomi S: 
+  \begin{itemize}
+    \item Rimuove ogni regola il cui corpo contiene $not L$, per $L \in S$. 
+    \item Rimuove tutti i $not L$ dai corpi delle restanti regole.
+  \end{itemize}
+
+  $P^S$ non contiene atomi con negazione per fallimento: 
+  \begin{itemize}
+    \item Ha un unico answer set. 
+    \item Se tale answer ser coincide con S, allora S è un answer set per P.
+  \end{itemize}
+}
 
 
 

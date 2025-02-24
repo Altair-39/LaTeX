@@ -102,12 +102,40 @@ mentre gli ASP solver non lo consentono (aka. ASP non va in loop).
 
 \qs{}{Come modificare un semplice programma ASP per renderlo soddisfacibile.}
 
+\nt{Suggerimento: rimuovere le contraddizioni.}
+
 \qs{}{Che cos'è e a che cosa serve il ridotto di un programma?}
 
+\dfn{Ridotto}{
+  Il \newfancyglitter{ridotto} $P^S$ rispetto a un insieme di atomi S: 
+  \begin{itemize}
+    \item Rimuove ogni regola il cui corpo contiene $not L$, per $L \in S$. 
+    \item Rimuove tutti i $not L$ dai corpi delle restanti regole.
+  \end{itemize}
+
+  $P^S$ non contiene atomi con negazione per fallimento: 
+  \begin{itemize}
+    \item Ha un unico answer set. 
+    \item Se tale answer ser coincide con S, allora S è un answer set per P.
+  \end{itemize}
+}
+
+
+
 \qs{}{Fare il ridotto di un programma ASP rispetto a un insieme dato.}
+
+\begin{center}
+  p :- a. 
+a :- not b.
+b :- not a.
+\end{center}
+
+\nt{In questo esempio il ridotto c'è per S = \{b\} e S = \{a, p\}}
 
 \qs{}{Dire se un programma ASP presenta un answer set.}
 
 \qs{}{Scrivere un programma che presenti due answer set diversi.}
+
+\paragraph{Risposta:} banalmente si può scrivere il programma di Nixon pacifista. Ha un answer set in cui Nixon è pacifista e quacchero e un answer set in cui Nixon è repubblicano e guerrafondaio (non pacifista).
 
 \section{Parte 2}
