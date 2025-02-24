@@ -540,6 +540,8 @@ semantica non è composizionale.
   Classi che aumentano o scompaiono con tempi lunghissimi.
 }
 
+\nt{Un esempio di classi chiuse sono i pronomi: una volta, in inglese, la seconda persona singolare era "thou", attualmente "you" ha assunto sia il ruolo di seconda persona singolare che plurale.}
+
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.5]{01/opcl.png}
@@ -555,19 +557,256 @@ postpositions), NUM (numerals), CONJ (conjunctions), PRT (particles), ‘.’
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.7]{01/paf.png}
+    \includegraphics[scale=0.6]{01/paf.png}
     \caption{Parsing sintattico.}
 \end{figure}
 
 \nt{Le due alternative derivano da prospettive diverse: 
 \begin{itemize}
   \item Quella a sinistra è la struttura sintagmatica (o a costituenti). 
-  \item Quella a destra è la struttura a dipendenze.
+  \item Quella a destra è la struttura a dipendenze (scuola di praga).
 \end{itemize}
 Entrambe le alternative sono equivalenti.
 }
 
+\dfn{Costituenza}{
+  La struttura della frase organizza le parole in costituenti annidati.
+}
+
+\qs{}{
+  Come si fa a sapere cos'è un costituente?
+}
+
+\begin{itemize}
+  \item Distribuzione: un costituente si comporta come un'unità che compare in differenti parti della frase.
+  \item Sostituzione: test per verificare un costituent 
+\end{itemize}
+
+\nt{La cosa interessante è automatizzare il processo della costruzione di alberi.}
+
+\clm{}{}{
+  \begin{itemize}
+    \item NP:  la parola più importante sintatticamente è un nome.
+    \item VP:  la parola più importante sintatticamente è un verbo.
+    \item PP-LOC: la parola più importante sintatticamente è una preposizione.
+  \end{itemize}
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{01/struttura.png}
+    \caption{Parti della sintassi.}
+\end{figure}
+
+\nt{I costituenti si comportano come un'unità:
+\begin{itemize}
+  \item Esperimento di Fodor-Bever. 
+  \item Esperimento di Bock-Loebell.
+\end{itemize}
+}
+
+\dfn{Context Free Grammar}{
+  I CFG mettono in relazione i \newfancyglitter{simboli non terminali} e i \newfancyglitter{constituenti} (\textit{Chomsky}).
+}
+
+\dfn{X-barra}{
+La teoria X-barra sostiene che se si costruisce un albero a costituenti con una determinata proprietà l'oggetto sarà presente internamente e il soggetto sarà presente esternamente.
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{01/X-barra}
+    \caption{X-barra.}
+\end{figure}
+
+\dfn{Dipendenza}{
+  Relazione tra due parole:
+  \begin{itemize}
+    \item \fancyglitter{Head}:  parola dominante.
+    \item \fancyglitter{Dipendenza}:parola dominata.
+  \end{itemize}
+}
+
+\nt{La testa seleziona le sue dipendenze e determina le loro proprietà.}
+
+\cor{Argomenti}{
+  Modificano in maniera sostanziale un evento (obbligatori).
+}
+
+\cor{Modificatori}{
+  Modificano parzialmente un evento (facoltativi).
+}
+
 \subsection{Il Livello Semantico}
 
+\paragraph{Esistono 2 approcci alla semantica lessicale:}
+
+\begin{itemize}
+  \item Classico. 
+  \item Distribuzionale (anni '60): 
+    \begin{itemize}
+      \item Statistico. 
+      \item Neurale.
+    \end{itemize}
+\end{itemize}
+
+\dfn{Semantica Lessicale Classica}{
+  Le connessioni sono legate al significato dei vari lessemi. La struttura interna dei lessemi è legata al significato.
+}
+
+\cor{Lessema}{
+  Una coppia \newfancyglitter{forma-significato}, elemento del lessico.
+}
+
+\nt{Il problema è che sono possibili definizioni ricorsive "infinite".}
+
+\paragraph{Relazioni tra lessemi:}
+
+\begin{itemize}
+  \item Omonimia: 2 lessemi con la stessa forma ortografica hanno due sensi diversi.
+    \begin{itemize}
+      \item A bank can hold the investments. 
+      \item We can go on the right bank of the river.
+    \end{itemize}
+  \item Polisemia: lo stesso lessema ha due sensi diversi:
+    \begin{itemize}
+      \item A bank can hold the investments. 
+      \item He got the blood from the bank.
+    \end{itemize}
+  \item Sinonimia: due lessemi con forma diversa hanno lo stesso senso (sostituibilità). 
+    \begin{itemize}
+      \item How big is that plane?
+      \item How large is that plane?
+    \end{itemize}
+  \item Iponimia: due lessemi di cui uno denota una sottoclasse dell'altro: 
+    \begin{itemize}
+      \item Automobile è un iponimo di veicolo. 
+      \item Veicolo è un iperonimo di automobile.
+    \end{itemize}
+\end{itemize}
+
+\ex{Iponimia}{
+  \begin{itemize}
+    \item Quella è un automobile $\rightarrow$ quello è un veicolo. 
+    \item (?) Quello è un veicolo $\rightarrow$ quella è un automobile.
+  \end{itemize}
+}
+
+\cor{Syn-set}{
+  Insieme di relazioni tra lessemi, usato per costruire le mappe in worldnet.
+}
+
+\dfn{Semantica Distribuzionale (vettoriale)}{
+  Il significato di una parola è collegato alla distribuzione delle parole attorno a sé.
+}
+
+\ex{Semantica Distribuzionale}{
+  \begin{itemize}
+    \item A bottle of tesguino is on the table. 
+    \item Everybody likes tesguino. 
+    \item Tesguino makes you drunk.
+  \end{itemize}
+  Si può inferire che \textit{testguino} sia un super alcolico.
+}
+
+\paragraph{I vettori:}
+
+\begin{itemize}
+  \item Lunghi (lunghezza 20.000-50.000). 
+  \item Sparsi (molti elementi sono zero).
+\end{itemize}
+
+\paragraph{I lean vectors:}
+
+\begin{itemize}
+  \item Piccoli (lunghezza 200-1000). 
+  \item Densi (molti elementi sono non-zero). 
+  \item Vettori più corti sono più facili da usare come feautures nel ML.
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{01/occ.png}
+    \caption{Si può andare a determinare la "vicinanza" di parole con la semantica vettoriale.}
+\end{figure}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Con l'avvento delle reti neurali si ha un miglioramento. 
+    \item vector(‘king’) - vector(‘man’) + vector(‘woman’) = vector(‘queen’). 
+    \item vector(‘Paris’) - vector(‘France’) + vector(‘Italy’) = vector(‘Rome’).
+  \end{itemize}
+}
+
+\dfn{Parole Contestualizzate}{
+  Costruire un vettore per ogni parola, condizionandolo al suo contesto. La rappresentazione per ogni token è una funzione dell'intera sequenza di input.
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{01/context.png}
+    \caption{Contestualizzazione.}
+\end{figure}
+
+\cor{Semantica Composizionale}{
+  La semantica di un sintagma è funzione della semantica
+dei sintagmi componenti; non dipende da altri sintagmi
+esterni al sintagma stesso.
+}
+
+\nt{
+  Conoscendo il significato di X, Y, e +, possiamo comporre
+il significato “X+Y”.
+}
+
+\paragraph{Reasoning:}
+
+\begin{itemize}
+  \item Deduzione: conseguenza logica. 
+  \item Induzione: basata su molti casi, si assume una regola generale. 
+  \item Abduzione: regionamento per indizi.
+\end{itemize}
+
+\dfn{Metasemantica}{
+  L'insieme di semantica composizionale e semantica lessicale distribuzionale. Serve per dare senso a parole sconosciute.
+}
+
 \subsection{Il Livello Pragmatico e del Discorso}
+
+\dfn{Pragmatica}{L’interpretazione di “io” (sottinteso) e “oggi” dipende da
+chi enuncia la frase e quando, rispettivamente.}
+
+\nt{Il vero significato deve essere integrato da oggetti metalinguistici.}
+
+\cor{Anafora}{
+  Sintagmi che si riferiscono a oggetti
+precedentemente menzionati.
+}
+
+\ex{Anafora}{
+  \begin{itemize}
+    \item “La torta era sul tavolo. Giorgio la divorò”. 
+    \item “In giardino c’erano il cane e il gatto che giocavano con un
+pezzo di stoffa. Il felino lacero’ la stoffa”.
+    \item “Dopo essersi fidanzati, Giorgio e Maria trovarono un
+prete e si sposarono. Per la luna di miele, essi andarono ai
+Caraibi”.
+  \end{itemize}
+}
+
+\paragraph{Le \fancyglitter{strutture dati} dei livelli:}
+
+\begin{itemize}
+  \item Livello morfologico e l'analisi lessicale: Lista. 
+  \item Livello sintattico: Alberi. 
+  \item Livello Semantico: 
+    \begin{itemize}
+      \item Semantica lessicale: Insiemi, Vettori. 
+      \item Semantica formale: Logica, Alberi/Grafi. 
+    \end{itemize}
+  \item Livello paradigmatico e del discorso: Frame, Ontologie.
+\end{itemize}
+
+
+
 
