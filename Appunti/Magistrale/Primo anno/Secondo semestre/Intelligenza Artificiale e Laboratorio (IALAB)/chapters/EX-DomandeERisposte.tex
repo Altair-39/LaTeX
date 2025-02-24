@@ -34,11 +34,47 @@
 
 \qs{}{Dire se un dato programma è PROLOG o ASP.}
 
+\nt{Suggerimento: guardare se il programma ha cut (PROLOG) o no (ASP)}
+
 \qs{}{Differenze tra PROLOG e CLINGO.}
+
+\paragraph{Risposta:}
+
+\begin{itemize}
+  \item ASP (CLINGO) ha integrity constrain, PROLOG no.
+  \item ASP è proposizionale, PROLOG è logica del primordine. 
+\item In ASP l’ordine dei letterali non ha alcuna importanza. 
+  \item Prolog è goal-directed, ASP no.
+  \item In ASP non c'è il concetto di dimostrazione.
+  \item La SLD-risoluzione del Prolog può portare a loop,
+mentre gli ASP solver non lo consentono (aka. ASP non va in loop). 
+\item PROLOG ha il cut(!), ASP no.
+\item ASP ha sia la negazione per fallimento che la negazione classica, PROLOG solo la negazione per fallimento.
+\end{itemize}
+
+\qs{}{Esempio di Nixon pacifista.}
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.5]{Domande/nixon1.png}
+        \caption{Codice di Nixon pacifista.}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.25]{Domande/nixon2.png}
+        \caption{Modelli di Nixon pacifista.}
+    \end{minipage}
+\end{figure}
+
 
 \qs{}{PROLOG e ASP sono monotòni?}
 
 \qs{}{Perché in ASP non c'è il cut(!)?}
+
+\paragraph{Risposta:} non esistono né una dimostrazione né backtracking, ASP si cerca i suoi modelli indipendentemente.
 
 \qs{}{Come funziona la negazione per fallimento in ASP?}
 
@@ -47,6 +83,22 @@
 \qs{}{In PROLOG si può avere Integrity Constrain?}
 
 \qs{}{Fare un esempio di codice ASP che risulta insoddisfacibile.}
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.5]{Domande/tux1.png}
+        \caption{In questo esempio si ha che tux vola ma non vola.}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.25]{Domande/tux2.png}
+        \caption{Non esistono modelli che siano vero.}
+    \end{minipage}
+\end{figure}
+
 
 \qs{}{Come modificare un semplice programma ASP per renderlo soddisfacibile.}
 
