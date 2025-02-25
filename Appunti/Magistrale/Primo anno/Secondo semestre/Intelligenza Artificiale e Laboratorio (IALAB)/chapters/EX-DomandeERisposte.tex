@@ -6,29 +6,91 @@
 
 \qs{}{Scrivere un semplice programma PROLOG che va in loop.}
 
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.5]{Domande/loop1.png}
+        \caption{Codice che causa un loop.}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.35]{Domande/loop2.png}
+        \caption{PROLOG se ne accorge perché è un loop stupido.}
+    \end{minipage}
+\end{figure}
+
+
 \qs{}{Fare l'esempio del pinguino.}
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.5]{Domande/pinguino1.png}
+        \caption{Codice dell'esempio.}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.65]{Domande/pinguino2.png}
+        \caption{Tux è un pinguino, quindi non vola (negazione per fallimento).}
+    \end{minipage}
+\end{figure}
+
+
 
 \qs{}{Perché in PROLOG non è presente la negazione forte (negazione classica)?}
 
+\paragraph{Risposta:}
+
 \qs{}{Come funziona la negazione per fallimento?}
+
+\paragraph{Risposta:}
 
 \qs{}{Fare un esempio di negazione per fallimento.}
 
+\nt{Andare a vedere l'esempio del pinguino.}
+
 \qs{}{Tipi di fallimenti in PROLOG.}
+
+\paragraph{Risposta:}
+
+\begin{itemize}
+  \item Successo se $G_n$ è vuoto (\texttt{true}). 
+  \item Fallimento finito, se non è possibile derivare da $G_n$ alcun risolvente e $G_n$ non è vuoto (\texttt{false}).
+  \item Fallimento infinito, se è sempre possibile derivare nuovi risolventi (loop infinito).
+\end{itemize}
 
 \qs{}{Che cos'è la logica monotòna?}
 
+\paragraph{Risposta:}
+
 \qs{}{Come funziona la ricerca SLD?}
+
+\paragraph{Risposta:}
 
 \qs{}{Perché si usa la risoluzione SLD se è completa solo con le clausole di Horn?}
 
+\paragraph{Risposta:}
+
 \qs{}{Spiegare il cut(!) e qual è il suo vantaggio.}
+
+\paragraph{Risposta:}
 
 \qs{}{Scrivere un programmino con il cut(!).}
 
+\paragraph{Risposta:}
+
 \qs{}{Cut(!) danneggia la correttezza o la completezza? Perché?}
 
+\paragraph{Risposta:} la completezza, perché va a escludere potenziali soluzioni che sarebbero state considerate facendo backtracking.
+
 \qs{}{Scrivere lo stack dell'interprete PROLOG di un codice in cui è presente il cut(!).}
+
+\paragraph{Risposta:}
 
 \subsection{ASP}
 
@@ -72,15 +134,23 @@ mentre gli ASP solver non lo consentono (aka. ASP non va in loop).
 
 \qs{}{PROLOG e ASP sono monotòni?}
 
+\paragraph{Risposta:}
+
 \qs{}{Perché in ASP non c'è il cut(!)?}
 
 \paragraph{Risposta:} non esistono né una dimostrazione né backtracking, ASP si cerca i suoi modelli indipendentemente.
 
 \qs{}{Come funziona la negazione per fallimento in ASP?}
 
+\paragraph{Risposta:}
+
 \qs{}{Che cos'è l'Integrity Constrain e a cosa serve?}
 
+\paragraph{Risposta:}
+
 \qs{}{In PROLOG si può avere Integrity Constrain?}
+
+\paragraph{Risposta:}
 
 \qs{}{Fare un esempio di codice ASP che risulta insoddisfacibile.}
 
@@ -123,14 +193,18 @@ mentre gli ASP solver non lo consentono (aka. ASP non va in loop).
 \qs{}{Fare il ridotto di un programma ASP rispetto a un insieme dato.}
 
 \begin{center}
-  p :- a. 
+  p :- a.
+
 a :- not b.
+
 b :- not a.
 \end{center}
 
 \nt{In questo esempio il ridotto c'è per S = \{b\} e S = \{a, p\}}
 
 \qs{}{Dire se un programma ASP presenta un answer set.}
+
+\paragraph{Risposta:}
 
 \qs{}{Scrivere un programma che presenti due answer set diversi.}
 
