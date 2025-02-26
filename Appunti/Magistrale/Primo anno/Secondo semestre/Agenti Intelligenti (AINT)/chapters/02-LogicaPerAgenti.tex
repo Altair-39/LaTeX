@@ -1,0 +1,129 @@
+\chapter{Logica per Agenti}
+
+La logica è stata sviluppata nel corso di molti secoli da matematici e filosofi per modellare il "ragionamento corretto" degli esseri umani e ha avuto un ruolo importante nello sviluppo dell'intelligenza artificiale per realizzare agenti e sistemi multiagente.
+
+\paragraph{La logica fornisce strumenti formali per:}
+
+\begin{itemize}
+  \item \fancyglitter{La rappresentazione della conoscenza}: 
+    \begin{itemize}
+      \item Un linguaggio formale con una semantica precisa. 
+      \item Rappresentazione dichiarativa della conoscenza.
+    \end{itemize}
+  \item \fancyglitter{Ragionamento automatico}:
+    \begin{itemize}
+      \item Refole di inferenza.
+    \end{itemize}
+\end{itemize}
+
+\nt{Queste proprietà della logica hanno diverse qualità: per esempio possono spiegare in modo preciso i passi di ragionamento di un agente.}
+
+\paragraph{Ruoli della logica per gli agenti:}
+
+\begin{itemize}
+  \item La logica può essere utilizzata da un agente intelligente per \fancyglitter{rappresentare la conoscenza} e per \fancyglitter{ragionare}. Dato che la conoscenza è espressa in un linguaggio formale, gli agenti possono usare metodi formali per derivare altra conoscenza. 
+  \item La logica può servire per \fancyglitter{specificare il comportamento} di un agente intelligente. In questo caso la logica può essere usata per \fancyglitter{verificare} che l'agente si comporti come specificato, anche se l'agente non fa uso della logica nel suo funzionamento.
+\end{itemize}
+
+\paragraph{La logica classica:}
+
+\begin{itemize}
+  \item Normalmente, quando si parla di logica in ambito AI si intende la \fancyglitter{logica classica}, ossia la \fancyglitter{logica proposizionale} o la \fancyglitter{logica del primordine}. 
+  \item Però la necessità di modellare concetti diversi e le esigenze di efficienza hanno portato l'AI all'uso di logiche diverse da quelle classiche e anche alla definizione di nuove logica, per esempio le logiche non monotone. 
+  \item Nell'ambito degli agenti e dei sistemi multiagente si preferisce utilizzare la \fancyglitter{logica modale}.
+\end{itemize}
+
+\section{Richiami di Logica Classica}
+
+\dfn{Logica Classica}{
+  Le formule sono costituite da proposizioni atomiche appartenenti a un insieme $P$ e da connettivi logici secondo la seguente formulazione, con $p \in P, \phi, \psi$ sono formule:
+  \begin{itemize}
+    \item $p$. 
+    \item $\phi \lor \psi$. 
+    \item $\neg \phi$.
+  \end{itemize}
+}
+
+\nt{Quelli presentati nella definizione sono solo alcuni dei connettivi (ci sono anche and, nand, nor, xor, implica, etc.).}
+\subsection{Semantica}
+\dfn{Semantica della Logica Proposizionale}{
+  La semantica definisce la verità delle formule rispetto a ogni modello. Nella logica proposizionale, un modello  assegna un valore di verità (true o false) a ogni simbolo proposizionale.
+}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Se $|P| = n$ ci sono $n$ modelli (tavole di verità). 
+    \item Un modello può essere rappresentato come un insieme $M \subseteq P$ che contiene tutte le proposizioni atomiche che sono vere nel modello. Quelle che non appartengono a $M$ sono false.
+  \end{itemize}
+}
+
+\dfn{Soddisfacibilità}{
+  La semantica definisce una relazione di soddisfacibilità $M \vDash \phi$ di una formula $\phi$ in un modello $M$ (interpetazione):
+  \begin{itemize}
+    \item $M \vDash p$ se e solo se $p \in M$. 
+    \item $M \vDash \phi \lor \psi$ se e solo se $M \vDash \phi$ o $M \vDash \psi$. 
+    \item $M \vDash \neg \phi$ se e solo se $M \not \vDash \phi$. 
+  \end{itemize}
+}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Una formula è \fancyglitter{soddisfacibile} se è solo se c'è \fancyglitter{qualche} modlelo che la soddisfa. 
+    \item Una formula è \fancyglitter{valida} se e solo se è soddisfatta da \fancyglitter{ogni modello} (tautologia).
+  \end{itemize}
+}
+
+\subsection{Sistemi Deduttivi e Logica del Primordine}
+
+\dfn{Modus Ponens}{
+  $$\frac{\alpha \Rightarrow \beta \:\:\:\:\:\: \alpha}{\beta}$$
+}
+
+\nt{L'applicazione di una sequenza di regole di inferenza porta a una derivazione $KB \vdash \alpha$. Ovviamente ciò che si deriva da un insieme $KB$ è vero in tutti i modelli di $KB$.}
+
+\dfn{Deduzione}{
+  Data una base di conoscenza (insieme di formule) da $KB$, una formula $\alpha$ segue logicamente da $KB$: 
+$$KB \vDash \alpha$$
+se e solo se, in ogni modello in cui $KB$ è vera, anche $\alpha$ lo è.
+}
+
+\cor{Teorema di Deduzione}{
+  Date due formule $\alpha$ e $\beta$, 
+$$\alpha \vDash \beta$$ 
+se e solo se la formula 
+$$\alpha \Rightarrow \beta$$ 
+è valida.
+}
+
+\nt{La logica classica del primordine estende la logica proposizionale con quantificatori universali ed esistenziali.}
+
+\section{La Logica Modale}
+
+\subsection{Inadeguatezza della Logica Classica}
+
+Gli agenti sono descritti come \fancyglitter{sistemi intenzionali} attribuendo loro \fancyglitter{stati mentali}. Supponiamo di voler formulare, con la logica, la seguente frase: \fancyglitter{John crede che Superman voli}. In logica classica questo potrebbe essere espresso come: \textit{Bel(John, vola(Superman))}, dove \textit{Bel} è un predicato. 
+
+\paragraph{Questa formulazione non funziona per almeno due ragioni:}
+
+\begin{itemize}
+  \item \fancyglitter{Ragione sintattica}: le formule della logica classica hanno la seguente struttura \textit{Predicato(Term, \dots, Term)}, però il secondo argomento di \textit{Bel} è una formula e non un termine come richiesto. 
+\item \fancyglitter{Ragione semantica}: gli operatori intenzionali come \textit{Bel}sono \fancyglitter{referentially opaque}, ossia creano contesti chiusi in cui non è possibile sostituire una formula con una equivalente come in logica classica.
+\end{itemize}
+
+
+
+
+
+
+
+\subsection{Introduzione alla Logica Modale}
+
+
+
+
+
+
+
+
+
+

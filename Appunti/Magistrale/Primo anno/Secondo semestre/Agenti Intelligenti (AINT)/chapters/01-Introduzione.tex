@@ -285,9 +285,178 @@ Ricordiamo che un agente è un sistema di computazione capace di agire \fancygli
   \item Progettare un agente che bilanci reattività e proattività è ancora un problema aperto.
 \end{itemize}
 
+\clm{}{}{
+  \begin{itemize}
+    \item Il mondo reale è spesso un ambiente multiagente, per cui non si possono raggiungere i propri obiettivi senza l'aiuto degli altri. 
+    \item Alcuni obiettivi possono essere raggiunti solo con la collaborazione di altri. 
+    \item Allo stesso modo i sistemi sono immersi in una rete di computer. 
+  \end{itemize}
+}
 
+\dfn{Abilità Sociale}{
+  Per abilità sociale di un agente intelligente si intende l'abilità di interagire con altri agenti (anche umani) attraverso un qualche tipo di \newfancyglitter{linguaggio di comunicazione} (\newfancyglitter{agent-communication language}, \newfancyglitter{ACL}) e cooperare con essi.
+}
 
+\qs{}{Agente intelligente o generico programma?}
 
+\dfn{Is it an Agent or just a Program?}{
+  Un agente autonomo è un sistema situato in un ambiente che può percepire e agire su di esso nel tempo con il fine di perseguire una propria agenda e così facendo influire nelle successive percezioni.
+}
 
+\nt{Secondo questa definizione sia gli esseri umani che i termostati sono agenti autonomi.}
 
+\section{Cenni alla Computazione}
+
+\paragraph{L'ingegneria del software aspira a produrre software di qualità (tramite la \fancyglitter{modularizzazione}):}
+
+\begin{itemize}
+  \item Correttezza. 
+  \item Robustezza. 
+  \item Estensibilità. 
+  \item Riusabilità.
+\end{itemize}
+
+\nt{Che sono le stesse cose del software \textit{suckless} che è 100\% FOOS, ma ovviamente il prof non ne parla.}
+
+\paragraph{Meyer individua, nei linguaggi di programmazione, tre forze (fig. \ref{fig:meyer}):}
+
+\begin{itemize}
+  \item Processo: la CPU fisica, un processo o un thread. 
+  \item Azione: operazioni che costituiscono la computazione. 
+  \item Oggetto: le strutture dati a cui si applica l'azione.
+\end{itemize}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.7]{01/meyer.png}
+  \caption{Il triangolo di Meyer.}
+  \label{fig:meyer}
+\end{figure}
+
+\paragraph{Decomposizione funzionale (a dispetto del nome è l'approccio del paradigma imperativo):}
+
+\begin{itemize}
+  \item PRO:
+    \begin{itemize}
+      \item Semplice e intuitivo: si costruisce un sistema con la decomposizione in passi. 
+      \item Orientato agli algoritmi: utile quando si ha un solo top goal. 
+    \end{itemize}
+  \item CONTRO:
+    \begin{itemize}
+      \item Difficile da mantenere\footnote{Skill issue.}: difficile incorporare nuovi goal. 
+      \item Difficilmente scalabile in presenza di dati condivisi e processi concorrenti.
+    \end{itemize}
+\end{itemize}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.7]{01/func.png}
+  \caption{Decomposizione funzionale.}
+\end{figure}
+
+\paragraph{Decomposizione orientata agli oggetti:}
+
+\begin{itemize}
+  \item PRO: 
+    \begin{itemize}
+      \item Gli oggetti hanno una vita loro, indipendentemente dal processo che li usa. 
+      \item Operazioni sui dati: fornisce azioni per lavorare su essi. 
+      \item GLi oggetti sono modelli.
+    \end{itemize}
+  \item Contro: 
+    \begin{itemize}
+      \item Gli oggetti sono passivi: un processo esterno prende la decisione su quale azione invocare su un oggetto. 
+      \item Non c'è differenza tra uso di un oggetto e gestione di un oggetto. 
+      \item Non c'è supporto concettuale alle specifiche di un task. 
+    \end{itemize}
+\end{itemize}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.7]{01/oo.png}
+  \caption{Decomposizione orientata agli oggetti.}
+\end{figure}
+
+\paragraph{Modello ad attori e oggetti attivi:}
+
+\begin{itemize}
+  \item Gli attori hanno il proprio thread. 
+  \item Il modello degli attori non prende in considerazione il problema della coordinazione (sebbene siano state previste estensioni). 
+  \item Secondo le forze di Meyer: 
+    \begin{itemize}
+      \item Supporta la gestione dei dati e degli oggetti. 
+      \item Non supporta la modularizzazione usando gli oggetti stessi.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Processi di Business:}
+
+\begin{itemize}
+  \item Crea una rappresentazione esplicita delle attività di un'organizzazione. 
+  \item Descrive come un insieme di attività collegate conducano a risultati precisi e misurabili in risposta a un evento esterno. 
+  \item Si mette enfasi sulla forza processo (visione attività-centrica). 
+  \item Ha gli stessi limiti della decomposizione funzionale.
+\end{itemize}
+
+\paragraph{Gestione dei processi artefatto-centrica:}
+
+\begin{itemize}
+  \item Ci si sposta da una visione attività-centrica a una visione dato-centrica. 
+  \item Business artifact (BA).
+\end{itemize}
+
+\subsection{Paradigma Orientato agli Agenti e Architetture per Sistemi ad Agenti}
+
+\dfn{Paradigma Orientato agli Agenti}{
+Il paradigma orientato agli agenti si basa su due astrazioni:
+
+\begin{itemize}
+  \item Agente (forza processo). 
+  \item Ambiente (forza azione/oggetto).
+\end{itemize}
+}
+\paragraph{Agenti vs. Oggetti:}
+
+\begin{itemize}
+  \item Gli oggetti non hanno controllo sul proprio comportamento. 
+  \item Gli oggetti non hanno un comportamento flessibile. 
+  \item Gli oggetti sono single-threaded.
+\end{itemize}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.7]{01/ao.png}
+  \caption{Forze nel paradigma Agent-oriented.}
+\end{figure}
+
+\qs{}{Come realizzare agenti intelligenti? Come costruire agenti che abbiano le caratteristiche di autonomia, di reattività, di proattività e di abilità sociali fin qui citate?}
+
+\begin{itemize}
+  \item 1956-1985: la maggior parte dei progetti di architetture per agenti si basano sul \fancyglitter{ragionamento simbolico} sviluppato per IA. Utilizzo del ragionamento logico per capire cosa fare. 
+  \item 1985-presente: \fancyglitter{Reactive agents movements}. 
+  \item 1990-presente: \fancyglitter{architetture ibride} che combinano il meglio delle architetture basate sul ragionamento logico e quelle reattive. (e. g. Jason).
+\end{itemize}
+
+\nt{Il classico approccio per costruire agenti intelligenti è quello di vederli come casi particolari di sistemi basati sulla conoscenza (paradigma \fancyglitter{symbolic AI}).}
+
+\paragraph{L'architettura di un agente deliberativo:}
+
+\begin{itemize}
+  \item Contiene una esplicita rappresentazione (\fancyglitter{modello simbolico}) dell'ambiente. 
+  \item Prende decisioni attraverso un \fancyglitter{ragionamento simbolico}.
+\end{itemize}
+
+\paragraph{Però ci sono due problemi da affrontare:}
+
+\begin{itemize}
+  \item \fancyglitter{Il problema della trasduzione}: il problema della traduzione del mondo reale, dell'ambiente, in una descrizione simbolica accurata, in tempo perché possa essere utile.
+  \item \fancyglitter{Il problema della rappresentazione/ragionamento}: il problema di come rappresentare simbolicamente le informazioni su entità e processi complessi del mondo reale, e come fare in modo che gli agenti ragionano con queste informazioni in tempo perché i risultati possano essere utili.
+\end{itemize}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Entrambi i problemi non sembrano facilmente risolvibili, servono alternative. 
+    \item Il problema risiede nella \fancyglitter{complessità} degli algoritmi di manipolazione simbolica. La maggior parte degli algoritmi rilevanti sono \fancyglitter{altamente intrattabili}. 
+  \end{itemize}
+}
 
