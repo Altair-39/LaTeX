@@ -27,7 +27,7 @@
   \item Multicore e cluster.
 \end{itemize}
 
-\section{Introduzione}
+\section{Il Parallel Computing}
 
 \subsection{Perché si fa Parallel Computing?}
 
@@ -100,6 +100,15 @@
   \item Per cui, per molto tempo, si è pensato che la programmazione parallela fosse uno spreco in quanto sarebbe bastato aspettare un paio di anni.
 \end{itemize}
 
+\clm{}{}{
+  Non conviene fare chip più grandi: 
+  \begin{itemize}
+    \item Aumenta il rischio che siano difettosi. 
+    \item I segnali si trasferiscono troppo lentamente.
+    \item Si ha troppo calore difficile da dissipare.
+  \end{itemize}
+}
+
 \paragraph{Limiti del singolo chip:}
 
 \begin{itemize}
@@ -108,12 +117,61 @@
       \item Velocità della luce (insormontabile). 
       \item Densità di potere (che aumenta ogni anno).
     \end{itemize}
-  \item \fancyglitter{Legge scalare di Dennard}: nel 1974, Dennard osserca che l'aumento della densità di parole è costante con il fatto che i transistor diventano sempre più piccoli:
+  \item \fancyglitter{Legge scalare di Dennard}: nel 1974, Dennard osserca che l'aumento della densità di potere è costante con il fatto che i transistor diventano sempre più piccoli:
     \begin{itemize}
       \item Questo fu vero per quasi 30 anni. 
       \item Tra 2004-2005 si incontrò un muro all'aumento delle prestazioni.
     \end{itemize}
 \end{itemize}
+
+\paragraph{Muoversi verso i CMP per mantenere la densità di potere costante:}
+
+$$\text{Power}_\text{dynamic} = \frac{1}{2}*C*V^2*F$$
+
+
+$$\text{Perf} = \text{NCores}*F$$
+
+\begin{itemize}
+  \item V = voltaggio, C = capacitanza, F = frequenza di clock. 
+  \item Ma V è circa F, quindi si può approssimare $\text{Power}_\text{dynamic} = C*F^3$.
+  \item Se raddoppiamo il numero di core si raddoppia sia la potenza che  le performance.  
+  \item Se raddoppiamo il numero di core e si dimezzano V e F si avrà la stessa performance, ma il potere si sarà ridotto di un fattore 4.
+\end{itemize}
+
+\nt{Nelle specifiche dei processori può venire indicata la frequenza di turbo, ossia la frequenza su un solo core in determinate condizioni di temperatura.}
+
+\paragraph{Trend del CMP:}
+
+\begin{itemize}
+  \item I produttori di processori mettono multipli core su un solo chip. 
+  \item La frequenza smette di crescere. 
+  \item La legge di Moore è ancora valida, ma solo per quanto riguarda il numero dei cores. 
+  \item Unità di cache sempre più grandi per il singolo chip. 
+  \item La performance single-thread diventano sempre peggiori.
+\end{itemize}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.7]{01/trend.png}
+  \caption{Trend dei microprocessori.}
+\end{figure}
+
+\paragraph{Multicore eterogenei:}
+
+\begin{itemize}
+  \item CMP integra diversi tipi di core su un singolo chip: CPU, GPU, DSP. 
+  \item Power Efficiency: assegna differenti carichi di lavoro al tipo di core più appropriato per minimizzare lo spreco di energia. 
+  \item Inoltre alcuni cores servono a massimizzare le prestazioni. 
+\end{itemize}
+
+
+
+
+
+
+
+
+
 
 
 
