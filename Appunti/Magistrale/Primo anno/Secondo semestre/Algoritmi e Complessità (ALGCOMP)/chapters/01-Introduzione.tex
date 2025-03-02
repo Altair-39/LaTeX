@@ -96,9 +96,101 @@ I progetti sono classificati in base a un indice di utilità:
 
 }
 
+\nt{Il calcolo classico non è sufficiente a risolvere i problemi motivazionali.}
 
+\qs{}{
+  La \fancyglitter{programmazione lineare} (PL) e la \fancyglitter{programmazione lineare intera} (PLI) sono alternative al calcolo classico?
+}
+\paragraph{La PL non è adatta:} le soluzioni ai problemi Valutazioni, Bando e Rischio assumono la forma di tuple \( x^*_1 , ..., x^*_N \), in cui ogni \( x^*_i \in \{0, 1\} \). In accordo col vocabolario iniziale, questo significa che ogni attività coincide con una scelta:
 
+\begin{itemize}
+  \item Se $x^*_i$, l'attività consiste nel \fancyglitter{non scegliere} di inserire il ricavo locale $g_i$ in quello totale. 
+  \item Se $x^*_i$, l'attività consiste nel \fancyglitter{scegliere} di inserire il ricavo locale $g_i$ in quello totale.
+\end{itemize}
+\subsubsection{}
+Le tecniche algoritmiche offerte dalla \fancyglitter{PL} sono sviluppate per ottenere valori delle variabili \( x^*_1, \dots, x^*_N \) di problemi esprimibili almeno come:
 
+\begin{equation}
+    \max/\min_{\substack{x_1, x_2, \dots, x_N}} \quad g_1(x_1) + g_2(x_2) + \dots + g_N(x_N)
+\end{equation}
+\[
+    \dots
+\]
+\begin{equation}
+    x_i \in \mathbb{R} \quad (i \in \{1, \dots, N\})
+\end{equation}
+\subsubsection{}
+in cui le variabili posso assumere valori in \( \mathbb{R} \). Quindi, non possiamo immaginare di risolvere alcuno dei problemi motivazionali con tecniche di \fancyglitter{PL}.
+
+\paragraph{Anche la PLI può essere inefficiente:} la \fancyglitter{PLI} si distingue dalla PL perché fornisce tecniche per risolvere problemi della forma:
+
+\begin{equation}
+    \max/\min_{\substack{x_1, x_2, \dots, x_N}} \quad g_1(x_1) + g_2(x_2) + \dots + g_N(x_N)
+\end{equation}
+\[
+    \dots
+\]
+\begin{equation}
+  x_i \in \{0, 1\} \quad (i \in \{1, \dots, N\})
+\end{equation}
+\subsubsection{}
+in cui le variabili possono assumere valori in $\{0, 1\}$.
+
+\nt{Imponendo variabili discrete, il comportamento della funzione da massimizzare (o minimizzare) diventa non derivabile. Quindi la ricerca dei valori ottimali deve avanzare per tentativi.}
+
+\paragraph{Le euristiche Greedy:}
+
+\begin{itemize}
+  \item Allocano una quantità di risorsa per la prossima attività tale da massimizzare il ricavo in quel momento. 
+  \item Non ammettono "ripensamenti": non è possibile ritrattare sulla quantità di risorse assegnata a un'attività una volta decisa.
+\end{itemize}
+
+\paragraph{Due euristiche Greedy per valutazioni:}
+
+\begin{enumerate}
+  \item Si sceglie in base al miglior valore assoluto del voto assegnato. 
+  \item Si sceglie in base al miglior rapporto $\frac{\text{voto assegnato}}{\text{voto massimo assegnabile}}$.
+\end{enumerate}
+
+  \begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{01/val.png}
+    \caption{Esempio di valutazioni.}
+  \end{figure}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Se si applica la prima euristica si assegna 7.9 (2+2+3.9). 
+    \item Se si applica la seconda euristica si assegna 8.5 (4.6+3.9).
+  \end{itemize}
+
+  Però il massimo possibile è 8.6 (2+2+4.6).
+}
+
+\nt{Nessuna delle due scelte è ottimale.}
+
+\section{Brute-Force}
+
+Si vuole trovare un algoritmo per risolvere il problema delle valutazioni a \fancyglitter{basso costo computazionale}.
+
+\myalgo{Brute-Force}{
+  L'algoritmo Brute-Force effettua una visita esaustiva dello spazio delle permutazioni.
+}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{01/bf.png}
+    \caption{Applicazione di Brute-Force.}
+  \end{figure}
+  \nt{Un ramo rosso indica falso (risposta non presa), un ramo verde indica true (risposta presa).}
+\clm{}{}{
+  \begin{itemize}
+    \item La strategia Brute-Force su permutazioni è completa: indivisua \textit{almeno} una risposta che corrisponde alla soluzione migliore. 
+    \item Le euristiche Greedy non sono complete.
+    \item Con la generazione di permutazioni si può, senza cambiare nulla, avere la soluzione per il problema dei bandi.
+  \end{itemize}
+}
+
+\subsection{Permutazioni, Disposizioni e Sottoinsiemi}
 
 
 

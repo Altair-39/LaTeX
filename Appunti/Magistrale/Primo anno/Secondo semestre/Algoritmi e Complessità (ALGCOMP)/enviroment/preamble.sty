@@ -318,24 +318,24 @@
 }
 {th}
 %================================
-% PATTERN
+% ALGO
 %================================
 
 \usepackage[most]{tcolorbox}
 
-\definecolor{mypatternbg}{RGB}{255,248,220} 
-\definecolor{mypatternfr}{RGB}{139,69,19} 
+\definecolor{myalgobg}{HTML}{C49FC2} 
+\definecolor{myalgofr}{HTML}{482953} 
 
 \tcbuselibrary{theorems,skins,hooks}
 
-\newtcbtheorem[number within=section]{Pattern}{Pattern}
+\newtcbtheorem[number within=section]{Algo}{Algoritmo}
 {%
     enhanced,
     breakable,
-    colback = mypatternbg,
+    colback = myalgobg,
     boxrule = 0.75mm,
-    colframe = mypatternfr,
-    colbacktitle = mypatternfr!20,
+    colframe = myalgofr,
+    colbacktitle = myalgofr!20,
     coltitle = black,
     fonttitle = \bfseries,
     sharp corners,
@@ -343,7 +343,7 @@
     before upper = \tcbtitle\par\smallskip,
     description font = \mdseries\itshape,
     separator sign none,
-    segmentation style={solid, mypatternfr},
+    segmentation style={solid, myalgofr},
     theorem style=plain,
 }
 {th}
@@ -759,7 +759,7 @@
 \newcommand{\pf}[2]{\begin{myproof}[#1]#2\end{myproof}}
 \newcommand{\nt}[1]{\begin{note}#1\end{note}}
 \newcommand{\cd}[1]{\begin{code}#1\end{code}}
-\newcommand{\mypattern}[2]{\begin{Pattern}{#1}{}#2\end{Pattern}}
+\newcommand{\myalgo}[2]{\begin{Algo}{#1}{}#2\end{Algo}}
 \newcommand{\obs}[2]{\begin{Observation}{#1}{}#2\end{Observation}}
 
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
