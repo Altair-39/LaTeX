@@ -192,6 +192,49 @@ Si vuole trovare un algoritmo per risolvere il problema delle valutazioni a \fan
 
 \subsection{Permutazioni, Disposizioni e Sottoinsiemi}
 
+\qs{}{Dato il segmento \([1, \dots, n]\), sappiamo esistere \( n! \) permutazioni, dato un qualsiasi numero \( 0 \leq N < n! \), esiste un metodo per ricavare univocamente una permutazione a partire da \( N \)?}
+
+\paragraph{I passi per rispondere affermativamente:}
+\begin{itemize}
+    \item Trasformare \( N \) in notazione \textit{factoradic} \( N_f \).
+    \item Usare \( N_f \) per generare una permutazione, riorganizzando gli elementi in \([1, \dots, n]\).
+\end{itemize}
+
+\[
+N = \sum_{i=1}^{n-1} a_i i!
+\]
+
+\[
+(0 \leq a_i \leq i)
+\]
+
+  \begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{01/perm.png}
+    \caption{Numero più alto rappresentabile con $n = 6$.}
+  \end{figure}
+
+\ex{}{
+Supponiamo di voler usare 463 per generare una permutazione dei 6 elementi in \( l = \{A, B, C, D, E, F\} \). Abbiamo \( (463)_{10} = (341010)! \). Ogni cifra di \( (341010)! \) è l’indice, a partire da 0 dell’elemento da estrarre per produrre una permutazione da \( l \):
+
+\begin{itemize}
+    \item 3 estrae l’elemento di indice 3. Da \(\{A, B, C, D, E, F\}\) a \(\{A, B, C, E, F\}\).
+    \item 4 estrae l’elemento di indice 4. Da \(\{A, B, C, E, F\}\) a \(\{A, B, C, E\}\).
+    \item 1 estrae l’elemento di indice 1. Da \(\{A, B, C, E\}\) a \(\{A, C, E\}\).
+    \item 0 estrae l’elemento di indice 0. Da \(\{A, C, E\}\) a \(\{C, E\}\).
+    \item 1 estrae l’elemento di indice 1. Da \(\{C, E\}\) a \(\{C\}\).
+    \item 0 estrae l’elemento indice 0. La lista \(\{C\}\) si svuota.
+\end{itemize}
+
+La permutazione risultante è quindi: \(\{\mathbf{D}, \mathbf{F}, \mathbf{B}, \mathbf{A}, \mathbf{E}, \mathbf{C}\}\).
+}
+
+\nt{Però questo metodo è molto inefficiente rispetto ad altri (ha complessità $O(n^2)$, ma usando balanced tree si scende a $O(n*log(n))$).}
+
+
+
+
+
 
 
 
