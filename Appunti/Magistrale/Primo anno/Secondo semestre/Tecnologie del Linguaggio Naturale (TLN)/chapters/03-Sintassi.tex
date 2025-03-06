@@ -165,7 +165,7 @@ grammatica).
 
 \begin{itemize}
   \item Context-free. 
-  \item Bottom-up, left-to-right. 
+  \item Bottom-up, left-to-right, programmazione dinamica. 
   \item Rule-based.
 \end{itemize}
 
@@ -206,7 +206,152 @@ grammatica).
   \item Troppo lento per il real-time (motori di ricerca). 
 \end{itemize}
 
+\subsection{Parsing Probabilistico}
 
+\paragraph{Parser C (CKY probabilistico):}
+
+\begin{itemize}
+  \item Probabilistic Context-free. 
+  \item Bottom-up, left-to-right, programmazione dinamica. 
+  \item Probabilistico.
+\end{itemize}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.55]{03/prob.png}
+    \caption{CKY probabilistico.}
+\end{figure}
+
+\nt{Per fare ciò si realizza una distribuzione probabilistica sulle regole della grammatica.}
+
+\qs{}{Da dove si prendono le probabilità?}
+
+\begin{itemize}
+  \item Treebanks $\rightarrow$ Banche di alberi:
+    \begin{itemize}
+      \item Costituenti $\rightarrow$ Penn TB. 
+      \item Dipendenze $\rightarrow$ TUT TB $\rightarrow$ Universal Dependency TB.
+    \end{itemize}
+  \item Si creano con sistemi semiautomatici: 
+    \begin{itemize}
+      \item Prima con un parser. 
+      \item Successivamente si corregge a mano.
+    \end{itemize}
+  \item Guidelines di annotazione. 
+  \item Corpus Linguistics.
+\end{itemize}
+
+\nt{I Treebanks sono più costosi del PoS.}
+
+\paragraph{Training del modello probabilistico:}
+
+\begin{itemize}
+  \item Serve $P(\alpha \rightarrow \beta | \alpha)$. 
+  \item Quindi per ogni albero nel TB si calcola: 
+    $$P(\alpha \rightarrow \beta | \alpha) = \frac{\text{Count}(\alpha \rightarrow \beta)}{\sum_\gamma \text{Count}(\alpha \rightarrow \gamma)} = \frac{\text{Count}(\alpha \rightarrow \beta)}{\text{Count}(\alpha)}$$
+\end{itemize}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{03/PCKY.png}
+    \caption{Algoritmo del CKY probabilistico.}
+\end{figure}
+
+\nt{Attualmente si usano anche oracoli neurali dando vita a CKY neurali.}
+
+\subsection{Valutazione}
+
+\begin{itemize}
+  \item Precision: 
+    \begin{itemize}
+      \item Quale percentuale di subtree del system tree sono anche nel gold tree?
+      \item Quanto di quello prodotto è giusto?
+    \end{itemize}
+  \item Recall:
+    \begin{itemize}
+      \item Quale percentuale di subtree del golden tree sono anche nel system tree?
+      \item Quanto di quello che avremmo dovuto produrre abbiamo realmente prodotto?
+    \end{itemize}
+\end{itemize}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.45]{03/stgt.png}
+    \caption{System tree e Gold tree.}
+\end{figure}
+
+\paragraph{Problema con i parser probabilistici:}
+
+\begin{itemize}
+  \item Non ci sono preferenze lessicali.
+\end{itemize}
+
+\nt{Per questo motivo si utilizzano dei parser probabilistici \fancyglitter{lexicalized} in cui si tiene anche conto dell'informazione lessicale. Purtroppo facendo così aumentano il numero di regole.}
+
+\subsection{Parsing Parziale}
+
+\paragraph{Parser E (Chunk parsing a regole):}
+
+\begin{itemize}
+  \item Regular-Grammars (cascade). 
+  \item Bottom-up, programmazione dinamica. 
+  \item Rule-based.
+\end{itemize}
+
+\nt{Si rimuove la ricorsione. I sintagmi possono essere ricorsivi, i chunk (unità sintattiche di base) no.}
+
+\section{Parsing a Dipendenze}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.45]{03/parser a dipendenze.png}
+    \caption{Un parser a dipendenze.}
+\end{figure}
+
+\subsection{Sintassi a Dipendenze}
+
+\dfn{Sintassi a Dipendenze}{
+  La sintassi a dipendenze postula che la struttura
+sintattica consiste di elementi lessicali connessi da
+relazioni binarie asimettiche (graficamente frecce)
+chiamate \newfancyglitter{dipendenze}.
+}
+
+\nt{Non ci sono relazioni alla pari, c'è sempre un soggetto passivo e uno attivo.}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.45]{03/dip.png}
+    \caption{Esempio di sintassi a dipendenza.}
+\end{figure}
+
+\qs{}{Cosa è una testa (head)?}
+
+\begin{itemize}
+  \item H determina la categoria sintattica di C; H puo sostituire C. 
+  \item H è obbligatoria; D può essere opzionale. 
+  \item H seleziona D e determina quando D è obbligatoria. 
+  \item La forma di D dipende da H (agreement). 
+  \item La posizione nella frase di D è specificabile con
+riferimento a H. 
+\item H detemina la categoria semantica di C.
+\end{itemize}
+
+\clm{}{}{
+  \begin{itemize}
+    \item H: Head. 
+    \item D: Dependent. 
+    \item C: Costruzione.
+  \end{itemize}
+}
+
+\paragraph{Vantaggi delle dipendenze:}
+
+\begin{itemize}
+  \item Generalizzazioni tra lingue. 
+  \item Predizione psicolinguistica.
+  \item Trasparenza e semplicità di rappresentazione.
+\end{itemize}
 
 
 
