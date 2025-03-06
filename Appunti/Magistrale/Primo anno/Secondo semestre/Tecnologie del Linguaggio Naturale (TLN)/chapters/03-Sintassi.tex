@@ -28,7 +28,7 @@ La performance rappresenta un algoritmo di parsing. Come si utilizza la conoscen
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.6]{03/gen.png}
+    \includegraphics[scale=0.4]{03/gen.png}
     \caption{Grammatiche Generative.}
 \end{figure}
 
@@ -49,6 +49,12 @@ La performance rappresenta un algoritmo di parsing. Come si utilizza la conoscen
 
 \begin{figure}[h]
     \centering
+    \includegraphics[scale=0.4]{03/esempio.png}
+    \caption{Esempio con grammatica giocattolo.}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
     \includegraphics[scale=0.4]{03/chomsky.png}
     \caption{Gerarchia di Chomsky.}
 \end{figure}
@@ -59,13 +65,34 @@ La performance rappresenta un algoritmo di parsing. Come si utilizza la conoscen
 
 \subsection{Mildly-context-sensitive}
 
+\paragraph{Le grammatiche mildly-context-sensitive possiedono quattro proprietà:}
+
+\begin{itemize}
+  \item Includono le grammatiche Context-free. 
+  \item Hanno dipendenze annidate e incrociate. 
+  \item Sono parsificabili polinomialmente. 
+  \item Hanno la proprietà di crescita costante.
+\end{itemize}
+
 \dfn{Proprietà di Crescita Costante}{
   Un languaggio $L$ cresce costantemente se c'è una costante $c_0$ e un insieme finito di costanti $C$ tale che per ogni $w \epsilon L$ dove $|w| > c_0$ tale che $|w| = |w'| + c$ per qualche $c \epsilon C$. 
 }
 
 \nt{Questa proprietà è la versione formale dell'intuizione linguistica che una frase appartenente a un linguaggio naturale può essere costruita da un insieme finito di strutture usando la stessa operazione lineare.}
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{03/mildly.png}
+    \caption{Gerarchia di Chomsky con mildly-context-sensitive.}
+\end{figure}
+\pagebreak
 \section{La Performance e i costituenti}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{03/parser.png}
+    \caption{Un parser trasforma la frase in un albero.}
+\end{figure}
 
 \subsection{Approcci al Parsing}
 
@@ -83,8 +110,7 @@ La performance rappresenta un algoritmo di parsing. Come si utilizza la conoscen
 
 \nt{L'oracolo serve per via dell'ambiguità delle lingue naturali. Decide quale regola applicare prima secondo suoi criteri.}
 
-\paragraph
-{Fonti di informazioni:}
+\paragraph{Fonti di informazioni:}
 
 \begin{itemize}
   \item Grammatica $\rightarrow$ parsing diretto dai goal $\rightarrow$ top-down. 
@@ -100,6 +126,84 @@ radice S.
       \item Comporta la creazione di alberi non corretti. 
       \item Empiristi.
     \end{itemize}
+\end{itemize}
+
+\paragraph{Parser A:}
+
+\begin{itemize}
+  \item Context-free. 
+  \item Top-down, left-to-right, back-tracking. 
+  \item Rule-based.
+\end{itemize}
+
+\paragraph{Problemi del parser A:}
+
+\begin{itemize}
+  \item È lento: prova tutte le combinazioni e fa back-tracking. 
+  \item Va in loop: a causa della ricorsione se sono presenti regole che vanno in sé stesse.
+\end{itemize}
+
+\qs{}{Come ri gestisce l'esplosione combinatoria dei sottoalberi?}
+
+\paragraph{Con la programmazione dinamica (Richard Bellman):}
+
+\begin{itemize}
+  \item Sottostrutture ottimali. 
+  \item Sottoproblemi sovrapponibili. 
+  \item Memoizzazione.
+\end{itemize}
+
+\dfn{CKY}{
+  Calcola tutti i possibili parse in tempo $O(n^3)$. Il difetto maggiore è che il
+caso peggiore e il caso medio coincidono (ma anche esige una forma normale per la
+grammatica).
+}
+
+\nt{Questo algoritmo fu scoperto da tre persone nel giro di un anno e mezzo: Cocke, Kasami e Younger.}
+
+\paragraph{Parser B (CKY):}
+
+\begin{itemize}
+  \item Context-free. 
+  \item Bottom-up, left-to-right. 
+  \item Rule-based.
+\end{itemize}
+
+\paragraph{Idea del CKY:}
+
+\begin{itemize}
+  \item Salva i sottoalberi perché possono essere riutilizzati. 
+  \item Si rende in forma normale di Chomsky (solo regole binarie): 
+    \begin{itemize}
+      \item Si copiano tutte le regole binarie nella nuova grammatica, senza cambiarle. 
+      \item Si convertono i terminali in non terminali. 
+      \item Si binarizzano tutte le regole e si aggiungono alla nuova grammatica.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{A $\rightarrow$ BC:}
+
+\begin{enumerate}
+  \item Se c'è un A allora c'è un B seguito da un C. 
+  \item Se A va da $i$ a $j$, c'è un $k$ tale che $i < k < j$. 
+  \item Cioè B va da $i$ a $k$ e C va da $k$ a $j$. 
+  \item Usiamo una matrice per mettere B in matrix$[i,k]$, C in matrix$[k,j]$, A in matrix$[i,j]$. 
+  \item Loop su $k$. 
+  \item Se il parsing ha successo S è in $[0, n]$.
+\end{enumerate}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{03/CKY.png}
+    \caption{Algoritmo del CKY.}
+\end{figure}
+
+\paragraph{Complessità:}
+
+\begin{itemize}
+  \item $O(n^3)$. 
+  \item $O(n^5)$ nella versione probabilistica. 
+  \item Troppo lento per il real-time (motori di ricerca). 
 \end{itemize}
 
 
