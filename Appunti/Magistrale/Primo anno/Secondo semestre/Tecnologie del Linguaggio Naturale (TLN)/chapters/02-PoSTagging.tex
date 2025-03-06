@@ -225,18 +225,150 @@ $argmax_x f(x)$ significa "la $x$ che massimizza $f(x)$."
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.45]{02/viterbi.png}
+    \includegraphics[scale=0.5]{02/viterbi.png}
     \caption{Algoritmo di Viterbi.}
 \end{figure}
 
 \nt{
   La chiave di programmazione dinamica è che abbiamo bisogno solo memorizzare il percorso prob MAX in ogni cella e non in tutti percorsi. 
 }
+\pagebreak
+\paragraph{Un tag può non dipendere solo dal precedente, ma a volte ne servono due:}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{02/due.png}
+    \caption{Estensione a due tag.}
+\end{figure}
+
+\nt{Tuttavia molte coppie sono linguisticamente inesistenti e per ciò avranno probabilità 0. Il problema è la presenza di "falsi zeri" dovuti al fatto che si lavora con un dataset finito.}
+
+\dfn{Sparsness}{
+  La sparsness di una matrice si riferisce alla proporzione di elementi nulli rispetto al totale degli elementi della matrice. Una matrice è considerata sparsa (sparse matrix) se la maggior parte dei suoi elementi è uguale a zero:
+
+$$S = \frac{\text{numero di elementi nulli}}{\text{numero totale di elementi}} = \frac{\text{\#zeri}}{m \times n}$$
+}
+
+\paragraph{Problemi degli HMM:}
+
+\begin{itemize}
+  \item Quanto il corpus sia grande o sparso.
+  \item Come si può valutare la probabilità per parole sconosciute?
+    \begin{itemize}
+      \item Si possono usare alcune features: suffissi, capitalizzazione, etc.
+    \end{itemize}
+\end{itemize}
 
 \subsection{MEMM e CRF}
 
+Si può identificare un insieme di features su cui effettuare un modello probabilistico.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{02/MEMM.png}
+    \caption{Il Maximum Entropy Markov Model (MEMM).}
+\end{figure}
+
+\paragraph{MEMM:}
+
+\begin{itemize}
+  \item Assegna le features alla parola stessa (non ha memoria). 
+  \item Costruisce un classificatore per predirre il tag.
+\end{itemize}
+
+\paragraph{Apprendimento per MEMM:}
+
+\begin{itemize}
+  \item Regressione logistica multinomiale. 
+  \item Viene scelto il parametro $w$ che massimizza la probabilità dell'etichetta $y$ nei dati riguardanti un osservazione $x$.
+  \item Per via dell'utilizzo di pesi è più lento dei modelli generativi e ha un comportamento random.
+  \item Per il decoding si può usare il viterbi con alcune correzioni.
+\end{itemize}
 
 
+
+
+\dfn{Conditional Random Fields (CRF)}{
+  I CRF utilizzano features globali su un'intera sequenza. Sono modelli grafici molto complessi e potenti. 
+}
+
+\nt{In NLP sono catene lineari dove vengono accoppiate variabili ed etichette per tokens adiacenti.}
+
+\clm{}{}{
+  \begin{itemize}
+    \item In un CRF la funzione $F$ mappa un'intera sequenza $X$ e un'intera sequenza di output $Y$ su un vettore di features. 
+    \item A differenza del modello MEMM si calcola il peso sull'intera sequenza.
+  \end{itemize}
+}
+
+\subsection{Tagging di Parole Sconosciute}
+
+\paragraph{Possibili approcci per gestire parole sconosciute in HMM:}
+
+\begin{itemize}
+  \item Assumere che sono nomi. 
+  \item Assumere una dstribuzione uniforme nel PoS. 
+  \item Dizionari esterni. 
+  \item Usare informazioni morfologiche (per esempio -are, -ere, -ire per i verbi in italiano). 
+  \item Assumere che le parole sconosciute abbiano una probabilità di distribuzione simile alle parole che sono comparse nel training set.
+\end{itemize}
+
+\section{NER Tagging}
+
+\dfn{Named Entity}{
+  Una Named Entity è qualsiasi cosa che può essere indicata da un nome proprio. I 4 tags più comuni sono:
+  \begin{itemize}
+    \item PER (Person). 
+    \item LOC (Location). 
+    \item ORG (Organization). 
+    \item GPE (Geo-Political Entity).
+  \end{itemize}
+}
+
+\nt{Spesso sono multi-word.}
+
+\dfn{NER Tagging}{
+  Il task di name entity recognition (NER) consiste in: 
+  \begin{enumerate}
+    \item Trovare accorgimenti che costituiscono nomi propri. 
+    \item Taggando il tipo di entità.
+  \end{enumerate}
+}
+
+\qs{}{Perché si usa NER?}
+
+\begin{itemize}
+  \item \fancyglitter{Sentiment analysis}: i sentimenti del consumatore nei confronti di una particolare compagnia  persona. 
+  \item \fancyglitter{Rispondere alle domande}: su un'entità. 
+  \item \fancyglitter{Estrazione di informazioni}: riguardo un'entità da un testo.
+\end{itemize}
+
+\qs{}{Perché il NER è più difficile del PoS?}
+
+\begin{itemize}
+  \item Segmentation: bisogna dividere in segmenti che costituiscono le entità. 
+  \item Ambiguita dei tipi (la stessa named entity può assumere significati diversi).
+    
+\end{itemize}
+
+\dfn{BIO Tagging}{
+  BIO (Begin Inside Out) è una tecnica per effettuare il NER Tagging. Si utilizza:
+\begin{itemize}
+  \item B per indicare che sta iniziando una named entity. 
+  \item I per indicare che si è dentro una named entity. 
+  \item O per indicare che si è fuori da una named entity.
+\end{itemize}
+}
+
+\paragraph{Avendo $n$ tipi di entità diversi si avranno:}
+
+\begin{itemize}
+  \item 1 O tag. 
+  \item $n$ B tags. 
+  \item $n$ I tags. 
+\end{itemize}
+
+\nt{Quindi con $n$ entità si utilizzeranno $2n + 1$ tags diversi.}
 
 
 
