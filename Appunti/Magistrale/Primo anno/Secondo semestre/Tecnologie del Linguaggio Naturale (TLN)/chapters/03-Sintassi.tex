@@ -567,7 +567,12 @@ Per usare il ML bisogna:
 \begin{itemize}
   \item Un parser a dipendenze bottom-up di ampia
 copertura basato su regole. 
-\item Regole per: Chunking, Coordination, Verb-SubCat. 
+\item Regole per:
+  \begin{itemize}
+    \item Chunking. 
+    \item Coordination: si rimuove l'ambiguità delle congiunzioni con delle regole. 
+    \item Verb-SubCat: regole verbali basate su una tassonomia di classi per la sottocategorigazione.
+  \end{itemize} 
 \item Dipendenze: 
   \begin{itemize}
     \item Morfosintattiche. 
