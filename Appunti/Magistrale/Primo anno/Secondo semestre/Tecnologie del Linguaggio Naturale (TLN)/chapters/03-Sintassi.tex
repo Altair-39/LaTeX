@@ -353,6 +353,232 @@ riferimento a H.
   \item Trasparenza e semplicità di rappresentazione.
 \end{itemize}
 
+\paragraph{Svantaggi delle dipendenze:}
+
+\begin{itemize}
+  \item L'assunzione di relazioni binarie asimmetriche non è sempre corretto (e. g. Cani e gatti).
+\end{itemize}
+
+\nt{Le relazioni tra head e dipendenze sono una buona approssimazione della relazione tra predicati e i loro argomenti.}
+
+\subsection{Approcci}
+
+\paragraph{Tecniche per il dependency parsing:}
+
+\begin{itemize}
+  \item Programmazione dinamica. 
+  \item Algoritmi per i grafi. 
+  \item Parsing a costituenza. 
+  \item Parsing transition-based. 
+  \item Constrain Satisfaction.
+\end{itemize}
+
+\dfn{Dynamic Parsing}{
+  Utilizza la programmazione dinamica (simile a CKY). L'algoritmo è simile al parsing delle PCFG lessicalizzate (con complessità $O(n^5)$). 
+}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.7]{03/dynamic.png}
+    \caption{Dynamic Parsing.}
+\end{figure}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Dynamic Programming.
+    \item Eisner (1996) ha scoperto un algoritmo migliore che riduce la complessità a $O(n^3)$.
+  \end{itemize}
+}
+
+\dfn{Graph Algorithms}{
+  Si crea un minimum spanning tree per la frase. Le dipendenze vengono valutate usando un ML Classifier.
+}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.7]{03/graph.png}
+    \caption{Graph Algorithm.}
+\end{figure}
+
+\nt{Il primo algoritmo del motore di ricerca Google aveva un parsing di questo tipo.}
+
+\dfn{Constituency Parsing}{
+  Parsing con una grammatica a costituenti e converto in un formato a
+dipendenze attraverso delle “tabelle di percolazioni” (teoria X-bar). Scelte greedy per la creazione di dipendenze tra parole, guidate da
+ML classifiers. Vengono eliminate tutte le possibili dipendenze che non soddifano a
+certi vincoli.
+}
+
+\dfn{Deterministic Parsing}{
+  Si fanno scelte greedy per la creazione di dipendenze tra parole, guidate da ML classifiers. Possono essere transition-based.
+}
+
+\dfn{Constraint Satisfaction}{
+  Vengono eliminate tutte le dipendenze che non soddisfano a certi vincoli.
+}
+
+\subsection{Parsing Deterministico a Transizioni}
+
+\paragraph{Parser F (MALT):}
+
+\begin{itemize}
+  \item Dependency grammar. 
+  \item Bottom-up, depth-first. 
+  \item Probabilistico.
+\end{itemize}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.45]{03/parserf.png}
+i    \caption{Transition-based parsing.}
+\end{figure}
+
+\cor{Proiettività}{
+  IF $i \rightarrow j$ THEN $i \rightarrow * k$ for any $k$ such that $i<k<j$ or $j<k<i$.
+}
+
+\nt{In parole povere: se non ci sono incroci.}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.85]{03/P.png}
+    \caption{Struttura proiettiva.}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.8]{03/NP.png}
+    \caption{Struttura non proiettiva.}
+\end{figure}
+
+
+\clm{}{}{
+  \begin{itemize}
+    \item La maggior parte dei framework non assume la proiettività. 
+    \item Le strutture non proiettive sono necessarie per tenere conto delle dipendenze a lunga distanza (e. g. le domande).
+  \end{itemize}
+}
+
+\paragraph{Uno \fancyglitter{stato} è composto da tre cose:}
+
+\begin{itemize}
+  \item Uno stack che contiene le parole parzialmente analizzate. 
+  \item Una lista contenente le rimanenti parole da analizzare. 
+  \item Un insieme contenente le dipendenze create fino a quel punto nell'analisi.
+\end{itemize}
+
+\paragraph{Stato iniziale:}
+
+\begin{itemize}
+\item \{$[$root$]$, $[$sentence$]$, ()\}.
+\end{itemize}
+
+\paragraph{Stato finale:}
+
+\begin{itemize}
+\item \{$[$root$]$, $[$$]$, (R)\}.
+\item R è l'insieme delle dipendenze costruite. 
+\item $[]$ è la lista vuota poiché tutte le parole sono state analizzate.
+\end{itemize}
+
+\clm{Operatori di parsing}{}{
+  \begin{itemize}
+    \item LeftArc: asserisce una relazione testa-dipendenza tra la parola sulla cima dello stack e la seconda parola nello stack (rimuove la seconda parola dallo stack). 
+    \item RightArc: asserisce una relazione testa-dipendenza tra la seconda parola nello stack e la parola sulla cima dello stack (rimuove la cima dallo stack). 
+    \item Shift: rimuove la parola dall'inizio dell'input e fa "push" sullo stack.
+  \end{itemize}
+}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.8]{03/DP.png}
+    \caption{Algoritmo per fare il parsing delle dipendenze.}
+\end{figure}
+
+\nt{Questo algoritmo è greedy: l'oracolo fornisce una singola scelta a ogni step e il parser procede con quella scelta (non c'è back-tracking).}
+
+\paragraph{\fancyglitter{2 Problemi:}}
+
+\begin{enumerate}
+  \item Operatori e dipendenze: come tipare?
+  \item Quale operatore (L, R, S) si deve utilizzare a ogni passo? Bisogna avere un buon oracolo.
+\end{enumerate}
+
+\paragraph{Problema 1:}
+
+\begin{itemize}
+  \item $n$ dipendenze $\rightarrow 2^n + 1$ operatori, ossia Left e Right in combinazione con tutte le relazioni + Shift.  
+\end{itemize}
+
+\paragraph{Problema 2:}
+
+\begin{itemize}
+  \item Oracolo a regole: si sceglie l'operatore da applicare usando un insieme di regole sul valore delle features dello stato corrente. 
+  \item Oracolo Probabilistico: si usa un sistema di ML per addestrare un classifier per scegliere l'operatore.
+\end{itemize}
+
+\clm{}{}{
+Per usare il ML bisogna: 
+\begin{itemize}
+  \item Trovare le features linguisticamente significative. 
+  \item Costruire il training data. 
+  \item Implementare un training algorithm.
+\end{itemize}
+}
+
+\paragraph{Trovare le features:}
+
+\begin{itemize}
+  \item A mano. 
+  \item In modo automatico utilizzando un classificatore neurale.
+\end{itemize}
+
+\paragraph{Training Data:}
+
+\begin{itemize}
+  \item TB (Treebank) a dipendenze. 
+  \item TB a costituenti e conversione (percolazione).
+\end{itemize}
+
+\paragraph{Training Algorithm:}
+
+\begin{itemize}
+  \item Dato un albero del TB si devono ricostruire tutte le scelte giuste del parser per costruire quello specifico albero. 
+  \item Si usa questo algoritmo: 
+    \begin{itemize}
+      \item LeftArc: se ottengo la dipendenza che correttamente si trova nell'albero. 
+      \item RightArc: se ottengo la dipendenza che correttamente si trova nell'albero e tutte le altre dipendenze associate alla parola figlia si trovano già nell'albero. 
+      \item Shift: in tutti gli altri casi.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Parsing a Regole per Dipendenze a Vincoli}
+
+\paragraph{Parser G (TUP, Turin University Parser):}
+
+\begin{itemize}
+  \item Dependency grammar (constrains). 
+  \item Bottom-up, depth-first. 
+  \item Rule-based.
+\end{itemize}
+
+\paragraph{Questo parser:}
+
+\begin{itemize}
+  \item Un parser a dipendenze bottom-up di ampia
+copertura basato su regole. 
+\item Regole per: Chunking, Coordination, Verb-SubCat. 
+\item Dipendenze: 
+  \begin{itemize}
+    \item Morfosintattiche. 
+    \item Sintatttico-funzionali. 
+    \item Semantiche.
+  \end{itemize}
+\end{itemize}
+
+
+
+
 
 
 

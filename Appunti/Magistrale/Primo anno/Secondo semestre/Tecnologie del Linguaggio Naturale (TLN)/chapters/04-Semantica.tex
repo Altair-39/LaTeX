@@ -1,0 +1,70 @@
+\chapter{Semantica}
+
+
+\qs{}{Si possono costruire le grammatiche a mano?}
+
+\begin{itemize}
+  \item Per l'italiano: L. Lesmo (1985 $\rightarrow$ 2014), Common Lisp.
+  \item Per l'inglese: 
+    \begin{itemize}
+      \item SHRFLU (Winograd 1972). 
+      \item CHAT-80 (1979 $\rightarrow$ 1982), sviluppato in Prolog. È un linguaggio naturale per un database sulla geografia.
+    \end{itemize}
+\end{itemize}
+
+\section{Fondamenti di Semantica Computazionale}
+
+
+\paragraph{Rappresentare il Significato:}
+
+\begin{itemize}
+  \item Quale forma per il significato?
+    \begin{itemize}
+      \item Tavole di un database, logica descrittiva, logica modale, AMR. 
+    \end{itemize}
+  \item Blackburn e Bos $\rightarrow$ Logica del primordine. 
+  \item Il problema nasce per le frasi incomplete. 
+  \item Lambda e logica del primordine per parole e sintagmi.
+\end{itemize}
+
+\subsection{Algoritmo Fondamentale della COmputer Science}
+
+\begin{enumerate}
+  \item Parsificare la frase per ottenere l'albero sintattico. 
+  \item Cercare la semantica di ogni persona nel lessico. 
+  \item Costruire la semantica per ogni sintagma:
+    \begin{itemize}
+      \item Bottom-up. 
+      \item Syntax-driven: traduzione rule-to-rule.
+    \end{itemize}
+\end{enumerate}
+
+\dfn{Principio di Composizionalità di Frege}{
+  Il significato del tutto è determinato dal significato delle parti e dalla
+maniera in cui sono combinate.
+}
+
+\paragraph{Il significato della frase è costruito:}
+\begin{itemize}
+  \item Dal significato delle parole $\rightarrow$ Lessico. 
+  \item Risalendo le costruzioni semantiche $\rightarrow$ Regole semantiche.
+\end{itemize}
+
+\paragraph{Sistematicità:}
+
+\begin{itemize}
+  \item Come costruiamo il significato del VP? 
+  \item Come specificare in che maniera combinare i pezzi? 
+  \item Come rappresentare pezzi di formule?
+\end{itemize}
+
+\section{Lambda Astrazione}
+
+
+
+
+
+
+
+
+
