@@ -1,6 +1,5 @@
 \chapter{Semantica}
 
-
 \qs{}{Si possono costruire le grammatiche a mano?}
 
 \begin{itemize}
@@ -114,7 +113,7 @@ $$\lambda (x.love(x, mary)) (john)$$
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[scale=0.35]{03/Love2.png}
+    \includegraphics[scale=0.37]{03/Love2.png}
     \caption{Beta riduzione.}
 \end{figure}
 
@@ -135,8 +134,38 @@ Montague propose un collegamento tra i linguaggi naturali e la logica: rifiutò 
     \includegraphics[scale=0.4]{03/tempo.png}
     \caption{Rappresentazione del tempo.}
 \end{figure}
+\pagebreak
+\subsection{Articoli e Nomi Propri}
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.4]{04/quant.png}
+    \caption{Rappresentazione degli articoli nel lambda calcolo.}
+\end{figure}
 
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.4]{04/paf.png}
+    \caption{Esempio di frase con l'articolo "un".}
+\end{figure}
 
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.4]{04/paf2.png}
+    \caption{Il nuovo modo di trattare i nomi propri.}
+\end{figure}
 
+\nt{Attenzione alle ambiguità: \textit{Every man loves a woman}.}
 
+\textbf{Lettura 1:}
+\[
+\forall x (\text{man}(x) \to \exists y (\text{woman}(y) \wedge \text{love}(x, y)))
+\]
 
+\textbf{Lettura 2:}
+\[
+\exists y (\text{woman}(y) \forall x (\text{man}(x) \to \text{love}(x, y)))
+\]
+
+\[
+\boxed{\lambda Q \lambda P (\forall x (Q(x) \to P(x))) \to \textbf{Every}}
+\]
