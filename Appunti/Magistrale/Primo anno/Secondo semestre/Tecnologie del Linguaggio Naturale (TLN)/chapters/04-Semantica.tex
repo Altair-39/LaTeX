@@ -169,3 +169,28 @@ Montague propose un collegamento tra i linguaggi naturali e la logica: rifiutò 
 \[
 \boxed{\lambda Q \lambda P (\forall x (Q(x) \to P(x))) \to \textbf{Every}}
 \]
+
+\subsection{NLTK}
+
+Esiste una libreria in python\footnote{Che schifo python.} per la linguistica computazionale. \fancyglitter{NLTK} (Natural Language ToolKit) è anche un libro pensato per dei linguisti che vogliono imparare a programmare (in python): nei primi capitoli vengono presentate le basi (variabili, cicli, etc.), verso la fine parla di semantica computazionale. Le principali caratteristiche della libreria includono:
+
+\begin{itemize}
+  \item Logica del primordine e lambda calcolo. 
+  \item Theorem proving, costruzione di modelli e model checking. 
+  \item Semantiche varie. 
+  \item Logica lineare. 
+  \item Altre robe.
+\end{itemize}
+
+\begin{lstlisting}[language=Python, caption=Esempio di semantica inglese utilizzando NLTK.]
+from nltk import load_parser
+parser = load_parser('./simple-sem.fcfg', trace=0)
+sentence = 'Angus gives a bone to every dog'
+tokens = sentence.split()
+for tree in parser.parse(tokens):
+  print(tree.label()['SEM'])
+
+all z2.(dog(z2) -> exists z1.(bone(z1) & give(angus,z1,z2)))
+\end{lstlisting}
+
+
