@@ -2,15 +2,132 @@
 
 \section{Windows}
 
+\paragraph{Per installare PostrgreSQL si può scaricare l'installer:}
+
+\begin{itemize}
+  \item \href{https://www.enterprisedb.com/downloads/postgres-postgresql-downloads}{https://www.enterprisedb.com/downloads/postgres-postgresql-downloads}.
+\end{itemize}
+
+
 \section{Linux}
 
+\paragraph{PostrgreSQL è disponibile nella maggioranza delle distro più utilizzate tramite package:}
+
+\begin{itemize}
+  \item Debian-based: \texttt{sudo apt install postrgresql}. Per ubuntu utilizzare l'installer grafico.
+  \item Fedora-based: \texttt{sudo dnf postrgresql-server}. 
+  \item SUSE: disponibile di default. 
+  \item Arch-based: disponibile nell'AUR (electron) o in alternativa usando \texttt{pipx install pgadmin4}.
+\end{itemize}
+
+\nt{Inoltre, per tutte le distro, si può fare una \textit{build from source}.}
+
+\subsection{Installazione via Docker}
+
+È possibile installare PostrgreSQL mediante docker. 
+
+\paragraph{Ottenere l'immagine di Postrgres}
+
+\begin{itemize}
+  \item \texttt{docker pull postrgres}.
+\end{itemize}
+
+\paragraph{Creare un container:}
+
+\begin{itemize}
+  \item \texttt{docker run ----name NOMECONTAINER -e POSTGRES\_PASSWORD=PSW -p 5432:5432 -d postrgres}. 
+\end{itemize}
+
+\nt{
+  \begin{itemize}
+    \item NOMECONTAINER: il nome che si vuole per il container. 
+    \item PSW: la password che si vuole.
+  \end{itemize}
+}
+
+\paragraph{Installare pgAdmin:}
+
+\begin{itemize}
+  \item \texttt{docker pull dpage/pgadmin4}.
+\end{itemize}
+
+\paragraph{Eseguire il container per pgadmin:}
+
+\begin{itemize}
+  \item \texttt{docker run ----name NOMECONTAINER -p 5050:80 -e PGADMIN\_DEFAULT\_EMAIL=EMAIL PGADMIN\_DEFAULT\_PASSWORD=PSW -d dpage/pgadmin4}. 
+\end{itemize}
+
+
 \section{MacOS}
+
+\paragraph{Per installare PostrgreSQL si può scaricare l'installer:}
+
+\begin{itemize}
+  \item \href{https://www.enterprisedb.com/downloads/postgres-postgresql-downloads}{https://www.enterprisedb.com/downloads/postgres-postgresql-downloads}.
+\end{itemize}
+
+\paragraph{PostrgreSQL è anche disponibile utilizzando homebrew:}
+
+\begin{itemize}
+  \item \texttt{brew install postrgresql@NN}\footnote{NN indica il numero dell'ultima major release, per esempio \texttt{brew install postrgresql@17} installa la versione 17.}
+\end{itemize}
 
 \section{Android}
 
 \nt{Per questo metodo si consiglia fortemente l'utilizzo di una tastiera fisica.}
 
 \subsection{Termux}
+
+Come prima cosa bisogna installare da uno store \textbf{termux}. Termux è un emulatore di terminale free e open-source che permette di utilizzare un sistema linux minimale.
+
+\paragraph{Per installare postrgresql si utilizza il suo package manager, basato su debian:}
+
+\begin{itemize}
+  \item \texttt{pkg install postrgresql}. 
+\end{itemize}
+
+\paragraph{Per iniziare si deve creare una cartella in cui salvare i dati e inizializzarla:}
+
+\begin{itemize}
+  \item \texttt{mkdir -p \$PREFIX/var/lib/postrgresql}.
+  \item \texttt{initdb \$PREFIX/var/lib/postrgresql}.
+\end{itemize}
+
+\paragraph{Per far partire il server:}
+
+\begin{itemize}
+  \item \texttt{pg\_ctl -D \$PREFIX/var/lib/postrgresql start}.
+\end{itemize}
+
+\paragraph{Per far fermare il server:}
+
+\begin{itemize}
+  \item \texttt{pg\_ctl -D \$PREFIX/var/lib/postrgresql stop}.
+\end{itemize}
+
+\subsection{pgweb}
+
+I dispositivi Android non sono ottimali per eseguire pgadmin, ma fortunatamente esiste una soluzione equivalente: \textbf{pgweb}. 
+
+\paragraph{Installare golang}:
+
+\begin{itemize}
+  \item \texttt{pkg install golang}. 
+\end{itemize}
+
+\paragraph{Installare pgweb:}
+
+\begin{itemize}
+  \item \texttt{go install github.com/sosedoff/pgweb@latest}.
+\end{itemize}
+
+\paragraph{Eseguire pgweb:}
+
+\begin{itemize}
+  \item \texttt{pgweb ----db-host=127.0.0.1 ----db-port=5432 ----db-user=postgres ----db-pass=PSW ----db-name=DB}.
+\end{itemize}
+
+\nt{Per vedere pgweb potete andare su \href{http://localhost:8081/}{http://localhost:8081/}.}
 
 \section{BSD}
 
