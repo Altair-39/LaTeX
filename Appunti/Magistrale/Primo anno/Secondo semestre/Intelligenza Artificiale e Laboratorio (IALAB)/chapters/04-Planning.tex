@@ -1,5 +1,30 @@
 \chapter{Planning}
 
+\paragraph{Seconda parte del corso:}
+
+\begin{itemize}
+  \item Comprendere i problemi fondamentali alla base degli algoritmi di pianificazione. 
+  \item Studiare alcuni degli approcci classici alla pianificazione:
+    \begin{itemize}
+      \item Assunzioni del planning classico. 
+      \item Algoritmi di ricerca nello spazio degli stati (progression, regression, STRIPS). 
+      \item Algoritmi di ricerca nello spazio dei piani (least-commitment planning). 
+      \item Algoritmi di ricerca basati su grafi (grafo di pianificazione, GRAPHLAN). 
+      \item Euristiche domain-independent per il planning. 
+      \item Altri approcci al planning (HTN).
+    \end{itemize}
+  \item Sistemi a regole:
+    \begin{itemize}
+      \item Paradigma dei sistemi esperti basati su regole di produzione. 
+      \item Sperimentare il paradigma a regole in CLIPS.
+    \end{itemize}
+  \item Incertezza: 
+    \begin{itemize}
+      \item Modellare l'incertezza con le probabilità. 
+      \item Meccanismi di inferenze probabilistiche.
+    \end{itemize}
+\end{itemize}
+
 \section{Che Cos'è il Planning?}
 
 \dfn{Planning (secondo Haslum)}{
@@ -20,7 +45,410 @@ all’effetto che ci si aspetta queste producano.
 
 \subsection{Modello Concettuale per il Planning}
 
+\fancyglitter{State Transition System} $\Sigma = (S, A, E, \gamma)$
+\begin{itemize}
+    \item Dove:
+    \begin{itemize}
+        \item $S = \{s_1, s_2, \ldots\}$ insieme finito, ricorsivamente enumerabile di stati
+        \item $A = \{a_1, a_2, \ldots\}$ insieme finito, ricorsivamente enumerabile di azioni
+        \item $E = \{e_1, e_2, \ldots\}$ insieme finito, ricorsivamente enumerabile di eventi
+        \item $\gamma : S \times (A \cup E) \rightarrow 2^S$ è una relazione di transizione di stato
+    \end{itemize}
+    
+    \item Se $a \in A$ e $\gamma(s, a) \neq \emptyset$, allora $a$ è \fancyglitter{applicabile} in $s$
+    
+    \item Applicare $a$ in $s$ causerà una transizione di stato del sistema da $s$ a $s'$, dove $s' \in \gamma(s, a)$
+\end{itemize}
+
+\clm{}{}{
+  Un STS $\Sigma = (S, A, E, \gamma)$ può essere rappresentato come un grafo diretto $G = (N_G, E_G)$ dove:
+    \begin{itemize}
+        \item $N_G = S$ è l’insieme dei nodi del grafo coincidente con l’insieme degli stati di $\Sigma$
+        \item $E_G$ è l’insieme degli archi del grafo tale che esiste un arco $s \xrightarrow{u} s'$ (anche rappresentato come $\langle s, u, s' \rangle$) da $s$ a $s'$ etichettato con $u \in A \cup E$, \fancyglitter{se e solo se}:
+        \begin{itemize}
+            \item $s, s' \in S$ e
+            \item $s' = \gamma(s, u)$
+        \end{itemize}
+    \end{itemize}
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.55]{04/sts.png}
+    \caption{STS visto come grafo.}
+\end{figure}
+
+\paragraph{Ingredienti del planning:}
+
+\begin{itemize}
+  \item \fancyglitter{STS}: 
+    \begin{itemize}
+      \item Descrive tutte le possibili evoluzioni del sistema. 
+    \end{itemize}
+  \item \fancyglitter{Piano}:
+    \begin{itemize}
+      \item Struttura che traccia le azioni necessarie per raggiungere un certo obiettivo $G$ dato uno stato iniziale $I$. 
+      \item È un cammino da $I$ a $G$ nello spazio degli stati tracciato da STS.  
+    \end{itemize}
+  \item \fancyglitter{Goals}:
+    \begin{itemize}
+      \item Un goal state $s_g$ o un sottoinsieme di possibili goal state $S_g$. 
+      \item Soddisfacimento di condizioni in tutta la sequenza di stati prodotta dalle azioni. 
+      \item Ottimizzazione di funzioni di utilità. 
+      \item Vincoli sulle azioni che possono essere eseguite.
+    \end{itemize}
+\end{itemize}
+
+\begin{minipage}{0.4\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{04/plan.png}
+    \captionof{figure}{Si assume che gli eventi non interferiscano con il controller.}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
+    \begin{itemize}
+        \item \fancyglitter{Planner:}
+        \begin{itemize}
+            \item Data la descrizione di un STS $\Sigma$, lo stato iniziale, e il goal.
+            \item Genera un piano che raggiunge il goal dallo stato iniziale.
+        \end{itemize}
+
+        \item \fancyglitter{Controller:}
+        \begin{itemize}
+            \item Dato un piano e lo stato corrente (funzione di osservabilità $\eta : S \rightarrow O$).
+            \item Seleziona ed esegue un’azione del piano.
+        \end{itemize}
+
+        \item \fancyglitter{STS $\Sigma$:}
+        \begin{itemize}
+            \item Evolve in funzione delle azioni eseguite e degli eventi che possono accadere.
+        \end{itemize}
+    \end{itemize}
+\end{minipage}
 
 
+\begin{minipage}{0.4\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{04/stsc.png}
+    \captionof{figure}{Gli eventi possono interferire.}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
+    \begin{itemize}
+        \item \fancyglitter{Challenge:}
+        \begin{itemize}
+            \item Il mondo reale può essere diverso da come è descritto nel modello.
+        \end{itemize}
+        \item \fancyglitter{Continual planning:}
+        \begin{itemize}
+            \item Plan supervision.
+            \item Plan revision.
+            \item Re-planning.
+        \end{itemize}
 
+        \item Continual planning consente un loop chiuso di feedback tra planner e controller.
+    \end{itemize}
+\end{minipage}
+
+\subsection{Pianificazione Classica}
+
+\nt{La pianificazione classica è la pianificazione che avviene sotto alcune assunzioni.}
+
+\dfn{Dominio Finito}{
+$\Sigma$ contiene un numero finito di stati.
+}
+
+\cor{Rilassare un Dominio Finito (A0)}{
+  Per: 
+  \begin{itemize}
+    \item Descrivere azioni che producono nuovi oggetti nel mondo. 
+    \item Trattare fluenti numerici. 
+  \end{itemize}
+  Problemi:
+  \begin{itemize}
+    \item Decidibilità e terminazione del pianificatore.
+  \end{itemize}
+}
+
+\dfn{Dominio Completamente Osservabile}{
+  La funzione $\eta: S \rightarrow O$ è la funzione identità.
+}
+
+\cor{Rilassare un Dominio Completamente Osservabile (A1)}{
+Per 
+\begin{itemize}
+  \item Trattare state in cui non tutto è osservabile o può essere conosciuto.
+\end{itemize}
+Problemi:
+\begin{itemize}
+  \item In genere si osserva solo un sottoinsieme della realtà, può accadere che $\eta(s) = \eta(s') = o$ con $s \not= s'$.
+  \item Le osservazioni sono ambigue perché consistenti con più stati possibili. 
+  \item Determinare lo stato successore può essere problematico. 
+    \item Conformant planning (pianificazione in assenza di osservazioni): pianificare a prescindere dal reale stato del mondo.
+\end{itemize}
+
+}
+
+\dfn{Dominio Deterministico}{
+$\Sigma$ è deterministico, cioè per ogni $s \in S, u \in A \cup E$ si ha $|\gamma (s, u)| \leq 1$.
+}
+
+\cor{Rilassare un Dominio Deterministico (A2)}{
+Per: 
+\begin{itemize}
+  \item Pianificare con azioni che possono avere risultati alternativi.
+\end{itemize}
+Problemi:
+\begin{itemize}
+  \item Il controller deve osservare il risultato reale di ogni azione. 
+  \item Il piano soluzione potrebbe contenere dei branch condizionali o iterativi.
+\end{itemize}
+}
+
+\dfn{Dominio Statico}{
+$\Sigma$ è statico, ovvero $E = \emptyset$ e STS può essere ridotto a $\Sigma = (S, A, \gamma)$.
+}
+
+\cor{Rilassare un Dominio Statico (A3)}{
+Per: 
+\begin{itemize}
+  \item Modellare domini in cui eventi al di là del controllo dell'esecutore sono possibili.
+\end{itemize}
+Problemi:
+\begin{itemize}
+  \item Il mondo diventa non deterministico dal punto di vista del pianificare.
+\end{itemize}
+}
+
+\dfn{Dominio con Goal Semplici}{
+Consistono in uno stato $s_g$ da raggiungere o un insieme di stati $S_g$ (è sufficiente che il piano porti a uno di essi). 
+}
+
+\nt{Gli stati possono essere descrizioni parziali di situazioni desiderate.}
+
+\cor{Rilassare un Dominio con Goal Semplici (A4)}{
+Per:
+\begin{itemize}
+  \item Trattare vincoli su stati e piani, funzioni di utilità/costo, ottimalità.
+\end{itemize}
+Problemi:
+\begin{itemize}
+  \item Esprimere e ragionare su vincoli ulteriori nella specifica del goal rende il planning computazionalmente costoso.
+\end{itemize}
+
+}
+
+\dfn{Dominio con Piani Sequenziali}{
+ Un piano soluzione è una sequenza finita di azioni linearmente ordinate. 
+}
+
+\nt{Una sola azione per volta è possibile.}
+
+\cor{Rilassare un Dominio con Piani Sequenziali (A5)}{
+Per: 
+\begin{itemize}
+  \item Sfruttare le capacità degli esecutori nel caso potessero eseguire più azioni. 
+  \item Non introdurre vincoli che non sono parte del dominio.
+\end{itemize}
+Problemi: 
+\begin{itemize}
+  \item Ragionare su e gestire strutture dati più complesse.
+\end{itemize}
+}
+
+\dfn{Dominio con Tempo Implicito}{
+Le azioni e gli eventi non hanno durata (oppure hanno durata istantanea).
+}
+
+\cor{Rilassare un Dominio con Tempo Implicito (A6)}{
+Per: 
+\begin{itemize}
+  \item Trattare azioni durative, problemi di concorrenza e deadline.
+\end{itemize}
+Problemi:
+\begin{itemize}
+  \item Rappresentare e ragionare sul tempo. 
+  \item Gli effetti delle azioni si sviluppano nel tempo.
+\end{itemize}
+}
+
+\dfn{Dominio con Single Agent}{
+  Un solo pianificatore e un solo controller (esecutore).
+}
+
+\cor{Rilassare un Dominio con Single Agent (A7)}{
+Per:
+\begin{itemize}
+  \item Sfruttare meglio le risorse disponibili. 
+  \item Trattare situazioni in cui più esecutori sono presenti ma non sono sotto il controller di un unico pianificatore.
+\end{itemize}
+Problemi:
+\begin{itemize}
+  \item Multi-agent planning: necessità di trattare le interazioni, coordinazione, competizione, negoziazione e planning della teoria dei giochi.
+\end{itemize}
+}
+
+\subsection{Problemi di Pianificazione Classica}
+
+\paragraph{Un problema di pianificazione classica è $P = (\Sigma, s_0, S_g)$:}
+
+\begin{itemize}
+  \item $\Sigma = (S, A, \gamma)$ è il modello del dominio espresso come STS. 
+  \item $s_0 \in S$ è lo stato iniziale. 
+  \item $S_g \subset S$ è l'insieme degli stati goal.
+\end{itemize}
+
+\paragraph{Una soluzione $\pi$ a un problema $P$:}
+
+\begin{itemize}
+  \item Una sequenza totalmente ordinata di azioni istanziate (ground). $\pi = \langle a_1, a_2, \dots, a_n \rangle$.
+  \item Danno origine a una sequenza di transazioni di stato  $\langle s_0, s_1, \dots, a_n \rangle$ tale che:
+    \begin{itemize}
+      \item $s_1 = \gamma(s_0, a_1)$. 
+      \item $\forall k: 2..n s_k = \gamma(s_{k-1}, a_k)$. 
+      \item $s_n \in S_g$.
+    \end{itemize}
+\end{itemize}
+
+\qs{}{Quali sono le sfide dell'approccio classico al planning?}
+
+\begin{itemize}
+  \item Come rappresentare stati e azioni in modo da non dover
+esplicitamente enumerare S, A, e $\gamma$?
+\item Come ricercare una soluzione in modo efficiente? Quali algoritmi? Quali euristiche?
+\item Come generalizzare le soluzioni? Classical Planning troppo semplice per essere utile nei casi pratici, ma può essere la base per soluzioni in contesti più complessi (rilassando alcune assunzioni).
+\end{itemize}
+
+\qs{}{Perché la pianificazione è difficile?}
+
+\begin{itemize}
+  \item È dimostrabile che il planning è un task computazionalmente costoso:
+    \begin{itemize}
+      \item \fancyglitter{PlanSAT}: esiste un piano che risolve un problema di pianificazione? 
+      \item \fancyglitter{Bounded PlanSAT}: esiste un piano di lunghezza k? 
+    \end{itemize}
+  \item Per la pianificazione classica entrambi i problemi sono decidibili (la
+ricerca avviene in spazio finito). 
+\item Se si estende a uno spazio infinito: 
+  \begin{itemize}
+    \item PlanSAT diventa semi-decidibile: esiste un algoritmo che termina quando la soluzione non esiste, potrebbe non terminare quando la soluzione non esiste.
+    \item Bounded PlanSAT rimane decidibile.
+  \end{itemize}
+\end{itemize}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Bounded PlanSAT è NP completo mentre PlanSAT è P. 
+    \item Trovare una soluzione è meno costoso che trovare una soluzione ottima. 
+    \item La complessità del planning giustifica la ricerca di euristiche, possibilmente domain-independent, che guidino il pianificatore nella sintesi di una soluzione.
+  \end{itemize}
+}
+
+\paragraph{Proprietà di un buon algoritmo di pianificazione:}
+
+\begin{itemize}
+  \item \fancyglitter{Soundness} (correttezza): un pianificatore è corretto se tutte le soluzioni che trova sono piani corretti, ovvero realmente eseguibili dal controller: 
+    \begin{itemize}
+      \item Tutti i goals sono soddisfatti. 
+      \item Nessuna precondizione di azione è open (mancante). 
+      \item Nessun vincolo ulteriore è violato (vincoli temporali, istanziazione di variabili, etc.). 
+    \end{itemize}
+  \item \fancyglitter{Completeness} (completezza): 
+    \begin{itemize}
+      \item Un pianificatore è completo se trova una soluzione quando il problema è risolubile. 
+      \item Un pianificatore è strettamente completo se tutte le soluzioni sono mantenute nello spazio di ricerca (eventuali \textit{pruning} dello spazio non scartano soluzioni).
+    \end{itemize}
+  \item \fancyglitter{Ottimalità}: un pianificatore è ottimo se l'ordine con cui le soluzioni sono trovate è coerente con una qualche misura di qualità dei piani (lunghezza, costo complessivo, etc.).
+\end{itemize}
+
+\nt{Molti algoritmi, per favorire la velocità, rinunciano all'ottimalità.}
+
+\section{Algoritmi di Pianificazione}
+
+\subsection{Ricerca in Avanti e Ricerca all'Indietro}
+
+\dfn{Progression}{
+Calcolo dello stato successore $s'$ di uno stato $s$ rispetto all'applicazione di un operatore $o$:
+$$s' = \gamma(s, o)$$
+
+}
+
+\paragraph{Pianificatori basati su progression applicano delle ricerche in avanti tipicamente nello spazio degli stati:}
+
+\begin{itemize}
+  \item La ricerca comincia da uno stato iniziale. 
+  \item Iterativamente viene applicato un operatore $o$ per generare un nuovo stato $s'$. 
+  \item La soluzione è trovata quando lo stato $s'$ appena generato soddisfa il goal ($s' \vDash s_g$ e $s_g \in S_g$).
+  \item Ha il vantaggio di essere molto intuitivo e facile da implementare.
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{04/progression.png}
+    \caption{applicables.chooseOne() rappresenta una scelta non deterministica, ma esaustiva, di un'azione.}
+\end{figure}
+
+\nt{chooseOne() avrà varie implementazioni a seconda dell'algoritmo scelto.}
+
+\cor{Soundness di Progression}{
+  fwdSearch è corretto: se la funzione termina con un piano come soluzione, allora questo piano è effettivamente una soluzione al problema iniziale.
+}
+
+\cor{Completeness di Progression}{
+fwdSearch è completo: se esiste una soluzione allora esiste una traccia d'esecuzione che restituirà quella soluzione come piano.
+}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Il numero di azioni applicabili in un dato stato è in genere molto grande. 
+    \item Anche il branching factor tende a essere grande. 
+    \item La ricerca in avanti corre il rischio di non essere praticabile dopo pochi passi.    
+  \end{itemize}
+
+}
+
+\paragraph{Ricerca in avanti vs. Ricerca all'indietro:}
+
+\begin{itemize}
+  \item La ricerca in avanti comincia da un singolo stato iniziale mentre la ricerca all'indietro comincia da un insieme di stati. 
+  \item Quando si applica in avanti un operatore $o$ a uno stato $s$ si genera un unico stato successore $s'$, all'indietro possono esserci molteplici stati predecessori. 
+  \item Nella ricerca in avanti lo spazio di ricerca coincide con lo spazio degli stati, all'indietro ogni stato dello spazio di ricerca corrisponde a un insieme di stati del dominio.
+\end{itemize}
+
+\dfn{Regression}{
+Il calcolo del regresso, ovvero il sottogoal predecessore di un goal dato, avviene nel seguente modo:
+\begin{itemize}
+  \item Dato un goal $g$. 
+  \item Sia $a$ azione ground tale che $g \in effects^+(a)$.
+  \item $g' = \gamma^{-1} (g, a) = (g \ effects^+(a)) \cup pre(a)$.
+\end{itemize}
+$g'$ è il regresso di $g$ attraverso la relazione di transizione $\gamma$ e l'azione $a$.
+}
+
+\paragraph{Nella ricerca all'indietro:}
+
+\begin{itemize}
+  \item Si comincia dall'insieme di stati goal. 
+  \item Iterativamente si seleziona un sottogoal generato precedentemente e si regredisce attraverso un operatore generando un nuovo sottogoal. 
+  \item La soluzione è trovata quando il nuovo sottogoal è soddisfatto dallo stato iniziale. 
+  \item Ha il vantaggio di poter gestire più stati contemporaneamente. 
+  \item È più costoso e difficile.
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{04/regression.png}
+\end{figure}
+
+\clm{}{}{
+  \begin{itemize}
+    \item La ricerca all'indietro si basa su azioni rilevanti, cioè quelle che contribuiscono attivamente al goal: 
+      \begin{itemize}
+        \item Producono almeno uno degli atomi che compaiono nel goal. 
+        \item Non hanno effetti negativi sul goal stesso (non negano uno degli atomi del goal).
+      \end{itemize}
+    \item La ricerca all'indietro mantiene un fattore di ramificazione più basso rispetto alla ricerca in avanti, ma il fatto di dover mantenere un belief state può complicare le strutture dati usate dal planner e la definizione di euristiche. 
+    \item Nonostante il vantaggio teorico la ricerca in avanti è preferita alla ricerca all'indietro.
+  \end{itemize}
+}
 
