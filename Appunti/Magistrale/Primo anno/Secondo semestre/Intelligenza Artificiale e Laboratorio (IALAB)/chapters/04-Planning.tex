@@ -627,4 +627,140 @@ La funzione di transizione di stato $\gamma(s, a)$ è definita:
   \item \fancyglitter{Quantificators}.
 \end{itemize}
 
+\section{Pianificazione nello Spazio dei Piani}
+
+\qs{}{Come costruire un modello espresso da variabili di stato?}
+
+\begin{itemize}
+  \item Dato un ambiente $E$ che si vuole modellare. 
+  \item Dato l'insieme degli oggetti \fancyglitter{rilevanti} $B$. 
+  \item $B$ deve astrarre i dettagli insignificanti (non indispensabili per la risoluzione del problema).
+\end{itemize}
+
+\paragraph{Gli oggetti hanno due tipi di proprietà:}
+
+\begin{itemize}
+  \item \fancyglitter{Rigid}:
+    \begin{itemize}
+      \item Proprietà invarianti, persistono in ogni possibile stato del sistema. 
+      \item Nella rappresentazione classica corrispondono agli atomi grounf. 
+      \item In una rappresentazione state-variable questi atomi ground corrispondono a costanti booleane. 
+    \end{itemize}
+  \item \fancyglitter{Varying}: 
+    \begin{itemize}
+      \item Possono cambiare nelle transizioni di stato. 
+      \item Nella rappresentazione classica solo le relazioni fluenti che vengono aggiunte/tolte per effetto delle azioni. 
+      \item Sono modellate come variabili a cui possiamo assegnare un valore. 
+      \item Uno stato è rappresentato su un insieme e ogni variabile di stato ha un dominio.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Logica del primordine vs. state-variable:}
+
+\begin{itemize}
+  \item La logica del primordine ha origini storiche, il planning viene visto come meccanismo di theorem proving. 
+  \item La logica del primordine è \fancyglitter{equivalente} a state-variable:
+    \begin{itemize}
+      \item Stesso potere espressivo. 
+      \item Riconducibili l'uno all'altro. 
+    \end{itemize}
+  \item State-variable è più sintetica e uniforme. 
+  \item State-variable si presta meglio a estensioni verso il non classical planning e all'uso di euristiche domain-independent.
+\end{itemize}
+
+\subsection{Least-Commitment Planning}
+
+\dfn{Principio Least-Commitment}{
+  Si fanno scelte solo quando sono indispensabili per risolvere una parte del problema e durante la ricerca non si pongono più vincoli dello stretto necessario.
+}
+
+\paragraph{Decisioni che è possibile ritardare:}
+
+\begin{itemize}
+  \item \fancyglitter{Ordinamenti}: non ordinare le azioni a meno che non sia strettamente necessario. 
+  \item \fancyglitter{Bindings}: non ordinare le azioni a meno che non sia indispensabile unificarle con costanti al fine di conseguire i goal.
+\end{itemize}
+
+\paragraph{Idea:}
+
+\begin{itemize}
+  \item La ricerca avviene nello spazio dei piani. 
+  \item Ogni nodo della ricerca è un piano parzialmente ordinato con \fancyglitter{flaws} (difetti). 
+  \item A ogni passo si rimuove un difetto per mezzo di \fancyglitter{raffinamenti incrementali} del piano parziale corrente. 
+  \item Se l'algoritmo termina con successo il piano risultante è completamente istanziato ma solo parzialmente ordinato.
+\end{itemize}
+
+\nt{Spazio di ricerca = insieme dei piani parziali.}
+
+\paragraph{Un piano è una tupla $\langle A, O, B, L\rangle$ dove:}
+
+\begin{itemize}
+  \item $A$ è l'insieme di azioni, anche parzialmente istanziate. 
+  \item $O$ è l'insieme dei \fancyglitter{vincoli di ordinamento} della forma $a_i < a_j$, è una rekazione d'ordine parzialmente definita. 
+  \item $B$ è l'insieme dei \fancyglitter{bindings} (vincoli) della forma: 
+      \begin{itemize}
+        \item $v_i = C$, a $v_i$ è assegnata la costante $C$.
+           \item $v_i \not= C$, $v_i$ può assumere qualsiasi valore tranne $C$.
+              \item $v_i = v_j$, $v_i$ e $v_j$ assumono lo stesso valore.
+                  \item $v_i \not= v_j$, $v_i$ e $v_j$ devono essere distinte.
+      \end{itemize}
+    \item $L$ è l'insieme di \fancyglitter{causal links} della forma $a_i \rightarrow^c a_j$, in cui $c$ è un effetto dell'azione $a_i$ che è necessario per l'azione $a_j$. 
+\end{itemize}
+
+\cor{Flaws - Open Goals}{
+  Sia $\pi$ il piano del nodo corrente: 
+  \begin{itemize}
+    \item Una precondizione $p$ per un'azione $b$ è un open goal se non c'è un link causale a supporto di $p$. 
+    \item Si può risolvere il difetto aggiungendo il link causale mancante:
+      \begin{enumerate}
+        \item Si trova un'azione $a$ tale che:
+          \begin{itemize}
+            \item $p$ può appartenere a $effect^+(a)$. 
+            \item $a$ può precedere $b$ in $\pi$. 
+          \end{itemize}
+        \item Si istanzia l'azione $a$ in modo che asserisca $p$. 
+        \item Si aggiunge un vincolo di precedenza tra $a$ e $b$ in $O$. 
+        \item Si aggiunge un causal link $a \rightarrow^p b$ in $L$. 
+      \end{enumerate}
+  \end{itemize}
+}
+
+\cor{Flaws - Threats}{
+ Sia $\pi$ il piano del nodo corrente:
+ \begin{itemize}
+  \item Dato un link causale $l: a \rightarrow^p b$. 
+  \item Un'azione $c$ minaccia il link $l$ se: 
+    \begin{itemize}
+      \item $c$ può modificare il valore di verità di $p$ e può posizionarsi tra $a$ e $b$. 
+      \item $c$ può produrre $p$, il link $l$ impone che sia $a$ a produrre $p$ e non un'altra azione $c$. 
+    \end{itemize}
+  \item $c$ viene detta \fancyglitter{clobber}.
+ \end{itemize}
+
+}
+
+\paragraph{Risolvere le minacce:}
+
+\begin{itemize}
+  \item \fancyglitter{Promotion}: imporre il vincolo che $c$ precede $a$. 
+  \item \fancyglitter{Demotion}: imporre il vincolo che $b$ precede $a$. 
+  \item \fancyglitter{Separation}: imporre un vincolo di non-codesignation in modo tale che l'effetto di $c$ non unifichi con $p$.
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{04/psp.png}
+    \caption{Algoritmo di Plan-Space Planning (PSP).}
+\end{figure}
+
+\clm{}{}{
+PSP è corretto e completo: 
+\begin{itemize}
+  \item Ritorna un piano parzialmente ordinato $\pi$ tale che qualsiasi ordinamento totale delle sue azioni raggiunge il goal. 
+  \item Dove il dominio lo consenta, le azioni non strettamente sequenziali possono essere eseguite in parallelo.
+\end{itemize}
+}
+
+
+
 
