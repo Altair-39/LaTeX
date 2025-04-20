@@ -217,24 +217,88 @@
   \item Si ripianifica se qualcosa va storto. 
   \item È ancora presente overcommitment rispetto alle intenzioni: non si ferma a valutare se le sue intenzioni siano più o meno adeguate (blind). 
 \end{itemize}
-
+\pagebreak
 \begin{figure}[!h]
     \centering
     \includegraphics[scale=0.65]{03/agent5.png}
   \caption{Quinta versione di un agente che utilizza il pratical reasoning.}
 \end{figure}
 
+\paragraph{Nella quinta versione:}
+
+\begin{itemize}
+  \item Ci si ferma per determinare se le intenzioni hanno avuto successo o se sono diventate impossibili da soddisfare (single-minded). 
+  \item L'agente può riconsiderare le sue intenzioni ogni volta che il controllo è sul ciclo esterno, ossia quando:
+    \begin{itemize}
+      \item Ha completamente eseguito un piano per raggiungere le sue intenzioni correnti. 
+      \item Ritiene di aver raggiunto le sue attuali intenzioni.
+      \item Crede che le sue attuali intenzioni non siano più possibili.
+    \end{itemize}
+  \item Questo limita il modo in cui consente a un agente di riconsiderare le sue intenzioni.
+\end{itemize}
+\pagebreak
 \begin{figure}[!h]
     \centering
     \includegraphics[scale=0.65]{03/agent6.png}
   \caption{Sesta versione di un agente che utilizza il pratical reasoning.}
 \end{figure}
 
+\paragraph{Nella sesta versione:}
+
+\begin{itemize}
+  \item Riconsidera le intenzioni dopo l'esecuzione di ogni azione (open-minded).
+  \item Tuttavia la riconsiderazione delle intenzioni costa: 
+    \begin{itemize}
+      \item Un agente che non si ferma abbastanza spesso continuerà a tentare di raggiungere le sue intenzioni anche dopo che sarà chiaroo che non possono essere raggiunte. 
+      \item Un agente che riconsidera costantemente dedica poco tempo a raggiungere le sue intenzioni.
+    \end{itemize}
+\end{itemize}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.35]{03/shinji.png}
+  \caption{L'agente che riconsidera costantemente be like.}
+\end{figure}
+
+\pagebreak
+\subsection{Riconsiderazione delle Intenzioni}
+
 \begin{figure}[!h]
     \centering
     \includegraphics[scale=0.65]{03/agent7.png}
   \caption{Settima versione di un agente che utilizza il pratical reasoning.}
 \end{figure}
+
+\paragraph{Nella settima versione:}
+
+\begin{itemize}
+  \item Incorpora una componente di controllo esplicita \fancyglitter{meta-livello} che decide se eseguire o meno la riconsiderazione. 
+\end{itemize}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.7]{03/controllo.png}
+  \caption{Componente meta-livello.}
+\end{figure}
+
+\nt{Il problema è che la reconsider() è una funzione oracolo, per cui va implementata mediante euristiche e studi specifici sul dominio. Il costo di questa funzione dovrebbe essere molto inferiore al costo del processo deliberativo stesso.}
+
+\paragraph{Kinny e Georgeff hanno investigato ciò in maniera sperimentale:}
+
+\begin{itemize}
+  \item Due tipi di agenti: 
+    \begin{itemize}
+      \item \fancyglitter{Bold agents}: non si fermano mai a riconsiderare le intenzioni. 
+      \item \fancyglitter{Cautious agents}: riconsiderano le intenzioni dopo ogni azione.
+    \end{itemize}
+  \item Considerazioni:
+    \begin{itemize}
+      \item Se l'ambiente non cambia rapidamente gli agenti bold funzionano meglio. 
+      \item Se l'ambiente cambia costantemente gli agenti cautious funzionano meglio.
+    \end{itemize}
+\end{itemize}
+
+
 
 
 
