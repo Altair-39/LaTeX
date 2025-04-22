@@ -298,7 +298,127 @@
     \end{itemize}
 \end{itemize}
 
+\section{Linguaggi e Architetture per Agenti}
+
+\subsection{Procedural Reasoning System}
+
+\dfn{PRS}{
+  Il procedural reasoning system è stata una delle prime architetture per agenti che abbia fatto uso del paradigma BDI. È stata usata in applicazioni multi-agenti. 
+}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.7]{03/PRS.png}
+  \caption{Procedural Reasoning System.}
+\end{figure}
+
+\clm{}{}{\begin{itemize}
+  \item Gli input del sistema sono \fancyglitter{eventi}, ricevuti attraverso una \fancyglitter{coda di eventi}. 
+  \item Gli eventi possono essere: 
+    \begin{itemize}
+      \item \fancyglitter{Esterni}: percepiti dall'ambiente. 
+      \item \fancyglitter{Interni}: come aggiunta o cancellazione di belief o goal.
+    \end{itemize}
+  \item Gli output sono azioni che sono eseguite dall'interprete. 
+  \item I belief sono rappresentati come fatti del Prolog (atomi della logica del primordine). 
+  \item In PRS gli agenti non pianificano, ma fanno riferimento a una libreria di piani predefinita dal programmatore.
+\end{itemize}
+}
+
+\paragraph{I componenti di un piano sono:}
+
+\begin{itemize}
+  \item \fancyglitter{Nome}. 
+  \item \fancyglitter{Condizioni di invocazione}. 
+  \item \fancyglitter{Precondizioni}: le condizioni che devono valere prima di avviare l'esecuzione del piano. 
+  \item \fancyglitter{Body}: una sequenza di espressioni: 
+    \begin{itemize}
+      \item Azioni atomiche. 
+      \item Sottogoals.
+    \end{itemize}
+\end{itemize}
+
+\nt{Per raggiungere un dato goal, l'agente formula l'intenzione di raggiungere l'obiettivo, cioè sceglie un piano applicabile. Questo piano diventa un'intenzione, ed è aggiunto alla intention structure.}
+
+\paragraph{I piani in PRS:}
+
+\begin{itemize}
+  \item I goal in PRS possono essere complessi e contenere a loro volta dei goal. 
+  \item I piani possono contenere disgiunzioni di goal, loops, etc.
+  \item Un agente ha un insieme di piani, alcuni belief iniziali riguardo il mondo e un goal iniziale.
+  \item I belief sono rappresentati Prolog-like. 
+\end{itemize}
+
+\paragraph{Ragionamento:}
+
+\begin{itemize}
+  \item Per raggiungere un dato goal, l'agente formula l'intenzione di raggiungerlo (sceglie un piano applicabile). Il piano diventa un'intenzione ed è aggiunto alla intention structure. 
+  \item A ogni passo del loop principale, l'interprete sceglie un piano (parzialmente eseguito) nella intention structure e ne esegue un passo. 
+  \item Se ci sono molte opzioni disponibili l'interprete può scegliere quella con la massima utilità o entrare in un ragionamento di meta-livello.
+\end{itemize}
+
+\paragraph{Control loop:}
+
+\begin{enumerate}
+  \item Aggiorna belief e goal secondo gli eventi della \fancyglitter{event queue}. 
+  \item I cambiamenti dei goal e dei belief fanno scattare i diversi piani.
+  \item Uno o più piani applicabili sono scelti e messi nella intention structure. 
+    \item Si sceglie una intenzione (task) dalla intention structure. 
+    \item Si esegue un passo di quel task: 
+      \begin{itemize}
+        \item Esecuzione di un'\fancyglitter{azione primitiva}. 
+        \item Scelta di un nuovo subgoal.
+      \end{itemize}
+\end{enumerate}
+
+\paragraph{Stack delle intenzioni:}
+
+\begin{itemize}
+  \item Quando un agente inizia la sua esecuzione, il goal iniziale è inserito nell'intention stack. 
+  \item Lo stack contiene tutti i goal in attesa di essere soddisfatti. 
+  \item L'agente cerca tra i suoi piani per vedere quali hanno un goal sulla cima dello stack delle intenzioni come la loro post-condizione. 
+  \item Tra questi piani alcuni avranno le loro precondizioni soddisfatte dall'insieme di belief correnti.
+  \item L'insieme dei piani che permettono di raggiungere il goal e hanno le precondizioni soddisfatte diventano l'insieme delle possibili opzioni dell'agente.
+\end{itemize}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Il processo di selezione tra i diversi piani è la \fancyglitter{deliberazione}. 
+    \item La deliberazione è ottenuta mediante l'utilizzo di un piano metà meta-livello. 
+    \item Effettuata la scelta la sua esecuzione può portare ulteriori goal nello stack. 
+    \item Le azioni atomiche potranno essere eseguite direttamente dall'agente. 
+    \item Se un piano fallisce, l'agente può selezionare un nuovo piano tra quelli candidati. 
+    \item L'esecuzione dei task può essere \fancyglitter{interleaved} (supporta il multithread). 
+    \item Le intenzioni (task) sono solitamente implementate con uno stack di frames.
+  \end{itemize}
+}
 
 
+\dfn{AgentSpeak(L)}{
+ Il linguaggio AgentSpeak(L) è stato proposto come linguaggio di programmazione per agenti (BDI) e consente di essere scritto e interpretato in modo simile a quello dei programmi logici basati su clausole di Horn (Prolog). 
+}
+
+\nt{Si propone di colmare il gap tra specifica teorica e implementazione di un agente BDI. Ha dato origine a JASON.}
+
+\subsection{Agent-Oriented Programming}
+
+L'articolo Agent-Oriented programming di Shoham propone un nuovo paradigma di programmazione che promuove una visione sociale della computazione in cui più agenti interagiscono l'uno con l'altro. L'articolo presenta:
+\begin{itemize}
+  \item Un linguaggio formale per descrivere stati mentali. 
+  \item Un linguaggio di programmazione per definire agenti. 
+\end{itemize}
+
+\paragraph{Caratteristiche:}
+
+\begin{itemize}
+  \item Ci sono due categorie mentali principali: \fancyglitter{belief} e \fancyglitter{obligation}. Un'ulteriore categoria, che non è un costrutto mentale, è \fancyglitter{capability}. 
+  \item \fancyglitter{Decision} è una obligation a se stessi. 
+  \item Le formule fanno esplicitamente riferimento al tempo. Viene adottato un semplice linguaggio basato sugli istanti di tempo. 
+  \item Le azioni non sono distinte dai fatti: la presenza di un'azione è rappresentata dal fatto corrispondente.
+\end{itemize}
+
+\nt{Il linguaggio di Shoham, Agent0, non ha avuto molta rilevanza, contrariamente al nome Agent-Oriented Programming.}
+
+\subsection{Agenti Reattivi}
 
 
