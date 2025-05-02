@@ -421,4 +421,135 @@ L'articolo Agent-Oriented programming di Shoham propone un nuovo paradigma di pr
 
 \subsection{Agenti Reattivi}
 
+\nt{Un linguaggio per agenti reattivi è CLIPS, visto in "Intelligenza Artificiale e Laboratorio".}
+
+\paragraph{Tesi di Brooks:}
+
+\begin{itemize}
+  \item Un comportamento intelligente può essere generato \fancyglitter{senza rappresentazione esplicita} del tipo di ciò che è proposto dall'IA simbolica. 
+  \item  Un comportamento intelligente può essere generato \fancyglitter{senza ragionamento esplicito} del tipo di ciò che è proposto dall'IA simbolica. 
+  \item L'intelligenza è una proprietà \fancyglitter{emergente} di certi sistemi complessi.
+\end{itemize}
+
+\paragraph{Due idee chiave:}
+
+\begin{itemize}
+  \item \fancyglitter{Collocazione e personificazione}: l'intelligenza reale è situata nel mondo, non in sistemi senza sostanza come i "theorem provers" o i "sistemi esperti"\footnote{AKA touch some grass.}. 
+  \item \fancyglitter{Intelligenza e apparenza}: il comportamento intelligente è generato come un risultato di un'interazione con l'ambiente.
+\end{itemize}
+
+\dfn{Subsumption Architecture}{
+  Una Subsumption Architecture è una gerarchia di task che eseguono behaviours.
+}
+
+\cor{Behaviour}{
+  Una behaviour è una struttura a regole molto semplici. 
+}
+
+\paragraph{Subsumption Architecture:}
+\begin{itemize}
+  \item Ogni behaviours compete con altri per esercitare il controllo sugli agenti. 
+  \item Gli strati più bassi rappresentano tipi di behaviours più primitivi e hanno precedenza su strati più in alto nella gerarchia. 
+  \item I sistemi risultanti sono estremamente semplici in termini della quantità di computazione che fanno. 
+  \item Alcuni robot eseguono task che sarebbero sconvolgenti se eseguiti da sistemi simbolici di AI.
+\end{itemize}
+
+\paragraph{Selezione delle azioni:}
+
+\begin{itemize}
+  \item La scelta di un'azione è realizzata mediante insiemi di behaviours (coppie $(c, a)$):
+    \begin{itemize}
+      \item $c$: insieme di \fancyglitter{condizioni}. 
+      \item $a$: un'azione.
+    \end{itemize}
+  \item Un behaviour scatta quando la funzione $see$ restituisce una percezione $p$ tale che $p \in c$. 
+  \item Associato a un insieme di behaviour rules c'è una \fancyglitter{relazione di inibition}. 
+  \item Leggiamo $b_1 < b_2$ come "$b_1$ inibisce $b_2$", cioé $b_1$ è più basso nella gerarchia di $b_2$, quindi ha priorità.
+\end{itemize}
+
+\dfn{Steels Mars Explorer}{
+  Steels propose un sistema di esplorazione per Marte usando la Subsumption Architecture. La soluzione fa uso di due meccanismi:
+  \begin{itemize}
+    \item Un campo gradiente per trovare la direzione verso la base. 
+    \item "Briciole radioattive" per permettere la comunicazione tra agenti. 
+  \end{itemize}
+}
+
+\paragraph{Regole non-cooperative:}
+
+\begin{enumerate}
+  \item Evitare gli ostacoli. 
+  \item I campioni portati dagli agenti sono depositati alla base. 
+  \item Gli agenti che portano i campioni ritornano alla base. 
+  \item Gli agenti raccolgono i campioni che trovano. 
+  \item Un agente che non sa cosa fare esplora a caso.
+\end{enumerate}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Si vuole favorire la collaborazione. 
+    \item Un agente crea un sentiero di briciole radioattive ogni volta che trova un campione di roccia. 
+    \item Il sentiero sarà creato quando un agente riporta le rocce alla base. 
+    \item Mentre un agente segue un sentiero verso la sorgente di rocce, raccoglie le briciole rendendo il sentiero più sottile. 
+    \item Dopo che un po' di agenti avranno seguito il sentiero senza trovare campioni il sentiero sarà scomparso.
+  \end{itemize}
+}
+
+\paragraph{Viene rimossa la regola tre e aggiunte:}
+
+\begin{itemize}
+  \item [6.] Se un agente sta portando dei campioni e non è nella base, lascia cadere 2 briciole e va su verso il gradiente. 
+  \item [7.] Se un agente percepisce delle briciole ne prende una e va giu verso il gradiente.
+\end{itemize}
+
+\nt{L'ordine dei behaviours è 1, 2, 6, 4, 7, 5.}
+
+\paragraph{Limiti degli agenti reattivi:}
+
+\begin{itemize}
+  \item Agenti senza modello devono avere sufficienti informazioni locali. 
+  \item Se le decisioni sono locali gli agenti hanno una visione a breve termine. 
+  \item Difficili da realizzare. 
+    \item È difficile ingegnerizzare agenti specifici. 
+    \item È difficile definire agenti con un gran numero di behaviours.
+\end{itemize}
+
+\subsection{Architetture Ibride}
+
+\begin{itemize}
+  \item Molti ricercatori hanno sostenuto che né un approccio completamente deliberativo né un approccio completamente reattivo sono adatti a costruire agenti. 
+  \item Ci sono stati suggerimenti di utilizzo di sistemi ibridi. 
+  \item Un approccio è quello di costruire un agente con due o più sottosistemi:
+    \begin{itemize}
+      \item Uno \fancyglitter{deliberativo} contenente un modello simbolico del mondo, che sviluppa piani e prende decisioni nel modo proposto dall'IA simbolica. 
+      \item Uno \fancyglitter{reattivo} capace di reagire a eventi senza ragionamenti complessi.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Modelli ibridi:}
+
+\begin{itemize}
+  \item Solitamente viene data precedenza ai componenti reattivi. 
+  \item Questo tipo di struttura porta a un'architettura a strati. 
+  \item I sottosistemi di controllo di un agente sono organizzati in una gerarchia, con livelli più alti che trattano l'informazione a crescenti livelli di astrazione. 
+  \item Un problema è il tipo di schema di controllo in cui inserire i sottosistemi. 
+  \item Sono stati proposti:
+    \begin{itemize}
+      \item \fancyglitter{Horizontal layering:} tutti gli strati sono direttamente connessi all'input e all'output. 
+      \item \fancyglitter{Vertical layering:} input dei sensori e output delle azioni sono gestiti al massimo da uno strato ciascuno.
+    \end{itemize}
+\end{itemize}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.7]{03/archybr.png}
+  \caption{Schema delle architetture ibride.}
+\end{figure}
+
+\nt{Esempi di architetture ibride sono TOURINGMACHINES e Stanley.}
+
+
+
+
+
 
