@@ -296,13 +296,90 @@ La semantica basata su stati mentali è adeguata per sistemi di agenti cooperant
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[scale=0.7]{04/cf.png}
-  \caption{Communication Facilitators.}
+    \includegraphics[scale=0.5]{04/singh.png}
+  \caption{Ciclo di vita dei commitment per Singh.}
 \end{figure}
+
+\section{Protocolli di Interazione}
+
+\begin{itemize}
+  \item Gli agenti non possono prendere parte a un dialogo semplicemente scambiandosi messaggi ACL. 
+  \item L'analisi di numerose conversazioni umane mostra che sono presenti dei pattern ricorrenti nelle conversazioni. 
+  \item La semantica mentalistica per gli atti comunicativi è troppo complessa per determinare una possibile risposta a un messaggio. 
+  \item Un agente ha bisogno di \fancyglitter{conversation policies}/\fancyglitter{Protocolli di interazione}. 
+  \item In generale i protocolli specificano il contenuto della comunicazione.
+\end{itemize}
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[scale=0.7]{04/singh.png}
-  \caption{Ciclo di vita dei commitment per Singh.}
+    \includegraphics[scale=0.5]{04/protocollo.png}
+  \caption{Protocollo rappresentato come DFA.}
 \end{figure}
+
+\dfn{Contract Net Protocol (task sharing)}{
+  Un protocollo per realizzare sistemi di agenti cooperanti. È modellato sul meccanismo di contrattazione utilizzato per governare gli scambi di merci e servizi. Un agente che desidera che un task sia risolto viene chiamato manager (initiator) e gli agenti che potrebbero risolvere il task sono chiamati contractors (participants).
+}
+
+\paragraph{Un agente ha un goal e realizza che:}
+
+\begin{itemize}
+  \item O non è in grado di soddisfarlo in autonomia, ma non ne ha le capacità. 
+  \item O preferirebbe non soddisfarlo in autonomia, per ottenere una soluzione migliore.
+\end{itemize}
+
+\paragraph{Task Sharing:}
+
+\begin{itemize}
+  \item Manager: 
+    \begin{itemize}
+      \item Annuncia un task che necessita di essere risolto. 
+      \item Riceve e valuta le offerte dei possibili contractors. 
+      \item Sceglie un contractor e lo informa. 
+      \item Riceve il risultato.
+    \end{itemize}
+  \item Contractor: 
+    \begin{itemize}
+      \item Ricever gli annunci di task dal manager. 
+      \item Valuta il task. 
+      \item Risponde declinando o facendo un'offerta (bidding). 
+      \item Esegue il task se l'offerta è stata accettata. 
+      \item Riporta il risultato (expediting).
+    \end{itemize}
+  \item Un contractor per un task può agire a sua volta da manager sollecitando l'aiuto di altri agenti per risolvere parte di quel task. 
+  \item Una deadline può essere fissata per effettuare offerte da parte dei contractors.
+\end{itemize}
+
+\subsection{Protocolli a commitment}
+
+
+\begin{itemize}
+  \item I protocolli possono essere specificati come un insieme di commitment piuttosto che come DFA. 
+  \item Gli agenti giocano ruoli diversi nella società e i ruoli definiscono l'associazione con gli impegni sociali. 
+  \item In generale, gli agenti possono gestire i propri impegni manipolandoli o cancellandoli. 
+  \item Poiché i requisiti di un protocollo vengono espressi solamente attraverso commitment, gli agenti possono essere conformi sulla base della loro comunicazione. 
+ \item L'idea è di catturare la relazione "count-as" che descrive il significato dell'azione. 
+    \item Il solo vincolo che un protocollo a commitment deve soddisfare per avere successo è che tutti i componenti siano discharged. 
+
+\end{itemize}
+
+\dfn{Run del Protocollo a Commitment}{
+  Una run del protocollo a commitment è una sequemza finita di azioni che portano in uno stato in cui tutti i commitment sono discharged, ossia non ci siano commitment pendenti.
+}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Data la precedente specifica delle azioni, si può costruire delle sequenze che permettono di raggiungere uno stato in cui non ci siano commitment pendenti. 
+    \item Verifica: data una sequenza di azioni eseguite dagli agenti, si può verificare se essa sia o non sia una sequenza ammessa dal protocollo.
+  \end{itemize}
+}
+
+\subsection{Information Protocols}
+
+\subsection{Modelli di Coordinazione}
+
+
+
+
+
+
 
