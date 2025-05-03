@@ -200,8 +200,109 @@ Precondizioni, postcondizioni e condizioni di completamento descrivono lo stato 
 \end{itemize}
 
 
+\cor{Semantica di FIPA ACL}{
+  Il Semantic Language (SL) è un linguaggio formale per definire la semantica di FIPA ACL. È una logica multimodale quantificata con operatori modali. Per permettere il ragionamento su azioni, l'universo del discorso coinvolge sequenze di eventi.
+}
 
+\begin{itemize}
+  \item I seguenti operatori sono introdotti per ragionare sulle azioni:
+    \begin{itemize}
+      \item Feasible$(a, \phi)$: $a$ può occorrere e se occorre, $\phi$ sarà vera dopo tale occorrenza. 
+      \item Done$(a, \phi)$: $a$ è appena occorsa e $\phi$ è vera dopo tale occorrenza. 
+      \item Agent$(i, a)$: $i$ è il solo agente che esegue l'azione $a$. 
+    \end{itemize}
+  \item Sulla base di beliefs, choices ed eventi viene definito il concetto di \fancyglitter{goal persistente} $PG_{i\phi}$. 
+  \item L'intenzione $I_{i\phi}$ è definita come un goal persistente che impone all'agente di agire. 
+  \item La semantica degli atti comunicativ è specificata come un insieme di formule $SL$ che descrivono le precondizioni di fattibilità e gli effetti razionali.
+  \item \fancyglitter{Feasibility Conditions:} condizioni che devono valere per il mittente per eseguire in modo appropriato gli atti comunicativi. 
+  \item \fancyglitter{Rational Effects:} gli effetti che un agente può aspettarsi che occorrano come risultato dell'esecuzione di un azione. All'agente destinatario non è richiesto di garantire che  occorra l'effetto atteso. 
+  \item Per \fancyglitter{conformità} di FIPA ACL si intende che quando un agente $A$ esegue un atto comunicativo $c$, le FP$(c)$ per $A$ devono valere. I RE$(c)$ non sono garantiti e sono irrilevanti al fine della conformità.
+\end{itemize}
 
+\paragraph{Test di conformità:}
 
+\begin{itemize}
+  \item Sintattico: l'obiettivo è determinare se un agente rispetta la sintassi del linguaggio ogni volta che comunica.
+      \item Semantica: l'obiettivo è determinare se un agente rispetta la semantica del linguaggio ogni volta che comunica.
+\end{itemize}
 
+\nt{Wooldridge propose un approccio basato sulla riduzione a un problema di verifica di proprietà di un programma, ma la maggior parte dei vincoli sono espressi sul mittente e questo comporta la necessità di parlare di stati mentali che non sono sempre desumibili.}
+
+\section{Semantica Sociale per la Comunicazione}
+
+La semantica basata su stati mentali è adeguata per sistemi di agenti cooperanti ma ha alcuni problemi per quanto riguarda i sistemi ad agenti composti da agenti eterogenei e competitivi. 
+
+\nt{È impossibile fidarsi completamente di altri agenti o fare forti assunzioni a proposito dello stato interno degli agenti e sul loro modo di agire.}
+
+\paragraph{L'approccio sociale:}
+
+\begin{itemize}
+  \item Considera le conseguenze sociali di eseguire un atto comunicativo. 
+  \item Riconosce che la comunicazione è inerentemente pubblica e che dipende dal contesto sociale degli agenti.
+\end{itemize}
+
+\subsection{Un Buon ACL}
+
+\paragraph{Le caratteristiche di un buon ACL:}
+
+\begin{itemize}
+  \item \fancyglitter{Formal:} chiarezza della specifica per guidare al meglio colui che realizza un sistema. 
+  \item \fancyglitter{Declarative:} descrivere cosa piuttosto che come. 
+  \item \fancyglitter{Verifiable:} determinare se un agente sta agendo in accordo con una data semantica. 
+  \item \fancyglitter{Meaningful:} trattare la comunicazione secondo il suo significato e non come arbitrari token che devono essere ordinati in una qualche maniera.
+\end{itemize}
+
+\paragraph{Semantica per ACL basata su stati mentali e verifica:}
+
+\begin{itemize}
+  \item Rispettare un protocollo: un protocollo è rispettato se e solo se l'interazione specificata/desiderata occorre durante l'esecuzione. 
+  \item Verificare un protocollo: necessità di una semantica basata su fatti osservabili.
+  \item La semantica basata su stati mentali è particolarmente adatta per ragionare in modo statico sulle proprietà del protocollo e sulle politiche adottate dagli agenti. 
+  \item Non è possibile fare introspezione sugli agenti perché solitamente lo stato mentale degli agenti non è accessibile.
+\end{itemize}
+
+\paragraph{È necessaria una semantica che sia:}
+
+\begin{itemize}
+  \item Indipendente dagli stati mentali dei partecipanti.
+  \item Verificabile sia da un partecipante sia da una terza parte che deve monitorare l'interazione. 
+  \item Possibile rendere osservabile la violazione di una specifica da parte di un partecipante all'interazione. 
+\end{itemize}
+
+\clm{}{}{
+  \begin{itemize}
+    \item L'approccio è basato sui pratical commitment tra agenti: un agente (il debtor) si impegna verso un altro agente (il creditor) a rendere vero un qualche fatto o a eseguire una qualche azione. 
+    \item I vari atti illocutori possono essere visti in termini di commitment sociali che i partecipanti creano.
+  \end{itemize}
+}
+
+\nt{La comunicazione nell'approccio sociale è inerentemente pubblica.}
+
+\paragraph{Commitment (per Castelfranchi):}
+
+\begin{itemize}
+  \item Un commitment sociale ha natura normativa e genera diritti. 
+  \item Cancellare o ritirare un commitment viola un'obbligazione non implica un'informazione verso la contropare, ma frustra delle aspettative e dei diritti che l'agente ha creato.
+\end{itemize}
+
+\paragraph{Commitment (per Singh):}
+
+\begin{itemize}
+  \item Include una nozione di \fancyglitter{contesto sociale} nella definizione di commitment (il team in cui l'agente partecipa e in cui comunica). 
+  \item Permette \fancyglitter{metacommitment} per catturare un'ampia varietà di relazioni legali e sociali in un unico framework. 
+  \item Il comportamento degli agenti è influenzato dai commitment perché l'assunzione è che gli agenti rispettino gli impegni presi. 
+  \item I commitment sono manipolabili dagli agenti.
+\end{itemize}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.7]{04/cf.png}
+  \caption{Communication Facilitators.}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.7]{04/singh.png}
+  \caption{Ciclo di vita dei commitment per Singh.}
+\end{figure}
 
