@@ -42,11 +42,11 @@
 
 \qs{}{Perché in PROLOG non è presente la negazione forte (negazione classica)?}
 
-\paragraph{Risposta:}
+\paragraph{Risposta:} perché in prolog si assume mondo chiuso e ragionamento non monotono. La negazione classica richiede la conoscenza completa del dominio per poter affermare che qualcosa sia vero o falso, ma in prolog si possono aggiungere nuovi fatti.
 
 \qs{}{Come funziona la negazione per fallimento?}
 
-\paragraph{Risposta:}
+\paragraph{Risposta:} semplicemente un determinato \\+P è vero se prolog non riesce a dimostrare P. In poche parole "se non sono in grado di dimostrare che un qualcosa sia vero allora il suo opposto è vero".
 
 \qs{}{Fare un esempio di negazione per fallimento.}
 
@@ -62,23 +62,31 @@
   \item Fallimento infinito, se è sempre possibile derivare nuovi risolventi (loop infinito).
 \end{itemize}
 
-\qs{}{Che cos'è la logica monotòna?}
+\qs{}{Che cos'è la logica monotona?}
 
-\paragraph{Risposta:}
+\paragraph{Risposta:} una logica dello stesso tipo della logica classica, in cui si ha una conoscenza completa e non si aggiungono o rimuovono nuovi fatti.
 
 \qs{}{Come funziona la ricerca SLD?}
 
-\paragraph{Risposta:}
+\paragraph{Risposta:} la ricerca SLD è l'algoritmo inferenziale usato da prolog per risolvere obiettivi. Andare a vedere l'algoritmo di costruzione dell'albero SLD.
+
+\nt{Nota per self: è SDL, non LSD.}
 
 \qs{}{Perché si usa la risoluzione SLD se è completa solo con le clausole di Horn?}
 
-\paragraph{Risposta:}
+\paragraph{Risposta:} per questioni di efficienza, inoltre prolog usa solo clausole di Horn, quindi non è un dramma. 
 
 \qs{}{Spiegare il cut(!) e qual è il suo vantaggio.}
 
-\paragraph{Risposta:}
+\paragraph{Risposta:} il cut è un predicato extra logico che consente di modificare l'esecuzione dell'interprete PROLOG (è un predicato sempre vero). Il suo vantaggio è che blocca il backtracking rendendo definitive le scelte fatte. Questo fa perdere la completezza, ma aumenta l'efficienza evitando di esplorare rami potenzialmente inutili.
 
 \qs{}{Scrivere un programmino con il cut(!).}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.2]{Domande/cut.png}
+    \caption{Esempio di programma con il cut.}
+\end{figure}
 
 \paragraph{Risposta:}
 
@@ -87,8 +95,6 @@
 \paragraph{Risposta:} la completezza, perché va a escludere potenziali soluzioni che sarebbero state considerate facendo backtracking.
 
 \qs{}{Scrivere lo stack dell'interprete PROLOG di un codice in cui è presente il cut(!).}
-
-\paragraph{Risposta:}
 
 \section{ASP}
 
@@ -130,9 +136,9 @@ mentre gli ASP solver non lo consentono (aka. ASP non va in loop).
 \end{figure}
 
 
-\qs{}{PROLOG e ASP sono monotòni?}
+\qs{}{PROLOG e ASP sono monotoni?}
 
-\paragraph{Risposta:}
+\paragraph{Risposta:} non lo sono perché è possibile aggiungere nuovi fatti e quindi non si ha la completa conoscenza del dominio.
 
 \qs{}{Perché in ASP non c'è il cut(!)?}
 
@@ -140,15 +146,15 @@ mentre gli ASP solver non lo consentono (aka. ASP non va in loop).
 
 \qs{}{Come funziona la negazione per fallimento in ASP?}
 
-\paragraph{Risposta:}
+\paragraph{Risposta:} un determinato "not a" è vero se e solo se "a" non è dimostrabile in un answer set. Ciò che non può essere derivato è considerato vero.
 
 \qs{}{Che cos'è l'Integrity Constrain e a cosa serve?}
 
-\paragraph{Risposta:}
+\paragraph{Risposta:} è una regola senza testa (:- something). Serve a vietare che certe combinazioni di fatti siano presenti nello stesso answer set. Se il corpo è vero in un modello $X$ allora quel modello viene scartato. Serve per "filtrare" gli insiemi di risposta validi.
 
 \qs{}{In PROLOG si può avere Integrity Constrain?}
 
-\paragraph{Risposta:}
+\paragraph{Risposta:} non sono nativi, ma è possibile simularli utilizzando la negazione per fallimento. 
 
 \qs{}{Fare un esempio di codice ASP che risulta insoddisfacibile.}
 
