@@ -1,4 +1,4 @@
-\chapter{Privacy - Introduzione}
+\chapter{Introduzione}
 
 \section{Il Corso in Breve...}
 
@@ -453,7 +453,132 @@ and processing of personal and sensitive data.
   \item \fancyglitter{Rischio inaccettabile}: i sistemi di IA che rappresentano una chiara minaccia per la sicurezza o i diritti fondamentali sono vietato. Ciò include i sistemi che implementano tecniche subliminali per manipolare il comportamento, sfruttare le vulnerabilità di gruppi specifici o abilitare il punteggio sociale da parte dei governi.
   \item  \fancyglitter{Alto rischio}: sistemi di intelligenza artificiale utilizzati in aree critiche come la sanità, l'istruzione, l'occupazione, il diritto l'applicazione delle norme e i servizi essenziali sono soggetti a obblighi rigorosi. Questi includono rigorosi valutazioni dei rischi, misure di governance dei dati, supervisione umana e monitoraggio continuo per garantire la conformità. 
   \item \fancyglitter{Rischio limitato}: i sistemi di intelligenza artificiale a rischio limitato, come i chatbot e i deepfake, sono soggetti a obblighi di trasparenza. I fornitori e i distributori devono informare gli utenti che stanno interagendo con un sistema di intelligenza artificiale. 
-  \item \fancyglitter{Rischio minimo}: la maggior parte dei sistemi di intelligenza artificiale, come i videogiochi abilitati all'intelligenza artificiale o i filtri antispam, cadono rientrano in questa categoria e sono in gran parte non regolamentate, incoraggiando l'innovazione e lo sviluppo,
+  \item \fancyglitter{Rischio minimo}: la maggior parte dei sistemi di intelligenza artificiale, come i videogiochi abilitati all'intelligenza artificiale o i filtri antispam, cadono rientrano in questa categoria e sono in gran parte non regolamentate, incoraggiando l'innovazione e lo sviluppo.
 \end{itemize}
+
+\paragraph{Tutti i providers di modelli di AI devono:}
+
+\begin{itemize}
+  \item Fornire documentazione tecnica e istruzioni. 
+  \item Rispettare la direttiva europea sul copyright. 
+  \item Pubblicare un sommario dei dati usati per il training. 
+  \item Condurre valutazioni e test (anche di tipi "adversarial"\footnote{Per portare il sistema in errore.}. 
+  \item Assicurare misure di cybersecurity adeguate.
+\end{itemize}
+
+\nt{Questo copre la parte legale di assegnamento delle responsabilità in campo giuridico.}
+
+\paragraph{Obblighi:}
+
+\begin{itemize}
+  \item \fancyglitter{Sviluppatori:} entità che sviluppano sistemi ad alto rischio, devono assicurarsi che i datasets siano di alta qualità, mantenere documentazione tecnica e sviluppare sistemi con livelli di sicurezza, robustezza e sicurezza.
+  \item \fancyglitter{Utilizzatori:} chi utilizza sistemi ad alto rischio deve monitorare le performance e ridurre/mitigare i rischi con la presenza umana.
+\end{itemize}
+
+\clm{}{}{
+  \begin{itemize}
+    \item L'AI act prevede un board europeo che monitori l'intelligenza artificiale.
+    \item Controlla le implementazioni negli stati membri.
+    \item Forzano l'aderenza alla legge.
+  \end{itemize}
+}
+
+\dfn{Digital Service Act (2018)}{
+  Regola i servizi online. Sono 44 articoli e 128 misure che coprono le seguenti aree:
+  \begin{itemize}
+    \item Demonetizzazione: riduzione degli incentivi finanziari per leakers e disinformatori. 
+    \item Trasparenza nella pubblicità politica. 
+    \item Integrità dei servizi: riduzione di account fake, deepfake, amplificazione dovuta a bots, disinformazione, etc. 
+    \item Fact-checking\footnote{Non se il tuo cognome è Musk.}.
+  \end{itemize}
+}
+
+\section{La Privacy al Tempo dei "Big Data"}
+
+\subsection{La Privacy sotto Attacco}
+
+Nel 1996, il 24\% degli americani ha subito un'invasione della sua privacy. Questo tema rientra nel più ampio spettro del tema: privacy vs. convenienza. 
+
+\begin{center}
++ PRIVACY $\Leftrightarrow$ - COMODITÀ
+
+  + COMODITÀ $\Leftrightarrow$ - PRIVACY
+\end{center}
+
+\nt{Questo trade-off è il risultato di ignoranza e di una politica di conformismo e indifferenza.}
+
+\paragraph{Violazione della privacy, secondo alcune persone:}
+
+\begin{itemize}
+  \item Chiamate di basso livello per ottenere l'identificatore univoco nei chip intel. 
+    \item Database delle immagini dei guidatori negli USA. 
+    \item Utilizzo dei dati di Facebook. 
+    \item Scandali del NSA. 
+    \item Cambridge Analytica e scandali di Facebook.
+\end{itemize}
+
+\nt{Negli anni si sta verificando un sempre maggiore raccoglimento di dati personali: carte di credito, registri di chiamate, dati sulla sanità, emails, account social, DNA, etc.}
+
+\dfn{Big Data}{
+Il termine Big Data si riferisce all'acquisizione e all'analisi di enormi collezioni di informazioni, talmente grandi che fino a poco tempo fa la tecnologia per analizzarli non esisteva.
+}
+
+\cor{Legge delle Conseguenze Inattese}{
+La legge delle conseguenze inattese è un fenomeno frequentemente osservato per cui ogni azione ha risultati che non fanno parte delle intenzioni dell'attore. Le conseguenze possono essere positive, neutrali o negative.
+}
+
+\subsection{Deanonimizzazione}
+
+I dati vengono raccolti in modo che siano anonimizzati (vedremo in un successivo capitolo come). Però a volte si può bypassare questa anonimizzazione, com'è successo nel caso di Netflix nel 2006:
+
+\begin{itemize}
+  \item Si potevano incrociare due datasets (uno anonimizzato per una challenge di netflix e l'altro non anonimizzato riguardante i rating dei film). 
+  \item Così facendo, conoscendo 6-8 valutazioni di film e date, si potevano identificare unicamente gli utenti con una probabilità del 90\%. 
+  \item Non si può sempre anonimizzare i dati semplicemente rimuovendo gli identificatori. 
+  \item Si ha una vulnerabilità aggregando dati da sorgenti diverse (fig: \ref{fig:ae}).
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.65]{01P/re-id.png}
+    \caption{Esempi di re-identificazione.}
+    \label{fig:ae}
+
+  \end{figure}
+
+\subsection{Data Breach}
+
+\paragraph{Cause comuni di data breaches:}
+
+\begin{itemize}
+  \item Credenziali compromesse. 
+  \item Servizi malconfigurati. 
+  \item Vulnerabilità software.
+\end{itemize}
+
+\nt{Un caso emblematico italiano è il data breach avvenuto a danni dell'INPS durante il governo Renzi (fig: \ref{fig:db}).}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.65]{01P/db.png}
+    \caption{INPS data breach.}
+    \label{fig:db}
+
+  \end{figure}
+\qs{}{Ma qual è il costo di un data breach?}
+
+\begin{itemize}
+  \item I data breach sono molto costosi, sia in termini di valore dei dati che di credibilità. 
+  \item Si stima che il costo per i cittadini dei propri dati sia tra 1000\$ e 3000\$
+  \item Stefano Rodotà lega il concetto di privacy alla dignità attribuendo un costo immenso alla perdità dei propri dati personali.
+\end{itemize}
+
+
+
+
+
+
+
+
 
 
