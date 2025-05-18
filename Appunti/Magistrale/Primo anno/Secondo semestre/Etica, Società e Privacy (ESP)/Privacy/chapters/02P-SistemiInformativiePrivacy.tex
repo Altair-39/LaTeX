@@ -180,10 +180,154 @@
   \item Vengono separate le responsabilità per prevenire accessi illeciti.
 \end{itemize}
 
-\subsection{Tracciabilità}
+\subsection{Tracciabilità mediante Auditing}
+
+\dfn{Auditing}{
+  L'auditing è il processo di esaminazione e validazione di documenti, dati, processi, procedure, sistemi.
+}
+
+\cor{Audit Log}{
+  Documento in cui si memorizzano in ordine cronologico tutte le attività di interesse.
+}
+
+\cor{Audit Objectives}{
+  Insieme di business rules, controlli di sistema, regolazioni di governi, policies di sicurezza.
+}
+
+\paragraph{Altre definizioni:}
+
+\begin{itemize}
+  \item \fancyglitter{Auditor:} persona autolizzata a fare audit. 
+  \item \fancyglitter{Audit procedure:} insieme di istruzioni per il processo di auditing. 
+  \item \fancyglitter{Audit report:} documento contenente tutti i risultati dell'audit.
+  \item \fancyglitter{Audit trail:} record cronologico di cambiamenti su documenti e dati, attività di sistema od operazioni.
+\end{itemize}
+
+\paragraph{Tipi di audit:}
+
+\begin{itemize}
+  \item Interno: esaminazione di attività condotte da membri dello staff. 
+  \item Esterno: esaminazione di attività condotte da terze parti.
+\end{itemize}
+
+\paragraph{Attività di auditing (fig: \ref{fig:auditing}):}
+
+\begin{itemize}
+  \item Identificare problemi di sicurezza. 
+  \item Stabilire piani, politiche e procedure. 
+  \item Assicurarsi che gli elementi contrattuali siano riscontrati. 
+  \item Organizzare incontri tra team di verifica. 
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.53]{02P/auditing.png}
+    \caption{Processo di auditing.}
+    \label{fig:auditing}
+
+  \end{figure}
+
+\paragraph{Modelli di auditing:}
+
+\begin{itemize}
+  \item \fancyglitter{Modello 1:}
+    \begin{itemize}
+      \item Registra le entità in un repository. 
+      \item Tiene traccia delle attività performate.
+    \end{itemize}
+  \item \fancyglitter{Modello 2:}
+    \begin{itemize}
+      \item Memorizza solo i valori delle colonne. 
+      \item C'è un meccanismo di archiviazione. 
+      \item Non registra le azioni performate sui dati. 
+      \item Ideale per fare auditing di una o due colonne di una tabella.
+    \end{itemize}
+\end{itemize}
+
+\section{Controllo del Rilascio di Informazioni Statistiche}
+
+\paragraph{I databases sono risultati del collezionamento di dati di diversa provenienza:}
+
+\begin{itemize}
+  \item Web. 
+  \item Social media. 
+  \item Smartphones. 
+  \item etc.
+\end{itemize}
+
+\nt{Molte di queste informazioni sensibili potrebbero essere utili per un'analisi dei dati.}
+
+\paragraph{Spesso i dati per scopi statistici sono rilasciati come:}
+
+\begin{itemize}
+  \item Open data: uso del web per rappresentare i legami tra le pagine. 
+  \item Datasets per riproducibilità degli esperimenti. 
+  \item Data challenge. 
+  \item Politiche/Regolamenti.
+\end{itemize}
+
+\nt{In alcuni casi (e.g. Netflix nel 2006) i dati sono stati usati per inferire informazioni oltre lo scopo per cui sono stati rilasciati.}
+
+\subsection{Disclosure}
+
+\dfn{Disclosure}{
+  Un disclosure può:
+  \begin{itemize}
+    \item Occorrere basandosi solamente sui dati rilasciati. 
+    \item Risultare da combinazioni dei dati rilasciati con dati esterni che potrebbero o meno essere disponibili al pubblico.
+  \end{itemize}
+}
+
+\paragraph{Macrodata e Microdata:}
+
+\begin{itemize}
+  \item \fancyglitter{Macrodata:} spesso ottenuta con aggregazioni di tipo statistico:
+    \begin{itemize}
+      \item \evidence{Conti/Frequenza:} ogni cella di una tabella contiene il conto o la frequenza delle situazioni.
+      \item \evidence{Magnitudo:} ogni cella di una tabella contiene un valore aggregato di una quantità di interesse.
+    \end{itemize}
+  \item \fancyglitter{Microdata:} grana fine, su singole persone (rischio maggiore di data breach).
+\end{itemize}
+
+\qs{}{Come può avvenire questo rilascio non voluto di informazioni?}
+
+\begin{itemize}
+  \item Inferenza su sondaggi statistici (inferential disclosure):
+    \begin{itemize}
+      \item Avviene quando le informazioni possono essere inferite con alta confidenza per via di proprietà statistiche dei dati. 
+      \item Questo tipo di disclosure è difficilmente gestibile perché in linea teorica si può fare inferenza su qualsiasi dato e quindi nessun dato potrebbe essere rilasciato. 
+      \item L'inferenza serve per predirre aggregati, non singoli valori.
+    \end{itemize}
+  \item Informazioni sensibili (attribute disclosure):
+    \begin{itemize}
+      \item Avviene se si riescono a stimare le informazioni di un attributo.
+    \end{itemize}
+  \item Direttamente sui dati rilasciati (identity disclosure):
+    \begin{itemize}
+      \item Avviene quando una terza parte può identificare il soggetto. 
+      \item Nel caso dei macrodata non è particolarmente pericoloso. 
+      \item Per i microdata è un problema perché sono più personali.
+    \end{itemize}
+\end{itemize}
+
+\nt{I microdata contengono specifici identificatori: nome, numero telefonico, email, codice fiscale, etc. Il primo step per trattare i microdata è quello di eliminare o crittografare quelle colonne.}
+
+\subsection{Statistical Disclosure Control}
+
+\dfn{Statistical Disclosure Control}{
+  È una collezione di metodi che sono usati come parte del processo di anonimizzazione per controllare l'accesso ai dati.
+}
+
+\nt{Quest'attività non è strettamente considerata a favore della privacy (fig: \ref{fig:data}).}
 
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{02P/data.png}
+    \caption{Utilità vs. Privacy.}
+    \label{fig:data}
 
+  \end{figure}
 
 
 
