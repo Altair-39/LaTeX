@@ -6,6 +6,7 @@
 \input{enviroment/titlepage.sty}
 \input{enviroment/toc.sty}
 \usepackage{fancyhdr}
+\usepackage{caption}
 \usepackage{float}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \RequirePackage[times]{quotchap}
@@ -55,6 +56,19 @@
 %\afterpage{\blankpage}
 
 %---------------------------------------
+
+
+
+\clearpage
+\thispagestyle{empty}
+
+\vspace*{\fill}
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.6]{wm.png}
+    \caption*{White Miku vi augura buona fortuna.}
+\end{figure}
+\vspace*{\fill}
 
 
 \end{document}
