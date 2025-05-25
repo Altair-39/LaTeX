@@ -153,8 +153,58 @@ Un'ennesima applicazione degli LLMs è quella di usarli come sistemi di ricerca.
 
 \section{RAG e Chunking}
 
+Uno dei limiti degli LLMs è che non sempre dispongono di informazioni aggiornate o specifiche. Per cui si introduce un nuovo paradigma \fancyglitter{Retrieval-Augmented Generation} (RAG) che combina la generazione degli LLMs con il recupero da fonti precise o database.
 
+\qs{Che cos'è il RAG?}
 
+\paragraph{Il RAG si basa su:}
 
+\begin{itemize}
+  \item \fancyglitter{Retrieval:} il sistema usa un motore di ricerca interno per individuare i documenti. 
+  \item \fancyglitter{Generation:} i documenti vengono forniti al LLM come contesto per generare una risposta.
+\end{itemize}
 
+\subsection{Il Chunking}
+
+\dfn{Chunking}{
+  Il chunking consiste nella suddivisione dei documenti testuali in blocchi (chunk) di dimensioni gestibili, da indicizzare e recuperare successivamente. 
+}
+
+\paragraph{Aspetti chiave del chunking:}
+
+\begin{itemize}
+  \item \fancyglitter{Dimensione:} un chunk troppo lungo può superare il limite di contesto del modello, ma uno troppo breve è poco informativo. Solitamente è tra 200 e 500 token. 
+  \item \fancyglitter{Sovrapposizione (overlap):} si prevede sovrapposizione tra chunk adiacenti per evitare di perdere informazioni nei punti di separazione. 
+    \item \fancyglitter{Segmentazione intelligente:} i chunk non devono interrompere a metà frasi e concetti.
+\end{itemize}
+
+\paragraph{Metodi di chunking:}
+
+\begin{itemize}
+  \item A livello di token/carattere: semplice, ma inefficace a livello semantico. 
+  \item A livello di frase: mantiene l'integrità delle frasi, migliora la coerenza. 
+  \item Semantico: sfrutta tecniche di \textit{sliding windows} e calcolo della divergenza per individuare confini nei contenuti. 
+\end{itemize}
+
+\nt{Dopo aver generato i chunk è necessario convertirli in vettori tramite modelli di embedding e salvarli in un indice vettoriale. Quando l'utente pone una domanda essa viene trasformata in embedding e confrontata (in genere con la cosine similarity).}
+
+\paragraph{Prompting nel RAG:}
+
+\begin{itemize}
+  \item Si delimita chiaramente il contesto fornito. 
+  \item Si specifica che la risposta deve essere limitata al contesto dato. 
+  \item Si indica il formato dell'output.
+\end{itemize}
+
+\paragraph{Vantaggi e limiti:}
+
+\begin{itemize}
+  \item [\textcolor{green}{\ding{51}}] Aggiornabilità: si può facilmente aggiornare fornendo nuovi documenti. 
+ \item [\textcolor{green}{\ding{51}}] Controllo sulle fonti: l'utente o l'organizzazione ha un controllo diretto sulle fonti utilizzate, questo permette un comportamento più prevedibile e personalizzabile.
+    \item [\textcolor{green}{\ding{51}}] Tracciabilità delle risposte: si possono fornire riferimenti diretti alle fonti utilizzate. 
+       \item [\textcolor{red}{\ding{55}}] Rischio di falsa sicurezza: il modello può comunque generare informazioni sbagliate (allucinazioni). 
+          \item [\textcolor{red}{\ding{55}}] Limitazioni del contesto: anche se vengono recuperati molti chunk pertinenti solo una parte andrà a costituire la risposta. 
+
+             \item [\textcolor{red}{\ding{55}}] Dipendenza dalla quantità del retrieval: l'efficacia del sistema dipende da quanto può recuperare informazioni. 
+\end{itemize}
 
