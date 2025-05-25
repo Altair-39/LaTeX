@@ -49,11 +49,109 @@
     \end{itemize}
 \end{itemize}
 
+\section{LLM e Prompting}
 
+Gli LLMs sono modelli di intelligenza artificiale utilizzati per generare testi. Ne esistono di vari tipi, una prima distinzione può essere in:
 
+\begin{itemize}
+  \item \fancyglitter{Basici:} in grado di generare testo tramite predizioni statistiche ma non in grado di rispondere a domande specifiche. 
+  \item \fancyglitter{Instructed:} addestrati con domande e risposte. Possono essere guidati in direzioni specifiche.
+\end{itemize}
 
+\subsection{Prompting}
 
+\dfn{Prompting}{
+  Il prompting è il processo che consiste nel fornire al modello di intelligenza artificiale un input specifico per guidarlo nella generazione di un output desiderato.
+}
 
+\paragraph{Linee guida del prompting:}
+
+\begin{itemize}
+  \item Istruzioni chiare e specifiche: è importante fornire al modello di IA delle istruzioni chiare per comprendere esattamente ciò che gli si sta chiedendo. 
+  \item Uso dei segni di punteggiatura: per specificare meglio le richieste è necessario usare una corretta punteggiatura. 
+  \item Richiesta di formato di output: si può specificare il formato con cui si vuole restituito l'output.
+  \item Iterative Prompting Development: è possibile raffinare il processo di prompting attraverso un approccio iterativo.
+\end{itemize}
+
+\paragraph{Strategie di prompting:}
+
+\begin{itemize}
+  \item Prompting basato su sequenze di istruzioni: si può usare il prompting per fornire al modello una serie di istruzioni.
+  \item Prompting iterativo: si può chiedere al modello di eseguire $n$ ministep per arrivare a una conclusione.
+  \item Prompting basato su dialoghi: se l'input è il dialogo tra più persone si può usare il prompting per continuarlo.
+  \item Forza il modello a ragionare in "modo piano": si forza il modello a effettuare una serie di ragionamenti prima di fornire la risposta.
+  \item \textit{Chain of Thought} (CoT): richiesta di feedback, per fare in modo che il modello segnali eventuali errori o imprecisioni.
+\end{itemize}
+
+\subsection{Summarization e Inferenza}
+
+Come accennato in precedenza gli LLMs possono essere usati per riassumere testi tenendo intatto il significato originale. Questo processo avviene attraverso la generazione di un testo di output che contiene le informazioni più rilevanti di un testo di input. Questa sintesi può essere personalizzata specificando il numero di token, frasi o caeratteri, etc. Inoltre è possibile specializzare l'output, concentrandosi solo su particolari caeratteristiche. 
+
+Un altro utilizzo consiste enll'utilizzare gli LLMs per fare inferenza e \textit{sentiment analysis} (capire se un certo testo è positivo o meno su un determinato argomento).  Tradizionalmente la sentiment analysis veniva fatta annotando manualmente testi e creando modelli di classificazione. Attualmente può essere gestito tutto a livello di prompting.
+
+\clm{}{}{
+  \begin{itemize}
+    \item È possibile richiedere informazioni in modo flessibile e personalizzabile.
+    \item Si possono usare LLMs per trovare gli argomenti principali di un testo.
+  \end{itemize}
+}
+
+\subsection{Trasformazione ed Espansione}
+
+Gli LLMs possono anche essere usati per trasformare dei testi: cambiare formato, tradurli, cambiare stile, etc. 
+
+\paragraph{Task di trasformazione:}
+
+\begin{itemize}
+  \item Traduzione: uno dei principali, si può anche rilevare automaticamente la lingua. 
+  \item Trasformare lo stile: da formale a informale e viceversa. 
+  \item Trasformare da JSON a HTML, etc, correzione di errori ortografici, etc.
+\end{itemize}
+
+Una delle applicazioni più potenti degli LLMs è l'espansione: consentire agli utenti di allungare del contenuto in input. L'utente fornisce al modello un testo e il modello usa la sua comprensione del linguaggio e del contesto per generare altro testo. Un esempio: un utente fornisce un insieme schematico di punti e chiede al modello di generare un email partendo da essi. Quando si vuole genere testo si deve anche tenere conto della \fancyglitter{temperatura}. 
+
+\dfn{Temperatura}{
+  La temperatura è un parametro che controlla la variabilità dell'output: con temperatura bassa il modello genera risposte prevedibili, con temperatura alta diventa "creativo".
+}
+
+\qs{}{Perché la temperatura è importante?}
+
+\begin{itemize}
+  \item Per documenti tecnici è preferibile un output preciso, quindi con temperatura bassa. 
+  \item Per la scrittura creativa e il copywriting viene preferita una temperatura alta.
+\end{itemize}
+
+Un'ennesima applicazione degli LLMs è quella di usarli come sistemi di ricerca. Esistono vari approcci:
+
+\begin{itemize}
+  \item Utilizzare prompt basati su NLP che imitano gli esseri umani. 
+  \item Utilizzare prompt specifici e dettagliati, fornendo ulteriore contesto e vincoli. 
+\end{itemize}
+
+\nt{Gli LLMs hanno limiti per questi compiti: possono produrre errori o risultati non pertinenti. Un altro problema consiste nel fatto che si può fare retrieval di informazioni non aggiornate.}
+
+\subsection{Aspetti Pratici del Prompting}
+
+\paragraph{Il prompting riguarda diverse componenti:}
+
+\begin{itemize}
+  \item Istruzioni: una specifica attività che il modello deve seguire. Si devono testare vari tipi di istruzioni per trovare quelle più adatte al proprio scopo.
+  \item Contesto: include informazioni esterne. 
+  \item Input di dati: si riferisce all'input o alla domanda. 
+  \item Indicatore di output: indica il tipo e il formato di output. 
+\end{itemize}
+
+\nt{Un altro suggerimento è quello di evitare le negazioni.}
+
+\paragraph{Specifiche ulteriori:}
+
+\begin{itemize}
+  \item \fancyglitter{Zero-shot:} non si fornisce alcun suggerimento riguardo ciò che ci si aspetta. 
+  \item \fancyglitter{Few-shot:} si specifica cosa si intende con una determinata etichetta e cosa ci si aspetta in output. 
+  \item \fancyglitter{Chain of Thought:} si richiede al modello di esplicitare i passaggi svolti per aumentare le performance.
+\end{itemize}
+
+\section{RAG e Chunking}
 
 
 
