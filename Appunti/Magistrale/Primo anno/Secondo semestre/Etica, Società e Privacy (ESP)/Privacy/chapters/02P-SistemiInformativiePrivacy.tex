@@ -320,17 +320,194 @@
 
 \nt{Quest'attività non è strettamente considerata a favore della privacy (fig: \ref{fig:data}).}
 
-
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.6]{02P/data.png}
     \caption{Utilità vs. Privacy.}
     \label{fig:data}
 
-  \end{figure}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.65]{02P/SDC.png}
+    \caption{Ciclo di Statistical Disclosure Control (SDC).}
+\end{figure}
+
+\paragraph{I passi per proteggere i dati sono:}
+
+\begin{enumerate}
+  \item Definire i \fancyglitter{quasi identificatori}. 
+  \item Una piccola percentuale di quasi identificatori (generalmente meno del 5\%) possono essere identificati.
+  \item Calcolare le frequenze per le combinazioni di quasi identificatori. 
+  \item Effettuare il \fancyglitter{recoding} dei valori degli attributi (e.g. discretizzazione\footnote{Associare un valore costante di un intervallo associato a un valore continuo.}). 
+  \item Applicare metodi SDC. 
+  \item Effettuare una soppressione locale delle variabili di identificazione se ci sono ancora dei records che richiedono protezione.
+\end{enumerate}
+
+\paragraph{Metodi SDC per i macrodata:}
+
+\begin{itemize}
+  \item \fancyglitter{Non-perturbativi:} non modificano i valori delle celle:
+    \begin{itemize}
+      \item Soppressione della cella (CS, Cell Suppression). 
+    \end{itemize}
+  \item \fancyglitter{Perturbativi:} modificano i valori delle celle: 
+    \begin{itemize}
+      \item Arrotondamento casuale dei valori nelle celle (RR, Random Rounding). 
+      \item Arrotondamento controllato dei valori nelle celle (CR, Controlled Rounding). 
+      \item Se con tabelle statistiche si possono modificare le frequenze (CTA, Controlled Tabular Adjustment).
+    \end{itemize}
+\end{itemize}
 
 
+\dfn{Cell Suppression}{
+  In una tabella si possono sopprimere delle celle (fig: \ref{fig:cs}): 
+  \begin{itemize}
+    \item Soppressione primaria: non si pubblicano le celle ritenute a rischio. 
+    \item Soppressione secondaria: non si pubblicano celle non a rischio per aumentare la protezione delle celle a rischio.
+  \end{itemize}
+}
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{02P/cs.png}
+    \caption{Esempio di Cell Suppression.}
+    \label{fig:cs}
+\end{figure}
 
+\dfn{Rounding e Tabular}{
+\begin{itemize}
+  \item Random Rounding: viene deciso in modo randomico se effettuare un arrotondamento per difetto o per eccesso.
+  \item Controlled Rounding: arrotondamento classico.
+  \item Controlled Tabular Adjustment (fig: \ref{fig:rt}): i valori delle celle sensibili sono rimpiazzati da valori simili e le altre celle sono modificate di conseguenza per correggere i valori totali delle righe e delle colonne.
+\end{itemize}
+}
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{02P/rt.png}
+    \caption{Esempio di CTA.}
+    \label{fig:rt}
+\end{figure}
 
+\paragraph{Metodi SDC per query:}
+
+\begin{itemize}
+  \item \fancyglitter{Perturbativi:} si può applicare una perturbazione sia all'input della query che all'output.
+  \item \fancyglitter{Restrittivi:} si rifiuta di rispondere a certe query.
+\end{itemize}
+
+\paragraph{Metodi SDC per i microdata:}
+
+\begin{itemize}
+  \item \fancyglitter{Data Masking:} genera versioni modificate dei microdata.
+  \item \fancyglitter{Data Synthesis:} genera versioni sintetiche dei microdata.
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{02P/query.png}
+    \caption{Sicurezza di databases statistici (SDB).}
+\end{figure}
+
+\dfn{Masking Perturbativo}{
+  \begin{itemize}
+    \item Aggiunta di rumore: 
+      \begin{itemize}
+        \item Aggiungere a ogni record un rumore. 
+        \item Media e correlazioni possono essere preservate. 
+      \end{itemize}
+    \item Microaggressioni: 
+      \begin{itemize}
+        \item Partizionare i records in gruppi (basati su similarità). 
+        \item Solo la media per ogni gruppo è pubblicata.
+      \end{itemize}
+    \item Data swapping: 
+      \begin{itemize}
+        \item I valori per ogni attributo sono ordinati in ordine crescente. 
+        \item I valori sono scambiati casualmente in un range ristretto. 
+      \end{itemize}
+    \item Post randomizzazione:
+      \begin{itemize}
+        \item Lavora su attributi categorici. 
+        \item Gli attributi sensibili sono cambiati secondo determinate matrici.
+      \end{itemize}
+  \end{itemize}
+}
+
+\dfn{Masking non Perturbativo}{
+  \begin{itemize}
+    \item Sampling: pubblicare un campione dei dati originali. 
+    \item Generalizzazione: 
+      \begin{itemize}
+        \item Gli attributi categorici sono combinati in categorie meno specifiche. 
+        \item Gli attributi numerici sono sostituiti da intervalli.
+      \end{itemize}
+    \item Top/Bottom coding: valori sopra/sotto un threshold sono sostituiti da un estremo (simile all'arrotondamento, ma adattativo). 
+    \item Soppressione locale:
+      \begin{itemize}
+        \item Alcuni attributi sono sostituiti. 
+        \item Aumentare la dimensione dei gruppi.
+      \end{itemize}
+  \end{itemize}
+}
+
+\paragraph{Sintesi dei dati per i microdata:}
+
+\begin{itemize}
+  \item \fancyglitter{Goal:} rilasciare un dataset mantenendo i dati confidenziali.
+  \item \fancyglitter{Metodi:}
+    \begin{itemize}
+      \item \evidence{Fully Synthetic Data:} sintetizzare tutto il dataset. 
+      \item \evidence{Partially Synthetic Data:} sintetizzare solo le variabili sensibili.
+    \end{itemize}
+  \item \fancyglitter{Problemi:}
+    \begin{itemize}
+      \item I dati sintetizzati devono avere validità per analisi statistiche.
+      \item La sintesi dei dati dipende dal modello usato. 
+        \item \evidence{Overfitting:} records sintetici troppo simili ai records originali potrebbero favorire la reidentificazione.
+    \end{itemize}
+\end{itemize}
+
+\nt{Spesso è difficile misurare l'utilità perché non si sa cosa si voglia fare sui dati. Si potrebbe avere \fancyglitter{perdita di informazioni} (più è grande peggio è).}
+
+\paragraph{Perdita di informazioni per macrodata:}
+
+\begin{itemize}
+  \item \fancyglitter{Cell Suppression:} misura del numero delle soppressioni.
+  \item \fancyglitter{Rounding and Tabular:} somma delle distanza tra i valori veri e quelli perturbati.
+\end{itemize}
+
+\paragraph{Perdita di informazioni per query:}
+
+\begin{itemize}
+  \item \fancyglitter{Perturbazione:} differenza tra query non perturbata e query effettiva.
+  \item \fancyglitter{Restrizione:} il numero di query rifiutate.
+\end{itemize}
+
+\paragraph{Perdita di informazioni per microdata:}
+
+\begin{itemize}
+  \item Valutazione di quanto SDC cambi l'output di un'analisi. 
+  \item Altre misure base (statistiche, punteggi, distanze, etc.). Si vanno a calcolare le divergenze di Kullback-Leibler (KL) e di Jensen-Shannon (JS).
+\end{itemize}
+
+\subsection{Divergenze di Kullback-Leibler e Jensen-Shannon}
+
+\dfn{Kullback-Leibler}{
+  La divergenza misura quanto una distribuzione di probabilità perturbata $P(x)$ sia diversa dalla distribuzione di probabilità originaria $Q(x)$ con $x$ il valore di una varibile casuale. È definita come l'entropia relativa di $P$ dato $Q$: 
+
+$$KL(P \parallel Q) = \sum_{x \in \mathcal{X}} P(x) \log \left( \frac{P(x)}{Q(x)} \right)$$
+
+}
+
+\nt{Però KL non è simmetrica, per cui si introduce JS.}
+
+\dfn{Jensen-Shannon}{
+ La divergenza misura la similarità mediante KL. Tuttavia JS la simmetrizza ed effettua smoothing: 
+
+$$JS(P \parallel Q) = \frac{1}{2} KL(P \parallel M) + \frac{1}{2} KL(Q \parallel M) \\
+\text{with } M = \frac{1}{2}(P + Q)$$
+
+}
