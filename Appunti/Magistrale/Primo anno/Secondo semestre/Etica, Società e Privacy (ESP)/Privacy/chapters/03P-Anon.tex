@@ -336,4 +336,182 @@ La differential privacy è un framework matematico per rilasciare informazioni s
 
 \nt{Minore è $\epsilon$ maggiore è la garanzia di privacy.}
 
-\section{Calcolo Distribuito e Privato}
+\dfn{Meccanismo di Laplace}{
+Dato un dataset $D$ è una query $q$ il meccanismo di Laplace restituisce im valore estratto da una distribuzione di Laplace $Lap(\mu, \sigma)$ centrata nel risultato vero $q(D)$.
+$$\mathcal{M}_{\text{Lap}} : (D, q) \mapsto \text{Lap}\left(q(D), \frac{\text{GS}_1(q)}{\varepsilon}\right)$$ 
+
+$$\mathcal{M}_{\text{Lap}} : (D, q) \mapsto q(D) + \text{Lap}\left(0, \frac{\text{GS}_1(q)}{\varepsilon}\right)$$
+
+}
+
+\cor{Global Sensitivity}{
+  La global sensitivity è una misura di quanto è sensibile la variazione della risposta $q$ quando è calcolata su due datasets adiacenti 
+
+  $$S_1(q) = \max_{D \sim D'} \|q(D) - q(D')\|_1$$
+}
+
+\thm{Meccanismo di Laplace}{
+Il meccanismo di Laplace preserva la $\epsilon$-differential privacy.
+}
+
+\paragraph{Oltre il meccanismo di Laplace:}
+
+\begin{itemize}
+  \item Queries non numeriche: in questo caso non ha senso applicare una perturbazione numerica. 
+  \item Differentially private selection: in alcuni casi anche un'aggiunta piccola può cambiare enormemente il risultato.
+\end{itemize}
+
+\dfn{Meccanismo Esponenziale}{
+Consideriamo $R$ come l'insieme dei possibili output di una query $q$. $q$ restituisce il valore $r \in R$ che massimizza una funzione di utilità $U: \Omega \times R \to \bbR$.
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{03P/esp.png}
+    \caption{Meccanismo esponenziale.}
+\end{figure}
+
+\thm{Post-processing}{
+  Consideriamo $\mathcal{M}: \Omega \to \mathcal{R}$ come meccanismo di preservazione della $\epsilon$-differential privacy e $f$ come funzione con dominio $\mathcal{R}$. Allora $f \circ \mathcal{M}$ preserva la $\epsilon$-differential privacy.
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.41]{03P/pp.png}
+    \caption{Teorema di post-processing.}
+\end{figure}
+
+\thm{Composizione}{
+  Consideriamo $\mathcal{M}_1: \Omega \to \mathcal{R}$ e  $\mathcal{M}_2: \Omega \to \mathcal{S}$ come meccanismi di preservazione della $\epsilon_{1,2}$-differential privacy. Allora il meccanismo $\mathcal{N}: \Omega \to \mathcal{R} \times \mathcal{S}$ tale che $\mathcal{N}(D) = (\mathcal{M}_1(D), \mathcal{M}_2(D))$ preserva sia la privacy di $\epsilon_1$ che di $\epsilon_2$.
+} 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.41]{03P/comp.png}
+    \caption{Teorema di composizione.}
+\end{figure}
+
+\thm{Composizione Parallela}{
+  Consideriamo $D \in \Omega$ come dataset e $\mathcal{M}: \Omega \to \mathcal{R}$ come meccanismo di preservazione della $\epsilon$-differential privacy, inoltre $D_1 \cup D_2$ formano un partizionamento di $D$. Il meccanismo $\mathcal{N}: \omega \to \mathcal{R} \times \mathcal{R}$ tale che $\mathcal{N}(D) = (\mathcal{M}(D_1), \mathcal{M}(D_2))$ soddisfa la $\epsilon$-differential privacy.
+
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.41]{03P/pc.png}
+    \caption{Teorema di composizione parallela.}
+\end{figure}
+
+\dfn{($\epsilon, \delta$)-Differential Privacy}{
+  Versione rilassata dell'$\epsilon$-differential privacy in cui è aggiunto un valore di tolleranza $\delta \in (0, 1)$. 
+}
+
+\paragraph{Caratteristiche:}
+
+\begin{itemize}
+  \item $\delta$ rappresenta una \fancyglitter{probabilità di fallimento} del meccanismo. 
+  \item I teoremi appena visti continuano a valere. 
+  \item Quando $\delta = 0$ coincide con la $\epsilon$-differential privacy. 
+  \item Questo meccanismo è più debole dell'$\epsilon$-differential privacy: si ammettono fallimenti e la privacy non può essere preservata in alcuni casi.
+\end{itemize}
+
+\nt{Esistono ulteriori meccanismi che utilizzano la funzione gaussiana (funziona meglio con $\epsilon$ grande).}
+
+\section{Privacy in Sistemi Distribuiti}
+
+L'approccio tradizionale all'analisi dei dati da fonti distribuite è quello di raccogliere i dati una data warehouse centrale. Questo causa problemi di performance e connettività.
+
+\paragraph{Analisi dei dati distribuiti:}
+
+\begin{itemize}
+  \item Semplicemente creare un algoritmo di ML non funziona. 
+  \item I problemi relativi alla data warehouse persistono. 
+\end{itemize}
+
+\paragraph{A chi interessa quest'analisi?}
+
+\begin{itemize}
+  \item Governo e agenzie pubbliche. 
+  \item Multinazionali. 
+  \item Industrie. 
+\end{itemize}
+
+\paragraph{Classi di soluzione:}
+
+\begin{itemize}
+  \item \fancyglitter{Data obfuscation:} nessuno vede i dati reali. 
+  \item \fancyglitter{Sommarizzazione:} solo i fatti necessari sono esposti. 
+  \item \fancyglitter{Data separation:} 
+    \begin{itemize}
+      \item Solo parti fidate vedono i dati. 
+      \item Approcci:
+        \begin{itemize}
+          \item I dati sono tenuti dai possessori o dai creatori. 
+          \item Rilasci minimi. 
+          \item Operazioni e analisi fatte da parti fidate. 
+        \end{itemize}
+      \item Problemi: 
+        \begin{itemize}
+          \item La parte fidata è desiderosa di fare le analisi? 
+          \item I risultati delle analisi possono rivelare informazioni private?
+        \end{itemize}
+      \item Soluzioni:
+        \begin{itemize}
+          \item Secure Multiparty Computation. 
+          \item Federate learning.
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+\dfn{Secure Multiparty Computation}{
+  L'obiettivo è calcolare una funzione quando ogni parte ha qualche input.
+}
+
+\cor{1-out-2 Oblivious Transfer}{
+  Prende in considerazioni due parti, il sender e il receiver. Il sender ha in input una coppia (x0, x1) e il receiver ha in input un bit $\sigma \in {0, 1}$ che specifica quale input è in grado di leggere. 
+}
+
+\nt{Il protocollo è strutturato in modo che il receiver impara $x_\sigma$ e niente altro e il sender non impara nulla.}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.41]{03P/ab.png}
+    \caption{Esempio classico.}
+\end{figure}
+
+\paragraph{Sicurezza del protocollo:}
+
+\begin{itemize}
+  \item Per il sender: un receiver corrotto non impara informazioni addizionali diverse dal messaggio che ha dichiarato di voler leggere. 
+  \item Per il receiver: un sender corrotto non impara nulla sul receiver.
+\end{itemize}
+
+\paragraph{ID3 Algorithm:}
+
+\begin{enumerate}
+  \item Calcolo del guadagno di informazione per ogni feature. 
+  \item Se tutte le righe non appartengono alla stessa classe splitta il dataset in sottoinsiemi usando la feature con minima entropia. 
+  \item Crea un \fancyglitter{decision tree node} con la feature con minore entropia. 
+  \item Se tutte le righe appartengono alla stessa classe rendi il nodo corrente una foglia con la classe come sua label. 
+  \item Ripeti per le rimanenti features o finché il decision tree ha solo nodi foglia.
+\end{enumerate}
+
+\paragraph{Altri approcci complementari:}
+
+\begin{itemize}
+  \item Crittografia funzionale: 
+    \begin{itemize}
+      \item Generalizzazione della crittografia a chiave pubblica. 
+    \end{itemize}
+  \item Crittografia omomorfica: 
+    \begin{itemize}
+      \item Forma di crittografia che permette di effettuare calcoli su dati criptati senza decriptarli. 
+      \item I risultati sono contenuti in forma criptata.
+    \end{itemize}
+  \item Federated learning: 
+    \begin{itemize}
+      \item Consente di allenare un algoritmo su molti dispositivi-vertici decentralizzati senza effettuare scambi.
+    \end{itemize}
+\end{itemize}
+
+
