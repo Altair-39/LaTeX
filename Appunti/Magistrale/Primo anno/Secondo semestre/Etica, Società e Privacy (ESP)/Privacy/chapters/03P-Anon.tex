@@ -229,6 +229,111 @@ Il problema di trovare le tabelle con la minima k-anonimity, con generalizzazion
 
 \section{Oltre la K-Anonimity}
 
-\section{Differential Privacy}
+\subsection{Problemi con la K-Anonimity}
 
+\paragraph{Tipi di attacchi:}
+\begin{itemize}
+  \item Homogeneity attack: può accadere quando tutte le tuple con i quasi identificatori in una tabella k-anonimizzata hanno gli stessi valori di attributi sensibili.
+  \item Background knowledge attack:  si basa su conoscenza pregressa con informazioni esterne.
+\end{itemize}
+  
+\paragraph{Una tabella può rilasciare accidentalmente informazioni in due possibili modi:}
 
+\begin{itemize}
+  \item \fancyglitter{Positive diclosure:} pubblicando i valori della tabella si può identificare con alta probabilità una persona.
+  \item \fancyglitter{Negative disclosure:} pubblicando i valori della tabella si possono eliminare correttamente alcuni dei possibili valori (se iterata può portare a una positive disclosure).
+\end{itemize}
+
+\paragraph{Alcune definizioni:}
+
+\begin{itemize}
+  \item PT: tabella privata. 
+  \item GT: tabella generalizzata. 
+  \item $q$: valore di un attributo non sensibile $Q$ in PT. 
+  \item $q*$: valore generalizzato di $Q$ in GT. 
+  \item $s$: possibile valore dell'attributo sensibile $S$. 
+  \item $n(q*, s)$: numero delle tuple $t* \in$ GT dove $t*[Q] = q*$ e $t*[S] = s$. 
+  \item $q*$-block (classe di equivalenza): l'insieme di tuple in GT i cui valori non sensibili di $Q$ sono generalizzati come $q*$.
+\end{itemize}
+
+\dfn{Mancanza di Diversità}{
+  La mancanza di diversità avviene quando: 
+  $$\forall s' \neq s, \quad n(q^{*}, s') \ll n(q^{*}, s)$$
+}
+
+\nt{In altre parole: esistono attributi sensibili molto più rappresentati di altri. Se si sa che una persona è nella PT si può inferire la sua tupla con elevata accuratezza.}
+
+\cor{l-diversity}{
+Per assicurare la diversità in un $q*$-block dovrebbe avere almeno $l \geq 2$ diversi valori sensibili tali che il valore $l$ più frequente abbia all'incirca la stessa frequenza.
+}
+
+\nt{Scegliendo bene il parametro $l$ si può determinare il grado di protezione contro Background knowledge.}
+
+\dfn{l-diversity basata sull'Entropia}{
+  Una tabella GT l-diversa è basata sull'entropia se per ogni $q*$-block: 
+
+  $$\sum_{s \in S} p(q^{*}, s) \log\left(p(q^{*}, s)\right) \geq \log(l)$$
+
+dove $p(q^\ast, s) = \frac{n(q^\ast, s)}{\sum_{s' \in S} n(q^\ast, s')}$ è la frazione di tuple nel $q*$-block con attributi sensibili uguali a $s$.
+
+}
+
+\clm{}{}{
+  \begin{itemize}
+    \item l-diversity basata sull'entropia soddisfa la proprietà di \fancyglitter{monoticità}. 
+    \item Qualsiasi algoritmo per la k-anonimity può essere esteso per assicurare l-diversity.
+  \end{itemize}
+}
+
+\paragraph{Però la l-diversity ha dei problemi, è esposta ad attacchi basati sulla distribuzione dei valori nei $q*$-block:}
+
+\begin{itemize}
+  \item Skewness attack: quando la distribuzione dei $q$-block è diverso dalla popolazione originale.
+  \item Similarity attack: quando un $q$-block ha valori diversi ma semanticamente simili per i valori sensibili.
+\end{itemize}
+
+\subsection{Differential Privacy}
+
+\nt{Nel 2006 Cynthia Dwork propose la nozione di differential privacy.}
+
+\dfn{Differential Privacy}{
+La differential privacy è un framework matematico per rilasciare informazioni statistiche proteggendo contemporaneamente il dataset. Il modello è totalmente astratto rispetto alle caratteristiche implementative. 
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.41]{03P/dp.png}
+    \caption{I data owner possono fare hop out/hop in.}
+\end{figure}
+
+\paragraph{L'idea:}
+
+\begin{itemize}
+  \item Si studia l'effetto sulla query $q$ e sulla risposta di ogni singolo utente. 
+  \item Quando si aggiunge un record vuol dire che una persona ha fatto \fancyglitter{hop in}. 
+  \item Bisogna fare in modo che la risposta alla query sia leggermente randomizzata secondo una distribuzione di probabilità. Quindi se si fa due volte la stessa richiesta si riceveranno due risposte diverse vicine al valore esatto (fig: \ref{fig:lp}).
+  \item Per impedire che una persona faccia molte query e ne faccia la media il rumore delle risposte a quella persona aumenta in base al numero di query.
+  \item Assumiamo $\Omega$ come database e $Q$ come dominio di tutte le query.
+  \item Il meccanismo randomizzato è $$\begin{aligned}
+\mathcal{M}: \Omega \times Q &\to \mathcal{R} \\
+(D, q) &\mapsto q\overline{(D)}
+\end{aligned}$$
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.41]{03P/laplace.png}
+    \caption{Distribuzione di Laplace.}
+    \label{fig:lp}
+\end{figure}
+
+\nt{Si preferisce Laplace a Gauss perché discende molto velocemente.}
+
+\dfn{$\epsilon$-Differential Privacy}{
+  Un meccanismo $\mathcal{M}: \Omega \times Q \to  \mathcal{R}$ preserva la $\epsilon$-differential privacy, con $\epsilon > 0$ se, per qualsiasi query $q$ ogni datasets adiacenti $D, D' \in \Omega$ e ogni $r \in \mathcal{R}$: 
+  $$e^{-\varepsilon} \leq \frac{\mathbb{P}(\mathcal{M}(q, D) = r)}{\mathbb{P}(\mathcal{M}(q, D') = r)} \leq e^{\varepsilon}$$
+}
+
+\nt{Minore è $\epsilon$ maggiore è la garanzia di privacy.}
+
+\section{Calcolo Distribuito e Privato}
