@@ -199,6 +199,126 @@ $$
   \item \fancyglitter{Misurazione:} il processo in cui lo stato del mondo viene ridotto a tabelle di dati.
 \end{itemize}
 
+\paragraph{Il processo di misurazione:}
+
+\begin{itemize}
+  \item Spesso nel ML è dato per scontato. 
+  \item Vengono effettuate $N$ misurazioni su una proprietà osservabile $L$. 
+  \item Il valore convergerà alla lunghezza vera quando $N \rightarrow \infty$. 
+  \item Definizione alternativa: la $n$-esima misurazione $\hat l_n$ è correlata a $L$ tramite un errore additivo. 
+    $$\hat l_n = L + \epsilon_n$$
+  \item Se gli errori $\epsilon_n$ sono: 
+    \begin{itemize}
+      \item Normalmente distribuiti. 
+      \item Indipendenti. 
+      \item Con una varianza sufficientemente piccola. 
+    \end{itemize}
+  \item Allora $\frac{1}{N} \sum_{n=1}^N \hat i_n \rightarrow K$ con probabilità 1 quando $N \rightarrow \infty$.
+\end{itemize}
+
+\nt{Alcune caratteristiche possono essere \fancyglitter{non osservabili}, ma ciò non significa che siano \fancyglitter{impossibili da misurare}. Si deve ipotizzare un \fancyglitter{modello di misurazione}, ossia un modello statistico che colleghi il costrutto teorico non osservabile a una proprietà osservabile.}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Abbiamo abbastanza dati per certi gruppi di persone?
+    \item Siamo sicuri che le nostre misurazioni non siano di parte e non contengono bias nei confronti di certi gruppi?
+    \item L'assunzione di indipendenza è probabilmente falsa: gli errori non sono distribuiti equamente tra i gruppi.
+  \end{itemize}
+}
+
+\qs{}{Che fare?}
+
+\begin{itemize}
+  \item Finora ci si è basati su una comprensione intuitiva del pregiudizio/discriminazione. 
+  \item Lo studio dell'equità nel ML propone una serie di metodi per misurare l'equità di un modello di classificazione. 
+  \item Ma come si misura il costrutto teorico di \fancyglitter{equità}? Quali ipotesi si vanno a formulare?
+\end{itemize}
+
 \section{Discriminazione e Misure di Discriminazione}
+
+\qs{}{Che cos'è la discriminazione? Perché è sbagliata? La \fancyglitter{discriminazione algoritmica} è diversa da quella umana?}
+
+\subsection{Che Cos'è la Discriminazione?}
+
+\dfn{Discriminazione Diretta}{
+La discriminazione diretta è la pratica di trattare in modo diverso le persone in base alla loro appartenenza a un gruppo sociale rilevante.  
+}
+
+\nt{Nell'UE è disciplinata dall'articolo 21 della Carta dei Diritti Fondamentali.}
+
+\dfn{Discriminazione Indiretta}{
+La discriminazione indiretta è la pratica di offrire lo stesso trattamento a persone appartenenti a gruppi sociali distinti se ciò comporta che un gruppo di persone sia posto in una situazione di particolare svantaggio.
+}
+
+\ex{Hilde Schönheit contro Stadt Frankfurt am Main}{
+ Le pensioni dei dipendenti a tempo
+parziale erano calcolate utilizzando un tasso diverso da quello dei dipendenti a tempo
+pieno. Questo tasso diverso non era basato sulle differenze di tempo trascorso al lavoro.
+Pertanto, i dipendenti a tempo parziale ricevevano una pensione inferiore a quella dei
+dipendenti a tempo pieno, anche tenendo conto della diversa anzianità di servizio, il che
+significava, in pratica, che i lavoratori a tempo parziale erano retribuiti in misura inferiore.
+Questa norma neutra sul calcolo delle pensioni si applicava in modo uguale a tutti i
+lavoratori a tempo parziale. Tuttavia, poiché circa l'88\% dei lavoratori a tempo parziale
+erano donne, \fancyglitter{'effetto della norma era sproporzionatamente negativo per le donne
+rispetto agli uomini}.
+}
+
+\ex{ D.H. e altri contro Repubblica Ceca}{
+ Una serie di test era stata utilizzata per valutare
+l'intelligenza e l'idoneità degli alunni al fine di determinare se dovessero essere trasferiti
+dall'istruzione ordinaria a scuole speciali. Queste scuole speciali erano destinate a
+persone con disabilità intellettive e altre difficoltà di apprendimento. Lo stesso test è
+stato applicato a tutti gli alunni che erano stati presi in considerazione per l'inserimento
+in scuole speciali. Tuttavia, nella pratica il test era stato concepito per la popolazione
+ceca generale, con la conseguenza che gli studenti rom erano intrinsecamente più inclini
+a ottenere risultati scarsi, cosa che effettivamente è avvenuta, \fancyglitter{con la conseguenza che
+tra il 50\% e il 90\% dei bambini rom sono stati istruiti al di fuori del sistema
+scolastico tradizionale}.
+}
+
+\paragraph{La discriminazione indiretta ha alcuni risvolti interessanti:}
+
+\begin{itemize}
+  \item Si potrebbe non essere d'accordo che costituisca vera discriminazione. 
+  \item Un'argomentazione etica: nessuno \fancyglitter{aveva intenzione} di danneggiare determinati gruppi.
+\end{itemize}
+
+\subsection{Cosa Rende Sbagliata la Discriminazione?}
+
+\begin{itemize}
+  \item L'esistenza di una \fancyglitter{systematic animosity} (ostilità sistematica) a favore o contro determinati gruppi sociali rilevanti da parte di chi prende le decisioni è stata tradizionalmente la base per definire la discriminazione come sbagliata. 
+  \item Se chi prende le decisioni ha un \fancyglitter{intento} negativo allora sta commettendo discriminazione. 
+  \item Ma questo funziona per gli algoritmi?
+\end{itemize}
+
+\paragraph{Intenzione e Discriminazione:}
+
+\begin{itemize}
+  \item Se il possesso di stati mentali ostili sia necessario per definire la disriminazione allora i casi di studio riportati sopra non costituiscono discriminazione. 
+  \item Però gli algoritmi non possiedono stati mentali e gli scienziati che li progettano possono semplicemente affermare che non avevano determinate intenzioni. 
+  \item Inoltre la spiegazione basata su stati mentali non copre la discriminazione indiretta.
+  \item Un altro possibile motivo: fare inferenze sugli individui basate sui gruppi di cui fanno parte. Ossia non trattare le persone come individui.
+\end{itemize}
+
+\paragraph{Sono presenti diversi problemi:}
+
+\begin{itemize}
+  \item La definizione di generalizzazione. 
+  \item I mezzo di generalizzazione possono essere \fancyglitter{insufficientemente precisi}. 
+  \item Il processo decisionale algoritmico è ammissibile in queste condizioni? Un sistema di apprendimento automatico di solito esegue un'induzione (che è una generalizzazione).
+\end{itemize}
+
+\subsection{Egalitarismo}
+
+\dfn{Egalitarismo}{
+  L'egalitarismo è l'idea che le persone debbano essere trattate in modo uguale e che alcune cose di valore debbano essere distribuite equamente.
+}
+
+\nt{I sistemi osservati fin'ora non sono egalitari.}
+
+
+
+
+
 
 
