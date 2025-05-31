@@ -125,7 +125,6 @@ $$\hat Y = f_\theta (X)$$
     \caption{Esempio di classificazione.}
 \end{figure}
 
-
 \clm{}{}{
   \begin{itemize}
     \item Il processo di apprendimento dei parametri per $f_\theta$ dipende dall'algoritmo e dalla scelta della rappresentazione. 
@@ -161,8 +160,45 @@ dove $\bbE$ è il valore atteso.
 
 \nt{Due classificatori possono avere la stessa accuratezza ma avere costi differenti.}
 
+\cor{Errore di Classificazione}{
+  Il classificatore ottimale che riduce al minimo l'errore di classificazione soddisfa la seguente proprietà: 
+
+$$\hat{Y} = f(X), \quad \text{dove } f(X) = 
+\begin{cases}
+1 & \text{se } \mathbb{P}(Y = 1 \mid X = x) > \frac{1}{2} \\
+0 & \text{altrimenti}
+\end{cases}
+$$
+
+}
+
+\nt{Si può ottenere un classificatore ottimale da alcuni valori di probabilità scegliendo la soglia giusta.}
+
+\paragraph{Problemi:}
+
+\begin{itemize}
+  \item Tasso di falsi positivi sbilanciato. 
+  \item Disparità nei risultati positivi.
+\end{itemize}
+
 \subsection{Il Ciclo ML}
 
-\section{Discriminazione e Misure}
+\qs{}{Cosa succede nell'apprendimento automatico prima e dopo l'addestramento di un classificatore?}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{04P/ciclo ML.png}
+    \caption{Ciclo del ML.}
+\end{figure}
+
+\begin{itemize}
+  \item \fancyglitter{Apprendimento:} il processo di ricerca di buoni parametri $\theta$ per $f$ e, possibilmente, di una soglia ottimale.
+  \item \fancyglitter{Azioni:} come vengono impiegate le decisioni del nostro modello su input nuovi e mai visti prima. 
+  \item \fancyglitter{Esempi:} eliminare tutte le mail classificate come spam, decidere se una persona con un determinato punteggio di rischio può essere rilasciata su cauzione.
+  \item \fancyglitter{Feedback:} facoltativamente registrare come gli utenti hanno reagito alle azioni intraprese.
+  \item \fancyglitter{Misurazione:} il processo in cui lo stato del mondo viene ridotto a tabelle di dati.
+\end{itemize}
+
+\section{Discriminazione e Misure di Discriminazione}
 
 
