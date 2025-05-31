@@ -316,9 +316,78 @@ scolastico tradizionale}.
 
 \nt{I sistemi osservati fin'ora non sono egalitari.}
 
+\qs{}{Cosa deve essere distibuito equamente?}
 
+\begin{itemize}
+  \item Cohen: piacere o soddisfazione delle preferenze. 
+  \item Rawls e Dworkin: reddito e beni. 
+  \item Sen: capacità e risorse necessarie per fare determinate cose. 
+\end{itemize}
 
+\nt{Gli algoritmi che non riescono a distribuire equamente questi beni possono causare danni alle persone.}
 
+\paragraph{Tipi di danni:}
 
+\begin{itemize}
+  \item \fancyglitter{Allocativi:} a determinati gruppi vengono negate risorse in modo disparato (e.g. COMPAS, sistema di assunzione di Amazon).
+  \item \fancyglitter{Rappresentativi:} viene rafforzata la subordinazione di alcuni gruppi (beauty.ai, traduzione automatica).
+\end{itemize}
 
+\paragraph{Fortuna e Merito:}
+
+\begin{itemize}
+  \item Il \fancyglitter{merito} è la condizione di essere meritevoli di qualcosa grazie a scelte, talento, duro lavoro, etc. 
+  \item Per l'egalitarismo le disuguaglianze dovute alla \fancyglitter{fortuna} dovrebbero essere corrette. 
+  \item Tracciare una linea precisa di divisione tra fortuna e merito è un'idea un po' utopica. 
+\end{itemize}
+
+\dfn{Inconsapevolezza}{
+  L'inconsapevolezza di solito non esiste nei dati del mondo reale ed è difficile da sostenere se si osservano le correlazioni o se le osservano gli algoritmi.
+}
+
+\cor{Equità per Inconsapevolezza}{
+  Una cosa di cui si deve essere consapevoli è che gli algoritmi basati sui dati sono in grado di recuperare informazioni sensibili.
+}
+
+\paragraph{Criteri algoritmici di non discriminazione:}
+
+\begin{itemize}
+  \item È interessante cercare di \fancyglitter{quantificare} lo squilibrio nelle decisioni di un algoritmo. 
+  \item Presi $X$ covariate, $Y$ variabile target, $\hat Y$ la stima del target tramite il classificatore $f_\theta$, $R$ il punteggio di rischio, $A$ l'attributo sensibile: 
+    \begin{itemize}
+      \item Se $\hat Y$ è binario l'indipendenza è semplicemente: 
+        $$\bbP(\hat{Y}=1 \mid A=a) = \bbP(\hat{Y}=1 \mid A=b)$$
+      \item L'indipendenza viene rilassata (con $\epsilon \geq 0$) come:
+        $$
+\frac{\mathbb{P}(\hat{Y}=1 \mid A=a)}{\mathbb{P}(\hat{Y}=1 \mid A=b)} \geq 1 - \epsilon
+$$
+    \end{itemize}
+  \item L'indipendenza può riflettere la convinzione che \fancyglitter{tutti i gruppi abbiano pari diritto all'accettazione}. Inoltre non tiene conto di $Y$. 
+  \item Però anche l'indipendenza ha dei problemi: 
+    \begin{itemize}
+      \item Un decisore malintenzionato che assume persone del gruppo $a$ con un processo rigoroso e una probabilità $p > 0$.
+      \item Le persone del gruppo $b$ vengono assunte in modo casuale con la stessa probabilità $p$. 
+      \item In questo caso l'indipendenza è soddisfatta, ma le persone del gruppo $b$, scelte casualmente, avranno risultati scadenti.
+    \end{itemize}
+  \item \fancyglitter{Separazione:} le variabili casuali $(\hat Y, A, Y)$ soddisfano la separazione se $\hat Y \perp A | Y$.
+  \item La separazione può essere intesa come \fancyglitter{parità del tasso di errore} tra i gruppi.    
+      \item \fancyglitter{Sufficienza:} le variabili casuali $(\hat Y, A, Y)$ soddisfano la sufficienza se $Y \perp A | \hat Y$.
+      \item Se $A$ e $Y$ non sono indipendenti allora sufficienza e indipendenza non possono essere entrambe vere.
+\end{itemize}
+
+\paragraph{Interventi di fairness:}
+
+\begin{itemize}
+  \item \fancyglitter{Pre-processing:} cambiare i dati, $X$ o $Y$ o entrambi. 
+  \item \fancyglitter{In-processing:} cambiare il processo di learning $f_\theta$. 
+  \item \fancyglitter{Post-processing:} cambiare $\hat Y$.
+\end{itemize}
+
+\nt{Non c'è un consenso univoco su quale sia il migliore.}
+
+\dfn{Soppressione}{
+Trovare delle caratteristiche in $X$ che sono correlate con le informazioni sensibili $X$. 
+}
+
+\nt{Una nozione più generale è la mutua informazione sviluppata da Shannon.}
 
