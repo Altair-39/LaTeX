@@ -261,7 +261,183 @@ Il Word Sense Disambiguation è un problema aperto che consiste nell'identificar
 
 \section{FrameNet}
 
+\paragraph{Ipotesi:}
 
+\begin{itemize}
+  \item Le persone comprendono le cose effettuando operazioni mentali su ciò che conoscono già. 
+  \item Tale conoscenza può essere descritta in \fancyglitter{pacchetti di informazioni}.
+\end{itemize}
 
+\subsection{La Teoria dei Frame}
 
+\dfn{FrameNet}{
+  FrameNet è un progetto di costruzione lessicale per l'inglese che collega le parole ai loro significati: 
+  \begin{itemize}
+    \item Registrando i modi in cui le frasi sono costruite attorno a essi. 
+    \item Usando le evidenze trovate in testi in inglese moderno.
+  \end{itemize}
+}
 
+\cor{Frame}{I Frame funzionano utilizzando situazioni "stereotipate". I significati dei concetti dipendono dai frame a cui sono collegati.}
+
+\qs{}{Ma come si fa con la polisemia?}
+
+\begin{itemize}
+  \item Invece di usare parole si usano \fancyglitter{Unità lessicali} (LUs) coppie di parole e sensi. 
+  \item In WordNet differenti LUs appartengono a diversi synsets. 
+  \item In FrameNet differenti LUs sono solitamente appartenenti a frame diversi. 
+  \item Se una parola comunica differenti significati in diversi contesti e la differenza non è evidente dal contesto forse la parola ha più di un significato.  
+  \item Alcuni, ma non tutti  i verbi che indicano il parlare hanno un \fancyglitter{uso cognitivo} identificando fonti o credenze.
+  \item Patterns complementari dovrebbero andare con un particolare significato di una parola. 
+  \item Se un verbo ha due eventi derivati ed entrambi hanno significati diversi che si trovano anche nel verbo allora è il verbo stesso a essere polisemico.
+\end{itemize}
+
+\cor{Frame Element}{
+  Si sviluppa un vocabolario descrittivo per i componenti di ogni frame. Questi frame element (FE) sono usati per etichettare i costituenti di una frase nel frame.
+}
+
+\subsection{Il Frame "Revenge"}
+
+Il concetto \fancyglitter{Revenge} rappresenta una situazione in cui:
+
+\begin{itemize}
+  \item $A$ ha fatto qualcosa per ferire $B$. 
+  \item $B$ decide di far qualcosa per ferire $A$. 
+  \item L'azione di $B$ è portata a termine indipendentemente da conseguenze legali o istituzionali.
+\end{itemize}
+
+\paragraph{Vocabolario per Revenge:}
+
+\begin{itemize}
+  \item \fancyglitter{Nomi:} revenge, vengeance, reprisal, retaliation, retribution. 
+  \item \fancyglitter{Verbi:} avenge, revenge, retaliate (against), get back (at), get even (with), pay back. 
+  \item \fancyglitter{Adjectives:} vengeful, vindictive. 
+  \item \fancyglitter{V + N:} take revenge, exact retribution, wreak vengeance.
+\end{itemize}
+
+\paragraph{FE per Revenge:}
+
+\begin{itemize}
+  \item A causa di qualche lesione a qualcosa o qualcuno di importante per un vendicatore (forse se stesso), il Il vendicatore infligge una punizione all'autore del reato. l'autore del reato è la persona responsabile dell'infortunio.
+  \item Lista:
+    \begin{itemize}
+      \item Avenger. 
+      \item Offender. 
+      \item Injury. 
+      \item Injury\_party. 
+      \item Punishment.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{FN work:}
+
+\begin{itemize}
+  \item Vengono selezionate le frasi che mostrano i maggiori contesti sintattici. 
+  \item I costituenti delle frasi che esprimono questi FEs sono etichettati con i nomi associati agli FEs.
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.8]{03/framenet.png}
+    \caption{Esempio di visualizzazione di FrameNet con il Frame Revenge.}
+\end{figure}
+
+\paragraph{Due tipologie di target:}
+
+\begin{itemize}
+  \item \fancyglitter{Predicati:} parole che evocano frames, creano contesti per le informazioni da inserire. L'obiettivo dell'annotazione è trovare gli argomenti.
+  \item \fancyglitter{Fillers:} parole che soddisfano ruoli semantici nei frames evocati dai predicati. L'obiettivo dell'annotazione è identificare il frame e FE della frase.
+\end{itemize}
+
+\nt{Tipicamente parole diverse nello stesso frame mostrano variazione in come gli FE sono realizzati grammaticamente.}
+
+\dfn{Valenza}{
+La valenza è il numero e il tipo degli argomenti controllati da un predicato.
+}
+
+\paragraph{La valenza può essere di vario tipo:}
+
+\begin{itemize}
+  \item Impersonale. 
+  \item Intransitiva. 
+  \item Transitiva. 
+  \item Ditransitiva. 
+  \item Tritransitiva.
+\end{itemize}
+
+\qs{}{Nel frame Revenge attraverso quali significati sintattici è realizzato l'offender?}
+
+\begin{itemize}
+  \item Come un oggetto diretto. 
+  \item Con la preposizione \textit{on}. 
+  \item Con \textit{against}. 
+  \item Con \textit{with}. 
+  \item Con \textit{at}.
+\end{itemize}
+
+\qs{}{Quale FE è espressa dall'oggetto di avenge?}
+
+\begin{itemize}
+  \item L'injured\_party. 
+  \item L'injury.
+\end{itemize}
+
+\paragraph{Altre definizioni:}
+
+\begin{itemize}
+  \item \fancyglitter{Copertura lessicale:} tutte le parole importanti associate con ogni frame. 
+  \item \fancyglitter{Combinatorica:} tutti i patterns sintattici in cui ogni parola serve per esprimere il frame.  
+  \item \fancyglitter{Dati di frequenza:} non sono collezionati direttamente da FrameNet.
+\end{itemize}
+
+\subsection{Frame Semantics e Text Understanding}
+
+\paragraph{Information extraction:}
+
+\begin{itemize}
+  \item Si vuole progettare un'applicazione per estrarre informazioni dalle notizie di un giornale. 
+  \item I dati di FrameNet dovrebbero poter essere usati per: 
+    \begin{itemize}
+      \item WSD. 
+      \item Composizione semantica. 
+      \item Scelta tra possibili alternative analisi sintattiche. 
+      \item Attivazione di un vocabolario topic-related. 
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Risoluzione dell'anafora:}
+
+\begin{itemize}
+  \item \fancyglitter{Pronominale:} ci si riferisce a un referente con un pronome. 
+  \item Frasi nominali definite: l'antecedente si riferisce a una frase con "$<$the$><$noun$ phrase>$". 
+  \item Quantificatori/Ordinali: l'anafora è quantificata come "uno" e ordinalizzata come "primo".
+\end{itemize}
+
+\paragraph{Principi di utilizzo:}
+
+\begin{itemize}
+  \item Si può scegliere una parola per capire quali frame possano essere attivati da quella parola. 
+  \item Identificati i ruoli semantici si cerca di accoppiare le necessità semantiche di ogni frame attivato con le porzioni della frase in input. 
+  \item Il frame che si adatta meglio è quello scelto.
+\end{itemize}
+
+\paragraph{Disambiguazione:}
+
+\begin{itemize}
+  \item I significati possono essere inferiti mediante un criterio di coerenza. 
+  \item FN non li fornisce direttamente, ma offre descrizioni di frame collegati e legami semantici tra le parole per facilitare i giudizi.
+\end{itemize}
+
+\paragraph{Blocchi di più parole:}
+
+\begin{itemize}
+  \item L'analisi non può procedere sulla base delle parole prese una alla volta. 
+  \item È riconosciuto lo stretto legame tra le parole.
+\end{itemize}
+
+\paragraph{Altre cose:}
+
+\begin{itemize}
+  \item L'autore di un articolo può aggiungere informazione testimoniale a una parte della descrizione. 
+  \item Esistono frame metalinguistici.
+\end{itemize}
