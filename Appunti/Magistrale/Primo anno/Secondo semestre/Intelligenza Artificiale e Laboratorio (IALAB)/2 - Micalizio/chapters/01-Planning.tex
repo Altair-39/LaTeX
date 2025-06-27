@@ -761,6 +761,176 @@ PSP è corretto e completo:
 \end{itemize}
 }
 
+\section{Graphplan}
+
+\subsection{Introduzione}
+
+\dfn{Grafo di Pianificazione}{
+  Struttura dati speciale per:
+  \begin{itemize}
+    \item Definire euristiche domain-independent. 
+    \item Generare un piano.
+  \end{itemize}
+}
+
+\nt{Il grafo astrae lo spazio di ricerca e può essere costruito con un algoritmo polinomiale.}
+
+\paragraph{In dettaglio:}
+
+\begin{itemize}
+  \item Grafo orientato aciclico organizzato a livelli:
+    \begin{itemize}
+      \item Livello iniziale $S_0$ che contiene tutti i letterali che valgono nello stato iniziale (un nodo per ogni fluente). 
+      \item Livello di azioni $A_0$ che contiene le azioni ground che possono essere applicate a $S_0$. 
+      \item In generale $S_i, A_i$ si alternano fino a che non si raggiunge una condizione di terminazione: 
+        \begin{itemize}
+          \item $S_i$ contiene tutti i letterali che \fancyglitter{potrebbero} valere al tempo $i$. 
+          \item $A_i$ contiene tutte le azioni che \fancyglitter{potrebbero} avere le precondizioni soddisfatte al tempo $i$.
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Graphplan (GP) traccia solo un sottoinsieme delle possibili interazioni negative (un letterale che appare in uno stato $S_i$ per la prima volta) potrebbe di fatto essere producibile solo in uno stato successivo a $S_i$. Tuttavia $i$ è una buona stima per il letterale. 
+      \item GP è costruito a partire da azioni ground. 
+      \item Ogni $S_i$ è un \fancyglitter{belief state}: codifica più stati possibili e alternative. 
+  \end{itemize}
+}
+
+\paragraph{Quando si costruisce il grafo bisogna tenere a mente che:}
+
+\begin{itemize}
+  \item Un letterale al tempo $i$ può essere inteso sia come precondizione di un'azione in $A_i$ sia come atomo persistente. In questo caso la persistenza è realizzata da un'azione speciale \texttt{no-op}. 
+  \item In ogni livello $S_i$ possono essere presenti link di \fancyglitter{mutua esclusione} tra letterali. 
+  \item In ogni livello $A_i$ possono essere presenti link di \fancyglitter{mutua esclusione} tra azioni. 
+  \item GP cresce monotonicamente, quindi prima o poi si livella: due stati consecutivi $S_i$ e $S_{i + 1}$ sono identici. 
+\end{itemize}
+
+\paragraph{Mutua esclusione tra due azioni in un dato livello $A_i$:}
+
+\begin{itemize}
+  \item \fancyglitter{Effetti inconsistenti:} un'azione nega gli effetti dell'altra. 
+  \item \fancyglitter{Interferenza:} uno degli effetti di un'azione è la negazione di una precondizione dell'altra. 
+  \item \fancyglitter{Competizione delle precondizioni:} una delle precondizioni di un'azione è mutuamente esclusiva con le precondizioni dell'altra. 
+\end{itemize}
+
+\paragraph{Mutua esclusione tra due letterali in un dato livello $S_i$:}
+
+\begin{itemize}
+  \item \fancyglitter{Complementarity:} se uno è la negazione dell'altro. 
+  \item \fancyglitter{Inconsistent Support:} se ogni possibile coppia di azioni al livello $A_{i - 1}$ che producono i due letterali sono mutuamente esclusive.
+\end{itemize}
+
+\qs{}{Perché la costruzione di un GP è polinomiale?}
+
+\begin{itemize}
+  \item I: letterali. 
+  \item a: azioni. 
+  \item Ogni livello $S_i$ ha non più di $I$ nodi e $I^2$ mutex tra letterali. 
+  \item Ogni livello $A_i$ non ha più di $I + a$ nodi e $(a + I)^2$ link di mutex. 
+  \item Un grafo con $n$ livelli ha dimensione $O(n(a + I)^2)$ e la stessa complessità per costruirlo. 
+\end{itemize}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Se un letterale del goal non compare in nessun livello allora il goal non è raggiungibile. 
+    \item Se anche tutti i letterali del goal compaiono in un qualche livello del GP non vuol dire che esista una soluzione. 
+  \end{itemize}
+}
+
+\paragraph{Euristiche per stimare il costo di un singolo letterale:}
+
+\begin{itemize}
+  \item Profondità del livello tra quelli in cui un letterale del goal compare per la prima volta. 
+    \item Lunghezza del piano serializzabile estratto dal GP.
+\end{itemize}
+
+\paragraph{Euristiche per stimare il costo di una congiunzione di letterali:}
+
+\begin{itemize}
+  \item \fancyglitter{Max-level:} prendere il massimo livello tra quelli in cui un letterale del goal compare per la prima volta. 
+  \item \fancyglitter{Somma dei livelli:} assume indipendenza dei letterali del goal, non è ammissibile. 
+  \item \fancyglitter{Livello di insieme:} profondità del livello in cui tutti i letterali del goal compaiono senza che alcuna coppia di essi sia in mutua esclusione: 
+    \begin{itemize}
+      \item È ammissibile, funziona bene quando i letterali sono indipendenti tra di loro. 
+      \item Ignora le dipendenze tra tre o più letterali.
+    \end{itemize}
+\end{itemize}
+
+\thm{}{
+  Se esiste un piano valido allora questo è un sottografo del grafo di pianificazione. 
+}
+
+\paragraph{Intuitivamente:}
+
+\begin{enumerate}
+  \item Si espande il grafo un livello per volta fino a quando tutti gli atomi del goal non compaiono all'interno dell'$i$-esimo stato. 
+  \item Si invoca \texttt{extract-solution} per cercare un piano all'interno del grafo: 
+    \begin{itemize}
+      \item Se trova una soluzione termina con successo. 
+      \item Se la soluzione non esiste \fancyglitter{certamente} termina con insuccesso. 
+      \item In tutti gli altri casi va al punto 3.
+    \end{itemize}
+  \item Si espande il grafo di un livello e si torna al passo 2.
+\end{enumerate}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.55]{01/graphplan.png}
+    \caption{Algoritmo di Graphplan.}
+\end{figure}
+
+\dfn{Extract Solution}{
+  L'estrazione di un piano da un grafo di pianificazione corrisponde a una ricerca backward in un sottografo AND/OR del GP:
+  \begin{itemize}
+    \item OR: gli archi che dalle aziono a un livello $A_{i-1}$ producono un letterale $p$ in un goal $g$ al livello $S_i$. 
+    \item AND: sono gli archi che dagli atomi a un livello $S_i$ rappresentano le precondizioni per un'azione al livello $A_i$.
+  \end{itemize}
+}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Si sfrutta una funzione di supporto \texttt{GP-Search}. Sono \fancyglitter{mutuamente ricorsive}.
+    \item \texttt{extract-solution} invoca \texttt{GP-Search} su un livello di azioni e su un sottogoal. 
+    \item \texttt{GP-Search} pianifica per il solo livello su cui è invocato e se ha sucesso invoca \texttt{extract-solution} sul livello di stato precedente.
+  \end{itemize}
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.55]{01/extract.png}
+    \caption{Extract-solution.}
+\end{figure}
+
+\begin{itemize}
+  \item $G$ è il grafo di pianificazione. 
+  \item $g$ è il sottogoal su cui la funzione è invocata. 
+  \item $i$ è la profondità di un livello di stato $S_i$. 
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.55]{01/search.png}
+    \caption{GP-Search.}
+\end{figure}
+
+\begin{itemize}
+  \item $G$ è il grafo di pianificazione. 
+  \item $g$ è l'insieme di sottogoal ancora da risolvere al livello $i$. 
+  \item $\pi_i$ è il piano in costruzione al livello $i$. 
+\end{itemize}
+
+\paragraph{Considerazioni su \texttt{extract-solution}:}
+
+\begin{itemize}
+  \item 
+\end{itemize}
+
+\subsection{Euristiche}
+
+
+
 
 
 
