@@ -261,4 +261,66 @@ $$P(X_1,\dots, X_2) = \prod_{i=1}^n P(X_i | \text{Parents}(X_i))$$
 
 \section{Inferenza con le Reti Bayesiane}
 
+\paragraph{Data una rete definita su un insieme di variabili U, occorre distinguere tra:}
 
+\begin{itemize}
+  \item Variabili di evidenza E. 
+  \item Variabili di query X. 
+  \item Variabili nascoste Y = U - E - X.
+\end{itemize}
+
+\dfn{Procedura di Inferenza Generale}{
+  \[
+\mathbb{P}(X \mid \mathbf{e}) = \alpha \, \mathbb{P}(X, \mathbf{e}) = \alpha \sum_{y} \mathbb{P}(X, \mathbf{e}, y)
+\]
+
+}
+
+\paragraph{Algoritmo di eliminazione delle variabili:}
+
+\begin{itemize}
+  \item La procedura di calcolo può essere migliorata evitando di ripetere più volte gli stessi calcoli. 
+  \item Programmazione dinamica: svolto un calcolo ne ricordo il risultato per uso futuro. 
+  \item Una possibile implementazione è proprio questo algoritmo.
+\end{itemize}
+
+\dfn{Algoritmo di Eliminazione delle Variabili}{
+  Partendo dalla formulazione di una query che esplicità tutte le sommatorie nascoste si individuano i fattori della formula e si valuta la formula da destra verso sinistra svolgendo due operazioni fondamentali sui fattori:
+  \begin{itemize}
+    \item Dot product tra fattori. 
+    \item Eliminazione di una variabile per summing out.
+  \end{itemize}
+}
+
+\cor{Dot Product}{
+  Dati due fattori $f$ e $g$ il loro prodotto puntuale produce un nuovo fattore $h$ le cui variabili sono date dall'unione delle variabili dei fattori di partenza.
+}
+
+\nt{La complessità spaziale e temporale dell'algoritmo di eliminazione nasce proprio da questa caratteristica.}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.55]{03/dot.png}
+    \caption{Esempio di dot product.}
+\end{figure}
+
+\dfn{Eliminazione per Summing Out}{
+  Si elimina una variabile da un prodotto di fattori sommando le sottomatrici ottenute fissando la variabile a ognuno dei suoi valori.
+}
+
+\cor{Ottimizzazione - Safe Pruning}{
+  Ogni fattore che non dipende dalla variabile da eliminare con summing out può essere portato fuori dalle sommatorie. Le matrici non sono moltiplicate fino a quando non dobbiamo eliminare una variabile di conseguenza si moltiplicano solo le matrici che contengono la variabile da eliminare.
+}
+\nt{Si può fare ancora meglio osservando che qualsiasi nodo foglia che non è né variabile di query né di evidenza può essere ignorata.}
+
+\clm{}{}{
+  \begin{itemize}
+    \item La rimozione di un nodo foglia può dare origine a un altro nodo foglia a sua volta eliminabile. 
+    \item In generale ogni variabile che non è un progenitore di una variabile di query o di evidenza è irrilevante per risolvere l'interrogazione (semantica locale).
+  \end{itemize}
+}
+
+\cor{Ottimizzazione - Ordinamento delle Variabili}{
+  L'ordinamento delle variabili ha un impatto sull'albero di parsificazione della formula e quindi sui fattori che vengono prodotti. Il risultato finale non dipende dall'ordinamento scelto, ma ordinamenti diversi producono fattori intermedi diversi. Più sono grandi questi fattori intermedi peggio è.
+}
+\nt{Si deve trovare l'ordinamento ottimale, tuttavia è un problema intrattabile.}
