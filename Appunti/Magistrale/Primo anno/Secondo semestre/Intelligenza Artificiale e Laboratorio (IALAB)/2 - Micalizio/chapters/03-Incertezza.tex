@@ -175,3 +175,90 @@ La probabilità fornisce uno strumento per riassumere l’incertezza che deriva 
 dove $e$ è un vettore di valori alle variabili di prova.
 }
 
+\subsection{Modelli di Bayes}
+
+\dfn{Modello di Bayes Ingenuo}{
+  $$P(\text{Causa, Effetto$_1$, \dots, Effetto$_2$}) = P(\text{Causa}) \prod_i P(\text{Effetto$_i |$ Causa})$$
+}
+
+\nt{L'ingenuità sta nel fatto che si assume che gli $n$ effetti siano tra loro indipendenti, ma nei casi reali spesso non è così.}
+
+\dfn{Indipendenza Condizionale}{
+  L'indipendenza condizionale di $X$ e $Y$ data $Z$ vale se e solo se: 
+
+  $$P(X, Y|Z) = P(X|Z)*P(Y|Z)$$
+
+}
+
+\paragraph{Se l'indipendenza condizionale vale allora:}
+
+\begin{itemize}
+  \item $P(X|Y, Z) = P(X|Z)$
+  \item $P(Y|X, Z) = P(Y|Z)$
+\end{itemize}
+
+\dfn{Belief Networks}{
+È una rappresentazione grafica di asserzioni di indipendenze condizionali. Fornisce una specifica concisa di qualsiasi distribuzione congiunta completa. È un grafo:
+\begin{itemize}
+  \item Un nodo per ogni variabile casuale. 
+  \item Diretto e privo di cicli. 
+  \item Un arco da $X$ a $Y$ implica che $X$ è un genitore di $Y$ e ha influenza diretta. 
+  \item Ogni nodo $X_i$ è associato a una distribuzione condizionale di $X_i$ dati i suoi genitori $P(X_i | \text{parents}(X_i))$. 
+  \item In generale la Tabella di Probabilità Condizionali (CPT\footnote{Non TCP.}) di una variabile booleana con $k$ genitori booleani contiene $2^k$ righe.
+\end{itemize}
+}
+
+\nt{La topologia della rete specifica le condizioni di indipendenza e definisce implicitamente la distribuzione congiunta completa di tutte le variabili casuali.}
+
+\cor{Compattezza}{
+  Una CPT per una variabile booleana $X_i$ con $k$ genitori booleani ha $2^k$ righe per tutte le possibili combinazioni di valori dei genitori. Ogni riga contiene un valore $p$ per $X_i = true$, se ogni variabile ha non più di $k$ genitori la rete completa richiede $O(n*2^k)$. Dato che in generale $k << n$ il numero di valori necessari cresce linearmente in $n$ contro $O(2^n)$ della distribuzione completa congiunta.
+}
+
+\dfn{Semantica Globale}{
+  Stabilisce come la struttura (sintassi) della BN corrisponde a una distribuzione congiunta delle variabili. La distribuzione completa congiunta può essere riscritta come il prodotto delle distribuzioni condizionali locali:
+
+$$P(X_1,\dots, X_2) = \prod_{i=1}^n P(X_i | \text{Parents}(X_i))$$
+
+}
+
+\nt{Questa semantica è equivalente a una semantica local.}
+
+\dfn{Semantica Locale}{
+  Ogni nodo è condizionalmente indipendente dai suo non-discendenti dati i suoi genitori.
+}
+
+\cor{Markov Blanket}{
+  Ogni nodo è condizionalmente indipendente da tutti gli altri nodi di una rete data la sua coperta di Markov: genitori, discendenti e genitori dei discendenti.
+}
+
+\paragraph{Costruire una BN:}
+
+\begin{itemize}
+  \item Si deve fare attenzione all'ordine con cui i nodi sono aggiunti nella rete stessa. 
+  \item \fancyglitter{Chain rule:}
+    \begin{align*}
+\mathbb{P}(X_1, \ldots, X_n) 
+&= \mathbb{P}(X_1 \mid X_2, \ldots, X_n) \mathbb{P}(X_2, \ldots, X_n) \\
+&= \mathbb{P}(X_1 \mid X_2, \ldots, X_n) \mathbb{P}(X_2 \mid X_3, \ldots, X_n) \mathbb{P}(X_3, \ldots, X_n) \\
+&= \cdots \\
+&= \prod_{i=1}^{n} \mathbb{P}(X_i \mid X_{i+1}, \ldots, X_n)
+\end{align*}
+\item La chain rule è uguale alla semantica globale purché $\text{Parents}(X_i) \subseteq \{X_{i+1},\dots, X_n\}$
+\end{itemize}
+
+\nt{Una rete rispetta la semantica globale delle BN solo se per ogni nodo $X_i$ esso è condizionalmente indipendente da ogni altro suo predecessore nel'’ordine dei nodi, dati i suoi genitori.}
+
+\paragraph{Strategia di costruzione:}
+
+\begin{enumerate}
+  \item Si sceglie un ordinamento delle variabili $X_n, \dots, X_1$.
+  \item Per ogni $i$ da $n$ fino a 1:
+    \begin{enumerate}
+      \item Si aggiunge $X_i$ alla rete. 
+      \item Si scelgono genitori da $X_{i+1},\dots, x_i$ tali che $P(X_i|\text{Parents}(X_i)) = P(X_i|X{i+1},\dots, X_n)$
+    \end{enumerate}
+\end{enumerate}
+
+\section{Inferenza con le Reti Bayesiane}
+
+
