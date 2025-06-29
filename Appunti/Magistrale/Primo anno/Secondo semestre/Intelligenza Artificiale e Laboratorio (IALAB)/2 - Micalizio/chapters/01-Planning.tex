@@ -918,19 +918,68 @@ PSP è corretto e completo:
 \begin{itemize}
   \item $G$ è il grafo di pianificazione. 
   \item $g$ è l'insieme di sottogoal ancora da risolvere al livello $i$. 
-  \item $\pi_i$ è il piano in costruzione al livello $i$. 
+  \item $\pi_i$ è il piano in costruzione al livello $i$.
+  \item $\mu A_i$ contiene le coppie di azioni al livello $i$ tra le quali sussiste un vincolo di mutua esclusione.
 \end{itemize}
 
 \paragraph{Considerazioni su \texttt{extract-solution}:}
 
 \begin{itemize}
-  \item 
+  \item È un algoritmo backward di ricerca all'interno di un grafo di pianificazione. 
+  \item In generale questa ricerca potrebbe essere intrattabile e si ricorre quindi all'uso di euristiche. 
+  \item Un modo semplice per implementare questa funzione  è un algoritmo greedy:
+    \begin{itemize}
+      \item Dato un insieme di letterali che compaiono nel goal scegliere il letterale con il costo di livello più alto. 
+      \item Soddisfare il letterale scegliendo l'azione con le precondizioni più facili.
+    \end{itemize}
+  \item Ogni volta che \texttt{extract-solution} applicata a certi letterali $L$ e a un certo livello $lev$ fallisce la coppia $(L, lev)$ viene aggiunta nell'insieme $no-good$, per cui ricerche successive applicate alla stessa coppia falliranno immediatamente.
 \end{itemize}
 
-\subsection{Euristiche}
+\nt{L'espansione del GP non si interrompe anche quando un grafo si è livellato. Un livello di stato può essere il risultato dell'applicazione di più azioni in parallelo. Quando l'esecuzione è sequenziale l'applicazione multipla di azioni riduce la dimensione del grafo che deve quindi essere esteso.}
 
+\dfn{Terminazione di GP}{
+  Se \texttt{extract-solution} non trova una soluzione deve esistere un sottoinsieme di atomi del goal che non sono raggiungibili vengono marcati come $no-good$  al livello successivo e quindi si continua a espandere. 
 
+  Altrimenti quando sia il grafo sia i $no-good$ si sono livellati senza che una soluzione sia stata trovata si può concludere con fallimento.
+}
 
+\nt{Per far valere questo criterio bisogna dimostrare che: 
+\begin{itemize}
+  \item I $no-good$ si livellano sempre. 
+  \item Quando i $no-good$ e il grafo sono livellati allora si può concludere che la soluzione non esiste.
+\end{itemize}
+}
 
+\paragraph{La dimostrazione si basa su proprietà \fancyglitter{monotone} dei grafi di pianificazione:}
 
+\begin{itemize}
+  \item I letterali crescono monotonicamente: una volta che un letterale compare in un livello sarà presente in tutti i livelli successivi. 
+  \item Le azioni crescono monotonicamente: una volta che un'azione compare in un livello sarà presente in tutti i livelli successivi.
+  \item Le relazioni di mutex decrescono monotonicamente: se due azioni/letterali sono in mutua esclusione in un livello allora lo sono anche in tutti i livelli precedenti, ma potrebbero non esserlo in livelli successivi. 
+  \item I $no-goods$ decrescono monotonicamente: se un sottoinsieme di atomi del goal non è raggiungibile in un dato livello di stato $S_i$ allora non lo è nemmeno in nessuno dei livelli precedenti, però potra diventarlo in qualche livello futuro. 
+\end{itemize}
+
+\paragraph{Dimostrazione che il grafo e i $no-goods$ si livellano e criterio di temrminazione:}
+
+\begin{enumerate}
+  \item Dato che le azioni e i letterali crescono monotonicamente, e dato che sono entrambi insiemi finiti, deve esistere un livello in cui l’insieme dei letterali è uguale a quello dei letterali del livello precedente. 
+  \item Poiché i mutex e $no-goods$ decrescono monotonicamente e poiché non possono esserci meno di zero mutex e $no-goods$, deve esistere un livello con lo stesso numero di mutex e $no-goods$ del precedente. 
+  \item Una volta che il grafo ha raggiunto la situazione in cui sia i livelli che i $no-goods$ si sono livellati, se uno dei letterali del goal è mancante o in mutex con un altro letterale del goal, allora si può concludere che non esiste una soluzione.
+\end{enumerate}
+
+\nt{Graphplan è \fancyglitter{corretto} e \fancyglitter{completo}: restituisce failure solo quando il problema di pianificazione non è risolubile, altrimenti restituisce una soluzione espressa  come una sequenza di insiemi logici di azioni. L'algoritmo termina sempre a prescindere dall'esistenza della soluzione.}
+
+\subsection{Definire Euristiche}
+
+\dfn{Rilassamento}{
+  Si definisce un problema analogo all'originale, ma rilassato (semplificato). Si risolve il problema rilassato e si usa il costo della soluzione per il problema rilassato come euristica nel problema originale.
+}
+
+\paragraph{Possibili tecniche di rilassamento di un problema:}
+
+\begin{itemize}
+  \item \fancyglitter{Delete relaxation:} cancellazione degli effetti negativi dalle azioni. 
+  \item \fancyglitter{Astrazione:} considerare un problema più piccolo, ignorare alcune differenze tra stati così che  collassino in un unico stato (spazio di ricerca ridotto). 
+  \item \fancyglitter{Landmark:} un insieme di azioni (o fatti) per cui ogni soluzione deve avere almeno un'azione di quest'insieme, sono usati per definire euristiche che fanno un safe pruning dello spazio di ricerca.
+\end{itemize}
 
