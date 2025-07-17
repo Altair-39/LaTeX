@@ -16,8 +16,8 @@
   \item \fancyglitter{Dependency Relations:} insieme delle dipendenze analizzate. 
   \item \fancyglitter{Parser:} guarda l'input, guarda sullo stack ed effettua una di tre possibili azioni (operazioni di transizione tra stati):
     \begin{itemize}
-      \item LEFTARC: crea un arco a sinistra (tra la parola dell'input e il top dello stack). 
-      \item RIGHTARC: crea un arco a destra (tra il top dello stack e la parola dell'input). 
+      \item LEFTARC: crea un arco a sinistra (il top dello stack e la seconda parola sullo stack). Rimuove la seconda parola dallo stack. 
+      \item RIGHTARC: crea un arco a destra (tra la seconda parola sullo stack e il top dello stack). Rimuove il top dello stack.
       \item SHIFT: prende la parola in input e la mette nel top dello stack.
     \end{itemize}
 \end{itemize}
@@ -177,13 +177,95 @@ P(t_i|t_{i-1},w_i) = \frac{1}{Z}\exp\left(\sum_j \lambda_j f_j(t_i,t_{i-1},w_i)\
 \]
 dove $f_j$ sono feature (es: "la parola è maiuscola?") e $\lambda_j$ pesi appresi.
 \end{itemize}
+
 \qs{}{Dove si trovano le lingue naturali nella gerarchia di Chomsky?}
 
-\paragraph{Risposta:} sono \fancyglitter{Mildly Context-Sensitive} ($a^n b^n c^n$) e si collocano tra le Context-Sensitive ($a^{2^n}$) e le Context-free ($a^n b^n$).
+\paragraph{Risposta:}
+La \textbf{gerarchia di Chomsky} è una classificazione delle grammatiche formali basata sulla loro potenza espressiva. È suddivisa in quattro livelli principali:
+
+\begin{enumerate}
+    \item \textbf{Tipo 3 — Regolari}: le più semplici. Generano linguaggi come $a^n$, descrivibili con automi a stati finiti (DFA/NFA).
+    \item \textbf{Tipo 2 — Context-Free (CF)}: possono generare strutture nidificate come $a^n b^n$. Sono riconosciute da \textit{automi a pila} (PDA) e descritte da grammatiche context-free (CFG).
+    \item \textbf{Tipo 1 — Context-Sensitive (CS)}: più potenti, possono descrivere linguaggi come $a^n b^n c^n$ o $a^{2^n}$. Richiedono \textit{macchine a nastro linearemente limitato}.
+    \item \textbf{Tipo 0 — Ricorsivamente Enumerabili}: le più generali, corrispondono a ciò che può essere calcolato da una \textit{macchina di Turing}. Possono generare anche linguaggi non decidibili.
+\end{enumerate}
+
+\medskip
+
+Le \textbf{lingue naturali} non sono completamente catturate da nessuno di questi livelli in modo perfetto, ma studi linguistici (in particolare Shieber, Joshi, ecc.) hanno mostrato che esse richiedono una potenza espressiva maggiore delle context-free ma inferiore alle context-sensitive. Per questo motivo, si collocano in una classe intermedia nota come:
+
+\begin{center}
+    \fancyglitter{Mildly Context-Sensitive Languages (MCSLs)}
+\end{center}
+
+\medskip
+
+Le MCSLs sono in grado di generare strutture come:
+
+\begin{itemize}
+    \item $a^n b^n c^n$ (non generabile da una CFG)
+    \item Dipendenze incrociate come quelle presenti in alcune lingue germaniche (es. olandese o tedesco)
+\end{itemize}
+
+\noindent
+Queste lingue sono gestibili da formalismi come:
+\begin{itemize}
+    \item Tree-Adjoining Grammars (TAG)
+    \item Linear Indexed Grammars
+    \item Combinatory Categorial Grammars (CCG)
+\end{itemize}
+
+\medskip
+
+\noindent
+\textbf{In sintesi:} le lingue naturali si trovano in una classe intermedia tra le grammatiche context-free (Tipo 2) e le context-sensitive (Tipo 1), e sono descritte come \textit{Mildly Context-Sensitive Languages}.
 
 \qs{}{Cosa è una probabilistic CFG?}
 
-\paragraph{Risposta:} una probabilistic CFG è una distribuzione di probabilità sulle regole di una grammatica. La somma dei valori dei lati destri di una regola (dato il suo lato sinistro) deve fare 1. 
+\paragraph{Risposta:}
+Una \textbf{Probabilistic Context-Free Grammar (PCFG)} è una grammatica context-free in cui ogni \textit{produzione} è associata a una \textbf{probabilità}.
+
+\medskip
+Formalmente, una PCFG è una 5-upla $\langle N, \Sigma, R, S, P \rangle$, dove:
+\begin{itemize}
+    \item $N$ è l'insieme dei simboli non terminali,
+    \item $\Sigma$ è l'insieme dei simboli terminali,
+    \item $R$ è l'insieme delle regole di produzione del tipo $A \rightarrow \alpha$,
+    \item $S \in N$ è il simbolo iniziale,
+    \item $P$ è una funzione di probabilità definita su ogni regola $A \rightarrow \alpha$.
+\end{itemize}
+
+\medskip
+La funzione $P$ assegna a ogni regola una probabilità tale che:
+
+\[
+\sum_{\{A \rightarrow \alpha \in R\}} P(A \rightarrow \alpha) = 1 \quad \text{per ogni } A \in N
+\]
+
+Ovvero: \textit{la somma delle probabilità di tutte le produzioni con lo stesso lato sinistro dev'essere 1}.
+
+\medskip
+\noindent
+Le PCFG sono utilizzate per:
+\begin{itemize}
+    \item modellare l'\textbf{ambiguità} nelle grammatiche (scegliere l'albero più probabile tra molti),
+    \item effettuare il \textbf{parsing probabilistico} in NLP,
+    \item addestrare grammatiche da corpus annotati.
+\end{itemize}
+
+\medskip
+\noindent
+\textbf{Esempio:}
+
+\begin{align*}
+S &\rightarrow NP\;VP \quad\quad\quad P = 1.0 \\
+VP &\rightarrow V\;NP \quad\quad\quad P = 0.5 \\
+VP &\rightarrow V \quad\quad\quad\;\;\;\;\; P = 0.5
+\end{align*}
+
+\noindent
+Qui, la probabilità di ciascuna regola è usata per calcolare la probabilità totale di un dato albero sintattico (moltiplicando le probabilità delle regole applicate).
+
 
 \qs{}{Che cosa è il realizer nella NLG?}
 
@@ -291,8 +373,8 @@ dove $f_j$ sono feature (es: "la parola è maiuscola?") e $\lambda_j$ pesi appre
     \end{itemize}
   \item \fancyglitter{Referring Expression Generator:}
     \begin{itemize}
-      \item Generare le “referrinhg expressions” determina quali parole usare per esprimere le entità del dominio in una maniera comprensibile all'utente. 
-      \item Si bilancia fluentazza e ambiguità (a volte con parafrasi).
+      \item Generare le “referring expressions” determina quali parole usare per esprimere le entità del dominio in una maniera comprensibile all'utente. 
+      \item Si bilancia fluentezza e ambiguità (a volte con parafrasi).
       \item \evidence{Esempio:} 
         \begin{itemize}
           \item Aberdeen, Scotland. 
@@ -331,49 +413,26 @@ dove $f_j$ sono feature (es: "la parola è maiuscola?") e $\lambda_j$ pesi appre
 
 \qs{}{Cosa è la rappresentazione Neo-Davidsoniana?}
 
-\paragraph{Risposta:} una rappresentazione che usa FoL in cui si reificano gli eventi, ossia si definisce una variabile per identificare l'evento.
+\paragraph{Risposta:} una rappresentazione che usa FoL in cui si reificano gli eventi, ossia si definisce una variabile per identificare l'evento. Inoltre si distinguono i ruoli semantici (agente, paziente, etc.).
 
 \qs{}{Quali sono le due ipotesi fondamentali della linguistica computazionale?}
 
-\paragraph{Risposta:} La linguistica computazionale poggia su due ipotesi fondamentali che ne guidano l'approccio teorico e metodologico:
+\paragraph{Risposta:} La linguistica computazionale si fonda su due ipotesi fondamentali che guidano l'analisi automatica del linguaggio naturale:
 
-\paragraph{1. \fancyglitter{Ipotesi discreta del linguaggio}}
 \begin{itemize}
-  \item Postula che il linguaggio sia costituito da \textbf{unità discrete} (fonemi, morfemi, parole) combinabili secondo regole
-  \item Implicazioni computazionali:
-  \begin{itemize}
-    \item Rappresentabilità mediante strutture formali (grammatiche, automi)
-    \item Segmentazione precisa di testi/token (es: word boundary detection)
-    \item Modellazione come processi Markoviani (catene di stati discreti)
-  \end{itemize}
-  \item Contro-esempi da gestire:
-  \begin{itemize}
-    \item Fenomeni continui (es: intonazione, gradazioni semantiche)
-    \item Casi di ambiguità segmentativa (es: "l'ago" vs "la go")
-  \end{itemize}
+  \item Ipotesi dei livelli: l'analisi del linguaggio si fa a livelli. 
+    
+\begin{enumerate}
+  \item Fonetica e Fonologia: lo studio del suono della lingua. 
+  \item Morfologia: lo studio delle parti significative delle parole. 
+  \item Sintassi: lo studio sulla struttura e sulle relazioni tra le parole. 
+  \item Semantica: lo studio del significato. 
+  \item Pragmatica: lo studio di come il linguaggio è usato per compiere goal. Il passivo serve per mettere in luce/enfatizzare alcune parti della frase. 
+  \item Discorso: lo studio delle unità linguistiche rispetto alla singola dichiarazione.
+    \end{enumerate}
+  \item Ipotesi sequenziale: ogni livello è collegato al successivo. Ogni livello prende in input l'output del livello precedente. 
+
 \end{itemize}
-
-\paragraph{2. \fancyglitter{Ipotesi della computabilità linguistica}}
-\begin{itemize}
-  \item Assume che i processi linguistici siano \textbf{algoritmicamente modellabili}
-  \item Conseguenze operative:
-  \begin{itemize}
-    \item Sviluppo di parser per grammatiche formali (es: CFG, TAG)
-    \item Apprendimento automatico di pattern linguistici
-    \item Decidibilità dei problemi linguistici (es: membership problem)
-  \end{itemize}
-  \item Limiti teorici:
-  \begin{itemize}
-    \item Problemi NP-completi per grammatiche espressive
-    \item Trade-off tra copertura linguistica e complessità computazionale
-  \end{itemize}
-\end{itemize}
-
-\paragraph{Interazione tra le ipotesi:}
-\[
-\text{Discretezza} \Rightarrow \text{Rappresentabilità formale} \Rightarrow \text{Computabilità}
-\]
-
 \qs{}{Cosa è la frame-based semantic nei DS?}
 
 \paragraph{Risposta:} in un dialogue system si hanno dei frames che vanno riempiti con informazioni che vanno ricavate dal dialogo con l'utente. 
@@ -382,7 +441,14 @@ dove $f_j$ sono feature (es: "la parola è maiuscola?") e $\lambda_j$ pesi appre
 
 \qs{}{Fare un esempio di ambiguità puramente semantica.}
 
-\paragraph{Risposta:} ho visto l'uomo sul monte con il telescopio.
+\paragraph{Risposta:} ogni uomo ama una donna. 
+
+\begin{itemize}
+  \item Senso 1: ogni uomo ama una singola donna. 
+  \item Senso 2: ogni uomo ama la sua donna.
+\end{itemize}
+
+\nt{Esempio di merda, ma non avevo voglia di inventarne uno.}
 
 \qs{}{Ambiguità sintattica: spiegare i fenomeni del PP attachment e dell'ambiguità sintattica.}
 
@@ -410,13 +476,83 @@ dove $f_j$ sono feature (es: "la parola è maiuscola?") e $\lambda_j$ pesi appre
 
 \nt{Vedere l'apposità sezione.}
 
-\qs{}{Qual è la complessità dell'algoritmo CKY rispetto alla lunghezza N dell'input?}
+\qs{}{Qual è la complessità dell'algoritmo CKY rispetto alla lunghezza $n$ dell'input?}
 
-\paragraph{Risposta:} $O(n^3)$ per la versione non probabilistica, $O(n^5)$ per la versione probabilistica. 
+\paragraph{Risposta:}
+L'algoritmo CKY (Cocke–Kasami–Younger), applicato a grammatiche in forma normale di Chomsky (CNF), ha una complessità temporale di:
 
-\qs{}{Che differenza c'è tra la sintassi formalizzata come dipendenze e quella come costituenti?}
+\begin{itemize}
+    \item $\mathcal{O}(n^3)$ nella versione \textbf{non probabilistica}, in cui si verifica soltanto se una frase è derivabile dalla grammatica e, opzionalmente, si costruisce un albero di parsing.
+    \item $\mathcal{O}(n^5)$ nella versione \textbf{probabilistica} (PCFG), dove si tiene conto anche delle probabilità delle regole e si calcola il parse tree con probabilità massima. Questo avviene perché, per ogni cella della tabella, è necessario esplorare tutte le combinazioni di suddivisioni e accumulare le probabilità.
+\end{itemize}
 
-\paragraph{Risposta:} differiscono per la struttura, quella a costituenti forma degli alberi, quella a dipendenze crea collegamenti tra varie parole.
+\medskip
+\noindent
+In entrambi i casi, l'algoritmo richiede anche spazio $\mathcal{O}(n^2)$ per la tabella triangolare che memorizza i risultati intermedi.
+
+
+\qs{}{Che differenza c'è tra la sintassi formalizzata come \textit{dipendenze} e quella come \textit{costituenti}?}
+
+\paragraph{Risposta:}  
+La sintassi a \textbf{costituenti} (o \textit{sintassi a frasi}) e quella a \textbf{dipendenze} rappresentano due approcci distinti per analizzare la struttura sintattica di una frase.
+
+\begin{itemize}
+    \item \textbf{Sintassi a costituenti}: rappresenta la frase come un \textbf{albero gerarchico} formato da \textit{costituenti}, ossia gruppi di parole che funzionano come unità (es. sintagma nominale \texttt{NP}, sintagma verbale \texttt{VP}, ecc.). Ogni costituente può contenere altri costituenti più piccoli, fino ad arrivare alle parole.
+    
+    \begin{center}
+    \begin{minipage}{0.8\textwidth}
+    \begin{verbatim}
+[S
+  [NP Il gatto]
+  [VP dorme [PP sul tappeto]]
+]
+    \end{verbatim}
+    \end{minipage}
+    \end{center}
+    
+    Questo tipo di analisi è tipico delle grammatiche costituenziali, come le \textit{Context-Free Grammars}.
+
+    \item \textbf{Sintassi a dipendenze}: rappresenta la frase come un insieme di \textbf{relazioni binarie} tra parole, dove ogni parola (eccetto la radice) \textit{dipende} da un'altra. La struttura è un grafo orientato, spesso ad albero, in cui i legami indicano ruoli grammaticali (soggetto, oggetto, ecc.).
+
+    \begin{center}
+    \begin{minipage}{0.8\textwidth}
+    \begin{verbatim}
+dorme  →  soggetto  →  gatto
+dorme  →  complemento  →  tappeto
+tappeto  →  determinante  →  il
+dorme  →  preposizione  →  su
+    \end{verbatim}
+    \end{minipage}
+    \end{center}
+
+    Questo tipo di rappresentazione è comune nella linguistica computazionale e nel parsing NLP (es. Universal Dependencies).
+\end{itemize}
+
+\medskip
+\noindent
+\textbf{Differenze principali:}
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Aspetto} & \textbf{Costituenti} & \textbf{Dipendenze} \\
+\hline
+Unità di base & Gruppi di parole (sintagmi) & Relazioni tra parole \\
+Struttura & Albero gerarchico & Grafo di dipendenze \\
+Focus & Composizione frasale & Funzione grammaticale \\
+Uso comune & Linguistica teorica & Parsing computazionale \\
+Efficienza & Più complessa & Più semplice \\
+\hline
+\end{tabular}
+\end{center}
+
+\medskip
+\noindent
+In sintesi:
+\begin{itemize}
+    \item La sintassi a \textbf{costituenti} mostra \textit{come le parole si combinano} in gruppi gerarchici.
+    \item La sintassi a \textbf{dipendenze} mostra \textit{chi dipende da chi}, evidenziando le relazioni grammaticali tra parole.
+\end{itemize}
 
 \qs{}{Che cos'è la misura PARSEVAL?}
 
@@ -424,7 +560,32 @@ dove $f_j$ sono feature (es: "la parola è maiuscola?") e $\lambda_j$ pesi appre
 
 \qs{}{Che cos'è un treebank?}
 
-\paragraph{Risposta:} un treebank è un corpus che annota la struttura sintattica o semantica di molte frasi.
+\paragraph{Risposta:}
+Un \textbf{treebank} è un corpus linguistico annotato che contiene un insieme di frasi accompagnate dalla loro \textbf{struttura sintattica} (e, in alcuni casi, anche semantica).
+
+\medskip
+Ogni frase nel treebank è arricchita con una rappresentazione strutturale sotto forma di:
+\begin{itemize}
+    \item \textbf{alberi a costituenti} (phrase structure trees), che mostrano come le parole si raggruppano in sintagmi;
+    \item oppure \textbf{alberi a dipendenze} (dependency trees), che indicano le relazioni grammaticali tra le parole.
+\end{itemize}
+
+\medskip
+I treebank sono utilizzati per:
+\begin{itemize}
+    \item addestrare e valutare parser sintattici automatici,
+    \item studiare fenomeni grammaticali nelle lingue naturali,
+    \item costruire risorse linguistiche per il \textit{Natural Language Processing} (NLP).
+\end{itemize}
+
+\medskip
+\noindent
+\textbf{Esempi di treebank famosi:}
+\begin{itemize}
+    \item \textbf{Penn Treebank} (inglese, sintassi a costituenti)
+    \item \textbf{Universal Dependencies} (molte lingue, sintassi a dipendenze)
+    \item \textbf{TUT} (Turin University Treebank, italiano)
+\end{itemize}
 
 \qs{}{Quali sono le fasi della NLG simbolica?}
 
@@ -499,7 +660,7 @@ dove $f_j$ sono feature (es: "la parola è maiuscola?") e $\lambda_j$ pesi appre
 \end{enumerate}
 \qs{}{HMM è un modello generativo o discriminativo?}
 
-\paragraph{Risposta:} HMM è un modello generativo: per capire se in una foto c'è un cane si guardano le caratteristiche che lo rendono un cane (e.g. la code, etc.). MEMM invece è discriminativo: se si vede un guinzaglio non è un cane. 
+\paragraph{Risposta:} HMM è un modello generativo: per capire se in una foto c'è un cane si guardano le caratteristiche che lo rendono un cane (e.g. la coda, etc.). MEMM invece è discriminativo: se si vede un guinzaglio non è un cane. 
 
 \qs{}{Spiegare cosa si intende per anatomia di un parser.}
 
@@ -526,20 +687,20 @@ dove $f_j$ sono feature (es: "la parola è maiuscola?") e $\lambda_j$ pesi appre
       \item È come se la comunicazione venisse vista come un gioco.  
       \item Il problema del turno: Come si capisce quando prendere il turno? Si può concedere all'utente di interrompere il sistema. La difficoltà sta nella comprensione del sistema, poiché può capitare che le persone smettano di parlare temporanemente nel proprio turno.
     \end{itemize}
-    \fancyglitter{Speech Acts:}
+  \item \fancyglitter{Speech Acts:}
     \begin{itemize}
       \item Constativi: affermare qualcosa.
       \item Direttivi: tentativo del parlante di far fare qualcosa all'altra persona.
       \item Committivi: riguardanti azioni future del parlante.
-      \item Riconoscitivi: esprire un'attitudine riguardo la persona che sta ascoltando.
+      \item Riconoscitivi: esprimere un'attitudine riguardo la persona che sta ascoltando.
     \end{itemize}
-    \fancyglitter{Grounding:}
+  \item \fancyglitter{Grounding:}
     \begin{itemize}
       \item I partecipanti alla conversazione hanno bisogno di un "terreno comune". 
       \item Consiste nel confermare che l'ascoltatore abbia capito. 
       \item Esempio: il bottone di un ascensore che si illumina\footnote{Tranne in dipartimento I guess.}.
     \end{itemize}
-    \fancyglitter{Struttura del Dialogo:}
+  \item \fancyglitter{Struttura del Dialogo:}
     \begin{itemize}
       \item \evidence{Punti di Adiacenza:} si ha una struttura sensata. 
       \item Domanda e Risposta. 
@@ -578,7 +739,7 @@ dove $f_j$ sono feature (es: "la parola è maiuscola?") e $\lambda_j$ pesi appre
 
 \qs{}{Cos'è il NER Tagging?}
 
-\paragraph{Risposta:} il Named Entities recognition è un task di tagging che si applica unicamente ai nomi propri. Per distinguere se indicano persone, organizzazioni, luoghi, etc. A differenza del PoS tagging è un multi word: New York City, Marie Curie, etc. 
+\paragraph{Risposta:} il Named Entities recognition è un task di tagging che si applica unicamente ai nomi propri. Per distinguere se indicano persone, organizzazioni, luoghi, etc. A differenza del PoS tagging è un multi word: New York City, Marie Curie, etc. Si tratta di semantica lessicale (sapere che Napoli è un luogo condiziona l'interpretazione semantica rispetto al sapere che Napoli è una squadra). 
 
 \paragraph{2 Sottotask:}
 
