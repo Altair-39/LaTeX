@@ -60,5 +60,72 @@
   \caption{Modello architetturale di JADE.}
 \end{figure}
 
+\paragraph{Caratteristiche importanti:}
+
+\begin{itemize}
+  \item \fancyglitter{HalloWorld Agent:}
+    \begin{itemize}
+      \item Un tipo di agente è creato estendendo \texttt{jade.core.Agent} e ridefinendo il metodo \texttt{setup()}. 
+      \item Ogni agente è identificato da un AID (nome univoco e qualche indirizzo).
+      \item A ogni agente è assegnato uno e un solo thread (per evitare deadlock).
+    \end{itemize}
+  \item \fancyglitter{Local names, GUID and addresses:}
+    \begin{itemize}
+      \item Il nome completo di un agente deve essere globalmente unico. 
+      \item In una singola piattaforma JADE ci si riferisce agli agenti solamente mediante il loro nome. 
+      \item È possibile creare AID. 
+      \item Si possono passare argomenti agli agenti.
+    \end{itemize}
+  \item \fancyglitter{Terminazione:}
+    \begin{itemize}
+      \item Un agente termina quando è chiamato il metodo \texttt{doDelete()}. Questo metodo non cancella all'istante, ma segnala che l'agente deve essere eliminato (solo dopo aver completato la \texttt{setup()}. 
+      \item Nella terminazione è chiamato il metodo \texttt{takeDown()} per fare operazioni di clean-up.
+    \end{itemize}
+\end{itemize}
+
+\dfn{Classe Behaviour}{
+Il lavoro si un agente è eseguito dalle sue "behaviours". Per far sì che un agente esegua un task è sufficiente definire una behaviour e aggiungerla all'agente. 
+}
+
+\paragraph{Ogni behaviour deve implementare:}
+
+\begin{itemize}
+  \item \texttt{void action():} cosa la behaviour fa. 
+  \item \texttt{boolean done():} quando la behaviour finisce.
+\end{itemize}
+
+\nt{Un agente può eseguire più behaviours in parallelo, il loro scheduling è cooperativo e tutti avvengono nello stesso thread java.}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{05/exec.png}
+  \caption{Modello di esecuzione di un agente.}
+\end{figure}
+
+\paragraph{Tipi di behaviour:}
+
+\begin{itemize}
+  \item \fancyglitter{One shot:}
+    \begin{itemize}
+      \item La loro \texttt{action()} viene eseguita solo una volta. 
+      \item \texttt{done()} restituisce sempre true (non si deve reimplementare).
+    \end{itemize}
+  \item \fancyglitter{Cyclic:}
+    \begin{itemize}
+      \item Non si completano mai, \texttt{action()} effettua sempre le stesse operazioni. 
+      \item \texttt{done()} restituisce sempre false (non si deve reimplementare).
+    \end{itemize}
+  \item \fancyglitter{Complex:}
+    \begin{itemize}
+      \item Hanno uno stato (e.g. DFA) e a seconda di esso svolgono operazioni differenti. 
+      \item Completano quando una data condizione diventa vera.
+    \end{itemize}
+\end{itemize}
+
+
+
+
+
+
 
 \section{Jason}
