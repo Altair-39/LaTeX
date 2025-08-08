@@ -1,6 +1,6 @@
-\chapter{Jade e Jason}
+\chapter{JADE e JASON}
 
-\section{Jade}
+\section{JADE}
 
 \subsection{FIPA}
 
@@ -122,10 +122,97 @@ Il lavoro si un agente è eseguito dalle sue "behaviours". Per far sì che un ag
     \end{itemize}
 \end{itemize}
 
+\paragraph{Altri tipi:}
 
+\begin{itemize}
+  \item \fancyglitter{WakerBehaviour:}
+    \begin{itemize}
+      \item Al posto di \texttt{action()} e \texttt{done()} si deve ridefinire \texttt{onWake()} che verrà eseguito dopo un certo timeout. 
+      \item Subito dopo l'esecuzione il behaviour è completato.
+    \end{itemize}
+  \item \fancyglitter{TickerBehaviour:}
+    \begin{itemize}
+      \item Al posto di \texttt{action()} e \texttt{done()} si deve ridefinire \texttt{onTick()} che verrà eseguito periodicamente.
+      \item L'esecuzione va avanti all'infinito o finché non viene invocato \texttt{stop()}. 
+      \item Solitamente si usa per aggiungere periodicamente delle behaviours.
+    \end{itemize}
+\end{itemize}
 
+\paragraph{Other shits on behaviours:}
 
+\begin{itemize}
+  \item \texttt{onStart():} invocato prima della prima esecuzione di \texttt{action()}. Sono operazioni che devono essere eseguite prima di ogni behaviour.
+  \item \texttt{onEnd():} invocato dopo che \texttt{done()} restituisce true. Sono operazioni che devono essere eseguite alla fine di ogni behaviour.
+  \item \texttt{removeBehaviour():} well, prova a indovinare cosa fa... RIMUOVE LA FUCKING BEHAVIOUR DAL POOL DI UN AGENTE\footnote{Non chiama \texttt{onEnd}.}. 
+  \item Quando il pool di behaviours attive di un agente è vuoto esso entra in IDLE a il suo thread va in sleep.
+\end{itemize}
 
+\subsection{Comunicazione tra Agenti}
 
+\dfn{Modello di Comunicazione}{
+  Il modello di comunicazione è basato sul passaggio asincrono di messaggi. I messaggi sono definiti dal linguaggio ACL (FIPA).
+}
 
-\section{Jason}
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.65]{05/mess.png}
+  \caption{Modello di comunicazione.}
+\end{figure}
+
+\paragraph{I messaggi:}
+
+\begin{itemize}
+  \item Invio: inviare i messaggi è la creazione di un messaggio ACL e l'invio del messaggio tramite \text{send(ACLMessage)}.
+  \item Ricezione: per leggere i messaggi si usa \texttt{receive()}.
+\end{itemize}
+
+\paragraph{Bloccare una behaviour mentre si aspetta per un messaggio:}
+
+\begin{itemize}
+  \item Il metodo \texttt{block()} non blocca il thread, ma sposta il behaviour dal pool di comportamenti attivi in un pool di comportamenti bloccati. 
+  \item Non è una chiamata bloccante. 
+  \item Tutte le behaviours vengono riattivate quando arriva un nuovo messaggio.
+\end{itemize}
+
+\paragraph{Leggere selettivamente una coda di messaggi:}
+
+\begin{itemize}
+  \item \texttt{receive()} restituisce il primo messaggio nella coda di messaggi e lo rimuove. 
+  \item Se ci sono più behaviours che aspettano un messaggio una può rubare il messaggio a un'altra behaviour interessata. 
+      \item Per evitare questo è possibile leggere solo certi tipi di messaggi con certe caratteristiche.
+\end{itemize}
+
+\paragraph{Ricevere un messaggio in "modalità bloccante":}
+
+\begin{itemize}
+  \item Gli agenti hanno anche un metodo \texttt{blockingReceive()} che restituisce quando c'è un messaggio nella coda di messaggi.
+  \item Questa è una chiamata bloccante, per cui nessuna altra behaviour può eseguire finché la behaviour che ha invocato il metodo non ha ricevuto un messaggio.
+\end{itemize}
+
+\dfn{Pagine Gialle}{
+Un servizio che consente agli agenti di pubblicare uno o più servizi che forniscono in modo che gli altri agenti possano trovarli.
+}
+
+\nt{In JADE ci si può accedere come oggetto remoto o interagendo come fosse un agente con messaggi ACL (modalità imposta da FIPA).}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{05/yellow.png}
+  \caption{Servizio di pagine gialle.}
+\end{figure}
+
+\pagebreak
+
+\subsection{Funzionalità Avanzate}
+
+\dfn{Protocolli di Interazione}{
+  Hanno un insieme di tipi di messaggio (INFORM, REQUEST, PROPOSE, \dots) che consentono lo scambio di specifiche sequenze predefinite di messaggi durante una conversazione.
+}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.3]{05/FIPA_SUB.jpg}
+  \caption{FIPA Protocol.}
+\end{figure}
+
+\section{JASON}
