@@ -197,13 +197,13 @@ Un servizio che consente agli agenti di pubblicare uno o più servizi che fornis
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[scale=0.5]{05/yellow.png}
+    \includegraphics[scale=0.6]{05/yellow.png}
   \caption{Servizio di pagine gialle.}
 \end{figure}
 
 \pagebreak
 
-\subsection{Funzionalità Avanzate}
+\subsection{Protocolli di Interazione}
 
 \dfn{Protocolli di Interazione}{
   Hanno un insieme di tipi di messaggio (INFORM, REQUEST, PROPOSE, \dots) che consentono lo scambio di specifiche sequenze predefinite di messaggi durante una conversazione.
@@ -211,8 +211,148 @@ Un servizio che consente agli agenti di pubblicare uno o più servizi che fornis
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[scale=0.3]{05/FIPA_SUB.jpg}
+    \includegraphics[scale=0.35]{05/FIPA_SUB.jpg}
   \caption{FIPA Protocol.}
 \end{figure}
 
+\paragraph{Alcuni protocolli comuni sono già presenti:}
+
+\begin{itemize}
+  \item Request. 
+  \item Contract-net. 
+  \item Subscribe.
+\end{itemize}
+
+\paragraph{Essi garantiscono:}
+
+\begin{itemize}
+  \item Che il flusso di messaggi sia compliant con il protocollo. 
+  \item Che se è presente un timeout esso sia corretto.
+\end{itemize}
+
 \section{JASON}
+
+\subsection{Introduzione}
+
+\dfn{AgentSpeak}{
+  Un linguaggio di programmazione per agenti che si propone di colmare il gap tra specifica teorica e implementazione di un agente.
+}
+
+\nt{JASON è un'implementazione di AgentSpeak, scritta in java.}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Gli agenti BDI vengono trattati sotto due punti di vista:
+      \begin{itemize}
+        \item Specifica teorica. 
+        \item Implementazione.
+      \end{itemize}
+    \item Le implementazioni esistenti usano strutture dati per rappresentare \fancyglitter{belief}, \fancyglitter{desires} e \fancyglitter{intentions}.
+    \item JASON è un'estensione della programmazione logica (e.g. prolog).
+  \end{itemize}
+}
+
+\paragraph{Agenti BDI:}
+
+\begin{itemize}
+  \item Sistemi collocati in un ambiente dinamico, che muta nel tempo. 
+  \item Sistemi in grado di percepire informazioni provenienti dall'ambiente. 
+  \item Sistemi in grado di compiere delle azioni sulla base dei propri stati mentali, in particolare:
+    \begin{itemize}
+      \item Belief: cattura le informazioni. 
+      \item Desire: cattura le motivazioni. 
+      \item Intention: catture le decisioni.
+    \end{itemize}
+\end{itemize}
+
+\subsection{AgentSpeak(L)}
+
+\qs{}{Ma com'è fatto AgentSpeak(L)?}
+
+\begin{itemize}
+  \item Si parte da un BDI. 
+  \item Il sistema è PRS (Procedural Reasoning System) e dMARS (Distribuited Multi-Agent Reasoning System). 
+  \item Si basa sulla logica del primordine con eventi e azioni. 
+  \item A differenza di BDI si vanno a scrivere programmi. 
+  \item Dettaglio dell'agente: 
+    \begin{itemize}
+      \item Current belief: modello di sé stesso, dell'ambiente e degli altri agenti. 
+      \item Desires: stati che l'agente vuole raggiungere. 
+      \item Intentions: adozione di programmi per soddisfare certi stimoli.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Il linguaggio AgentSpeak(L):}
+
+\begin{itemize}
+  \item Testuale. 
+  \item Possiede belief (predicati), piani, azioni, intentions, eventi e goals. 
+  \item Piani:
+    \begin{itemize}
+      \item Context-sensitive. 
+      \item Possono essere invocati dall'utente. 
+      \item Decomposizione gerarchica dei goals.
+      \item Simili alle clausole di prolog.
+    \end{itemize}
+  \item Usa un alfabeto composto da variabili, costanti, simboli funzionali, simboli predicativi, simboli di azione, connettivi, quantificatori e punteggiatura. 
+  \item I connettivi sono: 
+    \begin{itemize}
+      \item $\&$: congiunzione. 
+      \item not: negazione. 
+      \item $\leftarrow$: implicazione. 
+      \item !: achievement goal. 
+      \item ?: test goal. 
+      \item ;: sequenza.
+    \end{itemize}
+\end{itemize}
+
+\dfn{Belief}{
+  Siano $b(t)$ e $c(s)$ belief atoms, allora $b(t) \& c(s)$ e not $b(t)$ sono beliefs.
+}
+
+\cor{Belief Atom}{
+  Sia $b$ un simbolo predicativo e siano $t_1,\dots,t_n$ termini, allora: $b(t_1,\dots,t_n)$ è un belief atom e si scrive anche $b(t)$.
+}
+
+\nt{Un belief atom e la sua negazione sono detti belief literal. Se un belief atom è ground (senza variabili libere) si chiama belief base.}
+
+\dfn{Goal}{
+  Sia $g$ un simbolo predicativo e siano $t_1,\dots,t_n$ termini, allora: !$g(t_1,\dots,t_n)$ è un achievement goal, ?$g(t_1,\dots,t_n)$ è un test goal.
+}
+
+\paragraph{Triggering event:}
+
+\begin{itemize}
+  \item Quando un agente acquisisce un nuovo goal oppure nota una modifica nell'ambiente può far scattare aggiunte/cancellazioni di goals o beliefs. 
+  \item L'aggiunta è rappresentata dall'operatore +. 
+  \item La rimozione dall'operatore -.
+\end{itemize}
+
+\dfn{Azione}{
+  Sia $a$ un simbolo di azione e siano $t_1,\dots,t_n$ termini, allora $a(t_1,\dots,t_n)$ è un'azione.
+}
+
+\paragraph{Piano:}
+
+\begin{itemize}
+  \item Un piano specifica il modo in cui un agente potrebbe raggiungere un determinato obiettivo. 
+  \item Un Triggering event specifica perché il piano è stato attivato. 
+  \item Il context specifica quali beliefs dovrebbero essere soddisfatti nel set di credenze dell'agente quando il piano scatta. 
+  \item Il body è una sequenza di goals o azioni e specifica:
+    \begin{itemize}
+      \item I goals. 
+      \item Le azioni.
+    \end{itemize}
+  \item true rappresenta un componente vuoto.
+\end{itemize} 
+
+
+
+
+
+
+
+
+
+
+
