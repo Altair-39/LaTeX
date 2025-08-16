@@ -460,6 +460,76 @@ Un servizio che consente agli agenti di pubblicare uno o più servizi che fornis
 
 \subsection{JASON: Un'Implementazione di AgentSpeak(L)}
 
+\dfn{JASON}{
+  Java-Based agentSpeak interpreter used with saci for multi-agent distribution Over the Net. 
+  Si tratta della prima implementazione significativa di AgentSpeak(L) che utilizza SACI: un'infrastruttura per la comunicazione tra agenti per create un sistema distribuito sulla rete.
+}
+
+\paragraph{Aggiunge alcune cose ad AgentSpeak(L):}
+
+\begin{itemize}
+  \item Gestione del fallimento dei piani. 
+    \item Supporto per lo sviluppo di ambienti in java. 
+    \item Possibilità di eseguire un ambiente multi-agente. 
+    \item Possibilità di personalizzare funzioni di selezione, di belief-revision, di azione, di comunicazione tra agenti. 
+    \item Libreria di azioni interne di base. 
+    \item Possibilità di definire azioni interne. 
+    \item Aggiunta della negazione forte.
+\end{itemize}
+
+\nt{Le versioni fino alla 2 utilizzavano un IDE che era una versione modificata di gedit, dalla 3 in poi hanno capito che la command line è oggettivamente superiore.}
+
+\paragraph{Possibile uso della negazione forte:}
+
+\begin{itemize}
+  \item La \fancyglitter{negazione debole} è usata nel contesto dei piani come in AgentSpeak(L). 
+  \item La \fancyglitter{negazione forte} è usata per negare un predicato/fatto.
+\end{itemize}
+
+\paragraph{Predicati atomici annotati:}
+
+\begin{itemize}
+  \item Si possono specificare annotazioni ai predicati nella base belief. 
+  \item Annotazione: lista di termini associati a un predicato. 
+  \item Annotazioni particolari:
+    \begin{itemize}
+      \item $[$source(percept)$]$: l'informazione è stata percepità dall'ambiente. 
+      \item $[$source(self)$]$: l'informazione è stata aggiunta dall'agente stesso durante l'esecuzione di un piano. 
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Piani con labels:}
+
+\begin{itemize}
+  \item È possibile associare una label a ciascun piano. 
+  \item La label può essere un qualsiasi predicato, anche un predicato con annotazione.
+\end{itemize}
+
+\paragraph{Gestione del fallimento dei piani:}
+
+\begin{itemize}
+  \item Esistono eventi in caso di fallimento. 
+  \item Tali eventi sono generati se un'azione fallisce o non vi sono piani applicabili per un evento con l'aggiunta di un goal +!g. 
+  \item Viene generato un evento interno per -!g associato alla stessa intention.
+  \item Se il programmatore ha previsto un piano per -!g e questo è applicabile allora verrà eseguito, altrimenti verrà eliminata l'intera intention.
+\end{itemize}
+
+\paragraph{Azioni interne:}
+
+\begin{itemize}
+  \item Possono essere usate sia nel contesto che nel body. 
+  \item Sono azioni distinte dalle azioni che compie l'agente sull'ambiente mediante gli attuatori. 
+  \item Possono servire per fare introspezione.
+\end{itemize}
+
+\paragraph{Sistemi Multi-Agente con JASON}
+
+\begin{itemize}
+  \item Si possono definire sistemi con più agenti. 
+  \item Ogni sistema prevede un ambiente in cui gli agenti vengono collocati e un set di istanze di agenti. 
+  \item JASON offre una serie di script e un'interfaccia grafica.
+\end{itemize}
+
 
 
 
