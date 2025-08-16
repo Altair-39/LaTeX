@@ -346,11 +346,119 @@ Un servizio che consente agli agenti di pubblicare uno o più servizi che fornis
   \item true rappresenta un componente vuoto.
 \end{itemize} 
 
+\dfn{Piano}{
+  Siano:
+  \begin{itemize}
+    \item $e$ un triggering event. 
+    \item $b_1,\dots,b_m$ belief literals. 
+    \item $h_1,\dots,h_n$ goals o azioni. 
+  \end{itemize}
 
+  allora
+  $$e:b_1\&\dots\&b_m \leftarrow h_1,\dots,h_n$$
+  è un piano.
+}
 
+\nt{La parte sinistra della freccia è detta \fancyglitter{head}, la parte destra della freccia è detta \fancyglitter{body} (un body vuoto è true). La parte a destra dei ":", nell'head, è il contesto.}
 
+\subsection{Semantica Operazionale}
 
+\paragraph{Un agente può essere visto come costituito da:}
 
+\begin{itemize}
+  \item Un insieme di beliefs $B$. 
+  \item Un insieme di piani $P$. 
+  \item Un insieme di intentions $I$. 
+  \item Un insieme di eventi $E$. 
+  \item Un insieme di azioni $A$. 
+  \item Un insieme di funzioni di selezione: $S_\epsilon, S_O, S_I$.
+\end{itemize}
+
+\paragraph{Progetto di un agente:}
+
+\begin{itemize}
+  \item Il progettista specifica un agente scrivendo:
+    \begin{itemize}
+      \item Un insieme di base belief. 
+      \item Un insieme di piani.
+    \end{itemize}
+  \item Si definiscono:
+    \begin{itemize}
+      \item Un insieme di fatti. 
+      \item Un insieme di regole.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Reasoning Cycle:}
+
+\begin{enumerate}
+  \item Viene generato un triggering event quando un agente nota una modifica dell'ambiente circostante (esterno) o quando un utente esterno chiede all'agente di raggiungere un goal (interno). 
+  \item Gli eventi vengono inseriti in un set $E$. 
+  \item Viene applicata la funzione di revisione dei beliefs:
+    \begin{itemize}
+      \item $S_\epsilon$ seleziona in $E$ un evento $E_0$ da processare. 
+      \item $E_0$ viene rimosso da $E$ e viene usato per unificare con i triggering events dei piani $P$. 
+      \item I piani che unificano sono detti \fancyglitter{piani rilevanti} e il loro unificatore si chiama \fancyglitter{unificatore rilevante}.
+    \end{itemize}
+  \item L'unificatore rilevante è applicato al contesto dei piani rilevanti. Una \fancyglitter{correct answer substitution} è ottenuta dal contesto. 
+  \item Per alcuni piani le condizioni dei contesti risultano essere conseguenze logiche del set dei base beliefs $B$. Questi piani sono detti \fancyglitter{piani applicabili} mediante un \fancyglitter{unificatore applicabile} (derivato dalla composizione tra correct answer substitution e unificatore rilevante).
+  \item Dato un evento $E_0$ diversi piani risultano applicabili, per cui la funzione di selezione $S_0$ sceglie uno di questi ($P_0$). Applicando l'unificatore applicabile a $P_0$ si ottiene l'\fancyglitter{intended means} in risposta al triggering event. Ogni intention è uno stack di piani parzialmente istanziati (intention frames). 
+  \item A seconda del tipo di evento:
+    \begin{itemize}
+      \item Esterno: l'intended means è usato per creare una nuova intention che viene aggiunta a $I$. 
+      \item Interno: l'intended means è inserito in cima all'intention esistente che ha fatto scattare l'evento.
+    \end{itemize}
+  \item Quando l'agente esegue un intention:
+    \begin{itemize}
+      \item Eseguire un achievement goal equivale a generare un evento interno per aggiungere il goal alla corrente intention. 
+      \item Eseguire un test goal equivale a trovare una sostituzione per il goal che lo renda una conseguenza logica dei base belief. Se viene trovata una sostituzione il test goal è rimosso. 
+      \item Eseguire un'azione equivale ad aggiungerla al set di azioni $A$ e rimuoverla dal corpo.
+    \end{itemize}
+  \item L'agente torna a valutare il set degli eventi $E$ e il ciclo ricomincia fino a quando il set $E$ è vuoto o non è possibile eseguire altre intentions. 
+\end{enumerate}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{05/reasoning.png}
+  \caption{Reasoning Cycle.}
+\end{figure}
+
+\dfn{Intention}{
+  $I$ è l'insieme delle intentions. Ogni intention è uno stack di piani parzialmente istanziati, ossia piani dove alcune variabili sono state istanziate. Un'intention è denotata come: $[p_1|p_2|\dots|p_z]$
+}
+
+\nt{Caso particolare (true intention): $[$ +!true: true $\leftarrow$ true$]$}
+
+\dfn{Evento}{
+  L'insieme $E$ è l'insieme degli eventi. Ogni evento è una coppia $\langle e, i \rangle$ dove:
+  \begin{itemize}
+    \item $e$ è un triggering event. 
+    \item $i$ è una intention.
+  \end{itemize}
+}
+
+\nt{Se $i$ è la true intention T, l'evento è esterno, altrimenti è interno.}
+
+\paragraph{Ancora sui piani:}
+
+\begin{itemize}
+  \item Scelto un evento $\langle d, i \rangle$ dal set $E$, il triggering event $d$ viene unificato con i triggering event di tutti i piani contenuti nel set $P$. 
+  \item Il \fancyglitter{most general unifier}\footnote{Che schifo IALAB.} (mgu) che unifica i due eventi è detto relevant unifier. 
+  \item L'intention $i$ può essere:
+    \begin{itemize}
+      \item La true intention. 
+      \item Un'intention esistente che ha generato l'evento.
+    \end{itemize}
+\end{itemize}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Un piano rilvante è anche applicabile se esiste una sostituzione che composta con l'unificatore rilevante e applicata al contesto fa sì che quest'ultimo risulti una conseguenza logica dei base beliefs $B$.
+    \item La condizione del contesto di un piano rilevante deve essere conseguenza logica di $B$ affinché il piano sia applicabile.
+  \end{itemize}
+}
+
+\subsection{JASON: Un'Implementazione di AgentSpeak(L)}
 
 
 
