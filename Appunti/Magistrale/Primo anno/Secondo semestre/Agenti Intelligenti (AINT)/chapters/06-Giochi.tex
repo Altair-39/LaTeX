@@ -1,0 +1,133 @@
+\chapter{Teoria dei Giochi}
+
+\section{Introduzione}
+
+\qs{}{Abbiamo una serie di agenti \fancyglitter{egoisti}. Come può un agente prendere una decisione razionale?}
+
+
+\begin{itemize}
+  \item Solitamente i giochi studiati sono a turni con informazione perfetta. 
+  \item In questo capitolo si descriveranno gli aspetti della teoria dei giochi con mosse simultanee. 
+  \item Per semplicità ci si limiterà ai giochi con una sola mossa.
+\end{itemize}
+
+\nt{La teoria dei giochi è utilizzata per procedimenti per bancarotta, vendita delle frequenze radio, sviluppo di prodotti, etc.}
+
+\paragraph{La teoria dei giochi può essere usata in almeno due modi:}
+
+\begin{itemize}
+  \item \fancyglitter{Progettazione di agenti:} analizzare le decisioni dell'agente e calcolarne l'utilità attesa.
+  \item \fancyglitter{Progettazione di meccanismi:} se un ambiente è popolato da più agenti si potrebbero definire delle regole in modo da massimizzare il bene comune.
+\end{itemize}
+
+\paragraph{Un gioco è definito dai seguenti componenti:}
+
+\begin{itemize}
+  \item \fancyglitter{Giocatori} che prendono decisioni. 
+  \item \fancyglitter{Azioni} (strategie) che ogni giocatore può scegliere. 
+  \item Il \fancyglitter{risultato} è determinato dallo \fancyglitter{strategy profile} che specifica quale strategia viene adottata.
+\end{itemize}
+
+\dfn{Soluzione a un Gioco}{
+Una soluzione a un gioco è uno strategy profile in cui ogni giocatore adotta una strategia razionale.
+}
+
+\qs{}{
+  Ma cosa significa che la strategia è razionale?
+}
+
+\subsection{Strategie}
+
+\dfn{Strategia Dominante}{
+  Una strategia dominante è una che domina tutte le altre. Dato un giocatore $A$ e due strategie $sA_1$ e $sA_2$ di questo giocatore: 
+  \begin{itemize}
+    \item $sA_1$ domina strettamente $sA_2$ se, qualunque cosa faccia l'altro giocatore, $sA_1$ dà al giocatore $A$ un payoff maggiore di quello che $sA_2$. 
+    \item $sA_1$ domina debolmente $sA_2$ se, qualunque cosa faccia l'altro giocatore, $sA_1$ dà al giocatore $A$ un payoff maggiore o uguale di quello che $sA_2$, e in almeno un caso $sA_1$ dà un payoff maggiore di quello che $sA_2$ dà.
+    \item $sA_1$ è una strategia fortemente dominante se $sA_1$ domina fortemente ogni altra strategia del giocatore $A$.
+  \end{itemize}
+}
+
+\cor{Strategia che Domina}{
+Una strategia  $s$ per il giocatore $p$ domina fortemente la strategia $s'$ se il risultato di $s$ è meglio per $p$ di quello di $s'$ per ogni scelta di strategie da parte degli altri giocatori.
+}
+
+\nt{È irrazionale scegliere una strategia fortemente dominata ed è irrazionale non scegliere una strategia dominante quando ne esiste una.}
+
+\ex{Dilemma del Prigioniero}{
+  Due presunti scassinatori, Alice e Bob, sono catturati con le mani nel sacco e interrogati
+separatamente dalla polizia. Entrambi sanno che, se confessano il crimine, verranno
+condannati a 5 anni di prigione per furto con scasso, ma se entrambi rifiutano di confessare
+potranno essere condannati solo a 1 anno per il crimine minore di possesso di oggetti rubati.
+Tuttavia, la polizia offre a ognuno di loro separatamente la possibilità di testimoniare contro
+il complice: in tal caso il testimone se ne andrebbe libero, mentre l’altro sarebbe
+condannato a 10 anni.
+Ora Alice e Bob sono posti di fronte al cosiddetto dilemma dei prigionieri: devono
+testimoniare o no?
+Essendo agenti razionali, Alice e Bob vogliono massimizzare la propria utilità. Supponiamo
+che Alice sia totalmente disinteressata del destino del complice: in questo caso la sua utilità
+decresce con il numero di anni che ella dovrà passare in prigione, ma quel che accade a Bob è
+del tutto ininfluente. Bob contraccambia tale sentimento.
+
+\begin{itemize}
+  \item L'utilità dipende dagli anni in prigione: più breve il periodo in prigione, più utilità. 
+  \item Conviene sempre testimoniare perché:
+    \begin{itemize}
+      \item Nel caso migliore non si va in prigione. 
+      \item Nel caso peggiore ci si sta per 5 anni.
+    \end{itemize}
+  \item Se non si testimonia: 
+    \begin{itemize}
+      \item Nel caso migliore ci si sta per 1 anno. 
+      \item Nel caso peggiore ci si sta per 10 anni.
+    \end{itemize}
+    \item Il vero dilemma è che all'altra persona conviene anche testimoniare.
+\end{itemize}
+}
+
+\subsection{Equilibrio di Nash e Strategie}
+
+\dfn{Pareto Optimal}{
+  Un risultato è pareto optimal se non c'è un altro risultato preferibile da tutti i giocatori.
+}
+
+\nt{Nel caso del dilemma del prigioniero (testify, testify) non è pareto optimal, ma (refuse, refuse) lo è.
+
+La soluzione pareto optimal è improbabile perché non è un \fancyglitter{punto di equilibrio}.
+}
+
+\dfn{Equilibrio di Nash}{
+ Uno strategy profile $S = (P_1: s_1, P_2: s_2)$ è un equilibrio di Nash se ogni giocatore $P_i$ in $S$ farebbe peggio se deviasse da $S$, assumendo che tutti gli altri giocatori si attengano a $S$. Precisamente:
+ \begin{itemize}
+  \item Assumendo che il primo agente giochi $s_1$, il secondo agente non può fare niente di meglio che giocare $s_2$. 
+\item Assumendo che il primo agente giochi $s_1$, il secondo agente non può fare niente di meglio che giocare $s_2$. 
+ \end{itemize}
+}
+
+\nt{Un equilibrio con strategie dominanti è un equilibrio di Nash, ma non tutti i giochi hanno strategie dominanti. Se non esistono strategie dominanti possono esserci più equilibri di Nash.}
+
+\qs{}{Un gioco può avere più equilibri di Nash, ma può non averne nessuno?}
+
+\begin{itemize}
+  \item E.g. la morra a due dita. Se il numero di dita è pari, D (dispari) vorrà cambiare, viceversa se il numero di dita è dispari, P (pari) vorra cambiare. È un \fancyglitter{gioco a somma zero}: la somma dei payoff è zero. 
+  \item Nei giochi a somma zero a due giocatori le vincite devono essere uguali e opposte. 
+  \item Nessun profilo di strategie è un punto di equilibrio e quindi si considerano \fancyglitter{strategie miste}.
+\end{itemize}
+
+\thm{Teorema di Nash}{
+  Ogni gioco in cui ogni giocatore ha un insieme finito di strategie possibili ha un equilibrio con strategie miste.
+}
+
+\paragraph{Cooperazione e Self-interested:}
+
+\begin{itemize}
+  \item Il dilemma tra testimoniare o rifiutarsi è il problema fondamentale delle interazioni multi-agenti. 
+  \item Sembra implicare che la cooperazione non si presenti in società di agenti Self-interested (egoisti). 
+  \item Le persone non sono razionali: si potrebbe essere felici a rischiare la cooperazione. 
+  \item Il futuro: se si sa che si incontrerà nuovamente l'avversario allora l'incentivo per disertare non esiste. 
+  \item La cooperazione è la scelta razionale nel dilemma del prigioniero ripetuto infinite volte.
+\end{itemize}
+
+\section{Torneo di Axelrod}
+
+
+
