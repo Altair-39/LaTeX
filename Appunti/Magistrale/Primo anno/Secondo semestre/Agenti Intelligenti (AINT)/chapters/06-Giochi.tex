@@ -125,9 +125,54 @@ La soluzione pareto optimal è improbabile perché non è un \fancyglitter{punto
   \item Le persone non sono razionali: si potrebbe essere felici a rischiare la cooperazione. 
   \item Il futuro: se si sa che si incontrerà nuovamente l'avversario allora l'incentivo per disertare non esiste. 
   \item La cooperazione è la scelta razionale nel dilemma del prigioniero ripetuto infinite volte.
+  \item Se però si sa a priori che il gioco sarà ripetuto $n$ volte allora al giro $n - 1$ si sarà incentivati a disertare. Però questo rende $n - 2$ l'ultimo giro reale, per cui si avrà un incentivo per disertare ancora. 
+  \item Questo è il problema di \fancyglitter{backwards induction}. 
+  \item Se il numero di giri si conosce a priori allora diserare è la migliore strategia.
 \end{itemize}
 
-\section{Torneo di Axelrod}
+\subsection{Torneo di Axelrod}
+
+Supponiamo di giocare il dilemma del prigioniero iterato contro un insieme di avversari. Quale strategia si dovrebbe scegliere per massimizzare il proprio payoff? Axelrod ha investigato questo problema con un torneo di computer, ognuno con la propria strategia. Ogni gioco consisteva di 200 rounds.
+
+\paragraph{Strategie utilizzate:}
+
+\begin{itemize}
+  \item ALLD: Diserta sempre.
+  \item TIT-FOR-TAT:
+  \begin{itemize}
+    \item Nel round 0 coopera. 
+    \item Nei rounds successivi $n$ fa quello che ha fatto il suo avversario nel round $n - 1$.
+  \end{itemize}
+\item TESTER:
+  \begin{itemize}
+    \item Nel round 0 diserta. 
+    \item Se l'avversario collabora allora si passa a TIT-FOR-TAT.
+    \item Altrimenti si fa interleaving tra cooperazione e diserzione.
+  \end{itemize}
+\item JOSS: come TIT-FOR-TAT, ma ogni tanto diserta.
+\end{itemize}
+
+\nt{
+  Il programma migliore è risultato TIT-FOR-TAT. Questo sempra spingere sul fatto che la cooperazione sia  la cosa giusta da fare. Ma questo è perché si è considerata la media di tutte le strategie contro cui ha giocato, per esempio contro ALLD ha perso.
+}
+
+\paragraph{Axelrod ha suggerito alcune regole:}
+
+\begin{itemize}
+  \item Non essere invidiosi: non giocare come se si fosse a somma zero. 
+  \item Sii simpatici: iniziare cooperando e ricambiare la cooperazione. 
+  \item Vendicarsi appropriatamente: si punisce sempre il disertore, ma senza esagerare. 
+  \item Non tenere rancore: ricambiare la cooperazione immediatamente.
+\end{itemize}
+
+\section{Progettazione di Meccanismi}
+
+\subsection{Mechanism Design}
+
+
+
+
+
 
 
 
