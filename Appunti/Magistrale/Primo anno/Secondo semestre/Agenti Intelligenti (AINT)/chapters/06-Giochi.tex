@@ -169,10 +169,38 @@ Supponiamo di giocare il dilemma del prigioniero iterato contro un insieme di av
 
 \subsection{Mechanism Design}
 
+\dfn{Mechanism Design}{Mechanism Design indica la progettazione di protocolli per governare interazioni multi-agenti in modo che essi abbiano certe proprietà desiderabili.}
 
+\paragraph{Proprietà desiderabili:}
 
+\begin{itemize}
+  \item Successo garantito: il protocollo garantisce che prima o poi verrà raggiunto un accordo. 
+  \item Massimizzare il welfare sociale: massimizzare le utilità dei partecipanti. 
+  \item Pareto efficiency: il risultato deve essere pareto optimal. 
+  \item Individual rationality: i partecipanti hanno interesse nel seguire le regole del protocollo. 
+  \item Stability: c'è incentivo nel comportarsi in un determinato modo (e.g. equilibrio di Nash). 
+  \item Simplicity: si sceglie la strategia più ovvia.
+\end{itemize}
 
+\clm{}{}{
+  \begin{itemize}
+    \item Formalmente un meccanismo consiste in un linguaggio  per la descrizione delle possibili strategie adottabili dagli agenti e una regola per i risultati che determina le vincite dato un profilo di strategie adottabili. 
+    \item Le azioni di ogni agente possono influenzare il benessere degli altri in modo tale da ridurre l'utilità globale.
+    \item Tragedy of commons: tutti i contadini portano le proprie bestie a brucare sui prati comunali distruggendoli. 
+    \item Una possibile soluzione è quella di far pagare a ogni agente l'uso delle risorse collettive.
+  \end{itemize}
+}
 
+\subsection{Aste}
 
+Assumiamo che ci sia un singolo bene in vendita, che ha un valore pubblico per tutti i partecipenti e un valore privato che può essere diverso da un partecipante all'altro. 
 
+\paragraph{Tipi di aste:}
+
+\begin{itemize}
+  \item \fancyglitter{Asta inglese:} il banditore incrementa via via il prezzo dell'articolo controllando che ci siano ancora acquirenti interessati finché non ne rimane solo uno. Tutti i partecipanti hanno una semplice strategia dominante: continuare a puntare finché il costo corrente è inferiore al valore personale.
+  \item \fancyglitter{Asta olandese:} il banditore parte da un valore alto e continua ad abbassarlo finché un qualche partecipante accetta l'offerta. 
+  \item \fancyglitter{Asta in busta chiusa:} ogni partecipante comunica al venditore segretamente una singola offerta e quella più alta vince . 
+  \item \fancyglitter{Asta Vickey} (asta in busta chiusa al secondo prezzo): vince chi fa l'offerta più alta, ma paga il prezzo della seconda offerta più alta. In questo caso la strategia dominante è quella di offrire il proprio valore privato.
+\end{itemize}
 
