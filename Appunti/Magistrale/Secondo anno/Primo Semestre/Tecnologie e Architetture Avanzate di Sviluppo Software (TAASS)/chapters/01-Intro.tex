@@ -38,7 +38,7 @@
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.7]{01/crm.png}
+    \includegraphics[scale=0.4]{01/crm.png}
     \caption{Esempio di e-commerce.}
 \end{figure}
 
@@ -96,7 +96,7 @@
 \nt{Lo strumento fondamentale è il \fancyglitter{kanban}: la lavagna, per organizzare il lavoro.}
 
 \dfn{Siloed}{
-  Organizzazione aziendale a silos: si comunica poco e male. CI sono 4 gruppi: 
+  Organizzazione aziendale a silos: si comunica poco e male. Ci sono 4 gruppi: 
   \begin{itemize}
     \item BA Team: relazioni con gli stakeholders, requisiti, specifiche, documentazione. 
     \item Dev Team: programma e fa un minimo di unit testing. 
@@ -105,7 +105,127 @@
   \end{itemize}
 }
 
+\nt{I vari team si parlano in maniera molto limitata.}
 
+\dfn{Transaction Processing Monitor}{
+  I TP monitor erano il primo esempio di soluzione middleware. Usata nei sistemi di mainframe erano: centralizzati, monolitici, mission critical, con accesso da vari terminali.
+}
 
+\cor{Middleware}{
+  Software nel mezzo tra applicazioni e infrastrutture. Permette alle applicazioni di utilizzare le infrastrutture per farle comunicare tra di loro.
+}
 
+\paragraph{Obiettivi:}
 
+\begin{itemize}
+  \item Performance: si occupa di transazioni rispettando le proprietà ACID. 
+  \item Scalabilità: se un programma crasha ne avvia un'altra istanza. 
+  \item Affidabilità. 
+  \item Consistenza dei dati.
+\end{itemize}
+
+\paragraph{Limiti:}
+
+\begin{itemize}
+  \item Proprietario. 
+  \item Tight coupling. 
+  \item Costosi. 
+  \item Complessi.
+\end{itemize}
+
+\qs{}{Cosa rimane dei TP monitors?}
+
+\begin{itemize}
+  \item \fancyglitter{Gestione delle transazioni e coordinazione:}
+    \begin{itemize}
+      \item Soluzioni basate su 2PC (2 Phase Commit). 
+      \item Le proprietà ACID, attualmente supportate internamente da molti database. 
+      \item Proprietà BASE: 
+        \begin{itemize}
+          \item Basically: risposte basiche.
+          \item Available: si accetta che si possa non avere il dato più aggiornato. 
+          \item State: la consistenza potrebbe non essere rispettata.
+          \item Eventually: prima o poi si riceverà il dato corretto.
+        \end{itemize}
+    \end{itemize}
+  \item \fancyglitter{Pool di connessioni}. 
+  \item \fancyglitter{Distribuzione del carico:}
+    \begin{itemize}
+      \item Le richieste vengono distribuite su varie istanze. 
+      \item In caso di fallimento l'applicazione riparte.
+    \end{itemize}
+\end{itemize}
+
+\dfn{Remote Procedure Call}{
+  Si chiama una funzione da una macchina remota come se fosse locale. È indipendente dal linguaggio e a una struttura silos. RIchiede aggiunte sia nello sviluppo che a runtime.
+}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.55]{01/rpc1.png}
+    \caption{Remote Procedure Call - Development.}
+\end{figure}
+
+\begin{itemize}
+  \item Serializzazione: trasformare i dati in qualcosa che può essere comunicato.
+  \item Marshalling: usa la serializzazione e inserisce meta-dati per permettere la ricostruzione della struttura dati.
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.55]{01/rpc2.png}
+    \caption{Remote Procedure Call - Runtime.}
+\end{figure}
+
+\dfn{Common Object Request Broker Architecture (CORBA)}{
+  Evoluzione di rpc pensata per gli oggetti. Si possono creare oggetti in un server che possono rispondere a chiamate remote.
+}
+
+\nt{Più successo lo ha avuto RMI (Remote Method Invocation) che è CORBA, ma solo con Java.}
+
+\paragraph{Limiti:}
+
+\begin{itemize}
+  \item Nascondere le cose al programmatore: si ha un falso senso di disaccoppiamento e i programmatori tendono a non vedere la rete. 
+  \item La programmazione sembra semplice perché i problemi vengono sottovalutati.
+\end{itemize}
+
+\dfn{Message Oriented Middleware}{
+  Invece di chiamarsi a vicenda le applicazioni si inviano messaggi a vicenda:
+  \begin{itemize}
+    \item Sincronizzazione tra operazioni in applicazioni diverse. 
+    \item Notifiche di eventi. 
+    \item Non c'è necessità di conoscere il ricevente.
+  \end{itemize}
+}
+
+\paragraph{Due modelli di comunicazione:}
+
+\begin{itemize}
+  \item Point-to-Point: il mittente manda un messaggio nella coda del middleware, il ricevente lo consuma. 
+  \item Publish and Subscribe: c'è una bacheca su cui chiunque può pubblicare un evento.
+\end{itemize}
+
+\dfn{Enterprise Service Bus (ESB)}{
+  Un middleware coscente della logica di business. Si occupa di tradurre protocolli e dati.
+}
+
+\nt{Caduto totalmente in disuso.}
+
+\dfn{AGILE}{
+  Metodologie fondate su itertività e incrementalità.
+}
+
+\cor{XP - Xtreme Programming}{
+  Si concentra sul codice, lo sviluppo di software si fa in team. Si dà importanza ai feedback sia dai clienti che dagli sviluppatori (small release, test-driven development, on-site customer).
+}
+
+\paragraph{Principi di XP:}
+
+\begin{itemize}
+  \item Comunicazione. 
+  \item Semplicità. 
+  \item Feedback. 
+  \item Coraggio. 
+  \item Rispetto.
+\end{itemize}
