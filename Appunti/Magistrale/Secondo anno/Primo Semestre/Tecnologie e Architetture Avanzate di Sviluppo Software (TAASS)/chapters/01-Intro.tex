@@ -229,3 +229,142 @@
   \item Coraggio. 
   \item Rispetto.
 \end{itemize}
+
+\section{Ripasso su Spring Boot}
+
+\nt{DISCLAIMER: è il mio primo approccio alla programmazione web (dato che sono specializzata in robe teoriche e/o a basso livello) per cui potrei fare qualche imprecisione, sorry.}
+
+\subsection{Maven}
+
+Dato che gli IDE moderni consumano un sacco di batteria e risorse includo anche una mini guida per setuppare un progetto java con Maven (in questo modo potete usare vim, gedit o nano se vi va). Se usate Intell*J, Vs C*de o altro potete saltare\footnote{questi IDE possono utilizzare anche Maven, ma lo gestiscono loro.}.
+
+\dfn{Maven}{
+  Maven è un tool per creare automaticamente delle build di progetti java. Permette di compilare codice, fare testing, packaging, etc.
+}
+
+\nt{Maven utilizza il \fancyglitter{Project Object Model (POM)} per descrivere la configurazione di un progetto e gestire le dipendenze.}
+
+\qs{}{Come si crea un progetto con Maven?}
+
+\begin{lstlisting}[language=bash, caption={Creazione di un progetto Maven}]
+mvn archetype:generate \
+    -DgroupId=com.example \
+    -DartifactId=myapp \
+    -DarchetypeArtifactId=maven-archetype-quickstart \
+    -DinteractiveMode=false
+\end{lstlisting}
+
+\paragraph{Nello specifico:}
+
+\begin{itemize}
+  \item \texttt{DgroupID} indica il nome di una compagnia o di un'organizzazione. 
+  \item \texttt{DartifactId} indica il nome del progetto. 
+  \item \texttt{DarchetypeArtifactId} indica il template (in questo caso un semplice HelloWorld java.).
+\end{itemize}
+
+\paragraph{Per renderlo un progetto Spring Boot è necessario apportare le seguenti modifiche al \texttt{pom.xml}:}
+
+\begin{lstlisting}[language=xml, caption={Esempio di pom.xml per Spring Boot}]
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.4</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.example</groupId>
+    <artifactId>myapp</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>myapp</name>
+
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+\end{lstlisting}
+\paragraph{Spiegazione:}
+\begin{itemize}
+  \item Il \texttt{parent} imposta la versione di Spring Boot e le configurazioni di default.
+  \item Le \texttt{dependencies} includono il modulo web e quello per i test.
+  \item Il plugin \texttt{spring-boot-maven-plugin} permette di eseguire l'app con \texttt{mvn spring-boot:run}.
+\end{itemize}
+\pagebreak
+\subsection{Gradle}
+
+Per alcune persone può essere più facile utilizzare Gradle (inclusa me), quindi aggiungo qualcosa anche per questo. 
+
+\dfn{Gradle}{
+Come Maven, Gradle è un tool per creare automaticamente progetti java, C/C++, kotlin, etc. A livello di base ha le stesse funzionalità di Maven, le differenze principali sono il linguaggio utilizzato (Maven è basato su xml, Gradle su Groovy), velocità (Gradle è più veloce per build incrementali), etc.
+}
+
+\qs{}{Come si crea un progetto Spring Boot con Gradle?}
+
+\begin{lstlisting}[language=bash, caption={Creazione di un progetto Spring Boot con Gradle}]
+curl https://start.spring.io/starter.tgz \
+         -d type=gradle-project \
+         -d dependencies=web \
+         -d groupId=com.example \
+         -d artifactId=test \
+         -d name=test \
+         -d packageName=com.example.test \
+         -o test-gradle.tgz
+   tar -xvf test-gradle.tgz
+   cd test
+\end{lstlisting}
+
+\paragraph{Alcune osservazioni importanti:}
+
+\begin{itemize}
+\item Di default il progetto creato usa java 17, per cambiarlo basta andare nel file \texttt{build.gradle}.
+\item Inizialmente darà errore perché non si sono definiti endpoint.
+\end{itemize}
+
+\paragraph{Esecuzione del progetto:}
+
+\begin{lstlisting}[language=bash, caption={Avvio del progetto Spring Boot con Gradle}]
+# Su Linux/macOS
+./gradlew bootRun
+
+# Su Windows
+gradlew.bat bootRun
+\end{lstlisting}
+
+\nt{Al primo avvio Gradle scaricherà tutte le dipendenze necessarie. Una volta completato, l'app sarà disponibile su \texttt{http://localhost:8080/}.  
+Se non hai ancora definito controller o endpoint, vedrai la \textit{Whitelabel Error Page}.}
+
+\section{Spring Boot}
+
+
+
+
+
+
+
