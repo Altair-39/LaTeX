@@ -69,7 +69,9 @@
   \item Auditability: le verifiche di qualità fatte su software\footnote{Meglio visto in "Etica, Società e Privacy".}.
 \end{itemize}
 
-\subsection{Panoramica Storica}
+\section{Panoramica Storica}
+
+\subsection{Dagli Anni '70 al 2000}
 
 \dfn{Waterfall}{
   Le metodologie a cascata\footnote{Viste a "Sviluppo delle Applicazioni Software".} sono metodologie in cui ci sono fasi ben distinte e separate tra loro.
@@ -212,6 +214,8 @@
 
 \nt{Caduto totalmente in disuso.}
 
+\subsection{Dal 2000 ai Giorni Nostri}
+
 \dfn{AGILE}{
   Metodologie fondate su itertività e incrementalità.
 }
@@ -230,13 +234,209 @@
   \item Rispetto.
 \end{itemize}
 
+\dfn{Scrum}{
+  Prassi di organizzazione dell'attività lavorativa degli sviluppatori, si concentra sulla comunicazione:
+  \begin{itemize}
+    \item Organizzazione: esiste una lista del lavoro che deve essere svolto (Product Backlog e PDI), un'iterazione di lavoro di massimo 4 settimane (sprint) e deve esserci un incremento (valore percepibile dal cliente).
+    \item Ruoli: ci si organizza in piccoli teams per ogni modulo.
+  \end{itemize}
+}
+
+\paragraph{Ruoli in Scrum:}
+
+\begin{itemize}
+  \item Product owner: persona che gestisce il Backlog, in contatto con i clienti (non è il capo). 
+  \item Scrum master: organizza le riunioni, fa da mediatore. 
+  \item Development team.
+\end{itemize}
+
+\paragraph{Eventi per ogni sprint:}
+
+\begin{itemize}
+  \item Sprint panning: riunione in cui si decide cosa fare.
+  \item Daily scrum: meeting in piedi, deve durare poco.
+  \item Sprint review: alla fine dello sprint, si mostra l'incremento agli stakeholders.
+  \item Sprint retrocspective: dopo la review, è una riunione interna al team.
+\end{itemize}
+
+\dfn{Kanban}{
+  Si vuole mantenere il flusso di lavoro. Non si mette più lavoro di quello che si riesce a fare.
+}
+
+\paragraph{Principi di Kanban:}
+
+\begin{itemize}
+  \item Visualizzazione: si vede il proprio lavoro attraverso delle lavagne su cui vengono appiccicati post-it.
+  \item WIP limit: si fanno un certo numero di cose contemporaneamente (non più di 3-4). 
+  \item Pull system\footnote{Gacha moment.}: le cose vengono spostate dal to do al doing quando si libera un posto. 
+  \item Continuous delivery: si integra la feature implementata e la si consegna. 
+\end{itemize}
+
+\paragraph{Board:}
+
+\begin{itemize}
+  \item Backlog. 
+  \item To do: roba da fare. 
+  \item Doing (WIP limit): roba che si sta facendo. 
+  \item Done: roba fatta.
+\end{itemize}
+
+\dfn{Scrumban}{
+  Scrum: ha i ruoli, il product Backlog e PBI, daily meeting, sprints. 
+
+  Kanban: il flusso è pull-based e usa i WIP limit, le lavagne e i Continuous
+   delivery.
+}
+
+\paragraph{Siloed evoluta:}
+
+\begin{itemize}
+  \item Biz team: relazioni con gli stakeholders, marketing e vendite. 
+  \item Dev team: requisiti, sviluppo, testing e comunicazione con il biz team. 
+  \item Ops team: deploy, setting, validazioni.
+\end{itemize}
+
+\nt{La divisione c'è ancora, ma c'è più comunicazione tra i vari team.}
+
+\dfn{Service-Oriented Architecture}{
+  Si inizia a ragionare sul fatto che l'integrazione debba avvenire mediante moduli che forniscono servizi l'uno all'altro.
+}
+
+\qs{}{Cos'è un servizio?}
+
+\cor{Servizio}{
+  Un servizio è una capacità di business autocontenuta che viene esposta secondo un contratto standard (un'interfaccia).
+}
+
+\paragraph{I servizi:}
+
+\begin{itemize}
+  \item \fancyglitter{Coarse-grained:} ogni servizo implementa tutto (più pesanti dei microservizi). 
+  \item Condivide dati e funzioni attraverso interfacce (o API). 
+  \item \fancyglitter{Scopribili:} i servizi si scoprono attraverso nomi e non IP.
+\end{itemize}
+
+\paragraph{SOA:}
+
+\begin{itemize}
+  \item Comunicazione attraverso applicazioni apposta o protocolli basati su HTTP. 
+  \item Le infrastrutture hanno un ruolo importante nel comporre i servizi in funzioni. 
+  \item Deployment centralizzato.
+\end{itemize}
+
+\dfn{Web Services}{
+  Istanza di Service-Oriented Architecture che stabilisce:
+  \begin{itemize}
+    \item Protocollo di comunicazione (SOAP):
+      \begin{itemize}
+        \item XML su HTTP. 
+        \item Consente sia comunicazione sincrona che asincrona.
+      \end{itemize}
+    \item Service registry: UDDI
+      \begin{itemize}
+        \item Elenco di servizi registrati secondo le loro features generali. 
+        \item Consente ai servizi di essere scopribili. 
+        \item Comunicazione mediante SOAP.
+      \end{itemize}
+    \item Contratto (WSDL, Web Service Description Language): 
+      \begin{itemize}
+        \item Fornisce informazioni per contattare effettivamente un servizio. 
+        \item La struttura dei messaggi. 
+        \item Le strutture dati. 
+        \item Protocollo e indirizzo.
+      \end{itemize}
+  \end{itemize}
+}
+
+\clm{Sui Web Services}{}{
+  Idealmente:
+  \begin{itemize}
+    \item Il client cerca il servizio su UDDI. 
+    \item Ottiene il link dal WSDL del servizio. 
+    \item Utilizzando WSDL collega dinamicamente il servizio alle operazioni.
+  \end{itemize}
+  In Pratica:
+  \begin{itemize}
+    \item La scoperta di servizi "in tempo reale"  era impraticabile. 
+    \item I WSDL erano in maggioranza statici. 
+    \item Le informazioni venivano salvate in file di configurazione.
+  \end{itemize}
+}
+
+\subsection{JavaEE e Cloud}
+
+\dfn{Enterprise Java Beans (EJB)}{
+ Gli EJB sono oggetti resi disponibili dinamicamente. Offrivano:
+ \begin{itemize}
+\item Gestione del lifecycle. 
+  \item RMI. 
+  \item Sicurezza basata sui ruoli. 
+  \item Persistenza tramite Object-relational mapping (ORM). 
+  \item Gestione delle transazioni ACID.
+ \end{itemize}
+}
+
+\paragraph{I Java Beans erano pesanti:}
+
+\begin{itemize}
+  \item Oggetti collegati alla JVM (al container). 
+  \item Molto accoppiati all'ambiente di esecuzione. 
+  \item Necessitavano un java application server. 
+  \item Molto codice boiler-plate. 
+  \item Annotazioni XML. 
+  \item Non portabili.
+\end{itemize}
+
+\nt{Tutto questo fino al 2006 in cui la terza edizione di EJB li fa diventare più leggeri:
+\begin{itemize}
+  \item Annotazioni Java al posto di XML.
+  \item POJOs (Plain Old Java Objects). 
+  \item JPA (Java Persistence). 
+  \item Si integrano con web service. 
+  \item Introduzione della \fancyglitter{dependency injection}: design pattern per collegare due o più moduli tramite l'ambiente di sviluppo stesso.
+\end{itemize}
+}
+
+\dfn{Cloud}{
+  Insieme di risorse sia comptazionali, sia di storage, sia di networking. Queste risorse sono rese disponibili come servizi mediante API.
+}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Il cloud è un'astrazione che nasconde la struttura fisica delle macchine. 
+    \item C'è un livello simile a un OS. 
+    \item I servizi sono offerti su base dichiarativa: diventa possibile avere un servizio che si conformi alle proprie necessità.
+  \end{itemize}
+}
+
+\paragraph{Modelli:}
+
+\begin{itemize}
+  \item \fancyglitter{Infrastructure as a Service (IaaS):} l'azienda mette a disposizione macchine virtuali, di storage o sottoreti visibili a chi compra il servizio. 
+  \item \fancyglitter{Platform as a Service (PaaS):} si acquista una piattaforma che nasconde cose e ottimizza. 
+  \item \fancyglitter{Function as a Service (FaaS):} si carica su una piattaforma una serie di funzioni e si sviluppa solo il front end.
+\end{itemize}
+
+\paragraph{Applicazioni native sul cloud:}
+
+\begin{itemize}
+  \item Moduli molto leggeri e loosely-coupled. 
+  \item Deployment contenerizzato (impacchettato e Platform independent), orchestrazione (ignorante rispettto all'architettura ma che può operare su essa) e elasting scaling (cambiare il livello dei servizi). 
+  \item Dev Cycle features: integrazione continua, continuous delivery, deploy, infrastrutture dichiarative, consistenza tra dev/test/prod, anticipare i test sulla sicurezza, l'applicazione deve essere osservabile. 
+  \item NFRs: scalabilità, portabilità, sicurezza, evoluzione, mantenibilità, affidabilità.
+\end{itemize}
+
+\dfn{DevOPs}{
+  Gestione del sistema mediante l'utilizzo di tools e pratiche basato sui principi Lean.
+}
+
 \section{Ripasso su Spring Boot}
 
 \nt{DISCLAIMER: è il mio primo approccio alla programmazione web (dato che sono specializzata in robe teoriche e/o a basso livello) per cui potrei fare qualche imprecisione, sorry.}
 
 \subsection{Maven}
 
-Dato che gli IDE moderni consumano un sacco di batteria e risorse includo anche una mini guida per setuppare un progetto java con Maven (in questo modo potete usare vim, gedit o nano se vi va). Se usate Intell*J, Vs C*de o altro potete saltare\footnote{questi IDE possono utilizzare anche Maven, ma lo gestiscono loro.}.
+Dato che gli IDE moderni consumano un sacco di batteria e risorse includo anche una mini guida per setuppare un progetto java con Maven (in questo modo potete usare vim, gedit o nano se vi va). Se usate Intell*J, Vs C*de o altro potete saltare\footnote{Questi IDE possono utilizzare anche Maven, ma lo gestiscono loro.}.
 
 \dfn{Maven}{
   Maven è un tool per creare automaticamente delle build di progetti java. Permette di compilare codice, fare testing, packaging, etc.
@@ -259,7 +459,7 @@ mvn archetype:generate \
 \begin{itemize}
   \item \texttt{DgroupID} indica il nome di una compagnia o di un'organizzazione. 
   \item \texttt{DartifactId} indica il nome del progetto. 
-  \item \texttt{DarchetypeArtifactId} indica il template (in questo caso un semplice HelloWorld java.).
+  \item \texttt{DarchetypeArtifactId} indica il template (in questo caso un semplice HelloWorld java).
 \end{itemize}
 
 \paragraph{Per renderlo un progetto Spring Boot è necessario apportare le seguenti modifiche al \texttt{pom.xml}:}
@@ -285,7 +485,7 @@ mvn archetype:generate \
     <name>myapp</name>
 
     <properties>
-        <java.version>17</java.version>
+        <java.version>24</java.version>
     </properties>
 
     <dependencies>
@@ -316,7 +516,6 @@ mvn archetype:generate \
   \item Le \texttt{dependencies} includono il modulo web e quello per i test.
   \item Il plugin \texttt{spring-boot-maven-plugin} permette di eseguire l'app con \texttt{mvn spring-boot:run}.
 \end{itemize}
-\pagebreak
 \subsection{Gradle}
 
 Per alcune persone può essere più facile utilizzare Gradle (inclusa me), quindi aggiungo qualcosa anche per questo. 
@@ -360,7 +559,7 @@ gradlew.bat bootRun
 \nt{Al primo avvio Gradle scaricherà tutte le dipendenze necessarie. Una volta completato, l'app sarà disponibile su \texttt{http://localhost:8080/}.  
 Se non hai ancora definito controller o endpoint, vedrai la \textit{Whitelabel Error Page}.}
 
-\section{Spring Boot}
+\subsection{Spring Boot}
 
 
 
