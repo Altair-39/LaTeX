@@ -601,7 +601,13 @@
 	Come i value streams ma interni all'azienda, non riguardano direttamente il cliente finale.
 }
 
-\section{Ripasso su Spring Boot}
+\dfn{User Stories}{
+	Una user story è una breve narrativa che descrive un processo o un goal dal punto di vista di un solo attore. Cattura le motivazioni, le azioni e il risultato desiderabile.
+}
+
+\nt{Una variante sono le AGILE user stories che sono composte da una sola frase (As a [actor], I want [goal], so that [reason]).}
+
+\section{Ripasso su Spring Boot e React}
 
 \nt{DISCLAIMER: è il mio primo approccio alla programmazione web (dato che sono specializzata in robe teoriche e/o a basso livello) per cui potrei fare qualche imprecisione, sorry.}
 
@@ -730,9 +736,77 @@ gradlew.bat bootRun
 \nt{Al primo avvio Gradle scaricherà tutte le dipendenze necessarie. Una volta completato, l'app sarà disponibile su \texttt{http://localhost:8080/}.
 	Se non hai ancora definito controller o endpoint, vedrai la \textit{Whitelabel Error Page}.}
 
-\subsection{Spring Boot}
 
+\subsection{SpringBoot}
 
+\nt{Non descriverò come fare un progetto su IntelliJ, se non ci riuscite è skill issue.}
+
+\dfn{SpringBoot}{
+	SpringBoot è un frameworks open-source per la programmazione di webapp.
+}
+
+\paragraph{Spring usa il pattern MVC:}
+
+\begin{itemize}
+	\item \fancyglitter{Controller:} punto di ingresso delle richieste esterne.
+	\item \fancyglitter{Model:} consultato dal controller quando arriva una richiesta.
+	\item \fancyglitter{View:} prodotta dal controller.
+\end{itemize}
+
+\qs{}{Come si fa a fare un controller in spring?}
+
+\dfn{Annotazioni java}{
+	Modo per aggiungere metadati nel codice java. Forniscono informazioni extra al compilatore.
+}
+
+\paragraph{Annotazioni in spring:}
+
+\begin{itemize}
+	\item \texttt{@RestController:} fa capire a spring che è un controller e quindi deve stare in attesa di richieste HTTP.
+	\item \texttt{@RequestMapping(\dots):} specifica dove devono arrivare le URL. Per esempio in una classe \texttt{TavoliController} può esserci l'annotazione \texttt{@RequestMapping("/tavoli")}.
+	\item \texttt{@GetMapping(\dots):} handler per le varie richieste. Il suo contenuto viene aggiunto dopo la root string specificata da \texttt{@RequestMapping(\dots)}. Per esempio \texttt{@GetMapping(\{id\})} indica che si vuole un tavolo con un determinato menu.
+	\item \texttt{@PathVariable:} si mette nella signature dei metodi per passare i parametri presi dal \texttt{@GetMapping(\dots)}. Per esempio \texttt{ResponseEntity$<$Tavolo$>$ getTavoli(@PathVariable int id)} va a utilizzare l'id specificato in precedenza. Questo porta a due casi:
+	      \begin{itemize}
+		      \item Se l'id c'è si restituisce una \texttt{ResponseEntity.ok(\dots)}.
+		      \item Se non c'è viene restituito \texttt{ResponseEntity.notFound().build()}\footnote{Il famigerato 404.}. Il \texttt{notFound()} non dà una risposta definitiva, ma permette di aggiungere  altre caratteristiche (è il \texttt{build()} che formula la risposta HTTP).
+		            \begin{figure}[h]
+			            \begin{center}
+				            \includegraphics[width=0.7\textwidth]{01/404.png}
+			            \end{center}
+			            \caption{Not found.}
+		            \end{figure}
+	      \end{itemize}
+	\item \texttt{@PostMapping(\dots):} il controller si aspetta che la richiesta abbia un body. Per esempio \texttt{@PostMapping("crea")} si occupa di creare un ordine.
+	\item \texttt{@RequestBody:} si aspetta un body (quindi si usa nelle \texttt{@PostMapping(\dots)}), per cui un oggetto JSON che può essere deserializzato. Questo può portare a:
+	      \begin{itemize}
+		      \item \texttt{ResponseEntity.badRequest().build():} significa che l'utente ha sbagliato qualcosa nella richiesta (e.g. chiedere di entità che non esistono).
+		      \item \texttt{ResponseEntity.InternalServerError().build():} errore nell'esecuzione per cui il server non riesce a soddisfare la richiesta.
+	      \end{itemize}
+	\item \texttt{@Service:} l'istanza dell'oggetto viene creata automaticamente da spring. Viene creata a partire da un costruttore.
+	\item \texttt{@PostConstruct:} metodi che vanno invocati subito dopo la costruzione del \texttt{@Service}.
+	\item \texttt{@RestControllerAdvice:} per il \texttt{GlobalErrorHandler}, la gestione di errori di alto livello.
+	\item \texttt{@ExceptionHandler(\dots):} quando arriva un'eccezione la gestiscono.
+\end{itemize}
+
+\paragraph{Jakarta (persistence), per gestire i database:}
+
+\begin{itemize}
+	\item \texttt{@Entity:} la classe corrisponde a una tabella del database.
+	\item \texttt{@Table(\dots):} per specificare il nome della tabella (di default è il nome della classe).
+	\item \texttt{@Id/@EmbeddedId:} campo chiave.
+	\item \texttt{@GeneratedValue(\dots):} per scegliere la strategia di generazione e altri parametri.
+	\item \texttt{@Column(\dots):} una colonna della tabella, si possono specificare varie opzioni come lunghezza o nullable.
+	\item \texttt{@JoinColumn(\dots):} per effettuare join, va inoltre specificto il tipo di relazione con un'altra annotazione (\texttt{@ManyToOne(\dots)}, etc.).
+	\item \texttt{MapsId(\dots):} quando ci sono più id che indicano la stessa cosa.
+\end{itemize}
+
+\nt{È importante che sia presente un costruttore vuoto per l'entità.}
+
+\dfn{Applicazione Headless}{
+	Un'applicazione che non restituisce delle pagine, ma dei JSON. I files JSON possono essere intesi come view nel pattern MVC.
+}
+
+\subsection{React}
 
 
 
