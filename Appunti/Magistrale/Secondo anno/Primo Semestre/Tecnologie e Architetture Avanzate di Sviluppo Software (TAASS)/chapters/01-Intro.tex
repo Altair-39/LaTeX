@@ -796,15 +796,38 @@ gradlew.bat bootRun
 	\item \texttt{@Id/@EmbeddedId:} campo chiave.
 	\item \texttt{@GeneratedValue(\dots):} per scegliere la strategia di generazione e altri parametri.
 	\item \texttt{@Column(\dots):} una colonna della tabella, si possono specificare varie opzioni come lunghezza o nullable.
-	\item \texttt{@JoinColumn(\dots):} per effettuare join, va inoltre specificto il tipo di relazione con un'altra annotazione (\texttt{@ManyToOne(\dots)}, etc.).
-	\item \texttt{MapsId(\dots):} quando ci sono più id che indicano la stessa cosa.
+	\item \texttt{@JoinColumn(\dots):} per effettuare join, va inoltre specificto il tipo di relazione con un'altra annotazione (\texttt{@ManyToOne(\dots)}, \texttt{@OneToOne}, etc.).
+	\item \texttt{@MapsId(\dots):} quando ci sono più id che indicano la stessa cosa.
+	\item \texttt{@Enumerate(\dots):} di default gli enum vengono tradotti come numeri, con questa annotazione si possono specificare altri tipi come String.
 \end{itemize}
 
 \nt{È importante che sia presente un costruttore vuoto per l'entità.}
 
+\paragraph{Per avere corrispondenza tra gli oggetti e le entità del database si devono definire dei repositories:}
+
+\begin{itemize}
+	\item Sono interfacce che estendono \texttt{JpaRepository$<>$}.
+	\item Si specificano il tipo di oggetto e il tipo di id.
+	\item Si può utilizzare l'annotazione \texttt{@Repository}, ma non ha sostanzialmente effetto.
+	\item Questi repositories sono connessi ai services.
+	\item \texttt{@Transactional:} importante per tenere traccia delle modifiche. Si usa nei metodi dei services.
+\end{itemize}
+
 \dfn{Applicazione Headless}{
 	Un'applicazione che non restituisce delle pagine, ma dei JSON. I files JSON possono essere intesi come view nel pattern MVC.
 }
+
+\paragraph{Spring Security:}
+
+\begin{itemize}
+	\item Appena inserito lo starter viene creato un utente fittizzio.
+	\item Da questo momento tutte le operazioni necessitano un'autenticazione, se non la si ha viene restituito 401 - Unauthorized.
+	\item I metodi POST sono soggetti a Cross-Site Request Forgery (CSRF), per prevenire richieste false da parte di malintenzionati. Per risolvere bisogna configurare la Security.
+	\item Si aggiunge al progetto la classe SecurityConfig con l'annotazione \texttt{@Configuration}.
+	\item Il metodo \texttt{filterChain} è annotato come \texttt{Bean}, ossia un \fancyglitter{singleton}.
+	\item \texttt{@EnableMethodSecurity:} i controlli verranno fatti nel controller.
+	\item \texttt{@PreAuthorize(\dots):} va a specificare condizioni tipo se l'user ha un ruolo specifico. Se non è presente i metodi sono accessibili a chiunque sia autenticato.
+\end{itemize}
 
 \subsection{React}
 
