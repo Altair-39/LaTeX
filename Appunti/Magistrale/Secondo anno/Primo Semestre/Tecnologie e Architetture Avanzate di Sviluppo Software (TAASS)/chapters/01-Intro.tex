@@ -607,6 +607,165 @@
 
 \nt{Una variante sono le AGILE user stories che sono composte da una sola frase (As a [actor], I want [goal], so that [reason]).}
 
+
+\subsection{Bounded Context}
+
+\dfn{Bounded Context}{
+
+}
+
+\clm{}{}{
+	I subdomains sono il punto di partenza:
+	\begin{itemize}
+		\item one-to-one: un subdomain è legato a un bounded context.
+		\item many-to-one: un bounded context è legato a più subdomains:
+		      \begin{itemize}
+			      \item La maggior parte delle operazioni richiede una stretta interazione tra funzioni in subdomains diversi.
+			      \item
+		      \end{itemize}
+		\item one-to-many:
+	\end{itemize}
+}
+
+\nt{I bounded context sono legati da \fancyglitter{pattern di dinamiche di potere}.}
+
+\dfn{Separate Ways}{
+	Non ci sono interazioni tra due bounded context.
+}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.7\textwidth]{01/sw.png}
+	\end{center}
+	\caption{Separate Ways.}
+\end{figure}
+
+\dfn{Partnership}{
+	Due bounded context che lavorano in stretto contatto.
+}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.7\textwidth]{01/p.png}
+	\end{center}
+	\caption{Partnership.}
+\end{figure}
+
+\dfn{Customer Supplier}{
+	Un bounded context fornisce dei servizi a un altro.
+}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.7\textwidth]{01/cs.png}
+	\end{center}
+	\caption{Customer Supplier.}
+\end{figure}
+
+\dfn{Conformist}{
+	Il customer si deve adeguare al supplier.
+}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.7\textwidth]{01/c.png}
+	\end{center}
+	\caption{Conformist.}
+\end{figure}
+
+\dfn{Shared Kernel}{
+	Patterns che assuomono che due bounded context abbiano un modello di dominio indipendente:
+	\begin{itemize}
+		\item Crea tight coupling tra i due bounded context.
+		\item È necessario avere una comprensione dei concetti chiave tra i due teams.
+		\item Ci deve essere disponibilità tra due teams a collaborare (partnership).
+		\item La parte condivisa deve evolversi lentamente.
+	\end{itemize}
+}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.7\textwidth]{01/shared kernel.png}
+	\end{center}
+	\caption{Shared Kernel.}
+\end{figure}
+
+\dfn{Anti-Corruption Layer}{
+	Un livello di traduzione tra il bounded context e altri modelli esterni:
+	\begin{itemize}
+		\item Evita contaminazioni da altri bounded contest o fornitori esterni.
+		\item Difesa contro Conformist: un team non deve più fare design sulle scelte dell'altro.
+		\item È molto costosa come scelta.
+	\end{itemize}
+}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.7\textwidth]{01/anti-corruption layer.png}
+	\end{center}
+	\caption{Shared Kernel.}
+\end{figure}
+
+\paragraph{Tre tipi di Front-Ends:}
+
+\begin{itemize}
+	\item Front-End specifico di uno specifico bounded context:
+	      \begin{itemize}
+		      \item L'utente interagisce solo con un singolo bounded context.
+		      \item Il front-end è solo questioni di scelte tecnologiche.
+	      \end{itemize}
+	\item Portale/Federazione, multi bounded context:
+	      \begin{itemize}
+		      \item Ogni BC ha le sue capacità.
+		      \item Il front-end deve fornire un container uniforme.
+	      \end{itemize}
+	\item Orchestratore:
+	      \begin{itemize}
+		      \item Il front-end orchestra un processo che interagisce con multipli bounded context.
+		      \item Il front-end è un bounded context di suo.
+	      \end{itemize}
+\end{itemize}
+
+\dfn{Mockups}{
+	Disegno che mostra la UI e come gli utenti possono interagire con essa.
+}
+
+\subsection{Tactical DDD}
+
+\dfn{Tactical DDD}{
+	Il Tactical DDD si occupa di implementare un subsomain model in un bounded context.
+}
+
+\paragraph{Il Tactical DDD:}
+
+\begin{itemize}
+	\item È agnostico rispetto all'implementazione:
+\end{itemize}
+
+\paragraph{Parti del Tactical DDD:}
+
+\begin{itemize}
+	\item Entity: un concetto definito dalla sua identità piuttosto che dai suoi attributi. Rappresenta un qualcosa che persiste e cambia nel corso del tempo:
+	      \begin{itemize}
+		      \item Implemtazione anemica: ha solo ed esclusivamente i dati.
+		      \item Implemtazione ricca: include le responsabilità.
+	      \end{itemize}
+	\item Value Object: un concetto di dominio immutabile definito dai suoi attributi. Gli attributi sono impostati alla creazione del concetto e non possono cambiare.
+	\item Aggregato: un insieme di oggetti che deve essere tenuto consistente e trattato come un'unità:
+	      \begin{itemize}
+		      \item Un'entità viene scelta come root aggregate che permette l'accesso alle entità.
+		      \item Il root aggregate è responsabile delle regole di business.
+	      \end{itemize}
+\end{itemize}
+
+\paragraph{Patterns in DDD:}
+
+\begin{itemize}
+	\item Factory:
+	\item Repository:
+	\item Service:
+\end{itemize}
+
 \section{Ripasso su Spring Boot e React}
 
 \nt{DISCLAIMER: è il mio primo approccio alla programmazione web (dato che sono specializzata in robe teoriche e/o a basso livello) per cui potrei fare qualche imprecisione, sorry.}
@@ -830,6 +989,41 @@ gradlew.bat bootRun
 \end{itemize}
 
 \subsection{React}
+
+\dfn{React}{
+	React è un framework javascript per fare user interface. Segue il pattern MVVM.
+}
+
+\nt{PS. usate typescript e non javascript.}
+
+\cor{MVVM}{
+	Il pattern Model-View ViewModel in cui è presente il ViewModel che è strettamente collegato alla view.
+}
+
+\dfn{npm}{
+	npm è un package manager per javascript. Gestisce le dipendenze dei progetti. Con il comando \texttt{npm install} vengono inserite le dipendenze in una cartella "node\_modules".
+}
+
+\paragraph{Files:}
+
+\begin{itemize}
+	\item \texttt{index.html:} il punto di ingresso dell'applicazione.
+	\item \texttt{main:} il file deciso nell'index.
+	\item \texttt{app:} l'effettiva app che contiene tutti i componenti di react.
+\end{itemize}
+
+\nt{I componenti di react sono in \texttt{tsx} che permette di unire typescript e HTML.}
+
+\paragraph{I componenti React:}
+
+\begin{itemize}
+	\item Sono definiti andando a definire la loro funzione di rendering.
+	\item Si tratta di HTML sottoposto a interpolazione con espressioni javascript/typescript.
+	\item Si possono mettere dei tag con dei componenti, andando a creare gli alberi di componenti.
+	\item Lo stato è trattenuto internamente da react e viene chiamato nelle funzioni di rendering.
+	\item Le funzioni devono essere pure (no side-effect, haskell-like).
+	\item Le props sono gli input delle funzioni.
+\end{itemize}
 
 
 
