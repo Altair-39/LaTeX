@@ -607,11 +607,73 @@
 
 \nt{Una variante sono le AGILE user stories che sono composte da una sola frase (As a [actor], I want [goal], so that [reason]).}
 
+\dfn{CRC Cards}{
+	Le Class/Responsability/Collaborator (CRC) cards sono carte che:
+	\begin{itemize}
+		\item Catturano le entità rilevanti e le loro relazioni.
+		\item Possono essere introdotte in diversi stadi del processo.
+		\item Inizialmente sono usate per fare brainstorming.
+		\item L'obiettivo è quello di far emergere termini chiavi usati negli ubiquitous languages.
+		\item Un tipo di entità $\rightarrow$ Una carta.
+	\end{itemize}
+}
 
-\subsection{Bounded Context}
+\paragraph{CRC:}
+
+\begin{itemize}
+	\item \fancyglitter{Classe:} il tipo di entità, classe concettuale.
+	\item \fancyglitter{Responsability:} quale entità di questo tipo \newfancyglitter{conosce} o \newfancyglitter{fa}.
+	\item \fancyglitter{Collaborators:} altre entità con cui si interagisce per soddisfare le responsability.
+\end{itemize}
+
+\paragraph{Il processo:}
+
+\begin{itemize}
+	\item \fancyglitter{Identificare} le entità rilevanti in una storia. Gli NPC contano come entità mente MC no. Per ognuno si fa una carta con il nome e le responsabilities.
+	\item \fancyglitter{Role-Play} la storia con gli altri membri del team per:
+	      \begin{itemize}
+		      \item Scoprire le relazioni.
+		      \item Trovare responsabilities mancanti.
+		      \item Trovare entità mancanti.
+	      \end{itemize}
+	\item Se un'entità diventa troppo grande:
+	      \begin{itemize}
+		      \item Si splitta in due entità.
+		      \item Si stanno confondendo più punti di vista di un'entità.
+	      \end{itemize}
+\end{itemize}
+
+\section{Strategic e Tactical DDD}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=0.7\textwidth]{01/st.png}
+	\end{center}
+	\caption{Strategic DDD vs. Tactical DDD.}
+\end{figure}
+
+\subsection{Strategic DDD}
+
+\dfn{Subdomains}{
+	Dipartimenti diversi possono avere modelli di dominio o linguaggi diversi. Differenti subdomains possono:
+	\begin{itemize}
+		\item Utilizzare lo stesso nome per entità concettuali diverse.
+		\item Utilizzare nomi diversi per la stessa entità concettuale.
+		\item Considerare la stessa entità concettuale da punti di vista diversi.
+		\item Considerare  relazioni diverse tra le stesse entità.
+	\end{itemize}
+}
+
+\paragraph{I subdomains possono essere:}
+
+\begin{itemize}
+	\item Core: il "cuore" delle attività delle aziende, attività che non offrono altre aziende.
+	\item Generic: molto comuni nelle aziende (e.g. parte finanziaria, gestione clienti). Possono essere "acquistate" da pacchetti già esistenti.
+	\item Supporting: nel mezzo, abilitano il core business e hanno complessità variabile.
+\end{itemize}
 
 \dfn{Bounded Context}{
-
+	Un bounded context rappresenta un'area all'interno di un modello in cui il linguaggio è univoco e consistente, la logica è coerente ed è possibile immagazzinare al suo interno una parte della business logic esponendo degli endpoints.
 }
 
 \clm{}{}{
@@ -621,9 +683,14 @@
 		\item many-to-one: un bounded context è legato a più subdomains:
 		      \begin{itemize}
 			      \item La maggior parte delle operazioni richiede una stretta interazione tra funzioni in subdomains diversi.
-			      \item
+			      \item C'è un overlapping tra data models.
+			      \item Scelte tecnologiche.
 		      \end{itemize}
 		\item one-to-many:
+		      \begin{itemize}
+			      \item Dall'analisi emerge la possibilità di fare decoupling.
+			      \item La tecnologia permette uno split: front-end vs. back-end.
+		      \end{itemize}
 	\end{itemize}
 }
 
@@ -635,7 +702,7 @@
 
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[width=0.7\textwidth]{01/sw.png}
+		\includegraphics[width=0.4\textwidth]{01/sw.png}
 	\end{center}
 	\caption{Separate Ways.}
 \end{figure}
@@ -646,7 +713,7 @@
 
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[width=0.7\textwidth]{01/p.png}
+		\includegraphics[width=0.4\textwidth]{01/p.png}
 	\end{center}
 	\caption{Partnership.}
 \end{figure}
@@ -657,7 +724,7 @@
 
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[width=0.7\textwidth]{01/cs.png}
+		\includegraphics[width=0.4\textwidth]{01/cs.png}
 	\end{center}
 	\caption{Customer Supplier.}
 \end{figure}
@@ -668,10 +735,14 @@
 
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[width=0.7\textwidth]{01/c.png}
+		\includegraphics[width=0.4\textwidth]{01/c.png}
 	\end{center}
 	\caption{Conformist.}
 \end{figure}
+
+\nt{
+	Conformist è tipico dell'utilizzo di API di librerie di terze parti.
+}
 
 \dfn{Shared Kernel}{
 	Patterns che assuomono che due bounded context abbiano un modello di dominio indipendente:
@@ -685,7 +756,7 @@
 
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[width=0.7\textwidth]{01/shared kernel.png}
+		\includegraphics[width=0.3\textwidth]{01/shared kernel.png}
 	\end{center}
 	\caption{Shared Kernel.}
 \end{figure}
@@ -701,7 +772,7 @@
 
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[width=0.7\textwidth]{01/anti-corruption layer.png}
+		\includegraphics[width=0.3\textwidth]{01/anti-corruption layer.png}
 	\end{center}
 	\caption{Shared Kernel.}
 \end{figure}
@@ -711,13 +782,14 @@
 \begin{itemize}
 	\item Front-End specifico di uno specifico bounded context:
 	      \begin{itemize}
-		      \item L'utente interagisce solo con un singolo bounded context.
+		      \item L'utente interagisce solo con un singolo bounded context e ne usa l'ubiquitous languages.
 		      \item Il front-end è solo questioni di scelte tecnologiche.
 	      \end{itemize}
 	\item Portale/Federazione, multi bounded context:
 	      \begin{itemize}
-		      \item Ogni BC ha le sue capacità.
+		      \item Ogni bounded context ha le sue capacità.
 		      \item Il front-end deve fornire un container uniforme.
+		      \item Per esempio il portale dell'ateneo (bleah!).
 	      \end{itemize}
 	\item Orchestratore:
 	      \begin{itemize}
@@ -730,16 +802,33 @@
 	Disegno che mostra la UI e come gli utenti possono interagire con essa.
 }
 
+\paragraph{I primi Mockups:}
+
+\begin{itemize}
+	\item Seguono user stories.
+	\item Mostrano le interazioni.
+	\item Testano i bounded context.
+\end{itemize}
+
 \subsection{Tactical DDD}
 
 \dfn{Tactical DDD}{
-	Il Tactical DDD si occupa di implementare un subsomain model in un bounded context.
+	Il Tactical DDD si occupa di implementare un subdomain model in un bounded context.
 }
 
 \paragraph{Il Tactical DDD:}
 
 \begin{itemize}
 	\item È agnostico rispetto all'implementazione:
+	      \begin{itemize}
+		      \item Non c'è un commitment verso uno specifico linguaggio.
+		      \item Descriviamo il COSA, non il COME.
+	      \end{itemize}
+	\item Diagrammi UML con specifici stereotypes DDD:
+	      \begin{itemize}
+		      \item Ruoli delle classi in un bounded context.
+		      \item Possono essere rappresentati in UML come stereotypes.
+	      \end{itemize}
 \end{itemize}
 
 \paragraph{Parti del Tactical DDD:}
@@ -761,9 +850,9 @@
 \paragraph{Patterns in DDD:}
 
 \begin{itemize}
-	\item Factory:
-	\item Repository:
-	\item Service:
+	\item Factory: si usa quando la creazione di un oggetto non può essere delegata all'oggetto stesso perché bisogna tenere conto di regole che riguardano più oggetti. Si crea un \fancyglitter{factory object}.
+	\item Repository: un livello di astrazione che permettee di fare decoupling tra il dominio di business e la sua rappresentazione di persistenza. Permette di cambiare il modo in cui vengono gestiti i files (e.g. passare da files a database).
+	\item Service: un orchestratore che sa come gestire le varie operazioni sulle entity.
 \end{itemize}
 
 \section{Ripasso su Spring Boot e React}
