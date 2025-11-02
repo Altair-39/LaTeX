@@ -1,0 +1,207 @@
+\chapter{Introduzione}
+
+\section{Che Cos'è l'Intelligenza Artificiale?}
+
+Nell'immaginario l'intelligenza artificiale viene solitamente assimilata a quella di un robot antropomorfo che risolve problemi complessi e impara da essi.
+
+\begin{center}
+	\begin{minipage}{0.45\textwidth}
+		\centering
+		\includegraphics[scale=0.45]{01/ia.png}
+	\end{minipage}%
+	\hfill
+	\begin{minipage}{0.45\textwidth}
+		\centering
+		\includegraphics[scale=0.45]{01/ia2.png}
+	\end{minipage}
+\end{center}
+
+\paragraph{Però esistono altri tipi di IA:}
+
+\begin{itemize}
+	\item Servizi di streaming: portali per l'accesso a molti files. Utilizzano meccanismi di personalizzazione.
+	\item Social network.
+	\item Assistenti virtuali.
+	\item Macchine fotografihche/Smartphone.
+\end{itemize}
+
+\subsection{Un inizio}
+
+\dfn{Intelligenza}{Complesso di facoltà psichiche e mentali che
+	consentono all’uomo di pensare, comprendere o
+	spiegare i fatti o le azioni, elaborare modelli astratti
+	della realtà, intendere e farsi intendere dagli altri,
+	giudicare, e lo rendono insieme capace di adattarsi a
+	situazioni nuove e di modificare la situazione stessa
+	quando questa presenta ostacoli all’adattamento;
+	propria dell’uomo, in cui si sviluppa gradualmente a
+	partire dall’infanzia e in cui è accompagnata dalla
+	consapevolezza e dall’autoconsapevolezza, è
+	riconosciuta anche, entro certi limiti (memoria
+	associativa, capacità di reagire a stimoli interni ed
+	esterni, di comunicare in modo anche complesso, ecc.),
+	agli animali.}
+\nt{Artificiale indica che non è naturale.}
+
+\paragraph{Prospettiva storica:}
+
+\begin{itemize}
+	\item 1936: Alan Turing formalizza la Turing Machine.
+	\item 1940: ENIAC: primo computer "moderno".
+	\item 1950: Test di Turing, quando un computer può dirsi intelligente?
+	\item Il dubbio nasce dal contesto bellico in cui vennerò sviluppati i primi computer: all'epoca solo poche persone istruite riuscivano a fare i calcoli necessari.
+	\item 1956: Nasce l'intelligenza artificiale.
+\end{itemize}
+
+\paragraph{Breve storia dell'automazione:}
+
+\begin{itemize}
+	\item \fancyglitter{Automazione del calcolo:} metà anni '50, pochi dati, molti calcoli.
+	\item \fancyglitter{Automazione di procedure amministrative e contabili:} metà anni '60, pochi calcoli, grandi molti di dati alfanumerici.
+	\item \fancyglitter{Automazione di fabbrica:} metà anni '70, primi robot industriali, ambiente predeterminato.
+	\item \fancyglitter{Automazione di ufficio:} metà anni '80, primi PC, primi strumenti per utenti non esperti.
+	\item \fancyglitter{Automazione della ricerca delle informazioni:} fine anni '90, internet, WEB, motori di ricerca.
+\end{itemize}
+
+\qs{}{L'automazione è intelligenza?}
+
+\paragraph{Ragionando:} la calcolatrice è automatica, ma non si può dire intellingente. Una lavatrice è automatica, ha diversi programmi e si adatta. Un rover che gira su Marte effettua esperimenti e si adatta, ha una certa autonomia. Infine, gli LLM eseguono un programma e hanno la capacità di comunicare mediante linguaggio naturale.
+
+\subsection{Test di Turing}
+
+\qs{}{Quando un programma può dirsi intelligente?}
+
+\dfn{Turing Test (The Imitation Game)}{
+	Un'intervistatore deve capire se un'entità misteriosa è umana o è una macchina. Può fare tutte le domande che vuole su qualsiasi argomento e l'entità deve rispondere (il tutto per scritto). Al termine l'intervistatore enuncia il suo verdetto. Se dice uomo ed era macchina, la macchina ha superato il test.
+}
+
+\paragraph{AI:}
+
+\begin{itemize}
+	\item Data e luogo di nascita:
+	      \begin{itemize}
+		      \item Darthmouth Conference (USA), 1956.
+		      \item Nome scelto da John McCarthy.
+	      \end{itemize}
+	\item In precedenza:
+	      \begin{itemize}
+		      \item Una macchina può pensare ed essere considerata intelligente?
+		      \item Vari approcci: cybernetica, teoria degli automi, etc.
+		      \item Turing test.
+	      \end{itemize}
+	\item Successivamente:
+	      \begin{itemize}
+		      \item Scacchi.
+		      \item Giochi.
+		      \item Dimostrazioni automatiche.
+	      \end{itemize}
+\end{itemize}
+
+\qs{}{Basta produrre gli output attesi per dire che vi è comprensione?}
+
+\begin{itemize}
+	\item Si può dare una risposta "giusta" avendo certe conoscenze e ragionamento.
+	\item Ma si può dare una risposta "giusta" anche tirando a caso.
+\end{itemize}
+
+\dfn{Esperimento della Stanza Cinese}{
+	Una persona interagisce con un computer, programmato per rispondere con certi
+	ideogrammi cinesi ad altri ideogrammi cinesi ricevuti in input. Il computer parla cinese? Lo capisce?
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{01/cinese.png}
+	\caption{Esperimento di Searle.}
+\end{figure}
+
+\nt{Ma supponiamo che una persona chiusa in una
+	stanza ha istruzioni per rispondere con certi ideogrammi cinesi in risposta ad altri ideogrammi cinesi. Parla cinese? Lo capisce?}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{01/cinese2.png}
+	\caption{Esperimento di Searle.}
+\end{figure}
+
+\dfn{Test di Turing Inverso}{
+	Usati per intercettare bot che cercano di accedere a form o a dati (C.A.P.T.C.H.A.).
+}
+
+\nt{Una variante di questo test è usata in "Ma gli androidi sognano pecore elettriche?" (Blade Runner).}
+
+\subsection{Strong e Weak AI}
+
+\paragraph{Due tipi di intelligenza:}
+
+\begin{itemize}
+	\item \fancyglitter{Strong AI:} è possibile riprodurre l'intelligenza umana?
+	\item \fancyglitter{Weak AI:} è possibile trovare dei modi per risolvere problemi che, se risolti dagli esseri umani richiederebbero intelligenza?
+\end{itemize}
+
+
+\paragraph{Obiettivo della weak AI:}
+
+\begin{itemize}
+	\item Programmare un agente artificiale in grado di:
+	      \begin{itemize}
+		      \item Rilevare ostacoli.
+		      \item Rilevare oggetti in movimento.
+		      \item Costruire un piano d'azione.
+		      \item Rilevare segnali significativi.
+	      \end{itemize}
+	\item In un ambiente che è:
+	      \begin{itemize}
+		      \item Complesso.
+		      \item Parzialmente prevedibile.
+		      \item Parzialmente collaborativo.
+	      \end{itemize}
+\end{itemize}
+
+\nt{Nasce il binomio Agente-Ambiente.}
+
+\dfn{Agente}{
+	Un agente è un'astrazione che rappresenta un qualsiasi sistema che percepisce il proprio ambiente tramite i sensori e agisce su di esso tramite degli attuatori.
+}
+
+\clm{Caratteristiche dell'ambiente}{}{
+	\begin{itemize}
+		\item Completamente osservabile: in ogni istante i sensori danno accesso a
+		      tutti gli aspetti dell’ambiente rilevanti per
+		      la scelta dell’azione.
+		\item Parzialmente osservabile: i sensori danno accesso solo a parte
+		      dell’informazione rilevante (cause:
+		      sensori imprecisi oppure non in grado di
+		      rilevare alcuni dati).
+		\item Deterministico: lo stato successivo è determinato dallo
+		      stato corrente e dall’azione applicata.
+		\item Stocastico: applicando più volte una stessa azione in
+		      uno stesso stato si possono raggiugnere
+		      stati diversi. Si dice strategico quando è
+		      stocastico solo per quanto riguarda le
+		      azioni degli altri agenti.
+		\item Epistodico: l’esperienza degli agenti è divisa in
+		      episodi atomici: un episodio è dato da
+		      una percezione seguita da una singola
+		      azione (esempio: classificazione).
+		\item Sequenziale: attività composta da più passi ognuno dei
+		      quali in generale influenzerà i successivi.
+		\item Statico: l'ambiente non cambia mentre l'agente "pensa".
+		\item Dinamico: l'ambiente cambia mentre l'agente "pensa".
+		\item Discreto: possono essere discreti stato, tempo,
+		      percezioni, azioni (esempio: gli scacchi
+		      hanno stati, percezioni, azioni discreti).
+		\item Continuo: possono essere continui stato, tempo,
+		      percezioni, azioni (esempio: gli scacchi
+		      hanno tempo continuo).
+		\item Singolo agente: viene modellata come agente una sola
+		      entità.
+		\item Multi agente: vengono modellate come agenti più
+		      entità
+	\end{itemize}
+}
+
+
+
+
+
