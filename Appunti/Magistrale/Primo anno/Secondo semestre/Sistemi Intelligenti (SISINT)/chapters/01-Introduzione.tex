@@ -412,9 +412,142 @@ completa), risoluzione di problemi mediante soddisfacimento di vincoli.
 	\item Funzione di costo del cammino: dato un percorso possibile gli assegna un costo numerico.
 \end{enumerate}
 
+\paragraph{Alcune astrazioni:}
 
+\begin{itemize}
+	\item \fancyglitter{Stati:} occorre rappresentare solo l'informazione rilevante alla soluzione del problema.
+	\item \fancyglitter{Azioni:} occorre rappresentare solo gli aspetti funzionali alla soluzione del problema.
+	\item \fancyglitter{Toy problem:} un problema artificiale avente lo scopo di
+	      illustrare o mettere alla prova dei metodi di risoluzione.
+	      Ha una formulazione precisa e univoca. Utile per
+	      confrontare metodi diversi
+	\item \fancyglitter{Real-world problem:} problemi concreti, effettivi. Spesso
+	      non hanno una formulazione unica.
+\end{itemize}
 
+\nt{E.g. di toy problems: problema dell'aspirapolvere, gioco dell'8, problema delle 8 regine.}
 
+\paragraph{Possibili approcci:}
 
+\begin{itemize}
+	\item \fancyglitter{Blind:} usano esclusivamente la struttura del problema per cercare una soluzione.
+	\item \fancyglitter{Informati:} usano la struttura del problema e ulteriore conoscenza per guidare la ricerca.
+\end{itemize}
 
+\subsection{Metodi di Ricerca non Informati (Blind Search)}
+
+\dfn{Albero di Ricerca}{
+	Un albero di ricerca è una struttura dati usata per trovare una soluzione a un problema di ricerca:
+	\begin{itemize}
+		\item Ogni nodo corrisponde a uno stato.
+		\item I nodi figli sono costruiti tramite la funzione successore.
+		\item Ogni nodo ha un riferimento al nodo padre (per ricostruire le
+		      soluzioni).
+		\item L’albero è costruito a partire dal nodo corrispondente allo stato
+		      iniziale.
+		\item L’albero diventa un grafo quando lo stesso nodo (NB: non lo stesso
+		      stato) può essere raggiunto tramite più percorsi.
+		\item Un percorso che porta dal nodo iniziale a un nodo obiettivo è una
+		      soluzione.
+	\end{itemize}
+}
+
+\nt{Gli alberi sono un caso specifico dei grafi.}
+
+\paragraph{Formalizzando:}
+
+\begin{itemize}
+	\item Un \fancyglitter{grafo di ricerca} $G = (\{n_i\}, \{e_{i j}\})$ è costituito da un insieme di nodi $n_i$ e di archi $e_{i j}$.
+	\item $e_{pq} \in \{e_{i j}\}$ rappresenta l'esistenza di un arco dal nodo $n_p$ al nodo $n_q$, quindi $n_q$ è successore di $n_p$.
+	\item Ciascun arco $e_{i j}$ ha associato un costo $c_{i j}$.
+	\item L'esistenza di $e_{i j}$ non implica l'esistenza di $e_{j i}$.
+\end{itemize}
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[scale=0.45]{01/8.png}
+	\caption{Esempio con il gioco dell'8.}
+\end{figure}
+
+\qs{}{Se le strategie sono tante ve ne è una migliore?
+	Come le confronto?}
+
+\paragraph{Criteri di valutazione:}
+
+\begin{itemize}
+	\item \fancyglitter{Completezza:} garanzia di trovare una soluzione, se esiste.
+	\item \fancyglitter{Ottimalità:} garanzia di trovare una soluzione ottima (a costo
+	      minimo)\footnote{Corso di "Algoritmi e Complessità}.
+	\item \fancyglitter{Complessità temporale:} quanto tempo occorre per trovare una soluzione.
+	\item \fancyglitter{Complessità spaziale:} quanta memoria occorre per effettuare la ricerca.
+\end{itemize}
+
+\qs{}{Come si valuta la complessità?}
+
+\begin{itemize}
+	\item \fancyglitter{Complessità computazionale:} dato un problema esistono infiniti algoritmi che lo risolvono.
+	\item \fancyglitter{Termine di paragone:}
+	      \begin{itemize}
+		      \item Tempo.
+		      \item Spazio.
+	      \end{itemize}
+	\item \fancyglitter{Criterio di preferenza:} economicità.
+\end{itemize}
+
+\nt{
+	Per astrarre dal calcolatore utilizzato lo spazio e il tempo non sono metrici, ma parametrici. E.g. Numero di nodi creati o visitati.
+
+	È interessante vedere l'andamento del costo al variare della dimensione del problema.
+}
+
+\subsection{Lista di Strategie}
+
+\dfn{Ricerca in Ampiezza}{
+	La ricerca espande il nodo radice, poi tutti i suoi successori, poi
+	tutti i discendenti di secondo livello, ecc.
+
+	Si realizza gestendo la frontiera come una coda FIFO.
+}
+\begin{center}
+	\begin{minipage}{0.45\textwidth}
+		\centering
+		\includegraphics[scale=0.5]{01/amp.png}
+	\end{minipage}%
+	\hfill
+	\begin{minipage}{0.45\textwidth}
+		\centering
+		\includegraphics[scale=0.5]{01/fifo.png}
+	\end{minipage}
+\end{center}
+
+\paragraph{Valutazione:}
+
+\begin{itemize}
+	\item \fancyglitter{Completezza:} se esiste un nodo obiettivo a una profondità finita $d$, la
+	      ricerca in ampiezza lo troverà a patto che il fattore di ramificazione $b$
+	      (cioè il numero di figli che un nodo può avere) sia finito.
+	\item \fancyglitter{Ottimalità:} la soluzione trovata è ottima solo se il costo del cammino
+	      è una funzione monotona crescente della profondità (es. tutte le azioni
+	      hanno lo stesso costo).
+	\item \fancyglitter{Complessità temporale:} $O(b^{d + 1})$.
+	\item \fancyglitter{Complessità spaziale:}  $O(b^{d + 1})$, perché bisogna tenere in memoria sia la frontiera che gli antenati.
+\end{itemize}
+
+\dfn{Ricerca a Costo Uniforme}{
+
+}
+
+\dfn{Ricerca in Profondità}{
+
+}
+
+\dfn{Iterative Deepening}{
+
+}
+
+\dfn{Ricerca Bidirezionale}{
+
+}
+
+\section{Ricerca Informata}
 
