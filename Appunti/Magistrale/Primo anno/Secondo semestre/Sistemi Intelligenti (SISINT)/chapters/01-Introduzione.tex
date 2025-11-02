@@ -1,5 +1,7 @@
 \chapter{Introduzione}
 
+\nt{DISCLAIMER: questi appunti sono stati scritti da una persona che ha dovuto dare questo esame in magistrale (yeah, l'ho skippato in triennale e ora mi tocca darlo): essendo che ho dato molti esami che dipendono da questo insegnamento e possibile che in alcune sezioni dia per scontato delle cose.}
+
 \section{Che Cos'è l'Intelligenza Artificiale?}
 
 Nell'immaginario l'intelligenza artificiale viene solitamente assimilata a quella di un robot antropomorfo che risolve problemi complessi e impara da essi.
@@ -25,7 +27,7 @@ Nell'immaginario l'intelligenza artificiale viene solitamente assimilata a quell
 	\item Macchine fotografihche/Smartphone.
 \end{itemize}
 
-\subsection{Un inizio}
+\subsection{Un Inizio}
 
 \dfn{Intelligenza}{Complesso di facoltà psichiche e mentali che
 	consentono all’uomo di pensare, comprendere o
@@ -120,7 +122,7 @@ Nell'immaginario l'intelligenza artificiale viene solitamente assimilata a quell
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=0.4]{01/cinese2.png}
+	\includegraphics[scale=0.35]{01/cinese2.png}
 	\caption{Esperimento di Searle.}
 \end{figure}
 
@@ -200,6 +202,217 @@ Nell'immaginario l'intelligenza artificiale viene solitamente assimilata a quell
 		      entità
 	\end{itemize}
 }
+
+\paragraph{Paradigmi di programmazione:}
+
+\begin{itemize}
+	\item Approccio tradizionale:
+	      \begin{itemize}
+		      \item Imperativo.
+		      \item A oggetti.
+		      \item \fancyglitter{Non è AI:} risolve un singolo compito ed è strutturato come una sequenza di passi.
+		      \item Descrivono il COME.
+	      \end{itemize}
+	\item Approccio dichiarativo:
+	      \begin{itemize}
+		      \item Separa una descrizione del COSA da un programma generale.
+		      \item Lo stesso programma è applicato a diverse descrizioni per risolvere problemi diversi.
+	      \end{itemize}
+\end{itemize}
+
+\subsection{Esempi}
+
+\dfn{Mondo dei Blocchi}{
+	Tipico Toy Problem in ambito AI. Si hanno un tavolo con $n$ posizioni e $m$ blocchi. L'obiettivo è passare da uno stato iniziale a uno stato finale. Un agente può spostare un blocco per volta seguendo determinate regole.
+}
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[scale=0.35]{01/blocchi.png}
+	\caption{Mondo dei blocchi.}
+\end{figure}
+
+\paragraph{L'agente:}
+
+\begin{itemize}
+	\item Percepisce la situazione iniziale.
+	\item Costruisce i passi per andare dalla situazione iniziale alla situazione finale.
+	\item Deve determinare quali azioni lo avvicinano al \fancyglitter{goal}.
+\end{itemize}
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[scale=0.45]{01/delibera.png}
+	\caption{Meccanismo di deliberazione.}
+\end{figure}
+
+\qs{}{Come scegliere le mosse?}
+
+\begin{itemize}
+	\item Dipende dal tipo di problema.
+	\item A volte basta la prima mossa, a volte si vuole trovare una soluzione ottima.
+\end{itemize}
+
+\subsection{Definire AI}
+
+\dfn{Automazione}{
+	Si deve programmare la macchina per fare ogni passo: è applicabile in domini fortemente ripetitivi.
+}
+
+\dfn{Autonomia}{
+	Un agente artificiale riceve compiti ad alto livello, l'utente demanda all'agente la risoluzione.
+}
+
+\paragraph{Un agente autonomo:}
+
+\begin{itemize}
+	\item Riceve solo compiti ad alto livello.
+	\item Ragiona ed esplora alternative (molte mosse possibili a ogni istante).
+	\item Riconosce quando non si può andare avanti su una strada \footnote{nota aggiuntiva: non proprio, dipende dal tipo di agente e dal suo control loop.}.
+	\item Riconosce che si è già stati in quella situazione.
+	\item Prima si ragiona e poi si agisce.
+\end{itemize}
+
+\nt{
+	In AI gli agenti autonomi sono un modo di concepire
+	i programmi, in cui controllo e logica (o modello) sono
+	chiaramente separati.
+
+	Un agente fa sempre ciò che è programmato a fare\footnote{No Terminator, sorry :'(}.
+}
+
+\qs{}{Cosa vuol dire fare la cosa giusta?}
+
+\dfn{Funzione Deliberativa}{
+	La funzione deliberativa di un agente determina le azioni che saranno eseguite. In termini informali un agente è razionale quando “fa la cosa giusta”, cioè opera per conseguire il “successo”.
+}
+
+\nt{Occorre quindi definire una \fancyglitter{misura di prestazione}.}
+
+\paragraph{Il comportamento razionale di un agente dipende da 4 fattori:}
+
+\begin{enumerate}
+	\item Azioni nelle facoltà dell'agente.
+	\item Misura di prestazione.
+	\item Conoscenza dell'ambiente.
+	\item Percezione.
+\end{enumerate}
+
+\cor{Agente Razionale}{
+	Un agente razionale dovrebbe scegliere sempre un’azione
+	che massimizza la misura di prestazione attesa, data la
+	particolare sequenza percettiva in oggetto e le informazioni
+	derivabili dalla conoscenza dell’ambiente.
+}
+
+\paragraph{Definizioni di AI:}
+
+\begin{itemize}
+	\item Sistemi che pensano come esseri umani:
+	      \begin{itemize}
+		      \item Haugeland, 1985.
+		      \item Bellman, 1978.
+	      \end{itemize}
+	\item Sistemi che agiscono come esseri umani:
+	      \begin{itemize}
+		      \item Kuzweil, 1990.
+		      \item Rich e Knight, 1991.
+	      \end{itemize}
+	\item Sistemi che pensano razionalmente:
+	      \begin{itemize}
+		      \item Charniak e McDermott, 1985.
+		      \item Winston, 1992.
+	      \end{itemize}
+	\item Sistemi che agiscono razionalmente:
+	      \begin{itemize}
+		      \item Poole et al., 1998.
+		      \item Nilsson, 1998.
+	      \end{itemize}
+\end{itemize}
+
+\qs{}{Quali problemi per l'AI:}
+
+\begin{itemize}
+	\item Non è adatta per:
+	      \begin{itemize}
+		      \item Modelli matematici precisi.
+		      \item Metodi algoritmici specifici.
+	      \end{itemize}
+	\item È utile/necessaria per:
+	      \begin{itemize}
+		      \item Problemi non deterministici.
+		      \item Più soluzioni.
+		      \item Dati non numerici.
+		      \item Grandi Knowledge Base (KB).
+		      \item Interazione con ambiente ed esseri umani.
+	      \end{itemize}
+\end{itemize}
+
+\section{Risoluzione Automatica di Problemi}
+
+In questa parte si affronta la problematica di come definire il concetto di problema e di soluzione,
+di distinguere tra soluzione e soluzione ottima. Sono studiati tre approcci alla risoluzione di
+problemi: ricerca nello spazio degli stati, ricerca in spazi con avversario (giochi ad informazione
+completa), risoluzione di problemi mediante soddisfacimento di vincoli.
+
+\subsection{I Problemi}
+
+\begin{itemize}
+	\item La realtà che definisce un problema può essere astratta in un insieme di stati.
+	\item La realtà transisce da uno stato ad un altro tramite l’esecuzione di azioni (o operazioni).
+\end{itemize}
+
+\paragraph{Caratteristiche:}
+
+\begin{itemize}
+	\item \fancyglitter{Stati discreti} (o dentro o fuori, non ci sono stati graduali).
+	\item Effetto \fancyglitter{deterministico} delle azioni.
+	\item \fancyglitter{Dominio statico} (non cambia durante l'esecuzione delle azioni).
+\end{itemize}
+
+\paragraph{Esempio non deterministico:}
+
+\begin{itemize}
+	\item Eseguendo più volte la stessa azione si possono avere conseguenze diverse.
+	\item Si hanno \fancyglitter{stati continui}.
+\end{itemize}
+
+\dfn{Obiettivo}{
+	Un obiettivo (goal) è un risultato verso il quale gli sforzi sono diretti. È una condizione data in termini di:
+	\begin{itemize}
+		\item Situazione.
+		\item Prestazione.
+	\end{itemize}
+}
+
+\nt{L'insieme degli stati obiettivo sono tutti gli stati in cui vale la condizione che li definisce.}
+
+\dfn{Algoritmo di Ricerca}{
+	L’algoritmo di ricerca determina una soluzione
+	che, a partire da uno stato iniziale, permette di
+	raggiungere un dato stato obiettivo. Usa:
+	\begin{itemize}
+		\item Una descrizione del problema.
+		\item Un metodo di ricerca attraverso lo spazio degli stati.
+	\end{itemize}
+}
+
+\cor{Soluzione}{
+	Una soluzione è un percorso nello spazio degli stati.
+}
+
+\paragraph{Un problema di ricerca può essere definito come una tupla di 4 elementi:}
+
+\begin{enumerate}
+	\item Stato iniziale: cattura la situazione a partire dalla quale viene computata la soluzione.
+	\item Funzione successore: dato uno stato e un'azione legale in esso calcola lo stato a cui si transisce eseguendo quell'azione in quello stato.
+	\item Test obiettivo: determina se lo stato a cui è applicato è lo stato goal: può verificare
+	      una proprietà o verificare l’appartenenza dello stato all’insieme degli
+	      stati target.
+	\item Funzione di costo del cammino: dato un percorso possibile gli assegna un costo numerico.
+\end{enumerate}
+
+
 
 
 
