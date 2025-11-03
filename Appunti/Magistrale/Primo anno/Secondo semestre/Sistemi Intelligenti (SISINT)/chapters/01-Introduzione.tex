@@ -649,11 +649,139 @@ completa), risoluzione di problemi mediante soddisfacimento di vincoli.
 	efficiente utilizzando della conoscenza sul problema? La conoscenza permette di
 	focalizzare la ricerca verso le direzioni più promettenti?}
 
+\dfn{Funzione di Valutazione}{
+	Una strategia di ricerca informata ordina la frontiera sulla base
+	di una funzione di valutazione $f(n)$ applicata ai nodi:
+	\begin{itemize}
+		\item In base a $f(n)$ si ottengono strategie differenti.
+		\item $f(n)$ comprende una componente $h(n)$ che restituisce una stima del minimo tra i costi che congiungono lo stato corrispondente al nodo $n$ a uno stato goal.
+		\item $h(n)$ è detta euristica.
+	\end{itemize}
+}
 
+\nt{La strategià generale è detta \fancyglitter{best-first search} e comprende greedy, A* e RBFS.}
 
+\dfn{Ricerca Greedy}{
+	Viene scelto il nodo stimato più vicino a quello
+	obiettivo ($f(n) = h(n)$).
+}
 
+\paragraph{Problemi:}
 
+\begin{itemize}
+	\item Rischio di loop per vicoli ciechi.
+	\item Stessi difetti della ricerca in profondità.
+\end{itemize}
 
+\paragraph{Intuizione:}
+
+\begin{itemize}
+	\item È possibile combinare la ricerca a costo uniforme con la ricerca greedy.
+	\item \fancyglitter{Costo uniforme:} espande per primi i nodi il cui
+	      raggiungimento dalla radice costa meno (guarda al
+	      passato).
+	\item \fancyglitter{Greedy:} espande per primi i nodi che promettono di raggiungere l'obiettivo spendendo meno (guarda al futuro).
+\end{itemize}
+
+\subsection{A*}
+
+\dfn{A*}{
+	A* considera grafi, generati a partire da un singolo nodo iniziale,
+	in cui un sottoinsieme T di nodi è costituito da nodi obiettivo (T
+	sta per target). Dato un qualsiasi nodo n del grafo, un obiettivo t è detto
+	preferito per n se e solo se il costo del cammino ottimo $h(n, t) \leq$ costo di qualsiasi altro cammino da n verso qualsiasi altro nodo
+	di T.
+}
+
+\paragraph{$f(n) = g(n) + h(n)$:}
+
+\begin{itemize}
+	\item $g(n)$: costo minimo di tutti i percorsi, visti fino a ora, che
+	      consentono di raggiungere il nodo n a partire dallo stato iniziale
+	      s.
+	\item $h(n)$: stima del costo minimo del proseguimento di percorso
+	      che consente di raggiungere un goal preferito di n.
+	\item $f(n)$: stima del costo minimo per raggiungere un goal
+	      preferito di n partendo da s.
+\end{itemize}
+
+\paragraph{$f^*(n) = g^*(n) + h^*(n)$:}
+
+\begin{itemize}
+	\item $g^*(n)$:costo minimo per raggiungere il nodo n a partire dallo
+	      stato iniziale s (calcolato considerando tutti i cammini possibili).
+	\item $h^*(n)$: costo minimo reale del proseguimento di percorso che
+	      consente di raggiungere un goal preferito a partire dal nodo n.
+	\item $f^*(n)$: costo minimo per raggiungere un goal preferito di n da
+	      s.
+\end{itemize}
+
+\nt{Se si sono esplorate tutte le alternative $f(x) = f*(n)$.}
+
+\paragraph{Algoritmo di A*:}
+
+\begin{enumerate}
+	\item Sia s il nodo iniziale.
+	\item Sia T l'insieme dei nodi obiettivo.
+	\item Segna s come aperto e calcola $f(s)$.
+	\item Seleziona il nodo aperto n avente valutazione minima.
+	\item Se n appartiene a T, marca n chiuso e termina.
+	\item Altrimenti marca n chiuso e applica l’operatore successore a n
+	      e:
+	      \begin{itemize}
+		      \item Calcola il valore di $f$ per tutti i successori n'.
+		      \item Marca come aperti quei successori n' che non risultano già chiusi.
+		      \item Rimarca come aperti quei successori n' che erano chiusi ma per cui è
+		            stato calcolato un valore f più basso di quello calcolato in precedenza
+		            (cioè sono stati raggiunti tramite un percorso migliore).
+	      \end{itemize}
+\end{enumerate}
+
+\dfn{Euristica Ammissibile}{
+	Un'euristica h è detta ammissibile quando
+
+	\[
+		\forall n, h(n) \leq h^*(n)
+	\]
+	dove $h^*(n)$ è il costo minimo reale per raggiungere il nodo goal a partire dal nodo n.
+}
+
+\nt{Intuitivamente un'euristica è ammissibile quando non fa mai stime per eccesso.}
+
+\cor{Ottimalità di A*}{
+	Se:
+	\begin{itemize}
+		\item Un'euristica h è ammissibile.
+		\item Tutti i passi hanno costo maggiore di 0.
+	\end{itemize}
+	Allora:
+	\begin{itemize}
+		\item $A^*$ termina e trova una soluzione ottima.
+		\item In questo caso $A^*$ è completa e ottimale.
+	\end{itemize}
+}
+
+\clm{}{}{
+	Perché manchi l’ottimalità deve accadere che durante la
+	ricerca l’algoritmo:
+	\begin{itemize}
+		\item Scelga un nodo obbiettivo sub-ottimo.
+		\item Al posto di un nodo.
+		\item Che si trova su un cammino ottimo.
+	\end{itemize}
+}
+
+\nt{Vedere dimostrazione su slides.}
+
+\cor{Euristica Monotona}{
+	Un'euristica ammissibile è monotona quando
+	\[
+		\forall n h(n) \leq c(n, a, n') + h(n')
+	\]
+	dove $c$ è la funziona costo per andare da $n$ a $n'$ mediante l'azione $a$.
+}
+
+\nt{Tuttavia ammissibile non vuol sempre dire informativa: $h(n) = 0$ è ammissibile, ma non informativa.}
 
 
 
