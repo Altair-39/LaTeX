@@ -534,20 +534,133 @@ completa), risoluzione di problemi mediante soddisfacimento di vincoli.
 \end{itemize}
 
 \dfn{Ricerca a Costo Uniforme}{
-
+	Nella ricerca a costo uniforme:
+	\begin{itemize}
+		\item Ogni nodo ha associato il costo del cammino con cui è stato raggiunto.
+		\item La frontiera è mantenuta ottimale.
+		\item A ogni iterazione espande il nodo appartenente a un cammino di costo minimo.
+	\end{itemize}
 }
+
+\nt{Quando i costi sono tutti uguali diventa una ricerca in ampiezza.}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Costo $\not = $ Numero dei passi: il numero dei passi effettuati non conta, conta solo il costo dei cammini.
+		\item Quando trova il nodo obiettivo non si ferma subito, prima controlla se vi sono cammini aperti di costo inferiore e nel caso prova a espanderli.
+	\end{itemize}
+}
+
+\paragraph{Valutazione:}
+
+\begin{itemize}
+	\item \fancyglitter{Completezza:} garantibile solo se tutti i passi hanno costo $\geq \epsilon > 0$. È il costo minimo delle operazioni.
+	\item \fancyglitter{Ottimalità:} garantibile solo se tutti i passi hanno costo $\geq \epsilon > 0$. Non sa gestire la nozione di guadagno unita a quella di costo.
+	\item \fancyglitter{Complessità temporale e spaziale:} ordine del branching factor elevato al numero di passi del percorso ottimale se i costi dei passi fossero uniformi ($O(b^{1 + LC^* / \epsilon})$).
+\end{itemize}
 
 \dfn{Ricerca in Profondità}{
-
+	La ricerca in profondità espande sempre uno dei nodi più profondi della frontiera, cioè uno dei più lontani dalla radice. L'espansione produce tutti i successori di un nodo. Quando la ricerca tenta di espandere un nodo che non ha
+	successori, l’effetto è che il nodo viene rimosso e si “torna indietro”
+	nell’albero per esplorare eventuali alternative.
 }
+
+\nt{Può essere con Backtracking o senza Backtracking\footnote{Meglio visto in "Intelligenza Artificiale e Laboratorio"}.}
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[scale=0.5]{01/profondità.png}
+	\caption{Ricerca in profondità.}
+\end{figure}
+
+\paragraph{Valutazione:}
+
+\begin{itemize}
+	\item \fancyglitter{Completezza:} garantibile solo se tutti i cammini sono finiti.
+	\item \fancyglitter{Ottimalità:} in generale non è garantita.
+	\item \fancyglitter{Complessità temporale:} nel caso peggiore vengono percorsi tutti i nodi dell'albero ($O(b^m)$), dove $b$ è il branching factor e $m$ è la profondità massima.
+	\item \fancyglitter{Complessità spaziale:}
+	      \begin{itemize}
+		      \item Senza Backtracking: $O(b*m)$, perché occorre mantenere tutti i nodi del cammino esplorato più tutti i loro fratelli.
+		      \item Con Backtracking: $O(m)$
+	      \end{itemize}
+\end{itemize}
+
+\cor{Ricerca in Profondità Limitata}{
+	Per evitare di entrare in branch infiniti viene introdotto un limite artificiale $l$ (punto di taglio):
+	\begin{itemize}
+		\item Un nodo viene espanso solo se la sua profondità $p \leq l$.
+		\item Altrimenti viene trattato come un nodo privo di successori.
+	\end{itemize}
+}
+
+\nt{Tutti i cammini saranno lunghi al più $l$.}
+
+\paragraph{Problemi:}
+
+\begin{itemize}
+	\item Si riduce la completezza, perché una soluzione potrebbe trovarsi a profondità maggiore di $I$.
+	\item Se $l >> d$ si perde efficienza.
+\end{itemize}
 
 \dfn{Iterative Deepening}{
-
+	Esegue una ricerca in profondità limitata, con iterazioni successive in cui la profondità massima viene aumentata via via.
 }
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[scale=0.5]{01/it.png}
+	\caption{Iterative Deepening.}
+\end{figure}
+
+\paragraph{Valutazione:}
+
+\begin{itemize}
+	\item Combina ampiezza e profondità.
+	\item È preferito quando lo spazio di ricerca è ampio e la profondità della
+	      soluzione non prevedibile.
+	\item Ha una complessità spaziale modesta.
+	\item La complessità temporale è alta.
+	\item È completo se $b$ è finito.
+	\item È ottimo quando il costo è funzione non decrescente della profondità.
+\end{itemize}
 
 \dfn{Ricerca Bidirezionale}{
-
+	Composta da due ricerche:
+	\begin{itemize}
+		\item Forward dallo stato iniziale.
+		\item Backward dallo stato obiettivo.
+	\end{itemize}
+	Termina quando le due ricerche si incontrano, quando le frontiere hanno intersezione non vuota.
 }
 
+\nt{Se lo stato obiettivo non è unico si può introdurre uno stato fittizzio raggiungibile da tutti gli stati obiettivo reali.}
+
+\paragraph{Sono possibili due andamenti:}
+
+\begin{itemize}
+	\item \fancyglitter{A fronte d'onda:} quando non si ha informazione aggiuntiva si esplorano tutte le possibili operazioni.
+	\item \fancyglitter{A cono:} quando si ha informazione aggiuntiva si esplora parte delle operazioni.
+\end{itemize}
+
 \section{Ricerca Informata}
+
+\qs{}{Le strategie di ricerca blind non sono efficienti. E’ possibile rendere la ricerca più
+	efficiente utilizzando della conoscenza sul problema? La conoscenza permette di
+	focalizzare la ricerca verso le direzioni più promettenti?}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
