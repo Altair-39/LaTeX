@@ -783,6 +783,132 @@ completa), risoluzione di problemi mediante soddisfacimento di vincoli.
 
 \nt{Tuttavia ammissibile non vuol sempre dire informativa: $h(n) = 0$ è ammissibile, ma non informativa.}
 
+\paragraph{Valutazione:}
+
+\begin{itemize}
+	\item A* è ottimameente efficiente per qualsiasi euristica: non esiste alcun altro algoritmo ottimo che garantisca
+	      di espandere meno nodi di quelli espansi da A*.
+	\item Il numero di nodi espansi aumenta
+	      esponenzialmente con la profondità della soluzione
+	      ottima.
+	\item A* mantiene in memoria tutti i nodi generati (è una
+	      ricerca in ampiezza).
+\end{itemize}
+
+\paragraph{Funzioni euristiche nel gioco dell'8:}
+
+\begin{itemize}
+	\item In media occorrono 22 mosse per arrivare alla soluzione.
+	\item Il branching factor è pari a 3.
+	\item Albero esaustivo di ricerca: contiene $3^22$ nodi.
+	\item Grafo esaustivo di ricerca: 180000 nodi.
+	\item Ma se si passa al problema del 15 il grafo \fancyglitter{esplode}: $10^23$.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.3]{01/exp.png}
+	\caption{Il grafo be like.}
+\end{figure}
+
+\subsection{Approfondimento su Euristiche}
+
+\paragraph{Possibili euristiche per A*:}
+
+\begin{itemize}
+	\item h1 (numero di tessere fuori posto): è ammissibile perché ogni tessera fuori posto deve
+	      essere spostata almeno una volta.
+	\item h2 (\fancyglitter{distanza di Manhattan}): è la somma della distanza di
+	      una tessera dalla sua posizione
+	      desiderata, contata in numero di tessere
+	      attraversate (originariamente di isolati
+	      attraversati) sulle ascisse più numero di
+	      tessere attraversate sulle ordinate.
+	      È ammissibile perché ogni mossa può spostare una
+	      tessera al più di una posizione più vicina al goal.
+\end{itemize}
+
+\paragraph{Qualità delle euristiche:}
+
+\begin{itemize}
+	\item La qualità di un’euristica può essere calcolata computando il
+	      branching factor effettivo b*.
+	\item b* = branching factor di un albero uniforme di profondità d che
+	      contiene N+1 nodi.
+	\item Le \fancyglitter{euristiche migliori} hanno b* bassi, vicini a 1.
+\end{itemize}
+
+\dfn{Problemi Rilassati}{
+	Un problema ne rilassa un altro
+	quando toglie qualche vincolo. Il grafo degli stati di un problema rilassato è un supergrafo di
+	quello del problema originario perché include transizioni che i
+	vincoli di quest’ultimo non consentono (meno vincoli, più
+	transizioni possibili\footnote{Magari fosse così ovunque.}).
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.45]{01/relax.png}
+	\caption{Rilassamento di un grafo.}
+\end{figure}
+
+\cor{Absolver II}{
+	Absolver II è un esempio di programma che è in grado di
+	generare automaticamente euristiche ammissibili per
+	astrazione:
+
+	\begin{itemize}
+		\item Ha scoperto la prima euristica ammissibile per il cubo di
+		      Rubik.
+		\item Ha scoperto un’euristica ammissibile per il problema
+		      dell’8 che è migliore di quelle precedentemente proposte
+	\end{itemize}
+}
+
+\nt{Gli studi sulla generazione di euristiche continua oggi
+	soprattutto nell’area di planning.}
+
+\dfn{Recursive Best First Search}{
+	RBFS trasforma la ricerca in ampiezza di A* in una ricerca in profondità.
+}
+
+\section{Strategie di Ricerca con Avversario}
+
+\paragraph{Ambiente competitivo:}
+
+\begin{itemize}
+	\item Multi-agente.
+	\item Ogni agente ha \fancyglitter{obiettivi}.
+	\item Gli obiettivi di agenti diversi sono conflittuali, cioè il conseguimento
+	      degli obiettivi di un agente impedisce il conseguimento degli
+	      obiettivi degli altri agenti.
+	\item I problemi di ricerca con avversario sono anche detti \fancyglitter{giochi}.
+\end{itemize}
+
+\paragraph{Tipologie di giochi:}
+
+\begin{itemize}
+	\item \fancyglitter{Condizioni di scelta:}
+	      \begin{itemize}
+		      \item Informazione perfetta: gli stati del gioco sono
+		            totalmente espliciti per tutti gli agenti.
+		      \item Informazione imperfetta: gli stati del gioco sono solo parzialmente esplicitati.
+	      \end{itemize}
+	\item \fancyglitter{Effetti della scelta:}
+	      \begin{itemize}
+		      \item \fancyglitter{Deterministici:} gli stati sono determinati unicamente
+		            dalle azioni degli agenti.
+		      \item \fancyglitter{Stocastici:} gli stati sono determinati anche da fattori
+		            esterni (es: dadi).
+	      \end{itemize}
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{01/giochi.png}
+	\caption{Tipi di giochi.}
+\end{figure}
+
 
 
 
