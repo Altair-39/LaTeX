@@ -909,6 +909,102 @@ completa), risoluzione di problemi mediante soddisfacimento di vincoli.
 	\caption{Tipi di giochi.}
 \end{figure}
 
+\subsection{Teoria delle Decisioni}
+
+\paragraph{Elementi delle decisioni:}
+
+\begin{itemize}
+	\item \fancyglitter{Andamenti:} non controllabili, dipendono da dinamiche esterne.
+	\item \fancyglitter{Scelte:} se ne può fare una sola.
+	\item \fancyglitter{Payoff:} ossono essere guadagno o
+	      perdite ma anche riferirsi ad altre misure
+	      (esempio: tempo, risorse). Sono specifici
+	      del problema.
+\end{itemize}
+
+\paragraph{Sono possibili tre approcci:}
+
+\begin{itemize}
+	\item Approccio maximax (ottimistico): Guarda i payoff più alti per ogni possibile scelta e fa la scelta che promette di più
+	      in assoluto: il massimo dei massimi. È ottimistica perché non ha
+	      garanzie che le dinamiche esterne faranno salire il fondo scelto.
+	\item Approccio maximin (pessimistico): Questo approccio guarda le perdite maggiori legate a ciascuna scelta e poi esegue
+	      l’azione che minimizza le perdite (il massimo dei minimi).
+	\item Approccio minimax (pentimento): best payoff - real payoff.
+\end{itemize}
+
+\paragraph{Guadagno e giochi con avversario:}
+
+\begin{itemize}
+	\item Non sappiamo come evolverà l’ambiente, non
+	      sappiamo quale scelta farà l’avversario.
+	\item Dobbiamo far bastare la conoscenza dello stato corrente e
+	      delle mosse a disposizione.
+\end{itemize}
+
+\paragraph{Caratteristiche del gioco:}
+
+\begin{itemize}
+	\item Due giocatori.
+	\item Ciascun giocatore non sa quali mosse farà l’altro ma le mosse possibili
+	      sono note e sono calcolabili i successori che produrranno una volte
+	      applicate a qualche stato.
+	\item Osservabilità:
+	      \begin{itemize}
+		      \item \fancyglitter{Totale:} giochi con turno, i giocatori conoscono i risultati
+		            delle mosse precedenti.
+		      \item \fancyglitter{Parziale:} giochi ad azione simultanea: i giocatori non
+		            conoscono le mosse che i giocatori eseguono simultaneamente alla loro.
+	      \end{itemize}
+	\item Partendo da uno stato iniziale è possibile sviluppare un albero di possibili
+	      evoluzioni (\fancyglitter{albero di gioco}), applicando le azioni eseguibili e calcolando
+	      così gli stati successori.
+	\item Alcuni stati sono terminali, quando uno di essi è raggiunto la partita
+	      termina.
+	\item I giocatori si avvalgono del calcolo dell’utilità degli stati.
+	\item I giocatori devono tener conto dell’avversario quindi il calcolo
+	      dell’utilità comprende una valutazione del punto di vista
+	      dell’avversario.
+	\item Giocatori pessimisti: suppongono che l’avversario faccia sempre
+	      la mossa che gli porta il guadagno maggiore.
+\end{itemize}
+
+\dfn{Strategia Ottima per un Agente}{
+	Sequenza di mosse che porta a uno stato terminale
+	corrispondente alla vittoria dell’agente.
+}
+
+\nt{L’agente non sa come muoverà l’altro, può solo
+	“immedesimarsi”.}
+
+\dfn{Minimax}{
+	Un algoritmo che rappresenta la strategia ottima per un agente è minimax in cui:
+	\begin{itemize}
+		\item Il max rappresenta l'agente che vuole massimizzare la propria utilità.
+		\item Il min rappresenta l'avversario che vuole minimizzare l'utilità dell'agente.
+	\end{itemize}
+}
+
+\paragraph{Valutazione di minimax:}
+
+\begin{itemize}
+	\item Effettua una visita in profondità completa quindi la
+	      complessità temporale è esponenziale e quella spaziale
+	      è lineare.
+	\item È completo in grafi finiti.
+	\item È ottimale se MAX e MIN giocano in modo ottimale.
+\end{itemize}
+
+\cor{Potatura Alfa-Beta}{
+	Per ridurre i tempi di ricerca si può fare pruning sui rami meno promettendi:
+	\begin{itemize}
+		\item $\alpha$ = massimo lower bound delle soluzioni possibili.
+		\item $\beta$ = minimo upper bound delle soluzioni possibili.
+	\end{itemize}
+
+	Ha senso esplorare un nodo se e solo se il suo valore stimato N è compreso tra i due estremi.
+}
+
 
 
 
