@@ -160,6 +160,17 @@
 	      \end{itemize}
 \end{itemize}
 
+\paragraph{Vincoli speciali:}
+
+\begin{itemize}
+	\item \fancyglitter{Alldifferent($X_1,\dots,X_n$):} i valori delle variabili elencate devono essere tutti differenti.
+	\item \fancyglitter{Atmost($N, A_1,\dots,A_k$):} le attività $A_1, \dots, A_k$ possono impegnare complessivamente al più $N$ risorse.
+\end{itemize}
+
+\nt{Atmost si utilizza per domini su grandi numeri.}
+
+\subsection{AC-3}
+
 \dfn{AC-3}{
 	Algoritmo di arc consistency sviluppato nel 1977 da Alan
 	Macworth. Si può usare come preprocessing oppure a valle degli
@@ -190,4 +201,204 @@
 	      \end{itemize}
 \end{itemize}
 
+\paragraph{Valutazione di AC-3:}
+
+\begin{itemize}
+	\item Un CSP con $n$ variabili e vincoli binari ha al più $n^2$ archi.
+	\item Sia $d$ il numero massimo di valori di una variabile: il tempo per la
+	      verifica della consistenza sarà nel caso peggiore $O(n^2d^3)$.
+	\item Più costoso della verifica forward ma più efficace.
+	\item AC-3 è incompleto: alcuni assegnamenti inconsistenti non vengono rilevati.
+\end{itemize}
+
+\subsection{K-consistency}
+
+\paragraph{La path consistency:}
+
+\begin{itemize}
+	\item È una proprietà più forte di arc consistency.
+	\item Identifica vincoli impliciti, inferiti da triplette di variabili.
+	\item Una coppia di variabili $\{X_1, X_2\}$ è path consistent rispetto a una
+	      terza variabile $X_3$ quando:
+	      \begin{itemize}
+		      \item Per ogni assegnamento $\{X_1=a, X_2=b\}$ consistente con i vincoli
+		            su $X_1$ e $X_2$.
+		      \item c’è un assegnamento di $X_3$ che soddisfa i vincoli esistenti sulle
+		            coppie di variabili $\{X_1, X_3\}$ e $\{X_2, X_3\}$.
+	      \end{itemize}
+\end{itemize}
+
+\dfn{K-consistency}{
+	Un CSP è k-consistent quando per ogni sottoinsieme costituito da k-1 delle sue variabili
+	e ogni loro assegnamento consistente, è possibile
+	individuare un assegnamento consistente per qualsiasi
+	k-ma variabile.
+}
+
+\paragraph{È la generalizzazione delle consistente viste in precedenza:}
+
+\begin{itemize}
+	\item 1-consistency: node consistency.
+	\item 2-consistency: arc consistency.
+	\item 3-consistency: path consistency.
+\end{itemize}
+
+\cor{CSP Fortemente K-consistent}{
+	Un CSP è fortemente k-consistent quando è:
+	\begin{itemize}
+		\item k-consistent.
+		\item (k-1)-consistent.
+		\item \dots
+		\item 1-consistent.
+	\end{itemize}
+}
+
+\paragraph{È dimostrato che un CSP fortemente k-consistent può essere risolto senza backtracking:}
+
+\begin{itemize}
+	\item In pratica:
+	      \begin{itemize}
+		      \item Poiché è 1-consistent basta iniziare da un valore consistente per una variabile $X_1$.
+		      \item Poiché è 2-consistent è possibile individuare un valore consistente per le variabili
+		            direttamente in relazione con $X_1$.
+		      \item Poiché è 3-consistente è possibile individuare un valore consistente per le variabili in
+		            relazione con coppie delle precedenti.
+	      \end{itemize}
+	\item Complessità temporale: $O(n*d)$ dove $n$ è il numero di variabili e $d$ è il numero di valori del dominio.
+	\item La complessità temporale per decidere se un CSP è fortemente k-consistent è esponenziale.
+\end{itemize}
+
+\subsection{Backjumping}
+
+\paragraph{Limiti del backtracking:}
+
+\begin{itemize}
+	\item Quando la ricerca con backtracking raggiunge un vicolo
+	      cieco, torna indietro alla variabile che era stata
+	      considerata al passo precedente (backtracking
+	      cronologico).
+	\item Non sfrutta i vincoli, ha i limiti delle strategie di ricerca blind.
+\end{itemize}
+
+\nt{Idea: fare backtracking a una variabile che potrebbe
+	risolvere il problema.}
+
+\dfn{Backjumping}{
+	Variante del backtracking che utilizza i conflict set
+	per decidere a quale variabile ritornare in caso di
+	vicolo cieco.
+}
+\cor{Conflict Set}{
+	Sia A un assegnamento parziale consistente, sia $X$ una
+	variabile non ancora assegnata. Se l’assegnamento A U
+	\{X=vi\} risulta inconsistente per qualsiasi valore vi
+	appartenente al dominio di $X$ si dice che A è un conflict set
+	di $X$.
+}
+
+\nt{Un conflict set per una variabile è minimo quando togliendo
+	uno qualsiasi degli assegnamenti che lo costituiscono non si
+	ottiene più un conflict set.}
+
+\paragraph{Il forward checking può essere modificato in modo da costruire gli insiemi dei conflitti per ogni variabile:}
+
+\begin{itemize}
+	\item Quando si assegna un valore a una variabile, FC
+	      propaga questa scelta attraverso i vincoli cancellando
+	      valori dai domini di altre variabili.
+	\item asta arricchire FC in modo che registri la relazione fra
+	      la variabile assegnata e quelle che hanno subito una
+	      riduzione di dominio.
+
+\end{itemize}
+
+\nt{FC rileva esattamente gli stessi conflitti rilevati da BJ,
+	quindi l’uso di BJ congiunto a FC è ridondante.}
+
+\cor{NOGOOD}{
+	Assegnamenti parziali che
+	non appartengono all’insieme delle possibili soluzioni.
+}
+
+\paragraph{Conflict-directed backjumping:}
+
+\begin{itemize}
+	\item Il conflitto dipende da due fattori:
+	      (1) dagli assegnamenti precedenti e
+	      (2) dalle variabili rimaste a cui dovremo assegnare valori in
+	      futuro.
+	\item È possibile calcolare i conflict set in modo in modo tale che
+	      guidino in modo più efficace il backtracking (evitando di
+	      considerare T=R da cui non dipende l’inconsistenza e
+	      saltando direttamente ai “colpevoli”veri)?
+\end{itemize}
+
+
+\paragraph{Backjump:}
+
+\begin{itemize}
+	\item Sia $X_j$ la variabile corrente.
+	\item Indichiamo con conf($X$) il conflict set della generica variabile $X$.
+	\item Se tutti i valori possibili di $X_j$ falliscono si fa un
+	      backjump alla variabile $X_i$ che è stata aggiunta a
+	      conf($X_j$) più di recente e si aggiorna conf($X_i$):
+
+	      \[
+		      conf(X_i) \leftarrow conf(X_i) \cup conf(X_j) - \{x_i\}
+	      \]
+\end{itemize}
+
+\clm{}{}{
+	\begin{itemize}
+		\item I vincoli forniscono una guida per evidenziare relazioni implicite fra le variabili.
+		\item Gli stati NOGOOD minimali possono essere
+		      registrati dall’algoritmo che potrà così evitare di
+		      ripetere questi assegnamenti in futuro.
+		\item Si tratta di una forma di \fancyglitter{apprendimento}.
+	\end{itemize}
+}
+
+\subsection{Applicazioni di CSP}
+
+\paragraph{Applicazioni reali di CSP:}
+
+\begin{itemize}
+	\item Sudoku.
+	\item Location of facilities (es. warehouses): dato un elenco di magazzini e date delle
+	      richieste fatte da clienti, identificare un percorso che permetta di soddisfare le
+	      richieste visitando i magazzini così da minimizzare i costi.
+	\item Job scheduling: supponiamo che una fabbrica produca un range di prodotti, ogni
+	      tipologia richiede la sequenzializzazione di determinate operazioni svolte da
+	      macchinari. Ogni operazione richiede un tempo di esecuzione. Lo scopo è trovare
+	      una sequenza di produzione che minimizzi i tempi di produzione.
+	\item Car sequencing: nell’industria automobilistica la catena di montaggio assembla
+	      automobili partendo da un modello base a cui sono aggiunte caratterizzazioni
+	      scelte dai clienti (es. Optional). Automobili diverse avranno insiemi di optional
+	      diversi. Le auto sono portate da un nastro trasportatore e gli optional sono
+	      montati in aree di lavoro, ognuna delle quali ha una capacità massima. Il
+	      problema consiste nel definire un ordine di costruzione tale da non eccedere le
+	      capacità delle aree di lavoro.
+	\item Cutting stock problem: un materiale deve essere tagliato
+	      in pezzi più piccoli per un cliente minimizzando lo spreco.
+	\item Vehicle routing: n clienti vengono riforniti da uno stesso
+	      deposito. Il problema consiste nel trovare il percorso di costo
+	      minimo.
+	\item Timetabling: costruzione automatica di orari (esempio per
+	      corsi di studi) tenendo conto dell’allocazione di risorse (aule,
+	      laboratori) e altri vincoli.
+	\item Rostering e crew scheduling: definizione di turni e di
+	      equipaggi (esempio: per compagnie aeree).
+	\item SAT solver: risolvono problemi a variabili booleane\footnote{Visto in "Logica per l'Informatica".}.
+	\item ASP: per programmare e risolvere CSP\footnote{Visto in "Intelligenza Artificiale e Laboratorio".}.
+\end{itemize}
+
 \section{Rappresentazione della Conoscenza}
+
+
+
+
+
+
+
+
+
