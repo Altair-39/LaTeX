@@ -1,5 +1,45 @@
 \chapter{CSP e Rappresentazione della conoscenza}
 
-\section{Constrain Satisfaction Problem}
+\section{Constraint Satisfaction Problem}
+
+\subsection{Introduzione}
+
+\dfn{Constraint Satisfaction Problem}{
+	Un constraint satisfaction problem (CSP) è definito
+	da:
+	\begin{itemize}
+		\item Un insieme di variabili $X_1, \dots, X_n$.
+		\item Un insieme di vincoli $C_1,\dots,C_m$.
+		\item In alcuni casi è richiesta la massimizzazione di una funzione obiettivo.
+	\end{itemize}
+}
+
+\cor{Stati}{
+	Gli stati di un CSP sono dati da tutti gli assegnamenti
+	possibili per le variabili del CSP.
+
+	Un assegnamento $X_{i1} = v_{i1}, X_{i2} = v_{i2}$ è un'attribuzione di valori a un sottoinsieme delle variabili del CSP.
+}
+
+\paragraph{Un assegnamento è detto:}
+
+\begin{itemize}
+	\item \fancyglitter{Completo:} se assegna valori a tutte le variabili del CSP.
+	\item \fancyglitter{Consistente:} se non viola alcun vincolo del CSP.
+	\item \fancyglitter{Soluzione:} se è completo e consistente.
+\end{itemize}
+
+\nt{Quando esiste una soluzione per un vincolo si dice anche che
+	esiste un mondo possibile che soddisfa il vincolo.
+
+	I vincoli binari possono essere rappresentati come archi di un grafo i cui nodi sono le variabili del CSP.
+}
+
+
+
+
+
+
+
 
 \section{Rappresentazione della Conoscenza}

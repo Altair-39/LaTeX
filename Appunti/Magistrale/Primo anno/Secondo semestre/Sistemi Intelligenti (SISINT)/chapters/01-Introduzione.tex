@@ -1005,12 +1005,124 @@ completa), risoluzione di problemi mediante soddisfacimento di vincoli.
 	Ha senso esplorare un nodo se e solo se il suo valore stimato N è compreso tra i due estremi.
 }
 
+\paragraph{Minimax e Alpa-Beta Pruning sono equivalenti:}
 
+\begin{itemize}
+	\item Trovano la stessa mossa ottima.
+	\item Attribuiscono alla radice la stessa valutazione.
+\end{itemize}
 
+\nt{Alfa-Beta ha complessità temporale $O(b^{m/2})$ contro $O(b^m)$.}
 
+\clm{}{}{
+	\begin{itemize}
+		\item Alpha-beta pruning è più o meno efficace a seconda dell’ordine con
+		      cui i successori di ciascun nodo sono considerati.
+		\item Se il successore più promettente è l’ultimo a essere considerato non
+		      è possibile evitare di esplorare i sottoalberi dei suoi fratelli.
+		\item Quando l’ordinamento dei successori non è possibile, la
+		      complessità diventa $O(b^{3m/4})$.
+		\item \fancyglitter{Killer move:} espandere i figli più promettenti per primi.
+	\end{itemize}
+}
 
+\qs{}{
+	Come trovare le killer move?
+}
 
+\begin{itemize}
+	\item Tramite \fancyglitter{apprendimento} per cui il sistema ricorda le esperienze passate e le usa per scegliere la mossa più promettente.
+	\item Combinazione della potatura alfa-beta con iterative
+	      deepening.
+	\item Uso di \fancyglitter{tabelle di trasposizione} (talvolta in aggiunta ad alfa-
+	      beta + iterative deepening)
+\end{itemize}
 
+\dfn{Trasposizione}{
+	In alcuni problemi, eseguendo un certo insieme di mosse, è possibile
+	ottenere sempre uno stesso risultato anche se le mosse sono ordinate
+	differentemente. I diversi ordinamenti sono detti trasposizioni.
+}
 
+\nt{Quando lo spazio degli stati è grande riconoscere le trasposizioni è
+	importante per evitare di esplorare più volte gli stessi stati.}
 
+\cor{Tabella di Trasposizione}{
+	Una hash table che contiene tutte le trasposizione: ogni volta che si genera un nuovo stato si controlla
+	se corrisponde a uno stato già generato da una trasposizione. Se sì non
+	viene esplorato.
+}
 
+\paragraph{Alfa-Beta in contesti real-time:}
+
+\begin{itemize}
+	\item Alfa-beta concentra la ricerca su una porzione limitata dello
+	      spazio degli stati ma deve comunque arrivare agli stati
+	      terminali.
+	\item Può diventare troppo lento nel produrre la risposta quando il
+	      nodo terminale è situato a grande profondità (esempio:
+	      scacchi).
+	\item In questo caso è necessario introdurre dei test di “\fancyglitter{cutoff}” per
+	      produrre una decisione prima di raggiungere il nodo
+	      terminale.
+\end{itemize}
+
+\dfn{Funzione di Valutazione}{
+	Una funzione di valutazione fa una stima della bontà di uno
+	stato intesa come percentuale di presenza degli stati che portano
+	alla vittoria rispetto agli altri. Calcola la probabilità di essere in uno stato che porta a vittoria conoscendo solo la classe di appartenenza dello stato.
+}
+
+\nt{Ma nel mondo reale non sempre è immediato capire come impostare una funzione di valutazione.}
+
+\dfn{Problema dell'Orizzonte}{
+	L'algoritmo non vede oltre il punto di taglio, ma in alcune fasi il gioco si può capovolgere il fretta o, in
+	altri termini, la funzione di valutazione è instabile. Tagliare in questi punti è prematuro perché rischioso:
+	l’avversario potrebbe successivamente forzare un forte
+	cambiamento della valutazione.
+}
+
+\dfn{Quiescenza}{
+	La nozione di quiescenza concerne la permanenza della negatività (o
+	positività) della valutazione. Si taglieranno nodi la cui valutazione è quiescente mentre quelli non
+	quiescenti richiederanno un po’ di esplorazione ulteriore dei sottoalberi
+	che li vedono come radici.
+}
+
+\subsection{Programmi che Giocano}
+
+\dfn{DeepBlue}{
+	Primo calcolatore a vincere una partita a scacchi contro un
+	Campione del Mondo in carica, Garry Kasparov, con cadenza di
+	tempo da torneo.
+}
+
+\paragraph{Grande potenza computazionale:}
+
+\begin{itemize}
+	\item Un computer a parallelismo massivo a 30 nodi basato su
+	      RS/6000, supportato da 480 processori specifici VLSI
+	      progettati per il gioco degli scacchi.
+	\item Algoritmo in C.
+	\item È capace di calcolare 200 milioni di posizioni al secondo.
+\end{itemize}
+
+\dfn{AlphaGo}{
+	Sviluppato da google, primo programma che ha battuto senza handicap
+	a go un maestro umano, su un goban di dimensioni standard.
+}
+
+\paragraph{Nelle 500 partite disputate contro altri programmi ha vinto:}
+
+\begin{itemize}
+	\item Tutte le partite meno una quando eseguito su un solo computer.
+	\item Tutte le partite quando eseguito su di un cluster che impiegava
+	      1202 CPU e 176 GPU, circa 25 volte in più rispetto all'hardware del
+	      computer singolo.
+	\item La versione cluster ha battuto la versione su singolo computer nel
+	      77\% delle partite.
+\end{itemize}
+
+\nt{Utilizza deep learning neural networks e ricerca su alberi. Le reti
+	neurali sono state addestrate su un dataset di 30.000.000 di mosse
+	e poi raffinate giocando contro se stesse.}
