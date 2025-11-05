@@ -35,11 +35,159 @@
 	I vincoli binari possono essere rappresentati come archi di un grafo i cui nodi sono le variabili del CSP.
 }
 
+\paragraph{CSP come problemi di ricerca in uno spazio degli stati:}
 
+\begin{itemize}
+	\item \fancyglitter{Stato iniziale} = \{\} assegnamento vuoto.
+	\item \fancyglitter{Successore} = assegnamento di un valore a una
+	      delle variabili che non ce l’hanno facendo attenzione
+	      che non sorgano conflitti.
+	\item \fancyglitter{Test obiettivo} = assegnamento completo.
+	\item \fancyglitter{Costo} = ogni passo ha costo costante.
+\end{itemize}
 
+\subsection{Domini e Vincoli}
 
+\begin{itemize}
+	\item \fancyglitter{Domini finiti:} è possibile enumerare i vincoli mettendo in relazione i diversi valori.
+	\item \fancyglitter{Domini infiniti:} non è possibile enumerare i vincoli,
+	      si usano linguaggi di specifica.
+	\item \fancyglitter{Domini continui:} la programmazione lineare permette di risolvere CSP in cui i
+	      vincoli sono disuguaglianze lineari che specificano una
+	      regione convessa.
+\end{itemize}
 
+\paragraph{Arità dei vincoli:}
 
+\begin{itemize}
+	\item \fancyglitter{Unari:} coinvolgono una variabile e un valore.
+	\item \fancyglitter{Binari:} coinvolgono due variabili e possono essere rappresentati come
+	      archi di un grafo.
+	\item \fancyglitter{A tre o più variabili:} Vincoli a tre o più variabili
+	      coinvolgono un numero qualsiasi di variabili, possono essere
+	      rappresentati da ipergrafi\footnote{Grafi con archi che connettono più di due
+		      nodi.}.
+\end{itemize}
 
+\ex{Criptoaritmetica}{
+	La criptoaritmetica è un gioco in cui a ogni lettera corrisponde una
+	cifra diversa, bisogna trovare la sostituzione corretta.
+
+	\begin{center}
+		\includegraphics[scale=0.5]{02/ca.png}
+	\end{center}
+}
+
+\nt{Un altro problema è quello delle 8 regine.}
+
+\paragraph{Vincoli e criteri di preferenza:}
+
+\begin{itemize}
+	\item I vincoli possono essere più o meno \fancyglitter{rigidi}.
+	\item Si distingue tra vincoli veri e \fancyglitter{criteri di preferenza}.
+	\item Una soluzione deve soddisfare tutti i vincoli.
+	\item Una soluzione può violare uno o più criteri di
+	      preferenza.
+	\item Il soddisfacimento dei criteri di preferenza permette di
+	      ordinare le soluzioni identificando quelle preferibili e
+	      quelle meno preferibili.
+\end{itemize}
+
+\dfn{Generate-and-test}{
+	È un metodo di risoluzione di CSP molto semplice:
+	\begin{itemize}
+		\item Finché non si ha una soluzione:
+		      \begin{enumerate}
+			      \item Genera un assegnamento completo.
+			      \item Controlla se è consistente.
+			      \item Se è una soluzione, esci dal ciclo.
+			      \item Se non è una soluzione, torna al passo 1.
+		      \end{enumerate}
+		\item Se si ha una soluzione la si restituisce.
+		\item Altrimenti fallimento.
+	\end{itemize}
+}
+
+\nt{Però Generate-and-test è inefficiente.}
+
+\paragraph{Ricerca di una soluzione in profondità:}
+
+\begin{itemize}
+	\item Esploriamo lo spazio degli stati (dei possibili assegnamenti)
+	      utilizzando una ricerca depth-first con backtracking.
+	\item Ricerca non informata + vincoli per decidere quando potare un cammino.
+	\item La limitatezza dei cammini rende ragionevole la scelta della
+	      ricerca in profondità, tuttavia spesso si ha branching factor
+	      elevato.
+	\item Siano:
+	      \begin{itemize}
+		      \item $n$ = numero di variabili.
+		      \item $d$ = numero medio dei valori possibili per ciascuna
+		            variabile.
+		      \item Uno qualsiasi dei valori può essere assegnato a una
+		            qualsiasi delle variabili.
+	      \end{itemize}
+	\item Il branching factor sarà n*d al primo livello, (n-1)*d
+	      al secondo (perché una variabile è stata fissata),
+	      eccetera.
+	\item Quindi l'albero avrà $n! * d^n$ foglie.
+\end{itemize}
+
+\nt{Per migliorare si possono aggiungere euristiche generali.}
+
+\paragraph{Euristiche:}
+
+\begin{itemize}
+	\item \fancyglitter{Scelta della prossima variabile:}
+	      \begin{itemize}
+		      \item Euristica Minimum Remaining Values (o fail-first): sceglie una delle
+		            variabili con il minor numero di valori alternativi consistenti con l'assegnamento corrente.
+		      \item Euristica di grado: sceglie la variabile coinvolta con più vincoli.
+		      \item Euristica del valore meno vincolante: prediligere il valore che
+		            lascia più libertà alle variabili adiacenti sul grafo dei vincoli.
+
+	      \end{itemize}
+	\item \fancyglitter{Metodo di consistenza locale:}
+	      \begin{itemize}
+		      \item Forward checking: si percorrono gli archi che collegano il nodo, corrispondente alla
+		            variabile assegnata, con i suoi vicini diretti e si riduce il range dei
+		            possibili valori di tali vicini in maniera conforme al vincolo.
+		      \item Node consistency: riguarda singole variabili, vale quando i vincoli unari sono soddisfatti da
+		            tutti i valori dei domini delle rispettive variabili.
+		      \item Arc consistency: proprietà direzionale relativa a un vincolo binario,
+		            tutti i valori consistenti di una variabile x possono essere estesi a y tramite i vincoli.
+		      \item Path consistency: proprietà che lega una coppia di variabili a una terza tramite i vincoli.
+	      \end{itemize}
+\end{itemize}
+
+\dfn{AC-3}{
+	Algoritmo di arc consistency sviluppato nel 1977 da Alan
+	Macworth. Si può usare come preprocessing oppure a valle degli
+	assegnamenti per propagare le scelte fatte tramite i vincoli.
+	Quest’ultimo uso realizza l’algoritmo MAC (Maintaining Arc
+	Consistency).
+}
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.8]{02/AC3.png}
+	\caption{Algoritmo AC-3.}
+\end{figure}
+
+\paragraph{Arc consistency:}
+
+\begin{itemize}
+	\item La propagazione dei valori tramite arc consistency è un
+	      esempio di tecnica di inferenza.
+	\item Proprietà:
+	      \begin{itemize}
+		      \item Consente di ridurre i domini delle variabili di molti CSP.
+		      \item Quando riduce i domini di tutte le variabili a un solo valore trova
+		            anche una soluzione.
+		      \item Quando rende vuoto un dominio scopre che un particolare CSP
+		            non può essere risolto.
+		      \item Non è però generalmente sufficiente a determinare una
+		            soluzione o ad accorgersi dell’irresolvibilità di un CSP.
+	      \end{itemize}
+\end{itemize}
 
 \section{Rappresentazione della Conoscenza}
