@@ -558,6 +558,118 @@ Ragionare vuol dire rendere esplicita della conoscenza che prima non lo era.
 	\item FormulaComplessa $\rightarrow$ $\neg$ Formula $|$ (Formula $\land$ Formula) $|$ (Formula $\lor$ Formula) $|$ (Formula $\Rightarrow$ Formula)$|$ (Formula $\Leftrightarrow$ Formula)
 \end{itemize}
 
+\nt{L'implicazione logica non è una relazione causale: dal falso si può derivare qualsiasi assurdità.}
+
+\paragraph{Esistono vari tipi di implicazione, oltre all'implicazione logica:}
+
+\begin{itemize}
+	\item Ragionamento ontologico.
+	\item Ragionamento temporale.
+	\item Ragionamento causale.
+\end{itemize}
+
+\qs{}{Come dimostrare KB $\vDash$ P?}
+
+\begin{itemize}
+	\item \fancyglitter{Model Checking:}
+	      \begin{itemize}
+		      \item Enumero i possibili modelli.
+		      \item Seleziono quelli in cui KB è vera.
+		      \item Verifico che in tutti questi P sia vera.
+		      \item \fancyglitter{Costoso:} dati $N$ simboli proposizionali esistono $2^N$ modelli.
+	      \end{itemize}
+	\item \fancyglitter{Theorem Proving:}
+	      \begin{itemize}
+		      \item Permette di usare regole di inferenza per cercare una
+		            derivazione, senza costruire i modelli (più efficiente
+		            perché ignora le proposizioni irrilevanti, che possono
+		            essere numerose).
+	      \end{itemize}
+\end{itemize}
+
+\paragraph{Due risultati fondamentali:}
+
+\begin{itemize}
+	\item \fancyglitter{Teorema di deduzione:} permette di rispondere vero se si dimostra l'equivalenza $(KB \vDash P) \equiv True$.
+	\item \fancyglitter{Dimostrazione per refutazione:} permette di rispondere vero se si dimostra l’equivalenza $(KB \land \neg P) \equiv False$.
+\end{itemize}
+
+\dfn{Teorema di Deduzione}{
+	Date due formule R e Q, $(R \vDash Q)$ se e solo se $(R \vDash Q)$ è valida.
+}
+
+\paragraph{Validità e Soddisfacibilità:}
+
+\begin{itemize}
+	\item A è valida se e solo se $\neg$ A è insoddisfacibile.
+	\item A è Soddisfacibile se e solo se $\neg$ A non è valida.
+\end{itemize}
+
+\dfn{Dimostrazione per Refutazione}{
+	Date due formule R e Q, $(R \vDash Q)$ se e solo se $(R \vDash \neg Q)$ è insoddisfacibile.
+}
+
+\nt{Anche detta dimostrazione \fancyglitter{per assurdo}.}
+
+\paragraph{Inferenza e dimostrazioni:}
+
+\begin{itemize}
+	\item Dalle premesse, applicare una sequenza di passi per
+	      raggiungere una determinata conclusione.
+	\item Formulazione come problema di ricerca:
+	      \begin{itemize}
+		      \item Stato iniziale: background knowledge.
+		      \item Azioni: regole di inferenza.
+		      \item Goal: stato che contiene la formula da dimostrare.
+	      \end{itemize}
+\end{itemize}
+
+\nt{In questo corso si fa riferimento solo a logiche monotone: aggiungere nuova conoscenza non invalida le conclusioni precenti.}
+
+\dfn{Risoluzione}{
+	La regola di risoluzione è una regola di inferenza che se unita a un qualsiasi algoritmo di ricerca completo produce un algoritmo di inferenza corretto e completo.
+}
+\pagebreak
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.6]{02/res.png}
+	\caption{Algoritmo di risoluzione.}
+\end{figure}
+
+\subsection{Formule Proposizionali e Clausole}
+
+\nt{La risoluzione può essere applicata solo a KB in forma normale congiuntiva}
+
+\dfn{Conjunctive Normal Form (CNF)}{
+	Data una qualsiasi formula proposizionale esiste una congiunzione di clausole equivalente.
+}
+
+\paragraph{Grammatica:}
+
+\begin{itemize}
+	\item FraseCNF $\rightarrow$ Clausola $\land$ \dots $\land$ Clausola.
+	\item Clausola $\rightarrow$ Letterale $\lor$ \dots $\lor$ Letterale.
+	\item Letterale $\rightarrow$ Simbolo $|$  $\neg$ Simbolo.
+	\item Simbolo $\rightarrow$ P $|$ Q $|$ \dots
+\end{itemize}
+
+\paragraph{Algoritmo di traduzione in clausole:}
+
+\begin{enumerate}
+	\item Eliminare la biimplicazione.
+	\item Eliminare l'implicazione.
+	\item Portare il not all'interno.
+	\item Distribuire l'or sull'and dove possibile.
+\end{enumerate}
+
+\thm{Completezza della Risoluzione}{
+	Se un insieme di clausole è insoddisfacibile la chiusura della
+	risoluzione contiene la clausola vuota.
+}
+
+
+
+
 
 
 
