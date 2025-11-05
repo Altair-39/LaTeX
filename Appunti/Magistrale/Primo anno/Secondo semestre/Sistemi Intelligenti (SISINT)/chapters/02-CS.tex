@@ -394,10 +394,169 @@
 
 \section{Rappresentazione della Conoscenza}
 
+Ragionare vuol dire rendere esplicita della conoscenza che prima non lo era.
+
+\paragraph{Se so che:}
+
+\begin{itemize}
+	\item Tutti gli A hanno la proprietà B.
+	\item Tutti i B sono degli A.
+\end{itemize}
+
+\paragraph{Allora:}
+
+\begin{itemize}
+	\item Tutti i B hanno la proprietà A.
+\end{itemize}
+
+\nt{Il ragionamento lavora sulla forma delle affermazioni come se fossero \fancyglitter{schemi}, assumendone la verità.}
+
+\subsection{Introduzione}
+
+\paragraph{Il ragionamento è automatizzabile se:}
+
+\begin{itemize}
+	\item Si strutturano le affermazioni in modo standard (un linguaggio per rappresentare la conoscenza).
+	\item Si codificano le regole del ragionamento (quando si può dire che una certa affermazione è vera).
+	\item Si implementa un algoritmo che sa usare la conoscenza rappresentata e le regole di ragionamento.
+\end{itemize}
+
+\clm{Dati, Informazione e Conoscenza}{}{
+	\begin{itemize}
+		\item \fancyglitter{Dato:} una percezione, non ha significato di per sé.
+		\item \fancyglitter{Informazione:} è ciò che il dato rappresenta.
+		\item \fancyglitter{Conoscenza:} cattura le relazioni.
+	\end{itemize}
+}
+
+\dfn{Agenti Basati sulla Conoscenza}{
+	Sono agenti caratterizzati da:
+	\begin{itemize}
+		\item Knowledge Base (KB): un insieme di formule espresse in un linguaggio per
+		      la rappresentazione della conoscenza possedute dall’agente. Può cambiare
+		      nel tempo (non monotona). La conoscenza iniziale è detta background knowledge.
+		\item Tell (o assert): meccanismo per aggiungere nuove formule.
+		\item Ask (o query): meccanismo per effettuare interrogazioni.
+	\end{itemize}
+}
+
+\paragraph{Sia Ask che Tell possono attivare \fancyglitter{processi di inferenza} e devono soddisfare la proprietà:}
+
+\begin{itemize}
+	\item Ogni risposta a una ask deve deve essere una conseguenza delle asserzioni
+	      (tell) fatte e della conoscenza di background.
+\end{itemize}
+
+\paragraph{Programmazione di agenti basati sulla conoscenza:}
+
+\begin{itemize}
+	\item Si effettua specificando la KB che serve.
+	\item KB comprende la specifica delle azioni.
+	\item La KB è in \fancyglitter{forma dichiarativa} (COSA e non COME).
+\end{itemize}
+
+\dfn{Programmazione Dichiarativa}{
+	La programmazione dichiarativa è un paradigma di
+	programmazione in cui i programmi esprimono la logica di una
+	computazione senza esprimerne il flusso di controllo.
+}
+
+\nt{Esempi: XML, SQL, regular expressions.}
+
+\subsection{Logica}
+
+\dfn{Modello}{
+	Un modello è un mondo possibile. Fissa i valori di verità delle formule, quindi i modelli
+	possibili sono definiti da tutti i modi in cui è possibile assegnare
+	valori agli elementi che determinano il valore di verità delle
+	formule.
+}
+
+\nt{Quando l’universo di riferimento è fisico (reale), il modello è
+	un’astrazione matematica (simbolica) significativa di quella
+	realtà.}
+
+\dfn{Conseguenza Logica}{
+	Una conseguenza logica è una relazione fra due formule che
+	dice che in tutti i modelli in cui la prima formula è vera, è
+	vera anche la seconda, il fatto che da A consegue B è
+	denotato A $\vDash$ B
+}
+
+\cor{Implicazione Logica}{
+	Il fatto che B non sia sempre vera in tutti i modelli in cui è vera A non
+	vuol dire che B sia sempre falsa. Possono esistere modelli in cui B è vera e A falsa.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.8]{02/ins.png}
+	\caption{Visione insiemistica.}
+\end{figure}
+
+\cor{Equivalenza}{
+	A $\equiv$ se e solo se $A \vDash B$ e $B \vDash A$.
+}
 
 
+\paragraph{Una formula P è:}
 
+\begin{itemize}
+	\item \fancyglitter{Valida} (tautologia) se è vera in tutti i modelli (e.g. true).
+	\item \fancyglitter{Soddisfacibile} se esiste qualche modello in cui è vera.
+	\item \fancyglitter{Insoddisfacibile} (contraddizione) se è falsa in tutti i modelli (e.g. false).
+\end{itemize}
 
+\dfn{Inferenza}{
+	L'inferenza è il processo con il quale, da una proposizione accolta come vera, si passa a una seconda proposizione la cui verità è derivata dalla prima.
+}
+
+\cor{Regola di Inferenza: Modus Ponens}{
+	Da un'implicazione e dalla sua premessa si deriva la conseguenza.
+}
+
+\nt{Il modus ponens è il fondamento del ragionamento deduttivo.}
+
+\paragraph{Proprietà di un algoritmo di inferenza:}
+
+\begin{itemize}
+	\item \fancyglitter{Correttezza (soundness):} l'algoritmo deriva solo formule che sono anche conseguenze logiche.
+	\item \fancyglitter{Completezza (completness):} l'algoritmo permette di derivare tutte le formule che sono anche conseguenze logiche.
+\end{itemize}
+
+\dfn{Grounding}{
+	Cattura il legame fra la rappresentazione simbolica,
+	formale e l’ambiente reale che essa rappresenta.
+}
+
+\subsection{Logica Proposizionale}
+
+\dfn{Formule Atomiche}{
+	Ognuno rappresenta una formula che può
+	essere vera o falsa. Hanno un nome che inizia con una maiuscola.
+}
+
+\dfn{Formule Complesse}{
+	Sono costruite componendo altre formule
+	tramite gli operatori della logica:
+	\begin{itemize}
+		\item Negazione: il termine letterale indica formule atomiche eventualmente negate.
+		\item Congiunzione: le formule composte tramite questo operatore sono dette congiunti.
+		\item Disgiunzione: le formule composte tramite questo operatore sono dette disgiunti.
+		\item Implicazione: correla una formula detta premessa (o antecedente) a
+		      una formula detta conclusione (o conseguente).
+		\item Biimplicazione.
+	\end{itemize}
+}
+
+\paragraph{Grammatica:}
+
+\begin{itemize}
+	\item Formula $\rightarrow$ FormulaAtomica $|$ FormulaComplessa.
+	\item FormulaAtomica $\rightarrow$ True $|$ False $|$ Simbolo.
+	\item Simbolo $\rightarrow$ P $|$ Q $|$ R $|$ \dots
+	\item FormulaComplessa $\rightarrow$ $\neg$ Formula $|$ (Formula $\land$ Formula) $|$ (Formula $\lor$ Formula) $|$ (Formula $\Rightarrow$ Formula)$|$ (Formula $\Leftrightarrow$ Formula)
+\end{itemize}
 
 
 
