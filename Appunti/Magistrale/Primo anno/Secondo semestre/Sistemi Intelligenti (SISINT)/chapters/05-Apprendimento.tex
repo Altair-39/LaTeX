@@ -1,1 +1,55 @@
 \chapter{Apprendimento e Reti Neurali}
+
+\section{Apprendimento}
+
+\subsection{Classificazione}
+
+\paragraph{Il problema:}
+
+\begin{itemize}
+	\item Dati:
+	      \begin{itemize}
+		      \item Esempi.
+		      \item Categorie/classi.
+	      \end{itemize}
+	\item Costruire:
+	      \begin{itemize}
+		      \item Una rappresentazione astratta (modello) che permetta di
+		            associare in modo corretto nuove istanze alla classe (o alle
+		            classi) di appartenenza.
+	      \end{itemize}
+\end{itemize}
+
+\dfn{Apprendimento Supervisionato}{
+	Gli esempi dal quale astrarre le definizioni delle classi hanno associata la classe a cui appartengono.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{05/apprendimento.png}
+	\caption{Schema generale.}
+\end{figure}
+
+\cor{Learning Set}{
+	Per learning (o training) set si intende la collezione di dati usati per svolgere il
+	compito di apprendimento. I dati sono divisi in istanze (o record o esempi). Ogni
+	esempio è rappresentato da una tupla (x, y) dove x è a sua volta una tupla di valori
+	di attributi descrittivi e y è la classe di appartenenza dell'istanza.
+}
+
+\paragraph{Uso dei modelli appresi:}
+
+\begin{itemize}
+	\item \fancyglitter{Predittivo:} viene usato per predire la classe
+	      di appartenenza di istanze ignote
+	      in fase di apprendimento.
+	\item \fancyglitter{Descrittivo:} Viene usato come strumento esplicativo
+	      che permette di evidenziare quali carat-
+	      teristiche distinguono le diverse categorie.
+\end{itemize}
+
+
+
+
+
+

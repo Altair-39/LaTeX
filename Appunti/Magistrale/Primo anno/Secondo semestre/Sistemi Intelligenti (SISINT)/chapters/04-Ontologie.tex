@@ -389,6 +389,70 @@ quali azioni eseguire, tipicamente per raggiungere un obiettivo
 	dice quali parti di una situazione sono ereditati dalla precedente.
 }
 
+\qs{}{Ma come gestire goal complessi (unione di sotto-obiettivi)?}
+
+\dfn{Anomalia di Sussman}{
+	Non sempre il perseguimento degli obiettivi è sequenzializzabile,
+	anzi alcune volte il perseguimento di un sottogoal può disfare passi
+	effettuati per raggiungerne un altro. Quindi si può fare del lavoro inutile.
+}
+
+\paragraph{Considerazioni:}
+
+\begin{itemize}
+	\item Il situation calculus permette di usare FOL per problemi di
+	      pianificazione.
+	\item È stato fondamentale per definire il problema di pianificazione.
+	\item Nella pratica non è molto usato perché non esistono euristiche
+	      efficienti che guidino la ricerca della soluzione.
+\end{itemize}
+
+\section{Agenti}
+
+\subsection{Introduzione}
+
+\dfn{Agente}{
+	Un agente è astrazione che rappresenta un qualsiasi sistema che
+	percepisce il proprio ambiente tramite dei sensori e agisce su di
+	esso tramite degli attuatori.
+}
+
+\cor{Sequenza Percettiva}{
+	La sequenza percettiva è la storia completa delle percezioni di un agente. Un agente sceglie la prossima azione sulla base della situazione in
+	cui si trova, cioè di quanto ha percepito fino a quel momento.
+}
+
+\paragraph{Razionalità vs. Onniscienza:}
+
+\begin{itemize}
+	\item \fancyglitter{Onniscienza:} ottimizza il risultato reale. Non possono intercorrere fattori ignoti
+	      o imprevedibili.
+	\item \fancyglitter{Razionalità:} ottimizza il risultato atteso. Possono intercorrere fattori ignoti
+	      o imprevedibili che impediscono di
+	      conseguire il risultato atteso.
+\end{itemize}
+
+\paragraph{Tipologie di agente:}
+
+\begin{itemize}
+	\item Reattivi semplici: percepiscono qualcosa e reagiscono. Regole del tipo IF \dots THEN \dots ELSE \dots
+	\item Reattivi basati su modello: hanno una conoscenza su come il mondo evolve e sugli effetti delle azioni.
+	\item Guidati dagli obiettivi (goal-driven): sceglie l’azione da eseguire sulla base dei propri obiettivi, cioè
+	      l’azione deve avvicinarlo ai suoi obiettivi o farglieli raggiungere. La decisione può coinvolgere il solo passo successivo (passo singolo) o
+	      guardare in avanti per più passi (piano).
+	\item Guidati dall'utilità (utility-driven): utilizza una funzione di utilità da massimizzare.
+	\item Capaci di apprendere, hanno una parte aggiuntiva:
+	      \begin{itemize}
+		      \item Modulo critico: valuta il livello di prestazione dell’agente decidendo se è il caso
+		            di attivare l’apprendimento.
+		      \item Un modulo di apprendimento che modifica la conoscenza dell’agente.
+		      \item Un generatore di problemi che causa l’esecuzione di azioni esplorative, il cui fine
+		            è esporre l’agente a nuove esperienze.
+	      \end{itemize}
+\end{itemize}
+
+
+
 
 
 
