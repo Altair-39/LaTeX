@@ -61,4 +61,161 @@
 	      $$\text{Partition}(S, C) \Leftrightarrow \text{Disjoint}(S) \land \text{ExhaustiveDec}(S, C)$$
 \end{itemize}
 
+\subsection{Proprietà}
+
+\cor{Part-Of}{
+	Indica che alcuni oggetti sono parti di altri. Gode della proprietà transitiva:
+
+	\[
+		\text{Part-of}(X, Y) \land \text{Part-of}(Y, Z) \Rightarrow \text{Part-of}(X, Z)
+	\]
+
+}
+
+\cor{Bunch-Of}{
+	A volte è comodo indicare che un oggetto è composto da parti
+	senza specificare le relazioni fra queste ultime. Per far ciò si utilizza la nozione di bunch:
+
+	\[
+		\forall x \text{In}(x, s) \Rightarrow \text{Part-of}(x, \text{Bunch-of}(s))
+	\]
+
+}
+
+\section{Ontologie}
+
+\subsection{Introduzione}
+
+\dfn{Ontologia}{
+	Una KB descrittiva di un dominio può assumere forma più generale
+	di quella tassonomica. L’insieme dei concetti e delle loro relazioni prende in questo caso il
+	nome di ontologia (rete semantica).
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{04/ont.png}
+	\caption{Ontologia.}
+\end{figure}
+
+\paragraph{Modi di interrogare un'ontologia:}
+
+\begin{itemize}
+	\item Un'istanza appartiene a una categoria?
+	\item Un'istanza gode di una proprietà?
+	\item Differenza tra categorie?
+	\item Identificare varie istanze.
+\end{itemize}
+
+\dfn{Semantic Web}{
+	Da World-Wide Web a Semantic
+	Web: estensione del WWW in cui
+	il materiale pubblicato è
+	arricchito da metadati che
+	abilitano l’interpretazione,
+	l’inferenza, l’interrogazione,
+	l’elaborazione automatica.
+}
+
+\cor{Resource Description Framework (RDF)}{
+	Si tratta di un linguaggio di rappresentazione. È la base dei linguaggi OWL e SKOS che permettono di scrivere ontologie e FOAF (Friend of a Friend) per applicazioni sociali.
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item In RDF la conoscenza è espressa da statement, cioè triple soggetto –
+		      predicato – oggetto: il predicato mette in relazione soggetto e
+		      oggetto.
+		\item Soggetto, predicato e oggetto sono IRI (internationalized resource
+		      identifier, per esempio degli URL).
+		\item RDFS (RDF Schemas) permette di realizzare tassonomie
+		      appoggiandosi a RDF.
+		\item Un insieme di triple costituisce un grafo RDF.
+	\end{itemize}
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{04/pr.png}
+	\caption{Relazione tra soggetto e oggetto.}
+\end{figure}
+
+\cor{Ontology Web Language(OWL)}{
+	Linguaggio dichiarativo del semantic web ideato per definire ontologie tramite specifica di classi (categorie), proprietà, individui e valori.
+}
+
+\nt{Le ontologie OWL possono essere pubblicate sul web e
+	riferite da altre ontologie, per costruire KB più complesse
+	e raffinate.}
+
+\paragraph{OWL prevede tre elementi:}
+
+\begin{itemize}
+	\item \fancyglitter{Entità:} elementi usati per riferirsi a oggetti del mondo
+	      reale. Sono elementi atomici che possono essere usati
+	      negli assiomi.
+	\item \fancyglitter{Assiomi:} affermazioni (statement) di base espressi da
+	      un’ontologia OWL.
+	\item \fancyglitter{Espressioni:} combinazioni di entità che costituiscono
+	      descrizioni complesse sulla base di altre.
+\end{itemize}
+
+
+\paragraph{Come costruire un'ontologia}
+
+\begin{itemize}
+	\item \fancyglitter{Identificazione dei concetti:}
+	      \begin{itemize}
+		      \item Elencare tutti i concetti riferiti nel DB di partenza.
+		      \item I concetti sono solitamente catturati da sostantivi.
+		      \item Definire per ciascuno un’etichetta e una breve descrizione.
+		      \item Successivamente si identificano le sottoclassi.
+	      \end{itemize}
+	\item \fancyglitter{Identificazione delle proprietà:}
+	      \begin{itemize}
+		      \item Elencare tutte le relazioni catturate nel DB di partenza.
+		      \item Le relazioni tipicamente sono esprimibili come verbi.
+		      \item Definire per ciascuna un’etichetta e una breve descrizione.
+	      \end{itemize}
+\end{itemize}
+
+\subsection{Allineamento Ontologico}
+
+Un problema frequente è combinare concettualizzazioni sviluppate
+separatamente e indipendentemente.
+
+\dfn{Matching di Ontologie}{
+	Date due ontologie $O_1$ e $O_2$ costruire un
+	allineamento individuando le relazioni fra concetti corrispondenti.
+}
+
+\nt{La corrispondenza, in generale, sarà imperfetta.}
+
+\dfn{FIPA Ontology}{
+	Postula la presenza di un agente dedicato a gestire ontologie e che fornisce fra i suoi servizi:
+	\begin{itemize}
+		\item Discovery di ontologie pubbliche.
+		\item Traduzione di espressioni in ontologie differenti.
+		\item Rispondere a query relative alle differenze fra termini o
+		      ontologie.
+	\end{itemize}
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.6]{04/allineamento.png}
+	\caption{Allineamento ontologico.}
+\end{figure}
+
+\paragraph{Relazioni tra ontologie:}
+
+\begin{itemize}
+	\item \fancyglitter{Identiche:} .
+	\item \fancyglitter{Equivalenti:} .
+	\item \fancyglitter{Estensioni:} .
+	\item \fancyglitter{Weakly-Translatable:} .
+	\item \fancyglitter{Strongly-Translatable:} .
+	\item \fancyglitter{Approx-Translatable:} .
+\end{itemize}
+
 
