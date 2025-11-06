@@ -667,9 +667,72 @@ Ragionare vuol dire rendere esplicita della conoscenza che prima non lo era.
 	risoluzione contiene la clausola vuota.
 }
 
+\dfn{Clausola di Horn}{
+	Una clausola di Horn è una disgiunzione
+	di letterali di cui al più uno è positivo.
+}
 
+\nt{Se la clausola contiene esattamente un letterale positivo è detta clausola definita. }
 
+\clm{}{}{
+	\begin{itemize}
+		\item Le clausole di Horn sono la base della programmazione logica (e.g. prolog).
+		\item Su clausole di Horn è possibile applicare meccanismi di
+		      inferenza molto naturali per gli esseri umani.
+		\item Consentono di verificare la consequenzialità logica in un
+		      tempo che cresce linearmente con la dimensione della
+		      KB (quindi l’inferenza nel caso proposizionale è
+		      computazionalmente economica).
+	\end{itemize}
+}
 
+\dfn{Forward Chaining}{
+	Permette di derivare una query data da un singolo simbolo
+	proposizionale da una KB costituita da clausole di Horn.
+}
 
+\paragraph{Procedimento:}
 
+\begin{itemize}
+	\item Si parte dai fatti conosciuti.
+	\item Si applica il modus ponens,
+	      ragionamento deduttivo.
+	\item Se tutte le premesse di un’implicazione sono vere, si
+	      aggiunge il letterale implicato all’insieme dei fatti conosciuti.
+	\item Terminazione: o si ottiene la query (return true) o a un certo
+	      punto non si potranno fare altre inferenze (return false).
+\end{itemize}
 
+\clm{Forward Chaining}{}{
+	\begin{itemize}
+		\item Complessità lineare.
+		\item Completo: permette di derivare tutte le formule
+		      atomiche dimostrabili a partire dalla KB.
+		\item Inconscio: è guidato dai dati e non usa
+		      l’informazione relativa al goal.
+		\item È adeguato a risolvere problemi come per esempio il
+		      riconoscimento di oggetti.
+		\item Può attivare molte inferenze inutili ai fini della
+		      dimostrazione della formula in oggetto.
+	\end{itemize}
+}
+
+\dfn{Backward Chaining}{
+	Parte dalla formula da dimostrare (goal):
+	\begin{itemize}
+		\item Se risulta già vera termina restituendo true.
+		\item Altrimenti cerca clausole di Horn di cui la formula è conclusione e cerca di dimostrarne le premesse usando come informazione aggiuntiva i fatti noti.
+	\end{itemize}
+}
+
+\clm{Backward Chaining}{}{
+	\begin{itemize}
+		\item Realizza una forma di ragionamento guidato dagli obiettivi.
+		\item È usato nel theorem proving e nella
+		      programmazione logica come meccanismo di
+		      inferenza.
+		\item Spesso è più efficiente del forward chaining in
+		      quanto l’uso del goal focalizza la ricerca.
+		\item La complessità temporale è meno che lineare.
+	\end{itemize}
+}

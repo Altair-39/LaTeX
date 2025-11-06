@@ -1,0 +1,102 @@
+\chapter{Logica del Prim'Ordine}
+
+\section{Introduzione alla Logica del Prim'Ordine}
+
+\paragraph{La logica proposizionale è \fancyglitter{dichiarativa}:}
+
+\begin{itemize}
+	\item Separa nettamente conoscenza da inferenza.
+	\item Consente di derivare fatti da fatti.
+	\item La sua semantica è data da una relazione di verità che
+	      collega formule e mondi possibili.
+\end{itemize}
+
+\nt{Però la logica proposizionale non permette rappresentazioni compatte e manca di espressività.}
+
+\paragraph{Altre logiche:}
+
+\begin{itemize}
+	\item Logica temporale: permette di rappresentare e ragionare sul tempo, esempio “A
+	      non è vero finché B non diventa vero”, “Quando A è vero subito
+	      dopo B sarà vero”.
+	\item Logica epistemica (della conoscenza): permette di esprimere relazioni come “l’agente i sa A”o “tutti
+	      sanno A”e di ragionare sulle implicazioni.
+	\item Logica deontica (normativa): permette di esprimere obblighi, permessi, proibizioni,
+	      commitment e di ragionare su di essi.
+	\item Logica fuzzy (a valori sfumati): introduce e ragiona su gradi di verità. I valori di verità
+	      appartengono all’intervallo \[0,1\].
+\end{itemize}
+
+\dfn{Logica del Prim'Ordine}{
+	Il mondo è fatto di oggetti in
+	relazione fra di loro, una relazione può essere verificata
+	oppure no.
+}
+
+\paragraph{Modelli:}
+
+\begin{itemize}
+	\item Proposizionale: attribuzione di valori di verità ai fatti (simboli proposizionali).
+	\item Prim'ordine: contiene un dominio, cioè l’insieme degli oggetti del mondo
+	      considerati, e delle relazioni fra tali oggetti.
+\end{itemize}
+
+\cor{Dominio di Riferimento}{
+	Un dominio di riferimento è astratto in:
+	\begin{itemize}
+		\item Un insieme di oggetti (ognuno caratterizzato dalla propria
+		      identità).
+		\item Un insieme di relazioni ognuna espressa come insieme di tuple.
+	\end{itemize}
+}
+
+\cor{Relazione}{
+	Una relazione è un insieme di tuple costituite da oggetti del
+	dominio.
+}
+
+\paragraph{Predicati e funzioni:}
+
+\begin{itemize}
+	\item Funzioni: dato un insieme di oggetti restituiscono un
+	      oggetto.
+	\item Predicati: dato un insieme di oggetti ne catturano una
+	      proprietà, restituiscono vero o falso.
+	\item Simboli:
+	      \begin{itemize}
+		      \item Costante.
+		      \item Predicato.
+		      \item Variabile.
+	      \end{itemize}
+\end{itemize}
+
+\nt{Tutti i simboli hanno un'\fancyglitter{interpretazione}.}
+
+\dfn{interpretazione}{
+	Un modello è una coppia M = (D, I), dove D è il dominio del
+	discorso e I è un’interpretazione. L’interpretazione è il
+	fondamento per determinare il valore di verità delle formule. È
+	un’associazione fra i simboli e gli oggetti del dominio del discorso.
+}
+
+\nt{Se si cambiano coerentemente i simboli le formule non cambieranno valori di verità, ma se si cambia l'interpretazione dei simboli le formule potranno cambiare valore di verità.}
+
+\paragraph{Una formula è:}
+
+\begin{itemize}
+	\item È soddisfacibile quando esiste almeno
+	      un modello che la rende vera.
+	\item È valida quando è vera in tutti i modelli.
+	\item È insoddisfacibile quando non è mai vera.
+\end{itemize}
+
+\paragraph{}
+
+
+
+
+
+
+
+
+
