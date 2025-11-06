@@ -327,7 +327,7 @@
 	\item Spostare la negazione all'interno.
 	\item Standardizzazione delle variabili.
 	\item Skolemizzazione (eliminazione degli esistenziali).
-	\item Cancellare i quantificatori universali.
+	\item Cancellare i quantificatori universali (tutte le variabili sono universali).
 	\item Distribuire $\lor$ su $\land$.
 \end{enumerate}
 
@@ -345,8 +345,35 @@
 
 \nt{
 	Nel caso particolare in cui l’esistenziale non ricade nello scope di
-	alcun universale tali funzioni diventano costanti di Skolem.
+	alcun universale tali funzioni diventano \fancyglitter{costanti di Skolem}.
 }
+
+\dfn{Binary Resolution}{
+	Le clausole da risolvere non condividono variabili, per cui occorre fare il lifting della fattorizzazione: due letterali sono ridotti ad
+	uno non se sono uguali ma se sono unificabili. L’unificatore va applicato
+	alle clausole intere.
+}
+
+\nt{Binary resolution + fattorizzazione costituisce una regola di
+	inferenza completa.}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{03/fol.png}
+	\caption{Risoluzione FOL.}
+\end{figure}
+
+\paragraph{La risoluzione non è in grado di generare tutte le conseguenze
+	logiche di una KB ma è refutation-complete:}
+
+\begin{itemize}
+	\item Se una KB è insoddisfacibile, la resolution sarà sempre in grado
+	      di derivare una contraddizione.
+	\item Di conseguenza sarà in grado di derivare tutte le risposte a una
+	      query $Q(x)$ da KB a patto che KB $\land \neg Q(x)$ sia insoddisfacibile.
+\end{itemize}
+
+
 
 
 

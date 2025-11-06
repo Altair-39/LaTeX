@@ -1,1 +1,64 @@
 \chapter{Ontologie e Agenti}
+
+\qs{}{
+	Quali sono gli aspetti fondamentali della costruzione e del
+	mantenimento delle KB?
+}
+
+\begin{itemize}
+	\item Il mondo reale non è fatto di formule, è fatto di oggetti.
+	\item Le persone concettualizzano tali oggetti e le relazioni che questi intrattengono gli uni con gli altri.
+\end{itemize}
+
+\section{Tassonomie e Categorie}
+
+\subsection{introduzione}
+
+\dfn{Categorie}{
+	Gli esseri umani interpretano la realtà per categorie. Una parte consistente dell’apprendimento consiste nel definire
+	e ridefinire categorie.
+}
+
+\nt{È necessario standardizzare la
+	rappresentazione di categorie, introdurre relazioni fra
+	categorie e implementare meccanismi di eredità di
+	proprietà fra categorie.}
+
+\dfn{Tassonomia}{
+	Organizzazione gerarchica di categorie o concetti.
+}
+
+
+\paragraph{Predicati:}
+
+\begin{itemize}
+	\item Member(P, C) è un predicato che restituisce
+	      vero se P è un elemento della categoria C (in
+	      questo caso P è detto istanza di C).
+	\item is-a(C1, C2) è una relazione tra due categorie con C1 sottocategoria di C2.
+\end{itemize}
+
+\paragraph{Due categorie:}
+
+\begin{itemize}
+	\item \fancyglitter{Sono disgiunte:} quando non hanno istanze in comune.
+	\item \fancyglitter{Costituiscono una decomposizione esaustiva:} quando tutte e
+	      istanze della sovracategoria appartengono necessariamente ad
+	      almeno una delle categorie considerate (che potranno avere anche
+	      istanze comuni).
+	\item \fancyglitter{Costituiscono una partizione:} quando sono disgiunte e
+	      costituiscono una decomposizione esaustiva.
+\end{itemize}
+
+\paragraph{Vengono definite le seguenti proprietà:}
+
+\begin{itemize}
+	\item S è un insieme disgiunto di categorie:
+	      $$\text{Disjoint}(S) \Rightarrow \forall X_i, X_j \in S, X_i \not = X_j \Rightarrow \text{Intersection}(X_i, X_j) = \{\}$$
+	\item S è una decomposizione esaustiva di C:
+	      $$\text{ExhaustiveDec}(S, C) \Rightarrow \forall I (\text{Member}(I, C) \Leftrightarrow \exists X_i \text{is-a}(X_i, C) \land \text{Member}(I, X_i)) $$
+	\item S è una partizione di C:
+	      $$\text{Partition}(S, C) \Leftrightarrow \text{Disjoint}(S) \land \text{ExhaustiveDec}(S, C)$$
+\end{itemize}
+
+
