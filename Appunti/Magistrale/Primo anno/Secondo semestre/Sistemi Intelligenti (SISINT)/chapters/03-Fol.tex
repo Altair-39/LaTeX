@@ -275,7 +275,78 @@
 	      la costruzione della sostituzione da considerare.
 \end{itemize}
 
+\subsection{Lifting di Risoluzione}
 
+\dfn{Modus Ponens Generalizzato}{
+	Il modus ponens generalizzato è una forma del modus ponens che richiede che l'antecedente sia una congiunzione.
+}
+
+\nt{
+	L’appellativo “generalizzato” deriva dall’avere “sollevato” la
+	regola dalla logica proposizionale a quella del prim’ordine.
+	Questo processo si chiama \fancyglitter{lifting}.
+}
+
+\cor{Unificazione}{
+	Un algoritmo per cui:
+	\begin{itemize}
+		\item Date due formule F1 e F2.
+		\item UNIFY(F1, F2) = $\theta$ tale che F1 $\theta$ = F2 $\theta$.
+	\end{itemize}
+}
+
+\nt{
+	Il risultato è una sostituzione (unificatore) che, applicata a entrambe le
+	formule, le rende identiche. Se ci sono più unificatori si calcola e si usa il \fancyglitter{Most General Unifier} (MGU).
+}
+
+\dfn{Clausole di Horn del Prim'Ordine}{
+	Disgiunzioni di letterali di cui al più uno è positivo:
+	\begin{itemize}
+		\item Atomici.
+		\item Implicazione il cui antecedente è costituito da letterali
+		      positivi.
+	\end{itemize}
+}
+
+\nt{Non tutte le KB possono essere tradotte in clausole di Horn ma molte
+	possono. A queste è possibile applicare il forward chaining (e il modus
+	ponens generalizzato) per fare inferenze.}
+
+\paragraph{KB con clausole di Horn:}
+
+\begin{itemize}
+	\item F(x): quantificazione universale.
+	\item F(Costante): fatto (ground).
+\end{itemize}
+
+\paragraph{Tradurre una KB FOL in CNF:}
+
+\begin{enumerate}
+	\item Eliminare l'implicazione.
+	\item Spostare la negazione all'interno.
+	\item Standardizzazione delle variabili.
+	\item Skolemizzazione (eliminazione degli esistenziali).
+	\item Cancellare i quantificatori universali.
+	\item Distribuire $\lor$ su $\land$.
+\end{enumerate}
+
+\dfn{Skolemizzazione}{
+	Sostituiamo ogni variabile quantificata esistenzialmente con una
+	funzione che ha per argomenti tutte le variabili quantificate
+	universalmente nel cui scope ricade:
+	\begin{itemize}
+		\item $\forall x_1, x_2, \dots [\exists y P(y, x_1, \dots) \dots \exists z Q(z, x_1, \dots)]$ diventa
+		\item $\forall x_1, x_2, \dots [P(S_1(x_1, x_2, \dots), \dots) \dots Q(S_2(x_1, x_2, \dots),\dots)]$
+	\end{itemize}
+
+	$S_1$ e $S_2$ sono dette funzioni di Skolem.
+}
+
+\nt{
+	Nel caso particolare in cui l’esistenziale non ricade nello scope di
+	alcun universale tali funzioni diventano costanti di Skolem.
+}
 
 
 
