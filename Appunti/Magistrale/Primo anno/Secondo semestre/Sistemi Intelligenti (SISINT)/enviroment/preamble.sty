@@ -1,6 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PACKAGE IMPORTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{ulem}
 \usepackage{titleps}
 \usepackage[table]{xcolor}
 \usepackage{tabularx}
@@ -33,7 +34,7 @@
 \usepackage{multicol,array}
 \usepackage{tikz-cd}
 \usepackage[ruled,vlined,linesnumbered]{algorithm2e}
-\usepackage{comment} 
+\usepackage{comment}
 \usepackage{import}
 \usepackage{xifthen}
 \usepackage{pdfpages}
@@ -43,8 +44,8 @@
 \newcommand\mycommfont[1]{\footnotesize\ttfamily\textcolor{BrownPastel}{#1}}
 \SetCommentSty{mycommfont}
 \newcommand{\incfig}[1]{%
-    \def\svgwidth{\columnwidth}
-    \import{./figures/}{#1.pdf_tex}
+	\def\svgwidth{\columnwidth}
+	\import{./figures/}{#1.pdf_tex}
 }
 
 \usepackage{tikzsymbols}
@@ -63,9 +64,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcommand\blankpage{%
-    \null
-    \thispagestyle{empty}%
-    \newpage
+	\null
+	\thispagestyle{empty}%
+	\newpage
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -80,19 +81,19 @@
 \definecolor{PurplePastel}{RGB}{229, 204, 255}
 
 \newcommand{\evidence}[1]{%
-    \textcolor{cyan}{\textit{#1}}%
+	\textcolor{cyan}{\textit{#1}}%
 }
 
 \newcommand{\glitter}[1]{%
-    \textcolor{green}{\textit{#1}}%
+	\textcolor{green}{\textit{#1}}%
 }
 
 \newcommand{\fancyglitter}[1]{%
-    \textcolor{red}{\textit{#1}}%
+	\textcolor{red}{\textit{#1}}%
 }
 
 \newcommand{\newfancyglitter}[1]{%
-    \textcolor{violet}{\textit{#1}}%
+	\textcolor{violet}{\textit{#1}}%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -323,28 +324,28 @@
 
 \usepackage[most]{tcolorbox}
 
-\definecolor{mypatternbg}{RGB}{255,248,220} 
-\definecolor{mypatternfr}{RGB}{139,69,19} 
+\definecolor{mypatternbg}{RGB}{255,248,220}
+\definecolor{mypatternfr}{RGB}{139,69,19}
 
 \tcbuselibrary{theorems,skins,hooks}
 
 \newtcbtheorem[number within=section]{Pattern}{Pattern}
 {%
-    enhanced,
-    breakable,
-    colback = mypatternbg,
-    boxrule = 0.75mm,
-    colframe = mypatternfr,
-    colbacktitle = mypatternfr!20,
-    coltitle = black,
-    fonttitle = \bfseries,
-    sharp corners,
-    detach title,
-    before upper = \tcbtitle\par\smallskip,
-    description font = \mdseries\itshape,
-    separator sign none,
-    segmentation style={solid, mypatternfr},
-    theorem style=plain,
+	enhanced,
+	breakable,
+	colback = mypatternbg,
+	boxrule = 0.75mm,
+	colframe = mypatternfr,
+	colbacktitle = mypatternfr!20,
+	coltitle = black,
+	fonttitle = \bfseries,
+	sharp corners,
+	detach title,
+	before upper = \tcbtitle\par\smallskip,
+	description font = \mdseries\itshape,
+	separator sign none,
+	segmentation style={solid, mypatternfr},
+	theorem style=plain,
 }
 {th}
 
@@ -363,36 +364,36 @@
 
 \newtcbtheorem[number within=section]{Observation}{Osservazione}
 {%
-    enhanced,
-    breakable,
-    colback = mytheorembg,
-    frame hidden,
-    boxrule = 0sp,
-    borderline west = {2pt}{0pt}{mytheoremfr},
-    sharp corners,
-    detach title,
-    before upper = \tcbtitle\par\smallskip,
-    coltitle = mytheoremfr,
-    fonttitle = \bfseries\sffamily,
-    description font = \mdseries,
-    separator sign none,
-    segmentation style={solid, mytheoremfr},
-    attach boxed title to top left={yshift*=-\tcboxedtitleheight},
-    fonttitle=\bfseries,
-    boxed title size=title,
-    boxed title style={%
-        sharp corners,
-        rounded corners=northwest,
-        colback=myb!80!black,
-        boxrule=0pt,
-    },
-    underlay boxed title={%
-        \path[fill=myb!80!black] (title.south west)--(title.south east)
-        to[out=0, in=180] ([xshift=5mm]title.east)--
-        (title.center-|frame.east)
-        [rounded corners=\kvtcb@arc] |-
-        (frame.north) -| cycle
-    },
+	enhanced,
+	breakable,
+	colback = mytheorembg,
+	frame hidden,
+	boxrule = 0sp,
+	borderline west = {2pt}{0pt}{mytheoremfr},
+	sharp corners,
+	detach title,
+	before upper = \tcbtitle\par\smallskip,
+	coltitle = mytheoremfr,
+	fonttitle = \bfseries\sffamily,
+	description font = \mdseries,
+	separator sign none,
+	segmentation style={solid, mytheoremfr},
+	attach boxed title to top left={yshift*=-\tcboxedtitleheight},
+	fonttitle=\bfseries,
+	boxed title size=title,
+	boxed title style={%
+			sharp corners,
+			rounded corners=northwest,
+			colback=myb!80!black,
+			boxrule=0pt,
+		},
+	underlay boxed title={%
+			\path[fill=myb!80!black] (title.south west)--(title.south east)
+			to[out=0, in=180] ([xshift=5mm]title.east)--
+			(title.center-|frame.east)
+			[rounded corners=\kvtcb@arc] |-
+			(frame.north) -| cycle
+		},
 }
 {th}
 %================================
@@ -809,41 +810,41 @@
 \newsavebox\diffdbox
 \newcommand{\slantedromand}{{\mathpalette\makesl{d}}}
 \newcommand{\makesl}[2]{%
-\begingroup
-\sbox{\diffdbox}{$\mathsurround=0pt#1\mathrm{#2}$}%
-\pdfsave
-\pdfsetmatrix{1 0 0.2 1}%
-\rlap{\usebox{\diffdbox}}%
-\pdfrestore
-\hskip\wd\diffdbox
-\endgroup
+	\begingroup
+	\sbox{\diffdbox}{$\mathsurround=0pt#1\mathrm{#2}$}%
+	\pdfsave
+	\pdfsetmatrix{1 0 0.2 1}%
+	\rlap{\usebox{\diffdbox}}%
+	\pdfrestore
+	\hskip\wd\diffdbox
+	\endgroup
 }
 \newcommand{\dd}[1][]{\ensuremath{\mathop{}\!\ifstrempty{#1}{%
-\slantedromand\@ifnextchar^{\hspace{0.2ex}}{\hspace{0.1ex}}}%
-{\slantedromand\hspace{0.2ex}^{#1}}}}
+			\slantedromand\@ifnextchar^{\hspace{0.2ex}}{\hspace{0.1ex}}}%
+		{\slantedromand\hspace{0.2ex}^{#1}}}}
 \ProvideDocumentCommand\dv{o m g}{%
-  \ensuremath{%
-    \IfValueTF{#3}{%
-      \IfNoValueTF{#1}{%
-        \frac{\dd #2}{\dd #3}%
-      }{%
-        \frac{\dd^{#1} #2}{\dd #3^{#1}}%
-      }%
-    }{%
-      \IfNoValueTF{#1}{%
-        \frac{\dd}{\dd #2}%
-      }{%
-        \frac{\dd^{#1}}{\dd #2^{#1}}%
-      }%
-    }%
-  }%
+	\ensuremath{%
+		\IfValueTF{#3}{%
+			\IfNoValueTF{#1}{%
+				\frac{\dd #2}{\dd #3}%
+			}{%
+				\frac{\dd^{#1} #2}{\dd #3^{#1}}%
+			}%
+		}{%
+			\IfNoValueTF{#1}{%
+				\frac{\dd}{\dd #2}%
+			}{%
+				\frac{\dd^{#1}}{\dd #2^{#1}}%
+			}%
+		}%
+	}%
 }
 \providecommand*{\pdv}[3][]{\frac{\partial^{#1}#2}{\partial#3^{#1}}}
 %  - others
 \DeclareMathOperator{\Lap}{\mathcal{L}}
-\DeclareMathOperator{\Var}{Var} 
-\DeclareMathOperator{\Cov}{Cov} 
-\DeclareMathOperator{\E}{E} 
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\E}{E}
 
 \let\oldleq\leq % save them in case they're every wanted
 \let\oldgeq\geq
@@ -855,9 +856,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \hypersetup{
-    colorlinks,
-    citecolor=black,
-    filecolor=black,
-    linkcolor=black,
-    urlcolor=black
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
 }

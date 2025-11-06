@@ -72,11 +72,28 @@
 
 \nt{Tutti i simboli hanno un'\fancyglitter{interpretazione}.}
 
-\dfn{interpretazione}{
+\dfn{Interpretazione}{
 	Un modello è una coppia M = (D, I), dove D è il dominio del
 	discorso e I è un’interpretazione. L’interpretazione è il
 	fondamento per determinare il valore di verità delle formule. È
 	un’associazione fra i simboli e gli oggetti del dominio del discorso.
+}
+
+\ex{Interpretazione}{
+	\begin{itemize}
+		\item Oppressore $\rightarrow$ Entità che ne opprime un'altra.
+		\item Oppresso $\rightarrow$ Entità che viene oppressa.
+		\item Oppressione $\rightarrow$ Atto compiuto da un'entità che opprime nei confronti di un'entità oppressa.
+	\end{itemize}
+
+	Oppure:
+	\begin{itemize}
+		\item \sout{Oppressore} Israele $\rightarrow$ Entità che ne opprime un'altra.
+		\item \sout{Oppresso} Palestina $\rightarrow$ Entità che viene oppressa.
+		\item \sout{Oppressione} Genocidio $\rightarrow$ Atto compiuto da un'entità che opprime nei confronti di un'entità oppressa.
+	\end{itemize}
+
+
 }
 
 \nt{Se si cambiano coerentemente i simboli le formule non cambieranno valori di verità, ma se si cambia l'interpretazione dei simboli le formule potranno cambiare valore di verità.}
@@ -90,9 +107,173 @@
 	\item È insoddisfacibile quando non è mai vera.
 \end{itemize}
 
-\paragraph{}
+\dfn{Termine Ground}{
+	Un termine è ground quando non contiene variabili.
+}
 
+\subsection{Quantificatori}
 
+\dfn{Quantificatori}{
+	I quantificatori permettono di esprimere proprietà di collezioni di oggetti. Fanno riferimento a generici oggetti che saranno identificati da variabili.
+}
+
+\paragraph{La logica del prim'ordine prevede:}
+
+\begin{itemize}
+	\item $\forall$: per ogni (\fancyglitter{quantificatore universale}).
+	\item $\exists$: esiste (\fancyglitter{quantificatore esistenziale}).
+\end{itemize}
+
+\cor{Quantificatore Universale}{
+	Si considerino una formula F e un modello M = (D,I). L’espressione $\forall$x
+	F è vera nel modello M se e solo se F è vera per qualsiasi
+	intepretazione di x in M.
+}
+
+\nt{La quantificazione universale può essere espressa come insieme di congiunzioni.}
+
+\cor{Quantificatore Esistenziale}{
+	Si considerino una formula F e un modello M = (D,I). L’espressione $\exists$x
+	F è vera nel modello M se e solo se F è vera per qualche
+	intepretazione di x in M.
+}
+
+\nt{La quantificazione esistenziale può essere espressa come insieme di disgiunzioni.}
+
+\paragraph{Quantificatori annidati:}
+
+\begin{itemize}
+	\item $\exists x \exists y F(x, y)$ è equivalente a $\exists y \exists x F(x,y)$.
+	\item $\forall x \forall y F(x, y)$ è equivalente a $\forall y \forall x F(x,y)$.
+	\item $\forall x \exists y F(x, y)$ per tutti esiste.
+	\item $\exists x \forall y F(x, y)$ esiste per ogni.
+\end{itemize}
+
+\nt{La semantica non è intuitiva, le formule sono troppo complesse.}
+
+\section{Interrogazione su KB FOL}
+
+\dfn{Database Semantics}{
+	Si tratta della semantica usata nella programmazione logica, si basa su tre assunti:
+	\begin{itemize}
+		\item Unicità dei nomi: assumiamo che costanti diverse si riferiscano a oggetti del dominio diversi.
+		\item Assunzione di mondo chiuso: assumiamo che le formule atomiche delle quali non si conosce la verità siano false.
+		\item Domain closure: un modello non contiene più elementi di quelli nominati dalle costanti.
+	\end{itemize}
+}
+
+\nt{
+	La database semantics può essere usata quando siamo sicuri dell’identità
+	di tutti gli elementi. Da notare che riduce il numero di modelli possibili,
+	rendendoli tipicamente finiti.
+}
+
+\paragraph{Le interrogazioni a una KB FOL sono dei due tipi:}
+
+\begin{itemize}
+	\item ask(KB, Re(John)): viene chiesto se una formula in
+	      cui compaiono solo termini ground sia vera o falsa.
+	      La risposta sarà true o false.
+	\item ask(KB, Re(x)): viene chiesto se esiste un qualche
+	      valore per la variabile x tale per cui la formula è
+	      vera.
+	      La risposta sarà false nel caso non esista tale valore,
+	      se invece esiste la riposta indicherà un termine
+	      ground che usato al posto di x rende vera la
+	      formula.
+\end{itemize}
+
+\dfn{Sostituzione}{
+	Una sostituzione $\theta$ è un insieme $\{x_1/g_1, x_2/g_2, \dots x_n/g_n\}$ dove le varie $x_i$ sono variabili e le varie $g_i$ sono termini ground.
+}
+
+\nt{
+	Data una formula F e una sostituzione $\theta$, la scrittura F/$\theta$
+	indica la formula ottenuta sostituendo le occorrenze
+	delle variabili indicate in $\theta$ con i relativi termini ground.
+}
+
+\subsection{Trasformazione in Formule Proposizionali}
+
+\dfn{Proposizionalizzazione}{
+	Data una KB:
+	\begin{itemize}
+		\item Applicare le regole di eliminazione dei quantificatori sostituendo
+		      le formule quantificate con le loro istanze del caso, costruite
+		      considerando il vocabolario dei possibili termini ground.
+		\item Applicare un algoritmo di inferenza completo per la logica
+		      proposizionale.
+	\end{itemize}
+}
+
+\nt{Si perde parte dell'espressività garantita dalla logica del prim'ordine.}
+
+\cor{Istanziazione Universale}{
+	Da una formula quantificata universalmente si
+	possono inferire tutte le formule ottenute
+	sostituendo un termine ground del vocabolario alla
+	variabile quantificata.
+
+	\[
+		\displaystyle\frac{\forall x \alpha}{
+			\text{SUBST}(\{x/g\}, \alpha)
+		}
+	\]
+}
+
+\nt{
+	La nuova KB ottenuta da un'istanziazione universale è logicamente equivalente alla KB originale.
+}
+
+\cor{Istanziazione Esistenziale}{
+	\[
+		\displaystyle\frac{\exists x \alpha}{
+			\text{SUBST}(\{x/k\}, \alpha)
+		}
+	\]
+
+	Con $k$ come costante nuova, non utilizzata in KB.
+	L’inferenza si limita a dare un nome a questo elemento.
+
+}
+
+\nt{
+	La nuova KB ottenuta da un'istanziazione esistenziale non è logicamente equivalente alla KB originale, ma è soddisfacibile se prima lo era.
+}
+
+\paragraph{Problemi delle funzioni:}
+
+\begin{itemize}
+	\item Una funzione può essere applicata ricorsivamente.
+	\item Le sostituzioni diventano potenzialmente infinite.
+\end{itemize}
+
+\thm{Teorema di Herbrand}{
+	Herbrand ha dimostrato che se una formula è conseguenza
+	logica della base di conoscenza originaria (del prim’ordine)
+	allora partendo dalla base di conoscenza proposizionalizzata
+	esiste una dimostrazione finita della sua verità.
+}
+
+\nt{Questo garantisce che se una formula è conseguenza logica della KB allora la si può dimostrare in un numero finito di passi.}
+
+\paragraph{FOL è semidecidibile:}
+
+\begin{itemize}
+	\item Completezza: se una
+	      formula consegue da una KB si troverà una
+	      dimostrazione finita della sua verità.
+	\item Se però l’non vale la consequenzialità, la presenza di
+	      funzioni applicabili ricorsivamente porterà l’inferenza su di
+	      un percorso infinito.
+\end{itemize}
+
+\paragraph{La proposizionalizzazione è inefficiente:}
+\begin{itemize}
+	\item Perde tempo a creare istanze ininfluenti dell'implicazione.
+	\item È possibile evitare la creazione di formule irrilevanti focalizzando
+	      la costruzione della sostituzione da considerare.
+\end{itemize}
 
 
 
