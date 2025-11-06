@@ -210,12 +210,185 @@ separatamente e indipendentemente.
 \paragraph{Relazioni tra ontologie:}
 
 \begin{itemize}
-	\item \fancyglitter{Identiche:} .
-	\item \fancyglitter{Equivalenti:} .
-	\item \fancyglitter{Estensioni:} .
-	\item \fancyglitter{Weakly-Translatable:} .
-	\item \fancyglitter{Strongly-Translatable:} .
-	\item \fancyglitter{Approx-Translatable:} .
+	\item \fancyglitter{Identiche:} $O_1$ e $O_2$ sono la stessa ontologia.
+	\item \fancyglitter{Equivalenti:} condividono vocabolario e assiomatizzazione, ma sono espresse in linguaggi differenti.
+	\item \fancyglitter{Estensioni:} $O_1$ estende $O_2$ quando tutti i simboli definiti in $O_2$ sono preservati in $O_1$ insieme alle loro proprietà e relazioni ma non vale il viceversa.
+	\item \fancyglitter{Weakly-Translatable:} siano $O_{\text{source}}$ e $O_{\text{dest}}$ due ontologie, è possibile tradurre espressioni $O_{\text{source}}$ in espressioni $O_{\text{dest}}$ con perdita di informazione.
+	\item \fancyglitter{Strongly-Translatable:} $O_{\text{source}}$ è Strongly-Translatable in $O_{\text{dest}}$ quando:
+	      \begin{itemize}
+		      \item Il suo vocabolario è totalmente mappabile in $O_{\text{dest}}$.
+		      \item L'assiomatizzazione di $O_{\text{source}}$ vale in $O_{\text{dest}}$.
+		      \item Non c'è perdita di informazione.
+		      \item Non si introducono inconsistenze.
+	      \end{itemize}
+	\item \fancyglitter{Approx-Translatable:} quando è Weakly-Translatable e possono essere introdotte delle inconsistenze.
 \end{itemize}
+
+\paragraph{Applicazioni delle ontologie:}
+
+\begin{itemize}
+	\item Beni culturali.
+	\item Applicazioni legali.
+	\item Curricula transnazionali (Erasmus).
+	\item DB (tenendo presente che nei DB si fa assunzione di mondo chiuso e nelle ontologie di mondo aperto).
+\end{itemize}
+
+\section{Planning}
+
+Molte applicazioni dei sistemi di inferenza concernono il decidere
+quali azioni eseguire, tipicamente per raggiungere un obiettivo
+
+\dfn{Pianificare}{
+	Pianificare significa costruire una sequenza di azioni per
+	soddisfare un certo fine.
+}
+
+\cor{Problema di Pianificazione}{
+	Un problema di pianificazione include la specifica degli elementi
+	di interesse del mondo, delle azioni a disposizione, degli obiettivi.
+}
+
+\subsection{Rappresentare le Azioni}
+
+\dfn{Planning Domain Definition Language (PDDL)}{
+	PDDL è un linguaggio per esprimere un insieme di variabili. Uno stato è una congiunzione di atomi ground, in cui non
+	compaiono funzioni. Le azioni sono descritte in maniera schematica e hanno un impatto
+	limitato sul mondo. In generale, in un certo stato solo un sottoinsieme delle azioni sarà
+	applicabile e di queste solo una sarà applicata. Se l’azione scelta viene applicata realmente subito nel mondo
+	reale potrebbe non esserci possibilità di backtracking.
+}
+
+
+
+\paragraph{Situation Calculus:}
+
+\begin{itemize}
+	\item \fancyglitter{Azione:} qualcosa che viene compiuto e influenza il mondo.
+	\item \fancyglitter{Situazione:} stati derivanti dall’esecuzione di qualche azione.
+	\item \fancyglitter{Fluente:} proprietà che può cambiare valore (fluire).
+	\item \fancyglitter{Predicato atemporale (esterno):} sono funzioni o predicati il cui
+	      calcolo non è influenzato dalle azioni.
+\end{itemize}
+
+\dfn{Fluente}{
+	Relazione o proprietà che può cambiare valore con
+	l’esecuzione di azioni.
+}
+
+\nt{Viene specificata fra i suoi parametri la situazione.}
+
+\ex{Fluente}{
+	\begin{itemize}
+		\item Adjacent$(R_1,R_2, s)$: $R_1$ e $R_2$ sono adiacenti nella situazione $s$.
+		\item Holds$($At$(R, Loc), s)$: $R$ si trova in posizione $Loc$ nella situazione $s$.
+	\end{itemize}
+}
+
+\dfn{Azione}{
+	Rappresenta qualcosa che viene compiuto. In un contesto mono-agente non occorre indicare chi sia l’attore.
+}
+
+\nt{ Quindi un’azione è intesa come un oggetto intangibile, prodotto da
+	una funzione (nell’esempio ternaria).}
+
+\paragraph{Stato vs. Situazione:}
+\begin{itemize}
+	\item A uno stato non importa la sequenza di azioni con cui lo si è raggiunnto.
+	\item Per una situazione invece è importante.
+\end{itemize}
+
+\dfn{Do}{
+	Do(Azioni, S): funzione che restituisce la situazione raggiunta,
+	applicando la sequenza di azioni indicate a partire dallo stato indicato:
+	\begin{itemize}
+		\item Do($[]$, s) = s.
+		\item Do($[$head $|$ tail$]$, s) = Do(tail, Risultato(head, s)).
+	\end{itemize}
+}
+\nt{Due situazioni sono identiche esclusivamente se sono originate
+	dallo stesso stato iniziale applicando la stessa sequenza di azioni. In altri
+	termini una situazione è identificata dalla storia che l’ha prodotta.}
+
+\paragraph{Tramite Do un agente può fare \fancyglitter{proiezione}:}
+
+\begin{itemize}
+	\item \fancyglitter{Verificare} se un corso d'azione attraversa situazioni che godono di determinate proprietà.
+	\item \fancyglitter{Pianificare} un corso d'azione: quale sequenza di azioni
+	      permette di raggiungere una situazione che gode di una
+	      specifica proprietà?
+\end{itemize}
+
+\paragraph{Obiettivi:}
+
+\begin{itemize}
+	\item Raggiungere: ci si prefigge di raggiungere un goal.
+	\item Mantenimento: in tutti gli stati bisogna mantenere una certa proprietà.
+\end{itemize}
+
+\subsection{Assiomi}
+
+\dfn{Assioma di Applicabilità}{
+
+	\[
+		\forall\text{params}, s \text{Applicable(Action(params), $s$)} \Leftrightarrow \text{Precond(params, $s$)}
+	\]
+
+	\begin{itemize}
+		\item Applicable è un nuovo predicato che lega un'azione a una situazione.
+		\item Params è un insieme di oggetti.
+		\item Action(params) indica l'applicazione dell'azione agli oggetti.
+		\item Precond è una formula che rappresenta le precondizioni dell'azione.
+	\end{itemize}
+
+	Definisce che un'azione può (fisicamente) essere applicata in una
+	situazione se e solo se valgono determinate precondizioni.
+}
+
+\dfn{Assioma di Effetto}{
+	\[
+		\forall\text{params}, s \text{Applicable(Action(params), $s$)} \Leftrightarrow \text{Effects(params, Result(Action(params), $s$))}
+	\]
+	\begin{itemize}
+		\item Effects è una formula vera nello stato risultante
+		      dall’esecuzione dell’azione.
+		\item Result è una funzione che denota lo stato in cui si va
+		      eseguendo l’azione in $s$.
+	\end{itemize}
+	Specifica gli effetti di un’azione sulla situazione in cui è eseguita.
+}
+
+\cor{Frame Problem}{
+	Dalla conoscenza di stato iniziale, assiomi di applicabilità e assiomi
+	di effetto non è possibile derivare tutti i fatti che
+	ci aspettiamo.
+
+	Normalmente le azioni hanno un impatto limitato: come
+	rappresentare ciò che non viene modificato da un’azione?
+}
+
+\dfn{Assioma di Frame}{
+	\[
+		\forall\text{params, vars}, s \text{fluent(vars, $s$)} \land \text{params} \not = \text{vars} \Rightarrow \text{fluent(vars, Result(Action(params), $s$))}
+	\]
+
+	Per ogni azione viene definito un'assioma di questo tipo per ogni
+	fluente.
+
+}
+
+\nt{
+	Introduciamo un modo per dire al sistema inferenziale che ciò che
+	non è specificamente espresso come effetto è inteso rimanere
+	immutato.
+}
+
+
+\dfn{Assioma di Stato Successore}{
+	Questo assioma esprime il modo in cui le situazioni si evolvono
+	l’una dall’altra a seguito dell’esecuzione delle azioni. In particolare
+	dice quali parti di una situazione sono ereditati dalla precedente.
+}
+
+
 
 
