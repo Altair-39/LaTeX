@@ -152,6 +152,112 @@
 	\item Continui.
 \end{itemize}
 
+\dfn{Algoritmo di Hunt}{
+	L'albero viene costruito procedendo ricorsivamente e suddividendo il learning
+	set in sottoinsiemi via via più “puri”.
+
+	Dati:
+
+	\begin{itemize}
+		\item $D_t$ = sottoinsieme del learning set associato al nodo $t$.
+		\item $y = \{y_1, y_2, \dots, y_c\}$ = insieme delle etichette che identificano le classi.
+	\end{itemize}
+}
+
+\paragraph{Algoritmo di Hunt:}
+
+\begin{enumerate}
+	\item Se tutte le istanze in $D_t$ appartengono alla stessa classe $y_t$ allora il nodo
+	      è una foglia etichettata dalla classe $y_t$ delle sue istanze.
+	\item Si sceglie un attributo fra quelli che descrivono le istanze, si produce un
+	      nodo figlio per ogni possibile valore dell'attributo.
+\end{enumerate}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Se una certa combinazione di valori non è rappresentata da nessuna
+		      istanza, questa sarà associata alla classe di default (se esiste).
+		\item Se tutte le istanze associate a un nodo sono identiche come tuple ma
+		      corrispondono a classi differenti (non-determinismo), il nodo non può
+		      essere scisso.
+		\item Quando si termina la costruzione dell'albero?
+		\item Come si sceglie l'attributo di split?
+	\end{itemize}
+}
+
+\paragraph{Tipi di split:}
+
+\begin{itemize}
+	\item Su attributi binari: Il nodo corrente avrà due figli a seconda del
+	      valore rappresentato. Gli esempi associati
+	      al nodo radice verranno suddivisi fra i due
+	      figli a seconda del valore riportato in corrispondenza dell'attributo.
+	\item Su attributi multivalore: l nodo avrà tanti figli quanti sono i possibili valori dell'attributo.
+	\item Su attributi nominali: l'attributo assume valori su un insieme (finito) di etichette $\{L_1, L_2, \dots, L_n\}$. Gli split possono essere binari oppure multivalore.
+	\item Su attributi nominali: si possono avere split binari o multivalore con un vincolo, il
+	      raggruppamento dei valori deve rispettare l'ordinamento.
+	\item Binari di attributi continui: in questo caso il test prevedono l'identificazione di un valore possibile v per
+	      l'attributo A in questione.
+	\item Multivalore di attributi continui: in questo caso il test prevedono l'identificazione di un insieme di valori $v_i$ per
+	      l'attributo A in questione e la produzione di una serie di test $v_i \leq A < v_{i+1}$
+\end{itemize}
+
+\paragraph{Bontà degli split:}
+
+\begin{itemize}
+	\item \fancyglitter{Criterio generale:} alberi compatti sono preferiti ad alberi che consentono di
+	      raggiungere lo stesso grado di accuratezza (e di error rate) usando un maggior
+	      numero di test. Sono preferiti gli split che producono nodi figli la cui estensione
+	      prevede minore confusione (il cui grado di purezza è maggiore). Misure alternative: entropia, gini, errore di classificazione.
+	\item \fancyglitter{Rasoio di Occam:} a parità di assunzioni, la spiegazione più semplice è da
+	      preferire.
+\end{itemize}
+
+\dfn{Entropia}{
+	Serve per capire quanto sia confuso un insieme, più bassa è meglio è.
+	\[
+		\text{Entriopia}(t) = - \displaystyle\sum_{i=0}^{c-1} p(i|t) \text{log}_2 p(i|t)
+	\]
+	Dove $P(i|t)$ è la probabilità che l'elemento appartenenga all' i-esima classe.
+
+}
+
+\cor{Calcolo del Guadagno}{
+	Formula per calcolare il guadagno di uno split.
+	\[
+		\Delta = I(\text{parent}) - \displaystyle\sum_{j=1}^{k} \displaystyle\frac{N(v_j)}{N} I(v_j)
+	\]
+}
+
+\paragraph{Guadagno:}
+
+\begin{itemize}
+	\item $\Delta$ = guadagno.
+	\item $I(\text{parent})$ = impurità del nodo genitore.
+	\item $N$ = numero record del nodo genitore.
+	\item $N(v_j)$ = numero dei record del nodo figlio j-mo.
+	\item $I(v_j)$ = impurità del figlio j-mo.
+\end{itemize}
+
+\nt{Si vuole minimizzare l'impurità e massimizzare il guadagno.}
+
+\cor{Information Gain}{
+	Per information gain si intende una misura del guadagno ottenuta usando
+	l'entropia come valore dell'impurità dei nodi.
+	\[
+		\Delta = \text{entropia(parent)} - \displaystyle\sum_{j=1}^{k} \displaystyle\frac{N(v_j)}{N} \text{entropia}(v_j)
+	\]
+}
+
+\nt{
+	Le misure del grado di confusione, come Gini ed entropia tendono a favorire
+	attributi che hanno molti valori diversi rispetto ad attributi con pochi valori alternativi.
+}
+
+
+
+
+
 
 
 
