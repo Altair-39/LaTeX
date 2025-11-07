@@ -2,7 +2,7 @@
 
 \section{Apprendimento}
 
-\subsection{Classificazione}
+\subsection{Introduzione alla Classificazione}
 
 \paragraph{Il problema:}
 
@@ -48,7 +48,109 @@
 	      teristiche distinguono le diverse categorie.
 \end{itemize}
 
+\qs{}{Ma qual è la bontà dei modelli appresi?}
 
+\dfn{Valutazione Sperimentale}{
+	Il modello viene usato per classificare le istanze di un
+	test set. La valutazione della bontà è fatta sulla base del comportamento di classificazione corretto/sbagliato su questi dati.
+}
+
+\paragraph{Proprietà:}
+
+\begin{itemize}
+	\item \fancyglitter{Accuratezza} = predizioni corrette / predizioni totali.
+	\item \fancyglitter{Error Rate} = predizioni sbagliate / predizioni totali.
+\end{itemize}
+
+\cor{Matrice di Confusione}{
+	Matrice quadrata $N x N$ (con $N$ numero di classi). Le righe indicano le classi reali di appartenenza, le colonne indicano le classi predette.
+}
+
+\nt{L'ideale è che tutte le predizioni stiano sulla diagonale principale.}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{05/confusion.png}
+	\caption{Matrice di confusione.}
+\end{figure}
+
+\cor{Matrice dei Costi}{
+	Matrice $N x N$ (con $N$ numero di classi). Associa un costo allo indovinare/sbagliare una predizione.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{05/cost.png}
+	\caption{Matrice dei costi.}
+\end{figure}
+
+\subsection{Costruire un Modello}
+
+\dfn{Rote Learning (Apprendimento Meccanico)}{
+	Si tratta di memorizzare le varie istanze. Tramite confronti cerca un’istanza
+	identica:
+	\begin{itemize}
+		\item Se la trova restituisce la classe corrispondente.
+		\item Se non la trova prova a indovinare (cerca istanze simili utilizzando una misura di distanza).
+	\end{itemize}
+}
+
+\paragraph{Strategie per decidere:}
+
+\begin{itemize}
+	\item Votazione a Maggioranza: la classe più votata vince.
+	\item Votazione pesata: ogni voto ha un peso maggiore/minore a seconda
+	      della “distanza” fra le istanze considerate.
+\end{itemize}
+
+\nt{
+	In caso di votazione pesata, i pesi vengono
+	calcolati, usati e poi dimenticati.
+}
+
+\paragraph{Algoritmi di apprendimento diversi producono modelli di tipo diverso:}
+
+\begin{itemize}
+	\item Alberi di decisione: albero.
+	\item Sistemi a regole: if-then.
+	\item Reti neurali: matrici di numeri.
+	\item Apprendimento per rinforzo: distribuzioni di
+	      probabilità e matrici di numeri.
+\end{itemize}
+
+\nt{Nell'apprendimento automatico non sono importanti i numeri, ma cosa essi rappresentato e come sono ottenuti.}
+
+\dfn{Alberi di Decisione}{
+	Sono strumenti di supporto alle decisioni che
+	usano modelli strutturati ad albero, comunemente utilizzati per esempio per la definizione
+	di strategie mirate al conseguimento di un goal.
+}
+
+\nt{Per esempio i sottomenu a tendina sono alberi di decisione.}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{05/dec.png}
+	\caption{Struttura di un albero di decisione.}
+\end{figure}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Ogni test è su un attributo.
+		\item Le foglie sono classi.
+		\item A ogni branch dell'albero si prende una decisione sulla base di un test e si scende al nodo successivo.
+		\item Un dataset noto è il dataset degli iris.
+	\end{itemize}
+}
+
+\paragraph{Tipi di attributi:}
+
+\begin{itemize}
+	\item Binari: booleani.
+	\item Nominali: che hanno un nome.
+	\item Ordinali: per cui vale un ordine.
+	\item Continui.
+\end{itemize}
 
 
 
