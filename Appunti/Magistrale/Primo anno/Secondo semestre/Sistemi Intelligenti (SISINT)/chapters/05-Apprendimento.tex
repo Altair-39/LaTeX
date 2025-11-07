@@ -70,7 +70,7 @@
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=0.4]{05/confusion.png}
+	\includegraphics[scale=0.35]{05/confusion.png}
 	\caption{Matrice di confusione.}
 \end{figure}
 
@@ -80,7 +80,7 @@
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=0.4]{05/cost.png}
+	\includegraphics[scale=0.35]{05/cost.png}
 	\caption{Matrice dei costi.}
 \end{figure}
 
@@ -130,7 +130,7 @@
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=0.4]{05/dec.png}
+	\includegraphics[scale=0.3]{05/dec.png}
 	\caption{Struttura di un albero di decisione.}
 \end{figure}
 
@@ -254,10 +254,156 @@
 	attributi che hanno molti valori diversi rispetto ad attributi con pochi valori alternativi.
 }
 
+\subsection{Overfitting}
 
+Consideriamo la costruzione di un albero di decisione: ad ogni iterazione
+occorre individuare un attributo su cui effettuare il test. Un attributo viene
+preso in considerazione se il guadagno che dà supera una soglia minima.
 
+\dfn{Overfitting}{
+	Essere troppo adatto. Il modello che è stato costruito è troppo specializzato.
+}
 
+\clm{}{}{
+	\begin{itemize}
+		\item Il problema dell'overfitting nasce dal fatto che si utilizzano algoritmi \fancyglitter{greedy}.
+		\item Questi algoritmi tendono a massimizzare il guadagno.
+		\item Un modello addestrato in questo modo effettua una cattiva generalizzazione e non riesce a classificare nel mondo reale.
+	\end{itemize}
+}
 
+\paragraph{Ridurre l'overfitting:}
 
+\begin{itemize}
+	\item Prepruning: si stabilisce una soglia per cui si smette la costruzione dell'albero. Ci saranno foglie con più classi diverse (si dovrà fare una scelta sulla classe da restituire).
+	\item Postpruning: si applica al modello già addestrato. Vengono tagliati i percorsi meno usati o particolari.
+\end{itemize}
 
+\nt{Esistono altre tecniche come Minimum Description Length (MDL).}
+
+\section{Reti Neurali}
+
+\subsection{Ispirqaione Biologica}
+
+Le reti neurali si ispirano al modo in cui i neuroni agiscono ed interagiscono.
+
+\nt{I neuroni artificiali non sono modelli fedeli dei neuroni biologici, ne
+	catturano solo alcuni principi.}
+
+\dfn{Perceptron}{
+	Un perceptron è un elemento computazionale, dotato di una piccola memoria
+	in grado di calcolare una funzione di attivazione in esso strettamente codificata:
+	\[
+		Y = f(net)
+	\]
+	\[
+		net = \displaystyle\sum_{i=1}^{n}w_i X_i
+	\]
+	Tale funzione è calcolata su una composizione dei valori in ingresso, opportuna-
+	mente pesati.
+
+}
+
+\nt{Originariamente era usata la funzione gradino ($y = 0 | y = i$).}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{05/per.png}
+	\caption{Un percettrone.}
+\end{figure}
+
+\cor{Funzione Sigmoide}{
+$Y = f(net) = \displaystyle\frac{1}{1+e^{-\alpha * (net - \theta)}}$
+
+\begin{itemize}
+	\item $\theta$ soglia o bias.
+	\item $\alpha$ controlla la pendenza.
+\end{itemize}
+}
+
+\begin{center}
+	\begin{minipage}{0.45\textwidth}
+		\centering
+		\includegraphics[scale=0.45]{05/sig.png}
+	\end{minipage}%
+	\hfill
+	\begin{minipage}{0.45\textwidth}
+		\centering
+		\includegraphics[scale=0.15]{05/sigma.png}
+	\end{minipage}
+\end{center}
+
+\paragraph{Un percettrone codifica un test lineare:}
+
+\begin{itemize}
+	\item Ciò che cade al di sopra
+	      dell'iperpiano codificato
+	      dai suoi pesi fa attivare il
+	      neurone.
+	\item Ciò che è sotto
+	      non fa attivare il neurone.
+	\item Classificazione:
+	      \begin{itemize}
+		      \item Ciò che è sopra all'iperpiano
+		            è riconosciuto come
+		            appartenente alla classe
+		            obiettivo.
+		      \item Sotto all'iperpiano
+		            le istanze negative.
+	      \end{itemize}
+\end{itemize}
+
+\cor{Pesi}{I pesi sulle connessioni in ingresso definiscono la posizione e la pendenza
+	dell'iperpiano nello spazio in cui sono definiti gli input. I pesi caratterizzano
+	i neuroni e costituiscono la conoscenza del neurone.}
+
+\paragraph{Caratteristiche del perceptron:}
+
+\begin{itemize}
+	\item Adatto a svolgere compiti di tipo numerico.
+	\item Consente di risolvere problemi separabili linearmente.
+	\item Conoscenza data dai pesi.
+	\item I pesi sono persistenti.
+	\item Apprendimento da esempi, supervisionato.
+	\item Imparare = individuare la posizione corretta dell'iperpiano nello spazio.
+\end{itemize}
+
+\dfn{Epoca di Apprendimento}{
+	Elaborare una volta tutte le istanze appartenenti al learning set.
+}
+
+\nt{Solitamente si utilizzano più epoche di apprendimento.}
+
+\paragraph{Limiti del perceptron:}
+
+\begin{itemize}
+	\item Un perceptron non è in grado di capire un XOR.
+	\item Interpreto le coppie come coordinate di punti e il risultato dello XOR come il fatto
+	      che il punto debba stare sopra o sotto all'iperpiano.
+	\item Un'iperpiano da solo non ce la fa (sono necessari più iperpiani).
+\end{itemize}
+
+\subsection{Nascita delle Reti Neurali}
+
+\dfn{Rete Neurale}{
+	Una rete neurale è un approssimatore universale di funzioni, avente natura
+	distribuita. È costituita da un insieme di neuroni, collegati fra di loro secondo
+	una topologia, che dipende dal modello di rete realizzato. I neuroni possono
+	implementare funzioni diverse. Possono essere software oppure hardware.
+}
+
+\cor{Multi-Layer Perceptron}{
+	Il multi-layer perceptron (MLP) è un modello di NN con topologia a strati,
+	Feed-forward (flusso di calcolo in una sola direzione). Di solito i neuroni
+	di input implementano la funzione identità. I neuroni hidden sono perceptron,
+	che usano la sigmoide (o altre funzioni tipo a scalino, derivabili), i neuroni di
+	output combinano i risultati dei neuroni hidden. Si possono avere più layer
+	hidden.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.35]{05/mlp.png}
+	\caption{Multi-Layer Perceptron.}
+\end{figure}
 
