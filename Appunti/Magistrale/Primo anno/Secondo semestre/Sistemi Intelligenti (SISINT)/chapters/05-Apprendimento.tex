@@ -283,7 +283,7 @@ preso in considerazione se il guadagno che dà supera una soglia minima.
 
 \section{Reti Neurali}
 
-\subsection{Ispirqaione Biologica}
+\subsection{Ispirazione Biologica}
 
 Le reti neurali si ispirano al modo in cui i neuroni agiscono ed interagiscono.
 
@@ -406,4 +406,196 @@ $Y = f(net) = \displaystyle\frac{1}{1+e^{-\alpha * (net - \theta)}}$
 	\includegraphics[scale=0.35]{05/mlp.png}
 	\caption{Multi-Layer Perceptron.}
 \end{figure}
+
+\paragraph{Spesso si usano MLP con più hidden layers:}
+
+\begin{itemize}
+	\item Primo layer: traccia dei confini.
+	\item Secondo layer: costruisce delle forme.
+	\item Terzo layer: crea forme qualsivoglia complesse.
+\end{itemize}
+
+\qs{}{Come può imparare un MLP?}
+
+\begin{itemize}
+	\item Una rete neurale di tipo MLP impara in modo supervisionato inducendo
+	      la matrice dei pesi a partire da un insieme di esempi (etichettati nel caso
+	      della classificazione).
+	\item Per ogni istanza:
+	      \begin{itemize}
+		      \item \fancyglitter{Passata in avanti (forward):} l'istanza viene sottoposta all'MLP che
+		            la elabora e produce un risultato.
+		      \item \fancyglitter{Passata all'indietro (backward):} l'errore viene utilizzato per
+		            modificare i pesi partendo dalle connessioni più vicine ai neuroni di
+		            output e procedendo a ritroso.
+	      \end{itemize}
+\end{itemize}
+
+\dfn{Gradiente}{
+	Il gradiente è una misura che indica la direzione di massimo cambiamento di una funzione.
+}
+
+\cor{Discesa del Gradiente}{
+	La tecnica usata in MLP per l'apprendimento è la discesa del gradiente.
+
+	\[
+		\nabla w_{j i} = - \lambda \displaystyle\frac{\gamma E(w)}{\gamma w_{j i}}
+	\]
+}
+
+\nt{Si tratta di una tecnica greedy che cerca un punto di minimo.}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{05/grad.png}
+	\caption{Discesa del gradiente.}
+\end{figure}
+
+\dfn{Errore Globale MLP}{
+	$$	E = \displaystyle\frac{1}{2} \displaystyle\sum_{i=1}^{p} ||t_i - y_i||^2 $$
+	\begin{itemize}
+		\item $p$: numero dei neuroni di output.
+		\item $t_i$: valore desiderato per il neurone di output $i$-esimo.
+		\item $y_i$: valore prodotto dal neurone di output $i$-esimo.
+	\end{itemize}
+}
+
+\nt{Le seguenti formule sono da saper spiegare a parole e saperne fare i disegni.}
+
+\paragraph{Delta rule:}
+
+\begin{itemize}
+	\item \fancyglitter{Delta rule generalizzata:}
+	      \begin{itemize}
+		      \item Variazione da applicare al peso: $\Delta w_{j i} = \alpha * \gamma^i * x_{j i}$
+		      \item Misura derivante dal calcolo dell'errore: $\gamma^i = y_j * (1- y_j) * (t_j - y_j)$
+	      \end{itemize}
+	\item \fancyglitter{Delta rule per i neuroni hidden:}
+	      \begin{itemize}
+		      \item Variazione da applicare al peso: $\Delta w_{k i} = \alpha * \gamma^k * x_{k i}$
+
+		      \item Misura derivante dalla retropropagazione dell'errore: $\gamma^k = y * (1- y) * \displaystyle\sum_{j \in I_k} \gamma^j w_{k j}$
+	      \end{itemize}
+\end{itemize}
+
+\nt{
+	$\alpha$ è il learning rate.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{05/delta.png}
+	\caption{Delta rule.}
+\end{figure}
+
+\subsection{Cenni di Reinforcement Learning}
+
+Si vuole che un agente impari un \fancyglitter{comportamento}: eseguire azioni secondo certi schemi per raggiungere certi obiettivi. Prendendo spunto dai cani di Pavlov e deai piccioni di Skinner:
+
+\begin{itemize}
+	\item \fancyglitter{Condizionamento:} modifica il comportamento riflesso, non
+	      controllato in maniera conscia.
+	\item \fancyglitter{Condizionamento operante:} modifica il comportamento
+	      conscio grazie a un meccanismo di premi/punizioni (rinforzo).
+\end{itemize}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Comportamento: effetto dell’agire, comporta la scelta delle azioni
+		      da eseguire situazione per situazione.
+		\item Ambiente: ciò che non è sotto il controllo dell’agente.
+		\item Adattamento all'ambiente: agente non più unica componente
+		      attiva del binomio agente-ambiente; immagino l’ambiente come
+		      produttore e restitutore di feedback.
+	\end{itemize}
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{05/rl.png}
+	\caption{Agente e Ambiente.}
+\end{figure}
+
+\dfn{Reinforcement Learning}{
+	Si tratta di un approccio computazionale all'apprendimento per interazione. Riguarda l'imparare che cosa fare, associando azioni a situazioni in modo tale da
+	massimizzare un segnale numerico di compenso.
+}
+
+\cor{Policy}{
+	L'agente implementa un mapping fra situazioni $(s_j)$ e azioni possibili $(a_i)$: il valore $p_{a i}$
+	è la probabilità di selezionare l’azione $a_i$ essendo nella situazione $s_j$.
+
+	Lo scopo dell'apprendimento è quello di costruire una policy che consenta all'agente di massimizzare
+	il compenso totale ricevuto durante il suo funzionamento (obiettivo dell'agente).
+
+}
+
+\nt{L'apprendimento è guidato dalla massimizzazione del compenso atteso.}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.7]{05/ai.png}
+	\caption{Si vuole massimizzare il guadagno maggiore sul lungo termine, non immediato.}
+\end{figure}
+
+\nt{
+	Il compenso indica COSA si desidera che l'agente faccia non il COME farlo.
+}
+
+\dfn{Compenso Atteso}{
+	\[
+		R_t = r_{t+1} + r_{t+2} + \dots + r_{t + n}
+	\]
+	\begin{itemize}
+		\item $t$ istante corrente.
+		\item $r_{t+i}$ compenso che si riceverà all'istante $t+1$.
+		\item $t + n$ istante terminale dell'istante.
+	\end{itemize}
+}
+
+\nt{
+	\begin{itemize}
+		\item $n < \infty$ allora l'interazione con l'ambiente ha natura episodica, si possono separare gli stati terminali da quelli non terminali.
+		\item $n == \infty$ allora l'esecuzione è continua, la somma tende essa
+		      stessa a diventare infinita. Ciò porta all'introduzione del \fancyglitter{discount}.
+	\end{itemize}
+}
+
+\dfn{Discount}{
+	\[
+		R_t = \displaystyle\sum_{i = 0}^{\infty} \Gamma^i r_{t + i + 1}
+	\]
+}
+
+\paragraph{Un compito di RL che soddisfa la proprietà Markoviana è detto processo di decisione
+	Markoviano (MDP):}
+
+\begin{itemize}
+	\item Se l'insieme dei suoi stati e quello delle sue azioni sono finiti,
+	      si ha un MDP finito.
+	\item Un MDP finito è definito da:
+	      \begin{itemize}
+		      \item $S$ insieme degli stati.
+		      \item $A$ insieme delle azioni.
+		      \item $P^a_{s s'}$ probabilità di transizione.
+		      \item $R^a_{s s'}$ valore atteso del prossimo reward.
+	      \end{itemize}
+\end{itemize}
+
+\dfn{Funzione di Valutazione}{
+	Risolvere un problema di RL significa trovare una policy che permette di ottenere
+	compensi complessivi alti. Per gli MDP finiti è possibile costruire una simile politica
+	facendo sì che l'agente impari, con l'esperienza, a valutare correttamente gli stati.
+
+	\[
+		V^\pi (s) = \{\displaystyle\sum_{k = 0}^{\infty} \Gamma^k r_{t + k + 1} |s_t = s|\}
+	\]
+}
+
+\cor{Equazione di Bellman}{
+\[
+	V^\pi (s) = \displaystyle\sum_{a} \pi(s,a) \displaystyle\sum_{s'} P^a_{s s'} [R^a_{s s'} + \Gamma V^\pi (s')]
+\]
+
+}
 
