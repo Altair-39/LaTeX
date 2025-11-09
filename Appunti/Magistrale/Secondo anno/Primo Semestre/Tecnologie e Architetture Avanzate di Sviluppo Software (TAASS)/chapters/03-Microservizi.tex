@@ -1,3 +1,213 @@
 \chapter{Microservizi}
 
+\section{Comunicazione Sincrona}
+
+\subsection{RPC-Style}
+
+\dfn{Comunicazione Sincrona}{
+	Un servizio client invoca un'operazione al provider di un servizio. Ci sono 2 tipi di operazioni:
+	\begin{itemize}
+		\item Queries: il client chiede al provider per informazioni.
+		\item Commands: il client chiede al provider di fare qualcosa.
+	\end{itemize}
+}
+
+\paragraph{Questo tipo di comunicazione è anche detto RPC-Style perché:}
+
+\begin{itemize}
+	\item L'esecuzione delle operazioni richieste deve iniziare immediatamente.
+	\item Il client è bloccato ad aspettare il risultato dell'operazione.
+\end{itemize}
+
+\paragraph{In questo contesto REST è un protocollo sincrono:}
+
+\begin{itemize}
+	\item REST è distante dalla nozione di procedura e si concentra sulla nozione di risorsa.
+	\item Tuttavia, \fancyglitter{a basso livello} la manipolazione di risorse è comunque un insieme di operazioni.
+	\item HTTP è un protocollo sincrono.
+	\item Ergo REST viene usato per fare comunicazione sincrona sui microservizi.
+\end{itemize}
+
+\subsection{gRPC}
+
+\dfn{gRPC}{
+	Si tratta di un'implementazione FOSS di RPC. Strutturata specificatamente pper la comunicazione inter-servizio nelle architetture a microservizi. Utilizza HTTP/2 o nuovi.
+}
+
+\paragraph{gRPC non può essere applicata alla comunicazione back-end/front-end:}
+
+\begin{itemize}
+	\item gRPC-web permette di effettuare alcune chiamate mediante HTTP/1.1 (che viene tradotto in HTTP/2 da un \fancyglitter{proxy}).
+	\item Si ppuò usare un \fancyglitter{sidecar}: un servizio addizionale che si attacca a un servizio per tradurre le chiamate.
+\end{itemize}
+
+\clm{}{}{
+	\begin{itemize}
+		\item HTTP/2 offre \fancyglitter{streams}: connessioni con continuo passaggio di dati.
+		\item gRPC permette la comunicazione \fancyglitter{unaria} (semplice richiesta).
+		\item Server streaming: il server deve mandare informazioni continuative al server.
+		\item Client streaming: come il server, ma al contrario.
+		\item Bidirezionale: tipicamente usato per le chat.
+
+	\end{itemize}
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{03/arch.png}
+	\caption{Architettura di gRPC.}
+\end{figure}
+
+\begin{itemize}
+	\item Si parte da una descrizione delle API.
+	\item Viene generato dal compilatore di gRPC uno stub per il client e uno stub per il service:
+	      \begin{itemize}
+		      \item Lato client: si chiamano funzioni e metodi come fossero locali.
+		      \item Lato server: si occupa di serializzare/deserializzare i dati che arrivano dal server.
+		      \item Client e server comunicano mediante \fancyglitter{protocol buffer}.
+	      \end{itemize}
+\end{itemize}
+
+\dfn{Protocol Buffer (Protobuf)}{
+	Formato serializzato per lo scambio di messaggi strutturati tra servizi in formato binario.
+
+	Il programmatore deve definire un protobuf schema.
+}
+
+\nt{
+	L'idea è quella di ottenere serializzazione/deserializzazione in modo efficiente ed essere sia backward che forward compatible.
+}
+
+\paragraph{Il protoc compiler genera codice per:}
+
+\begin{itemize}
+	\item Dichiarare tipi di dato secondo uno schema.
+	\item Creare strutture dati rappresentanti un messaggio.
+	\item Serializzare messaggi come data streams binari.
+	\item Deserilizzare un binario secondo un determinato schema per ottenere la struttura dati originale.
+\end{itemize}
+
+\paragraph{Sviluppare services e clients gRPC richiede:}
+
+\begin{itemize}
+	\item Compilatore gRPC per il linguaggio scelto.
+	\item Librerie gRPC per il linguaggio scelto.
+\end{itemize}
+
+\subsection{Temi e Patterns}
+
+\dfn{Service Discovery}{
+	Un servizio, per poterne interrogare un altro, deve sapere come raggiungerlo (indirizzo).
+	Questo tema fa un mapping tra il nome logico di un servizio e il suo IP (un DNS).
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{03/ppds.png}
+	\caption{Service Discovery.}
+\end{figure}
+
+\dfn{Stateless - Stateful}{
+	\begin{itemize}
+		\item Un microservizio stateless non trattiene informazioni tra richieste:
+		      \begin{itemize}
+			      \item Funzione pura: la computazione dipende solo dall'input.
+			      \item Condotte: questi servizi agiscono da intermediari tra altri servizi.
+		      \end{itemize}
+		\item Un microservizio stateful mantiene uno stato del processo di interazione:
+		      \begin{itemize}
+			      \item Scalabilità complessa: lo stato deve essere sincronizzato tra istanze di servizi.
+			      \item Poco tollerante ai fallimenti: lo stato può essere perso o diventare inconsistente ai fallimenti.
+		      \end{itemize}
+	\end{itemize}
+}
+
+\nt{La maggior parte delle attività "interessanti" hanno un concetto di stato.}
+
+\dfn{Network Failure}{
+	Problemi di rete:
+	\begin{itemize}
+		\item Può capitare che un utente se non riceve risposta ritenta una richiesta che però è avvenuta con successo (richieste duplicate).
+		\item Se è il sistema di pagamento a fallire si rischia di intasare il sistema (e.g. si rompe VISA e anche MASTERCARD non funziona).
+	\end{itemize}
+}
+
+\paragraph{Prevenire il fallimento a cascata:}
+
+\begin{itemize}
+	\item \fancyglitter{Meccanismi di fallback:}
+	      \begin{itemize}
+		      \item Vanno studiati caso per caso.
+		      \item Restituiscono un messaggio di errore, un valore di default o un valore pre-cached.
+	      \end{itemize}
+	\item Intra service (\fancyglitter{service meshes}:)
+	      \begin{itemize}
+		      \item Strato infrastrutturale che assegna a ogni servizio un proxy.
+		      \item Stabilisce timeout di rete.
+		      \item Limita il numero di richieste aperte.
+		      \item Implementa il \fancyglitter{circuit breaker pattern}.
+	      \end{itemize}
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{03/cb.png}
+	\caption{Circuit Breaker.}
+\end{figure}
+
+\subsection{Richieste Duplicate e Idempotenza}
+
+\qs{}{Un servizio o una procedura invocata è idempotente?}
+
+\begin{itemize}
+	\item Le operazioni read-only sono sempre idempotenti.
+	\item Le operazioni di scrittura possono o meno essere idempotenti.
+\end{itemize}
+
+\dfn{Deduplicazione}{
+	La strategia utilizzata è la deduplicazione:
+	\begin{itemize}
+		\item Logica basata su DB constrains:
+		      \begin{itemize}
+			      \item Il servizio ha una conoscenza logica sulle strutture dati e possono usare la chiave primaria in un DB per accorgersi di duplicati.
+			      \item E.g. se due pagamenti hanno lo stesso ordine id.
+		      \end{itemize}
+		\item Payload hashing:
+		      \begin{itemize}
+			      \item Se la duplicazione implica payload identici.
+			      \item Non funziona con timestamp o IDs random.
+			      \item Non funziona se due richieste hanno lo stesso payload.
+		      \end{itemize}
+		\item Chiavi di idempotenza:
+		      \begin{itemize}
+			      \item Una chiave univoca è generata per ogni richiesta del client.
+			      \item Il service provider distingue richieste duplicate da richieste diverse con lo stesso payload.
+		      \end{itemize}
+	\end{itemize}
+}
+
+\qs{}{
+	Chi genera la chiave di idempotenza?
+}
+
+\begin{itemize}
+	\item Il client non può generarla:
+	      \begin{itemize}
+		      \item Crea accoppiamento non necessario.
+		      \item Difficoltà di garanzia dell'unicità.
+	      \end{itemize}
+	\item È preferibile farla generare al server:
+	      \begin{itemize}
+		      \item Simile a token di sessione.
+		      \item Il server genera la chiave, la invia al client e il client usa la stessa chiave se deve ripetere una richiesta.
+		      \item Si usa un two-phase commit (agreement o handshake).
+	      \end{itemize}
+\end{itemize}
+
+
+
+\section{Comunicazione Asincrona}
+
+
+
 
