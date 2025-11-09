@@ -1,0 +1,281 @@
+\chapter{Introduzione}
+
+\section{Tassonomie e Problemi di Sicurezza Software}
+
+\paragraph{Categorie di problemi di sicurezza dei software:}
+
+\begin{itemize}
+  \item \fancyglitter{Input Validation Failure:}
+    \begin{itemize}
+      \item Injection attacks (SQL, command, code). 
+      \item Cross-site scripting (XSS). 
+    \end{itemize}
+  \item \fancyglitter{Memory Safety Issue:}
+    \begin{itemize}
+      \item Buffer overflows, use-after-free, double-free\footnote{Un approfondimento interessante riguarda l'Arbitrary Code Execution (ACE) nelle console.}. 
+      \item Causa principale del 70\% delle vulnerabilità critiche (Microsoft, google). 
+    \end{itemize}
+  \item \fancyglitter{Authentication \& Authorization Flaws:}
+  \begin{itemize}
+    \item Broken access control, problemi con i privilegi. 
+    \item Session management issue. 
+  \end{itemize}
+\item \fancyglitter{Logic \& Design Flaws:}
+  \begin{itemize}
+    \item Race conditions, time-of-check-time-of-use (TOCTOU). 
+    \item Business logic bypass.
+  \end{itemize}
+\end{itemize}
+
+
+\subsection{I Problemi in Dettaglio}
+
+\dfn{Input Validation Failure}{
+  Gli Input Validation Failure avvengono quando un applicativo "si fida" eccessivamente degli utenti.
+  
+Sono causati da una non sufficiente sanificazione e validazione di un input.
+}
+
+\clm{Tipi}{}{
+  \begin{itemize}
+    \item Injection vulnerability:
+      \begin{itemize}
+        \item SQL Injection: codice SQL malevolo messo come input. 
+        \item Command Injection: comandi OS messi come input. 
+        \item Code Injection: codice eseguibile messo come input.
+      \end{itemize}
+    \item Cross-site scripting (XSS):
+      \begin{itemize}
+        \item Reflected: esecuzione immediata di scripts malevoli.
+        \item Stored: scripts malevoli persistenti in un database. 
+        \item DOM-Based: manipolazione di scripts client-side.
+      \end{itemize}
+    \item Path traversal:
+      \begin{itemize}
+        \item Accesso a file al di fuori della directory corretta (../../../etc/passwd).
+      \end{itemize}
+  \end{itemize}
+}
+
+\dfn{Memory Safety Issue}{
+Errori causati da una scorretta manipolazione della memoria.
+}
+
+\clm{Tipi}{}{
+\begin{itemize}
+  \item Buffer Overflows:
+    \begin{itemize}
+      \item Stack-Based: viene sovrascritto il return address (RA).
+      \item Heap-Based:corruzione della memoria che gestisce le strutture dati.
+    \end{itemize}
+  \item Use-After-Free (UAF):
+    \begin{itemize}
+      \item Accedere alla memoria liberata consente Arbitrary Code Execution (ACE). 
+      \item Comune in applicazioni C/C++.
+    \end{itemize}
+  \item Double-Free:
+    \begin{itemize}
+      \item Liberare due volte la stessa memoria. 
+      \item Corruzione dei metadati dell'heap.
+    \end{itemize}
+  \item Integer overflows:
+    \begin{itemize}
+      \item Possono causare buffer overflows quando usati per il calcolo di indirizzi.
+    \end{itemize}
+\end{itemize}
+}
+
+\dfn{Authentication \& Authorization Flaws}{
+Problemi legati al "chi sei" e al "che cosa puoi fare". 
+
+Accesso non autorizzato a dati sensibili e funzionalità.
+}
+
+\clm{}{}{
+\begin{itemize}
+  \item Broken Authentication: 
+  \begin{itemize}
+    \item Password deboli. 
+    \item Session fixation, Session hijacking. 
+    \item Attacchi alle credenziali.
+  \end{itemize}
+\item Broken Access Control: 
+  \begin{itemize}
+    \item Problemi con i privilegi verticali (user $\rightarrow$ admin). 
+    \item Problemi con i privilegi orizzontali (user A $\rightarrow$ user B). 
+  \end{itemize}
+\item Session Management Issue:
+  \begin{itemize}
+    \item Session ID predicibile. 
+    \item Sessione non invalidata dopo il logout. 
+    \item Cross-site request forgery (CSRF). 
+  \end{itemize}
+\end{itemize}
+}
+
+
+\dfn{Logic \& Design Flaws}{
+Problemi con la logica con cui è stato ragionato un applicativo.
+}
+
+\clm{}{}{
+  \begin{itemize}
+    \item Race Conditions:
+      \begin{itemize}
+        \item TOCTOU. 
+        \item Multipli threads che accedono a risorse condivise.
+      \end{itemize}
+    \item Business Logic Bypass:
+      \begin{itemize}
+        \item Violazioni dello stato di una macchina. 
+        \item Workflow circumvention.
+      \end{itemize}
+    \item Cryptographic failures:
+      \begin{itemize}
+        \item Algoritmi deboli, key management scarso.
+        \item Validazione di certificati impropria. 
+        \item Side-Channel attacks.
+      \end{itemize}
+    \item Configuration Issue: 
+      \begin{itemize}
+        \item Credenziali di default. 
+        \item Error handling improprio.
+      \end{itemize}
+  \end{itemize}
+}
+
+\paragraph{Principali cause:}
+
+\begin{itemize}
+  \item \fancyglitter{Linguaggio scelto:}
+    \begin{itemize}
+      \item C/C++: efficiente, ma richiede gestione manuale della memoria. 
+      \item Linguaggi interpretati: soggetti a Injection vulnerability.
+    \end{itemize}
+  \item \fancyglitter{Developer training:}
+    \begin{itemize}
+      \item Mancanza di consapevolezza per i rischi sulla sicurezza e pressione per avere delivery costante (TAASS fa schifo). 
+    \end{itemize}
+  \item \fancyglitter{Complessità:}
+    \begin{itemize}
+      \item Codebases enormi e con multiple dipendenze. 
+      \item Interazione di componenti.
+    \end{itemize}
+  \item \fancyglitter{Legacy systems:}
+    \begin{itemize}
+      \item Vecchio codice con pratiche di sicurezza superate. 
+      \item Difficile da aggiornare o rimpiazzare.
+    \end{itemize}
+  \item \fancyglitter{Testing non adeguato:}
+    \begin{itemize}
+      \item Che si focalizza sulla funzionalità e non sulla sicurezza. 
+      \item Numero di tools limitato.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Frameworks}
+
+\paragraph{Standard dell'industria:}
+
+\begin{itemize}
+  \item \fancyglitter{CWE} (Common Weakness Enumeration):
+    \begin{itemize}
+      \item Categorizza i tipi di debolezze software. 
+      \item Si focalizza sulle cause e sui patterns.
+    \end{itemize}
+  \item \fancyglitter{OWASP Top 10}:
+    \begin{itemize}
+      \item Riguardano le applicazioni web più critiche. 
+      \item Viene aggiornata ogni 3-4 anni basandosi sui dati dell'industria.
+    \end{itemize}
+\end{itemize}
+\dfn{Open Web Application Security Project}{
+Fondato nel 2001 è un fondazione no profit che si occupa di cybersecurity. Progetti chiave:
+
+\begin{itemize}
+  \item OWASP Top 10. 
+  \item OWASP Testing Guide: guida alle metodologie di testing. 
+  \item OWASP ZAP: tool per testing di sicurezza. 
+  \item ASVS: Application Security Verification Standard. 
+\end{itemize}
+
+}
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{01/cwe-owasp.png}
+    \caption{Esempi di CWE e OWASP.}
+\end{figure}
+
+\dfn{MITRE ATT\&CK}{
+  Framework usato per categorizzare e descrivere cyberattacchi su tattiche, tecniche e common knowledge.
+}
+
+\paragraph{Idee di MITRE ATT\&CK:}
+
+\begin{itemize}
+  \item Linguaggio comune per descrivere i comportamenti \fancyglitter{avversari}. 
+  \item Organizzare metodi di attacco conosciuti. 
+  \item Strumenti per la sicurezza.
+\end{itemize}
+
+\paragraph{Overview:}
+
+\begin{itemize}
+  \item Tattiche (colonne): il "perché", i goal degli avversari. 
+    \begin{itemize}
+      \item Accesso iniziale, esecuzione, persistenza, privilegi. 
+      \item Accesso alle credenziali, scoperte, movimenti laterali. 
+      \item Collezioni, Comandi e controlli, impatto. 
+    \end{itemize}
+  \item Tecniche (righe): il "come", i metodi per ottenere i goal.
+    \begin{itemize}
+      \item T1566 - Phishing.
+    \end{itemize}
+  \item Sotto-tecniche: variazioni specifiche di tecniche. 
+    \begin{itemize}
+      \item T1566.001 - Spearphishing Attachment. 
+      \item T1566.002 - Spearphishing Link.
+    \end{itemize}
+  \item Procedure: specifiche implementazioni.
+\end{itemize}
+
+\dfn{Vulnerability Classification}{
+  Framework per descrivere, categorizzare e prioritizzare problemi di sicurezza.
+}
+
+\paragraph{Sistemi chiave:}
+
+\begin{itemize}
+  \item CVE: identifica specifiche vulnerabilità. 
+  \item CWE: categorizza tipi di debolezze. 
+  \item CVSS: dà un punteggio alla severità delle vulnerabilità. 
+  \item CPE: identifica prodotti e sistemi affetti da vulnerabilità.
+\end{itemize}
+
+\nt{Questa è terminologia comune in ambito di cybersecurity.}
+
+\subsection{Classificazione delle Vulnerabilità}
+
+\dfn{CVE}{
+
+}
+
+\dfn{CWE}{
+
+}
+
+\dfn{CVSS}{
+
+}
+
+\dfn{CPE}{
+
+}
+
+
+
+
+
+

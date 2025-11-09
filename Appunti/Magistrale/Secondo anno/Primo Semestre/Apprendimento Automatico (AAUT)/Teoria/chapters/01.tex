@@ -1,0 +1,127 @@
+\chapter{Introduzione}
+
+\section{Che Cos'è l'Apprendimento Automatico?}
+
+\dfn{Machine Learning}{
+	Un programma informatico apprende dall'esperienza $E$ rispetto a una classe di task $T$ e una performance $P$, se la sua performance nel task $T$, misurata da $P$, aumenta con l'esperienza $E$.
+}
+
+\paragraph{Sostanzialmente:}
+
+\begin{itemize}
+	\item L'esperienza viene data sotto forma di esempi "risolti" al computer.
+	\item Un task (compito) da risolvere.
+	\item Con un modo per valutare la risoluzione (performance).
+\end{itemize}
+
+\subsection{Terminologia}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.45]{01/terminology.png}
+	\caption{Terminologia.}
+\end{figure}
+
+\begin{itemize}
+	\item Attributi (Features): le colonne.
+	\item Etichetta (Classe): elemento che indica come risolvere un task.
+	\item Istanza (Sample): una riga.
+	\item Valori: le celle.
+	\item Set di Training: insieme su cui si va a dedurre una regola per classificare.
+	\item Test Set: insieme per vedere quanto si sarà accurati su insiemi futuri.
+\end{itemize}
+
+\nt{Si usa un set diverso per il training e il test perché se si usasse lo stesso il modello farebbe risultati elevati essendo addestrato su quello.}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{01/terminology2.png}
+	\caption{Terminologia 2.}
+\end{figure}
+
+\paragraph{Immaginando gli oggetti in un qualche campo euclideo:}
+
+\begin{itemize}
+	\item \fancyglitter{Features vector:} ogni esempio corrisponde a un vettore.
+	\item \fancyglitter{Attribute space:} l'insieme di tutti gli esempi.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{01/table.png}
+	\caption{Tabella di riferimento.}
+\end{figure}
+
+\dfn{Learning (Training)}{
+	Il learning è un processo in cui si usano algoritmi di apprendimento automatico per costruire dei modelli.
+	\begin{itemize}
+		\item I dati utilizzati in questo processo sono detti training data.
+		\item Ogni istanza è un training example.
+		\item L'insieme di tutti i training example è il training set.
+	\end{itemize}
+}
+
+\nt{Un modello addestrato corrisponde a una serie di regole sui dati, quindi si chiama anche \fancyglitter{ipotesi} e le regole sono i \fancyglitter{fatti} (grounded-truth).}
+
+\subsection{Tasks}
+
+\dfn{Tasks predittivi}{
+	Un task predittivo è focalizzato sul prevedere una variabile sulla base degli esempi. Si parte da problemi vecchi per trovare la soluzione a nuovi problemi.
+}
+
+\paragraph{I tasks predittivi possono essere:}
+
+\begin{itemize}
+	\item \fancyglitter{Binari e Multi-classe:} di categorizzazione.
+	\item \fancyglitter{Regressivi:} con un target numerico.
+	\item \fancyglitter{Clustering:} un target sconosciuto.
+\end{itemize}
+
+\dfn{Tasks descrittivi}{
+	Un task descrittivo si concentra sul fornire regolarità nel dataset.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{01/tasks.png}
+	\caption{Vari tasks.}
+\end{figure}
+
+\paragraph{Assunzione:}
+
+\begin{itemize}
+	\item Si assume che i dati siano \fancyglitter{indipendenti}.
+	\item Si assume che i dati siano \fancyglitter{identicamente distribuiti}.
+\end{itemize}
+\subsection{Spazio di Ipotesi}
+
+Nei sistemi \fancyglitter{assiomatici} il processo di derivare un teorema da assiomi è detto \fancyglitter{deduzione}. Questo è un processo corretto se si assume che gli assiomi siano veri. L'\fancyglitter{induzione} è il processo opposto ed è il principio su cui si basa tutto l'apprendimento automatico.
+
+
+\nt{ATTENZIONE: l'induzione come intesa in questo corso non è l'induzione matematica.}
+
+\clm{Deduzione vs. Induzione}{}{
+	\begin{itemize}
+		\item La deduzione è valida: assumere le premesse vere garantisce che le conclusioni siano vere.
+		\item L'induzione non è valida come forma di ragionamento: non garantisce che  la conclusione sia vera anche se tutte le osservazioni sono corrette.
+	\end{itemize}
+}
+
+\dfn{Boolean Concept Learning}{
+	L'obiettivo è quello di apprendere una funzione booleana $h: \mcX \mapsto \{0,1\}$
+}
+
+\nt{Siamo nel campo del \fancyglitter{symbolic concept learning}, studiato nel campo dellla \fancyglitter{inductive logic programming}.}
+
+\dfn{Spazio di Ipotesi}{
+	Lo spazio di Ipotesi è l'insieme di tutte le possibili ipotesi che possono essere imparate da un algoritmo di apprendimento.
+}
+
+\nt{Il Machine Learning è la ricerca attraverso lo spazio delle ipotesi per trovare l'insieme di tutte le ipotesi che sono consistenti con i training data e selezionare i migliori secondo un qualche criterio.}
+
+
+
+
+
+
+

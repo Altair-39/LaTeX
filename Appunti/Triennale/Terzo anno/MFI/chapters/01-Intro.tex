@@ -1,0 +1,101 @@
+\chapter{Introduzione}
+
+\section{Cosa sono e a cosa servono i metodi formali?}
+
+I metodi formali sono un particolare tipo di \textit{tecnica matematica} per la \textit{specifica}, lo \textit{sviluppo} e la \textit{verifica} dei sistemi software e hardware. 
+Essi includono teorie, metodi e tool che derivano dalla logica matematica:
+
+\begin{itemize}
+    \item Calcoli logici;
+    \item Teoria degli automi;
+    \item Algebra dei processi;
+    \item Algebra relazione;
+    \item Semantica dei linguaggi di programmazione;
+    \item  Teoria dei tipi;
+    \item Analisi statica;
+    \item etc..
+\end{itemize}
+\paragraph{}
+L'utilizzo dei metodi formali è poter avere uno strumento per analizzare e certificare il software:
+
+\begin{itemize}
+    \item Verifica di SW e HW;
+    \item Documentazione, specifica e sviluppo del software;
+    \item Debugging;
+    \item Monitoring;
+    \item etc..
+\end{itemize}
+
+\section{La riscrittura}
+
+La \textit{riscrittura} parte dall'idea di trasformare in una "forma normale" delle proposizioni tramite una serie di trasformazioni (per esempio la doppia negazione che è uguale a un' affermazione o le leggi di De Morgan).
+
+\subsection{Il \texorpdfstring{$\mathcal{\lambda}$}--calcolo}
+
+Il \textit{$\lambda$-calcolo} è un sistema per calcolare usando le funzioni. 
+
+\dfn{La sintassi del $\lambda$-calcolo}{$$M, N \; :: == \; x \; | \; \lambda x.M \; | \; M N$$ dove \begin{itemize}
+    \item x è il parametro formale;
+    \item $\lambda$x.M è l'astrazione di un termine rispetto a una variabile;
+    \item M N è l'applicazione di N a M.
+\end{itemize}}
+
+\nt{Tuttavia si può anche assegnare una funzione a una funzione creando problemi, per esempio una ricorsione infinita}
+
+\subsection{Il \texorpdfstring{$\mathcal{\lambda}$}--calcolo tipato}
+
+Il \textit{$\lambda$-calcolo tipato} serve per risolvere il precedente problema, introducendo il concetto di tipo. Si introduce una sintassi con \textit{tipi di base} (int, bool, etc.) e \textit{tipi composti} (int $\rightarrow$ bool, int $\rightarrow$ int, etc.). Questo definisce il dominio delle funzioni ed è alla base di tutti i sistemi di tipo.
+
+\section{Il problema della verifica}
+
+\paragraph{Dati:} una descrizione concreta di un sistema (es. il codice di un programma) e una \textit{specifica} del suo comportamento o di una sua proprietà.
+
+\paragraph{Risultati:} un'evidenza del fatto che il codice soddisfi la specifica o un \textit{controesempio}.
+
+\nt{Il problema nasce dal fatto che il programma è un oggetto formale, mentre le specifiche non lo sono sempre (per cui vanno formalizzate)}
+
+\subsection{La semantica operazionale}
+
+La \textit{semantica operazionale} definisce il comportamento di un programma e ne modifica il suo stato. Lo stato è un'astrazione della memoria che viene riscritta dal programma.
+
+\dfn{La semantica operazionale}{Uno stato è una mappa dalle variabili ai valori: $\:\sigma \; : \; Var \rightarrow Var$ $$(P,\sigma) = (P_0,\sigma_0)\rightarrow(P_1,\sigma_1)\rightarrow ...\rightarrow (P_k,\sigma_k)$$
+$P_i$ è la parte che resta da eseguire di $P_{i-1}$, $\sigma_i$ è lo stato  risultante dall’esecuzione della
+prima istruzione di $P_{i-1}$ nello stato $\sigma_{i-1}$, se $P_k$ è vuoto allora $\sigma_k$ è il risultato della computazione
+}
+
+\subsection{Floyd e Hoare}
+
+Floyd introdusse il \textit{metodo delle asserzioni} che utilizza formule logiche per arricchire il flusso di un programma. Il problema di questo approccio è che bisogna scrivere le formule e ragionarci sopra in astratto. Hoare propose un \textit{calcolo logico} che utilizza una "pre-condizione" (ipotesi sui dati, $\phi$) e una "post-condizione" (cosa calcola il programma,$\psi$). 
+
+\nt{$\{\phi\}P\{\psi\}$ è vera nello stato $\sigma$ se quando $\phi$ sia vera in $\sigma$ e l'esecuzione di P da $\sigma$ termni in $\lambda'$, $\psi$ è vera in $\sigma'$}
+
+\thm{Logica di Hoare}{Se la tripla $\{\phi\}P\{\psi\}$ è derivabile in HL\footnote{Hoare's logic} allora è valida $$\vdash\{\phi\}P\{\psi\}\Rightarrow \models \{\phi\}P\{\psi\}$$ dove $\{\phi\}P\{\psi\}$ è valida se $$\forall \sigma.\sigma \models \{\phi\}P\{\psi\}$$}
+
+\subsection{Verifica e testing}
+
+Il testing (verifica dinamica) indica che per un certo insieme di valori il programma è corretto. La verifica (statica) indica che il programma è corretto per qualsiasi valore. 
+La verifica non prevede l'esecuzione del programma. Essa deve stabilire se un "contratto" è valido, ossia se le "post-condizioni" siano rispettate partendo dalle "pre-condizioni". L'\textit{invariante di ciclo} è vero sia prima che dopo e bisogna dimostrare che sia uguale per tutte le iterazioni.
+In un sistema di verifica \textit{model-based} o model checking si costruisce
+ un modello M del sistema/protocollo e se ne specifica il comportamento con una formula temporale (LTL, CTL, ...)$\phi$ quindi si stabilisce se M soddisfa $\phi$.
+ La verifica \textit{proof-based} o deduttiva non considera tutti gli infiniti stati ma si dimostra che la relazione di input/output è deducibile da un calcolo logico su un insieme finito.
+
+\subsection{Limiti teorici}
+
+\begin{itemize}
+    \item FOL\footnote{First-order logic} è corretta e completa, ma indecidibile;
+    \item HL è corretta, ma completa solo in senso debole ed è indecidibile;
+    \item Il \textit{teorema di Rice} indica che tutte le proprietà funzionali (che dipendono dalla semantica) sono indecidibili o triviali.
+\end{itemize}
+
+\section{Installare Agda}
+
+Questa mini guida utilizza Linux, in quanto l'installazione risulta più veloce e semplice.
+
+\begin{enumerate}
+    \item Come prima cosa bisogna installare emacs. Per fare ciò si può usare il proprio gestore di pacchetti con il terminale. Per esempio in ubuntu "sudo apt update" e "sudo apt install emacs";
+    \item Dopo di chè si può installare Agda con il comando "sudo apt install agda";
+    \item Creare un file chiamato ".emacs" e copiare il seguente comando "(load-file (let ((coding-system-for-read 'utf-8))
+(shell-command-to-string "agda-mode locate")))".
+\end{enumerate}
+
+\nt{In alcune vecchie versioni di Ubuntu potrebbe essere necessario usare "sudo apt install agda-mode"}

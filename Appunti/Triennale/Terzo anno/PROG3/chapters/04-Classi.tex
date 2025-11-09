@@ -1,0 +1,190 @@
+\chapter{Classi innestate e lambda expression}
+
+\nt{Le lambda expression e, in generale, il $\lambda$-calcolo sono spiegati in dettaglio nei corsi "Linguaggi e paradigmi di programmazione" e "Metodi formali dell'informatica".}
+
+\section{Classi innestate}
+
+Le classi possono essere dichiarate:
+\begin{itemize}
+	\item all'interno di altre classi in qualità di membri;
+	\item all'interno di blocchi di codice.
+\end{itemize}
+
+\dfn{Classi innestate}{
+	Le classi innestate sono utili per:
+	\begin{itemize}
+		\item definire tipi strutturati visibili all'interno di gruppi correlati;
+		\item connettere in modo semplice oggetti correlati;
+		\item information hiding di tipi di dati.
+	\end{itemize}
+	Il nome di una classe innestata è: NomeContenitore.NomeInnestata.
+}
+\nt{La visibilità di una classe innestata è \textit{almeno} la stessa della classe che la contiene.}
+
+\nt{Se non serve dare un nome alle classi innestate
+	(perché usate in un solo punto del codice della
+	classe contenitrice) le si può definire come anonime,
+	per compattezza. Però per questioni di leggibilità si
+	consiglia di definire classi anonime solo se hanno
+	poche linee di codice.}
+
+\section{Lambda expression}
+
+\dfn{Lambda expression}{
+	Le lambda expression sono utili per implementare interfacce funzionali (cioè interfacce con un solo metodo astratto) in modo compatto:
+	\begin{itemize}
+		\item possono avere o non avere parametri;
+		\item possono avere o non avere un tipo di ritorno.
+	\end{itemize}
+}
+\nt{Se il body ha una sola istruzione e restituisce un valore (non void) si possono omettere le parentesi graffe e la keyword \texttt{return}.}
+
+\section{Input/Output}
+
+\dfn{I/O}{
+	Le operazioni di I/O avvengono attraverso \textit{stream}:
+	successioni di byte che rappresentano i dati in input o
+	in output. Gli stream possono essere combinati. Ci sono due tipi di stream:
+	\begin{itemize}
+		\item \textit{byte stream}: stream di byte;
+		\item \textit{character stream}: stream di caratteri.
+	\end{itemize}
+	Esistono oltre 60 classi di I/O divise in due gerarchie:
+	\begin{itemize}
+		\item \texttt{InputStream} e \texttt{OutputStream} per i byte;
+		\item \texttt{Reader} e \texttt{Writer} per i caratteri.
+	\end{itemize}
+}
+
+\nt{
+	Sorgente e destinazione di un flusso di byte o di caratteri possono essere:
+	\begin{itemize}
+		\item \texttt{File}: file sul disco;
+		\item \texttt{Array}: array di byte o di caratteri;
+		\item \texttt{String}: stringa di caratteri;
+		\item \texttt{Pipe}: stream di byte o di caratteri in memoria.
+	\end{itemize}
+}
+
+\dfn{Input a caratteri}{
+	La classe read è la classe astratta che rappresenta un
+	generico stream di caratteri. I metodi più importanti
+	sono:
+	\begin{itemize}
+		\item \texttt{int read()}: legge un carattere e lo restituisce come intero;
+		\item \texttt{int read(char[] c)}: legge un array di caratteri e restituisce il numero di caratteri letti;
+		\item \texttt{int read(char[] c, int off, int len)}: legge un array di caratteri a partire da un offset e restituisce il numero di caratteri letti.
+	\end{itemize}
+	La classe InputStreamReader è una classe che converte un
+	InputStream in un Reader.
+}
+
+\dfn{Output a caratteri}{
+	La classe \texttt{Writer} è la classe astratta che rappresenta un generico stream di caratteri. I metodi più importanti sono:
+	\begin{itemize}
+		\item \texttt{void write(int c)}: scrive un carattere;
+		\item \texttt{void write(char[] c)}: scrive un array di caratteri;
+		\item \texttt{void write(char[] c, int off, int len)}: scrive un array di caratteri a partire da un offset;
+		\item \texttt{void flush()}: svuota il buffer di output;
+		\item \texttt{void close()}: chiude lo stream.
+	\end{itemize}
+	La classe OutputStreamWriter è una classe che converte un OutputStream in un Writer.
+}
+
+\dfn{Buffer}{
+	Un buffer è un'area di memoria temporanea dove vengono
+	memorizzati i dati prima di essere letti o scritti. I
+	vantaggi dell'utilizzo di un buffer sono:
+	\begin{itemize}
+		\item riduzione del numero di accessi al disco;
+		\item riduzione del tempo di esecuzione.
+	\end{itemize}
+}
+
+\nt{
+	I flussi standard di input e output sono:
+	\begin{itemize}
+		\item \texttt{System.in}: flusso di input standard;
+		\item \texttt{System.out}: flusso di output standard;
+		\item \texttt{System.err}: flusso di errori standard.
+	\end{itemize}
+}
+
+\subsection{Oggetti}
+
+\dfn{I/O di oggetti}{
+	Con ObjectInputStream e ObjectOutputStream è possibile
+	leggere e scrivere oggetti. Per poter scrivere un oggetto
+	su un file è necessario che la classe dell'oggetto sia
+	serializzabile, cioè che implementi l'interfaccia
+	\texttt{Serializable}. L'interfaccia Serializable è una
+	\textit{marker interface}, cioè un'interfaccia senza metodi.
+
+}
+
+\nt{
+	Per leggere e scrivere oggetti su un file si usano i metodi:
+	\begin{itemize}
+		\item \texttt{void writeObject(Object o)}: scrive un oggetto;
+		\item \texttt{Object readObject()}: legge un oggetto.
+	\end{itemize}
+}
+
+\subsection{File}
+
+\dfn{File}{
+	Un file è una sequenza di byte memorizzata su un dispositivo
+	di memorizzazione permanente. Un file è caratterizzato da:
+	\begin{itemize}
+		\item nome;
+		\item dimensione;
+		\item tipo;
+		\item posizione.
+	\end{itemize}
+	I file possono essere:
+	\begin{itemize}
+		\item \textit{testuali}: contengono caratteri;
+		\item \textit{binari}: contengono byte.
+	\end{itemize}
+}
+
+\nt{
+	Per leggere e scrivere file si usano le classi:
+	\begin{itemize}
+		\item \texttt{File}: rappresenta un file o una directory;
+		\item \texttt{FileReader} e \texttt{FileWriter}: leggono e scrivono file di caratteri;
+		\item \texttt{FileInputStream} e \texttt{FileOutputStream}: leggono e scrivono file di byte.
+	\end{itemize}
+}
+
+\dfn{Scanner}{
+	La classe \texttt{Scanner} permette di leggere file di caratteri o di byte. I metodi più importanti sono:
+	\begin{itemize}
+		\item \texttt{String nextLine()}: legge una riga;
+		\item \texttt{String next()}: legge una parola;
+		\item \texttt{int nextInt()}: legge un intero;
+		\item \texttt{double nextDouble()}: legge un double;
+		\item \texttt{boolean hasNext()}: verifica se ci sono altri dati da leggere.
+	\end{itemize}
+}
+
+
+\section{Verso i pattern architetturali}
+
+\dfn{Ereditarietà, parte 2}{
+	L'ereditarietà può essere usata per modellare oggetti complessi. Combinando
+	l'uso di interfaccie/classi che implementano le interfacce con relazioni di
+	combinamento si ottengono modelli di programmazione avanzati.
+}
+
+\begin{figure}[h]
+	\caption{La classe prisma}
+	\begin{center}
+		\includegraphics[scale=0.35]{images/Kernel-modulo/Prisma.png}
+	\end{center}
+\end{figure}
+\nt{
+	Questa separazione tra interfaccia e implementazione permette la compilazione
+	separata. Inoltre, se si cambia l'implementazione di una classe, non si
+	cambia l'interfaccia, quindi non si cambia il codice che usa l'interfaccia.
+}

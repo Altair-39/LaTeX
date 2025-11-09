@@ -1,0 +1,245 @@
+\chapter{Il Lambda Calcolo}
+
+\nt{Questo capitolo è concettualmente affine al capitolo "Il $\lambda$-calcolo" negli appunti del corso di "Linguaggi e paradigmi di programmazione"}
+
+\section{Introduzione}
+
+Il $\lambda$-calcolo fu introdotto nel 1933 da Alonzo Church. Con questo calcolo, Church, cercò di formalizzare la nozione di funzione calcolabile.
+
+\nt{Non tutte le funzioni sono calcolabili. Alcuni dei motivi per cui è vero ciò sono spiegati nel corso di "Calcolabilità e complessità"}
+
+\dfn{}{Sia Var = $\{x, \:y,\:z,\:...\}$ un insieme finito di variabili, la sintassi è la seguente:
+	$$M, N\:::= x \:\:\:|\:\:\: (\lambda x.M)\:\:\: |\:\:\: (M N)$$}
+
+\nt{$\lambda x.M$ è un'astrazione o funzione con parametro formale x e corpo M}
+\nt{$(M N)$ è l'applicazione delle funzione $M$ al parametro attuale $N$}
+
+\section{Il \texorpdfstring{$\mathcal{\lambda}$}--calcolo non tipato}
+
+\subsection{Semantica}
+
+\nt{Applicare una funzione $\lambda x.M$ a un argomento N significa valutare il corpo della funzione (M) in cui ogni occorrenza libera dell'argomento (x) è stata sostituita da N}
+
+\dfn{Insieme delle variabili libere}{L'insieme delle variabili libere di un termine M, denotato come $fv(M)$, è definito induttivamente sulla struttura di M come segue:
+	$$fv(x) = \{x\} \:\:\:\: fv(\lambda x.M) = fv(M) \ /\{x\}\:\:\:\: fv(M N) = fv(M) \cup fv(N)$$
+}
+
+\dfn{Sostituzione}{
+	\begin{itemize}
+		\item $x\{N/y\} = \begin{cases}
+				      N \text{ se } x = y \\
+				      x\; \text{ se } x \not = y
+			      \end{cases}$
+		\item $(M_1 M_2) \{N/y\} = M_1\{N/y\} M_2\{N/y\}$;
+		\item $(\lambda x.M)\{N/y\} = \begin{cases}
+				      \lambda x.M \:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\text{ se } x = y              \\
+				      \lambda x.M\{N/y\} \:\:\:\:\:\:\:\:\:\:\:\text{ se } x \not = y \text{ e } x \not\in fv(N) \\
+				      \lambda z.M\{z/x\}\{N/y\} \text{ se } x \not= y \text{ e } x \in fv(N) \text{ e } z \in Var - (fv(M) \cup fv(N))
+			      \end{cases}$
+	\end{itemize}
+}
+
+\dfn{$\alpha$-equivalenza}{L'$\alpha$-equivalenza  $\ac$ è la congruenza tra $\lambda$-espressioni tale che, se $y \not\in fv(M)$, allora $\lambda x.M \ac \lambda y.M\{y/x\}$}
+
+\nt{$y \not\in fv(M)$ serve a evitare che una variabile libera in M venga catturata dalla congruenza}
+
+\dfn{$\beta$-riduzione}{ La $\beta$-riduzione è la relazione tra $\lambda$-espressioni tale che:
+	\begin{itemize}
+		\item $(\lambda x.M) N \br M\{N/y\}$;
+		\item se $M\br M'$ allora $M N \br M' N$;
+		\item se $M\br M'$ allora $M N \br N M'$;
+		\item se $M\br M'$ allora $M N \br \lambda x.M'$.
+	\end{itemize}
+}
+
+\nt{Nella $\beta$-riduzione:
+
+	$$(\lambda x.M) N \br M\{N/y\}$$
+
+	$(\lambda x.M) N$ è un \textit{$\beta$-redex}\footnote{REDucible EXpression}.
+
+	$M\{N/y\}$ è il suo \textit{ridotto}.
+
+	Ci possono essere più modi di ridurre la stessa $\lambda$-espressione. La riduzione di un $\beta$-redex può creare altri $\beta$-redex. La riduzione di un $\beta$-redex può cancellare altri $\beta$-redex. La riduzione può non terminare.}
+
+\dfn{Church-Rosser nel $\lambda$-calcolo}{$R$ è confluente o Church-Rosser (CR) se
+	$$\forall M,\:\:N,\:\:L. \:\:\: M\xrightarrow{*} N \land M \xrightarrow{*}L \Rightarrow \exists P. \:\:M \xrightarrow{*} P \land L\xrightarrow{*} P$$
+}
+
+\cor{}{Se $=_\beta$ è la chiusura aimmetrica di $\xrightarrow{*}$ allora $M=_\beta N \Rightarrow \exists L. M\xrightarrow{*} L \land N \xrightarrow{*} L$}
+
+\dfn{Booleani}{Si possono definire $\text{\underline{true}} \equiv \lambda x\:\:y.x$\footnote{Combinatore K} e $\text{\underline{false}} \equiv \lambda x\:\:y.y$\footnote{Combinatore O}
+
+	Partendo da ciò: $\text{\underline{if-then-else}} \equiv \lambda x\:\:y\:\:z.x\:\: y\:\: z$
+}
+
+\nt{Questa scrittura è basata sulla logica combinatorica, ma non è esattamente lo stesso nel $\lambda$-calcolo. Per essere precisi: tutti i modelli del $\lambda$-calcolo sono modelli della logica combinatorica, ma non il viceversa}
+
+\ex{}{
+	\begin{itemize}
+		\item if-then-else \underline{true} $M\:\:N \br \text{\underline{true}} M\:\:N \br M$;
+		\item if-then-else \underline{false} $M\:\:N \br \text{\underline{false}} M\:\:N \br N$;
+	\end{itemize}
+}
+
+\subsection{Numerali di Church}
+
+\dfn{Numerale di Church}{
+	$$\underline{n}\equiv \lambda x\:\:y.x(...(x\:\:y)...)$$
+
+	La $y$ si comporta come lo zero, mentre la $x$ come il successore
+}
+
+\ex{}{
+	$$\underline{0} \equiv \lambda x\:\:y.y$$
+
+	$$\underline{2} \equiv \lambda x\:\:y.x(x Y)$$
+
+	$$\underline{3} \equiv \lambda x\:\:y.x(x(x\:\:y))$$
+}
+
+\nt{In ogni numerale sono presenti $n \:\: x$ dove $n$ rappresenta il "numero" in decimale}
+
+\dfn{Successore di un numerale}{
+	$$\text{\underline{succ }} n =_\beta n + 1 \equiv \lambda x\:\:y.x(x(...(x\:\:y)...))$$
+
+	$$\underline{n}\:\:x\:\:y =\beta x(...(x\:\:y)...)$$
+
+	Dunque \underline{succ }$\equiv \lambda z\:\:x\:\:y.x(z\:\:y\:\:x)$
+}
+
+\ex{}{
+	$$\underline{\text{succ 2}} = \lambda x\:\:y.x(\underline{2}\:\:x\:\:y)$$
+
+	$$= \lambda x\:\:y.x(x(x\:\:y)) \text{ , perchè } \underline{2} \:\:x\:\:y = x(x\:\:y)$$
+
+	$$= \underline{3} $$
+}
+
+\dfn{Somma}{
+$$\underline{\text{add }} \:\underline{n}\:\:\underline{m} = \underline{n + m}$$
+
+$$\underline{n + m} = \underline{\text{succ}}^n\:\:\underline{m}\equiv\underline{\text{succ}}(...(\underline{\text{succ}}\:\:\underline{m})...)$$
+
+	$$= \underline{n}\:\:\underline{\text{succ}}\:\:\underline{m}$$
+
+	Allora $\underline{\text{add }} \equiv \lambda x\:\:y.x\:\:\underline{\text{succ}}\:\:y$
+	}
+
+	\nt{Nello stesso modo si può definire \underline{mult} come iterazione di \underline{add}}
+
+	\dfn{Test per zero}{
+		$$\underline{\text{is-zero}}\:\:0 = \underline{\text{true}}$$
+
+		$$\underline{\text{is-zero}}\:\:n + 1 = \underline{\text{false}}$$
+
+		Allora \underline{is-zero} $\equiv \lambda n.n(\lambda z.\underline{\text{false}})\:\:\underline{\text{true}}$
+	}
+
+	\ex{}{
+		$$\underline{0}\:\:x\:\:y = y\:\:\:\:\:\:\:\:\:\:\:\:y\equiv \underline{\text{true}}$$
+
+		$$\underline{1}\:\:x\:\:y = x\:\: y\:\:\:\:\:\:\:\:\:\:\:\:x\equiv \lambda z.\underline{\text{false}}$$
+
+		$$\underline{2}\:\:x\:\:y = x(x\:\:y)\:\:\:\:\:\:\:\:\:\:\:\:x\equiv \lambda z.\underline{\text{false}}$$
+	}
+
+	\dfn{Ricorsione}{
+
+		$$\begin{cases}
+				\text{fact}\:\:\underline{0} = \underline{1} \\
+				\text{fact}\:\:\underline{n + 1} = \underline{\text{mult}} (n + 1) (\text{fact} \underline{n})
+			\end{cases}$$
+
+		Supponiamo di aver definito \underline{pred} tale che:
+
+		\begin{itemize}
+			\item \underline{pred}\; \underline{0} = \underline{0};
+			\item \underline{pred}\; \underline{n + 1} = \underline{n}.
+		\end{itemize}
+
+		$$\text{F}\:\:\underline{\text{fact}}\:\:\underline{n} = \text{if-then-else} \:\:(\underline{\text{is-zero}}\:\:\underline{n})\:\:\underline{1}\:\:(\underline{\text{mult}}\:\:\underline{n}\:\:(\underline{\text{fact}} \:\:(\underline{\text{pred}}\:\:\underline{n})))$$
+
+		$$\text{F}\equiv \lambda f\:\: x. \text{if-then-else}......(f\:\:(\underline{\text{pred}}\:\:n))....$$
+
+		Si suppone l'esistenza di una funzione \underline{fix} F = F (fix F)\footnote{Punto fisso}, allora:
+
+		$$\underline{\text{fact}}\equiv \underline{\text{fix F}} \text{ allora F \underline{fact} = \underline{fact}}$$
+
+		$$\text{\underline{fact}\:\underline{n} = F \underline{fact}}\:\:n = ....\underline{\text{fact}}\:\:(\underline{\text{pred}}\:\:\underline{n})$$
+
+		$$= ...... (\text{F} \underline{\text{ fact}})(\underline{\text{pred}}\:\:\underline{n})$$
+	}
+
+	\nt{Le funzioni ricorsive sono comunque calcolabili a patto che siano composte da funzioni calcolabili}
+
+	\thm{Teorema del punto fisso}{
+		$$\forall F\:\: \exists\:\: X . F\:\:X = X$$
+	}
+
+	\begin{myproof}
+		Leggiamo l'equaziobe alla rovescia, quindi:
+		$$X = F \:\: X$$
+		Proviamo che $X = W\:\:W$, allora:
+		$$W\:\:W = F\:(W\:\:W)$$
+		Allora $W\equiv \lambda w.F\:(w\:\:w)$ risolve la seconda equazione e dunque, anche la prima.
+	\end{myproof}
+
+	\dfn{Operatore a punto fisso ($Y$)}{
+		$$\text{fix }\equiv \lambda f.(\lambda n.f\:(x\:\:x)) (\lambda x.f\: (x\:\:x)))$$
+		Allora fix $F = (\lambda n.F\:(x\:\:x))(\lambda x. F\:(x\:\:x)) = F\:((\lambda x.F\:(x\:\:x))(\lambda x.F\:(x\:\:x))) = F(\text{fix } F)$
+	}
+
+	\nt{Il $\lambda$-calcolo non tipato puro non è SN}
+
+	\thm{Teorema di Kleensn}{
+		Per ogni funzione calcolabile parziale esiste $F \:\in A$ tale che:
+		$$f\:(n_1,\:...,\:n_k) \simeq m \Leftrightarrow F\:\:n_1 .... n_k \br \underline{n}$$
+		Dove $f(n^\rightarrow)\simeq m$ significa che $f(n^\rightarrow)$ è definita uguale a $(n^\rightarrow = n_1,\:...,\:n_k)$
+	}
+
+	\section{Il \texorpdfstring{$\mathcal{\lambda}$}--calcolo tipato}
+
+	\subsection{Tipi}
+
+	\qs{}{Come si interpreta un termine $X\:\:X$?}
+
+	\paragraph{Risposta:} nel $\lambda$-calcolo non tipato si può anche scrivere una cosa come l'autoapplicazione. Ma in generale una funzione non dovrebbe appartenere al proprio dominio.
+
+	\ex{}{
+		Se il primo $X \:\in\:A\rightarrow A$ e il secondo $X\rightarrow A$ non esiste alcun $A \not= \{*\}$ tale che $A \simeq A \rightarrow A$ in Set\footnote{Categoria degli insiemi}
+	}
+
+	\dfn{Tipi semplici}{
+$$A,\:\:B ::= \alpha | A\rightarrow B$$
+	dove $\alpha \in \{\text{bool, nat, ...}\}$ è \underline{atomico} fissate l'interpretazione $[\alpha]$ (es. [nat] = $\bbN$)
+
+$$[A \rightarrow B] = [B]^{[A]}$$
+
+dove il dominio è $[A]$ e il codominio è $[B]$
+}
+
+\dfn{Sistema di tipo}{
+	$$\Gamma \vdash M : A \text{ "$M$ ha tipo $A$ in $\Gamma$"}$$
+}
+
+\dfn{Contesto}{
+	Un contesto è un insieme finito di giudizi di tipo ($x_i : A_i$):
+	$$\Gamma = x_1 : A_1,\:\:...,x_n : A_n, \text{con $x_i \not = x_j$ se $i\not=j$}$$
+}
+
+\cor{}{
+	Valgono le seguenti proprietà:
+	\begin{itemize}
+		\item ax$\frac{}{\Gamma,\:\:x : A \vdash x : A}$;
+		\item $\rightarrow E \frac{\Gamma \vdash M : A\rightarrow B \:\:\:\:\:\Gamma\vdash N : A}{\Gamma \vdash M\:\:N : B}$;
+		\item $\rightarrow I\frac{\Gamma, \:\: x : A \vdash M : B}{\Gamma \vdash \lambda x: A.M : A \rightarrow B}$
+	\end{itemize}
+	Dove $\Gamma,\:\:x\:\:\in\:\:A = \Gamma \cup \{x : A\}$ e $x\:\: \not\in$ Dom($\Gamma$)
+}
+
+
+
+
+
+

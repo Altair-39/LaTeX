@@ -1,0 +1,126 @@
+\chapter{Deduzione naturale di Gentzen}
+
+\section{La deduzione}
+
+\dfn{Modus ponens (MP)}{$$\frac{\phi\rightarrow\psi\:\:\:\:\:\:\:\:\phi}{\psi}\text{MP}$$}
+\paragraph{}
+Nella logica definita da Gentzen non si utilizzano assiomi, ma soltanto due tipi di regole:
+
+\begin{itemize}
+    \item l'\textit{introduzione}: ossia come viene definito un connettivo;
+    \item l'\textit{eliminazione}: ossia come si usa un connettivo nelle ipotesi.
+\end{itemize}
+
+\section{Congiunzione e implicazione}
+
+\dfn{La congiunzione}{
+$$\frac{A\:\:\:\:\:\:\:\:B}{A \land B}\land \text{ I}$$
+$$\frac{A\land B}{A}\land \text{ E}_1$$
+$$\frac{A\land B}{B}\land \text{ E}_2$$
+}
+
+\dfn{L'implicazione}{
+\begin{center}
+    $[A]^i$
+
+    .
+
+    .
+
+    .
+\end{center}
+$$-i\frac{B}{A \rightarrow B} \rightarrow \text{ I}$$
+$$\frac{B\rightarrow A\:\:\:\:\:\:\:\:A}{B}\rightarrow\text{ E}$$
+}
+
+\nt{Con $[A]^i$ si indica la "scarica" di ipotesi $A$}
+
+\ex{}{$\vdash(A\land B)\rightarrow(B\land A)$
+
+$$-1\frac{\frac{\frac{[A \land B]^1}{B}\land \text{ E}_2\:\:\:\:\:\:\:\:\frac{[A \land B]^1}{A}\land\text{ E}_1 }{B \land A}\land \text{ I}}{A \land B \rightarrow B \land A} \rightarrow \text{ I}$$
+}
+
+\section{Vero, falso e negazione}
+
+\dfn{Vero}{
+$$\frac{}{\text{T}}\text{ T I}$$
+}
+
+\nt{Il vero può solo essere introdotto, ma non serve a dedurre altro}
+
+\dfn{Falso}{
+$$\frac{\perp}{A}\perp\text{ E}$$
+}
+
+\nt{Il falso può solo essere introdotto}
+
+\dfn{Negazione}{
+\begin{center}
+    $[A]^i$
+
+    .
+
+    .
+
+    .
+\end{center}
+$$-i\frac{\perp}{\neg A} \neg \text{ I}$$
+
+$$\frac{\neg A\:\:\:\:\:\:\:\:A}{\perp} \neg \text{ E}$$
+}
+
+\section{Disgiunzione}
+
+\dfn{Disgiunzione}{
+$$\frac{A}{A\vee B}\vee \text{ I}_1$$
+$$\frac{B}{A\vee B}\vee \text{ I}_2$$
+
+$$-i, \:\:-j\frac{A\vee B\:\:\:\:\:\:\:\:C\:\:\:\:\:C}{C} \vee \text{ E}$$
+
+Il primo $C$ è dedotto da $[A]^i$, il secondo da $[B]^j$ (entrambi "scaricati")
+
+}
+
+\ex{Legge di De Morgan}{
+$\vdash \neg (A \vee B) \rightarrow (\neg A \land \neg B)$
+$$-1 \frac{\frac{-2\frac{\frac{[\neg (A \vee B)]^1 \:\:\:\:\:\:\:\: \frac{[A]^2}{A \vee B}\vee \text{ I}_1}{\perp}\neg\text{ E}}{\neg A}\neg\text{ I} \:\:\:\:\:\:\:\:\neg B}{\neg A \land \neg B}\land \text{ I}}{\vdash \neg (A \vee B) \rightarrow (\neg A \land \neg B)}\rightarrow \text{ I}$$
+
+Per la parte "$\neg B$" si effettua un procedimento analogo
+}
+
+\ex{Doppia negazione}{
+$\vdash A \rightarrow \neg\neg A$
+
+$$-1\frac{\frac{\frac{[\neg A]^2 \:\:\:\:\:\:\:\: [A]^1}{\perp}\neg \text{ E}}{\neg\neg A}\neg\text{ I}}{A\rightarrow\neg\neg A}\rightarrow \text{ I}$$
+}
+
+\nt{Nella deduzione naturale $\vdash A \rightarrow \neg\neg A$ vale (come appena dimostrato), ma $\vdash \neg\neg A \rightarrow A$ non vale}
+
+\section{Reduction ad absurdum}
+
+\dfn{Reduction ad absurdum (RAA)}{Per dimostrare $A$ deriviamo l'assurdo $\perp$ dalla sua negazione $\neg A$}
+
+\nt{RAA non è una regola "costruttiva" bensì classica (CL), per cui si può dimostrare $\vdash_{CL} \neg\neg A \rightarrow A$}
+
+\ex{}{ $\vdash \neg\neg A \rightarrow A$
+$$-1\frac{-2\frac{\frac{[\neg\neg A]^1\:\:\:\:\:\:\:\:[\neg A]^2}{\perp}}{A}RAA}{\neg\neg A \rightarrow A}\rightarrow \text{ I}$$
+}
+
+\section{Quantificatori}
+
+\nt{La logica che fa uso dei quantificatori si dice "del prim'ordine" se i quantificatoti si possono usare solo su variabili}
+
+\dfn{Quanrificatore universale}{
+$$\alpha \not\in FV(\Gamma)\frac{P(\alpha)}{\forall x\:\: P(x)}\forall \text{ I}$$
+$$\frac{\forall x\:\: P(x)}{P(t)}\forall \text{ E}$$
+}
+
+\nt{$\Gamma$ è l'insieme delle premesse}
+
+\dfn{Quantificatore esistenziale}{
+$$\frac{P(t)}{\exists \:\: P(x)}\exists\text{ I}$$
+$$\alpha \not \in FV(\Gamma)\cup FV(C)\frac{\exists x\:\:P(x)\:\:\:\:\:\:\:\:c}{c}\exists\text{ E}$$
+}
+
+
+

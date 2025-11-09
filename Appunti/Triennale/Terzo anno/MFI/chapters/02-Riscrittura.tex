@@ -1,0 +1,278 @@
+\chapter{Riscrittura di termini}
+
+\section{La logica equazionale}
+
+La logica equazionale è una parte della logica in cui i termini sono delle equazioni.
+
+\ex{Un'equazione}{$$t = s  \: | \:  t, s$$ In cui $t$ e $s$ sono termini con la stessa signatura}
+
+\nt{$t, s \in \mcT_\Sigma$ è l'insieme di tutti i termini con signatura $\Sigma$}
+
+\dfn{Signatura}{Una signatura $\Sigma$ è un insieme finito di k simboli $\{f_1, ..., f_k\}$ e di una funzione che assegna a ciascuno di essi un'arietà\footnote{A quanti operandi può essere applicato un operatore} ar : $\Sigma\rightarrow\bbN$}
+
+\dfn{Insieme dei termini sulla signatura $\Sigma$}{Se $f \in \Sigma$ e $ar(f) = 0$ allora $f \in \mcT_\Sigma$ \\
+Se $f \in \Sigma$, $ar(f) = n > 0$ e \{$t_1, ...,t_n\} \in \mcT_\Sigma$ allora $f(t_1, ..., t_n) \in \mcT_\Sigma$
+}
+
+La definizione precedente è induttiva, infatti dà una regola con cui è possibile generare ricorsivamente tutti i possibili termini.
+
+\ex{Generazione induttiva dei numeri naturali}{$$\Sigma_{nat} = \{\text{Zero},\: \text{Succ}\}$$
+Zero è una costante, quindi ha arietà $ar(\text{Zero}) = 0$, mentre l'arietà di Succ è $ar(\text{Succ}) = 1$\footnote{A ogni valore assegna il suo succssore}. Per costruire l'insieme dei numeri naturali:
+$$\mcT_{\Sigma nat} = \{\text{Zero},\: \text{Succ(Zero)},\: \text{Succ(Succ(Zero)},\: ...\}$$
+}
+
+\nt{Si può abbreviare, impropriamente, Succ(Succ(Zero)) con $\text{Succ}^2\text{(Zero)}$}
+
+Un termine che viene definito nel precedente modo può essere visto come un albero.
+
+\dfn{Associazione Termine ::== Albero}{Se si ha un termine ben definito $\text{tree}(f(t_1,\: ...,\: t_n))\footnote{ar(f) = n}$ allora si può definire l'albero sintattico
+\begin{center}
+
+    \begin{forest}
+ [$f$[tree($t_1$)][tree(...)][tree($t_n$)]]
+    \end{forest}
+    
+\end{center}
+}
+
+\ex{Conversione da espressione ad albero}{$$\Sigma_{arit} = \Sigma_{nat} \cup \{+, *\}$$ con $ar(+) = ar(*) = 2$ 
+
+$$\text{+(*(Succ(Zero), Zero), Succ(Zero))}$$
+
+corrisponde all'albero
+
+\begin{center}
+
+    \begin{forest}
+    [+[*[Succ[Zero]][Zero]][Succ[Zero]]]
+    \end{forest}
+    
+\end{center}
+}
+
+\nt{$t + s$, in notazione infissa, corrisponde a $+(t,\: s)$ in notazione polacca o prefissa}
+
+\subsection{Le variabili}
+
+\ex{Differenza di due quadrati}{$$x^2 - y^2 = (x + y) * (x - y)$$ 
+è un esempio interessante poichè si utilizzano \textit{variabili}, per cui per ogni possibile scelta di x e y l'equazione è vera
+}
+
+\dfn{Insieme dei termini}{Dato un insieme infinito di variabili $X = \{x_0, x_1, ...\}$, l'insieme dei termini $\mcT_\Sigma(X)$ è:
+\begin{center}
+    $\mcT_{\Sigma \cup X}$ se $ar(x_i) = 0$, $x\in \mcT_\Sigma (X) \:\:\:\forall x \in X$
+\end{center}
+}
+
+\ex{Somma di un successore}{$$\text{Succ}(x) + y = \text{Succ} (x + y)$$ entrambi appartengono a $\mcT_{\Sigma\:arit}(\{x, y\})$}
+
+\dfn{Le variabili}{In generale si possono definire le varibili come:
+\begin{itemize}
+    \item $\text{var}(x) = \{x\}$;
+    \item $\text{var}(f(t_1,\: ...,\: t_n)) = \bigcup_{i = 1}^n \text{var}(t_i)$.
+\end{itemize}
+
+}
+
+\nt{Negli alberi le variabili sono le \textit{foglie}}
+
+\section{La sostituzione}
+
+\dfn{Sostituzione chiusa}{La sostituzione chiusa è una mappa insiemistica $\sigma$ che assegna a ciascuna variabile un termine nella signatura $$\sigma\::\:X \rightarrow\mcT_\Sigma$$ }
+
+\dfn{Sostituzione generale}{La sostituzione generale è una mappa insiemistica $\sigma$ che assegna a ciascuna variabile un termine nella signatura in cui si possono avere variabili anche nei termini che si sostituiscono $$\sigma\::\:X \rightarrow\mcT_\Sigma(X)\:\:\:\:\: x \in X \mapsto \sigma(x) \equiv t \in \mcT_\Sigma(X)$$
+}
+
+\nt{t$^\sigma$ è il risultato della sostituzione in t di ogni $x \in \text{var}(t)$ con $\Sigma(x)$}
+
+\ex{Sostituzione}{$t \equiv +(x, *(\text{Succ}(y), x))$, con $\sigma(x) = $ Succ(Zero) e $\sigma(y) = $ Zero, allora
+
+$$t^\sigma \equiv +(\text{Succ(Zero)}, *(\text{Succ(Zero), Succ(Zero)}))$$}
+
+\nt{Quando si sostituisce manualmente  si fa un passo alla volta, ma in realtà la sostituzione di una determinata variabile avviene contemporaneamente in tutta l'equazione (è simultanea)}
+
+\section{Il matching}
+
+Nelle equazioni quando si applica una formula scoperta a un calcolo particolare bisogna riconoscere che un termine o un sotto-termine è un caso particolare di quella formula. Questo riconoscimento è un matching.
+
+\dfn{Matching}{Dati due termini $s, \:\:t\in\mcT_\Sigma(X)$, $s$ è \textit{istanza} di t se $s \equiv t^\sigma$ per qualche $\sigma$. Dato ciò si può definire: 
+
+match($t$, $p$) =$ \begin{cases}
+    \sigma\:\: \text{tale che } t\equiv p^\sigma  \text{se esiste}\\
+    \text{fail se $t$ non è un'istanza di $p$}
+\end{cases}$
+
+}
+
+\nt{Si utilizza il simbolo $p$ come richiamo al fatto che nei linguaggi funzionali si usa il termine "pattern"}
+
+\dfn{Algoritmo per il calcolo del matching}{
+\begin{itemize}
+    \item match($t$, $x$) = $\{x \mapsto t\}$ caso banale in cui si sostituisce una variabile;
+    \item match($t$, $f(p_1,\:...,\:p_n)$) = $\sigma_1\cup...\cup\sigma_2$ se:
+        \begin{enumerate}
+            \item se $t \not= c\footnote{Costante}$ alllora $t \not = g(t_1,\:...,\:t_n) $
+            \item se $t \equiv f(t_1,\:...,\:t_n)$ allora match($t_i,\: p_i$) = $\sigma_i$, con $i = 1, \:...,\:n$;
+            \item $\forall x \in \text{var($t$)} $ se $i \not= j$ allora $\sigma_i(x) \equiv \sigma_j(x)$ 
+        \end{enumerate}
+    \item fail in tutti gli altri casi.
+\end{itemize}
+}
+\section{Sistemi di riscrittura}
+
+\dfn{Sistema di riscrittura}{Fissati $\sigma$ e $x$, un sistema di riscrittura R è un insieme finito di coppie\footnote{Regole} $\{l_1\rightarrow r_1,\:...,\:l_n\rightarrow r_n\}$ in cui $l_i,\:r_i \in \mcT_\Sigma(X)$. Le coppie ($l_i,\:r_i$) devono soddisfare (per $i = \{1,\:...,\:n\}$):
+\begin{enumerate}
+    \item $l_i \not \in X$ ($l_i \not\equiv x \:\forall x\in X$)\footnote{$l_i$ non può essere una variabile};
+    \item var($r_i$) $\subseteq$ var($l_i$)\footnote{Le variabili nella parte destra compaiono anche nella parte sinistra}.
+\end{enumerate}
+}
+
+\nt{$l$ indica il lato \textit{sinistro} (left) della freccia
+
+$r$ indica il lato \textit{destro} (right) della freccia}
+
+\dfn{Contesto}{Un contesto C[ ] può essere un buco [ ], una variabile $x$ o un termine di arietà n $f(t_1,\:...,\:C[ ],\:..., \:t_n)$
+}
+
+\ex{Albero di un contesto}{$f(t_1,\: g([\:\:]\: t_2))$
+
+\begin{center}
+
+        \begin{forest}
+    [f [$t_1$][$g$ [{[  ]}][$t_2$]]]
+    \end{forest}
+    
+\end{center}}
+
+I contesti indicano che le regole di riduzioni vanno applicate in un punto preciso, sotto determinate condizioni.
+
+\dfn{Rimpiazzo}{Dato C[ ] e un termine $t$, allora C[$t$] si ottiene da C[ ] rimpiazzando l'unico buco [ ] (se esiste) con $t$} 
+
+\ex{Rimpiazzo}{$f(t_1,\: g([t_3]\: t_2))$
+\begin{center}
+    \begin{forest}
+    [f [$t_1$][$g$ [{[ $t_3$ ]}][$t_2$]]]
+    \end{forest}
+\end{center}
+}
+
+\clm{}{}{Un termine $t$ si riduce in un solo passo a un termine $s$ ($t\rightarrow_R s$) se esiste un contesto C[ ], una regola $l\rightarrow r \in R$, e una sostituzione $\sigma$ tali che
+
+$$t \equiv C[l^\sigma]\:\:\:\: \wedge\:\:\:\: s \equiv C[r^\sigma]$$
+
+ossia $t$ è un'istanza di $l$ attraverso $\sigma$
+}
+
+\ex{Riscrittura}{$\Sigma = \{a, \:f,\:g\}$ con $ar(a) = 0$, $ar(f) = 1$, $ar(g) = 2$ 
+
+Si ha il sistema di riscrittura: $R = \{f(x)\rightarrow a, \:g(f(x),\:y) \rightarrow f(y)\}$
+
+Si vuole riscrivere $g(f(a),\: f(f(a)))$. In questo caso si hanno quattro possibili applicazioni delle regole (due producono un risultato identico):
+\begin{enumerate}
+    \item $g(a,\: f(f(a)))$
+        \begin{enumerate}
+            \item $g(a,\:f(a))$
+            \begin{enumerate}
+                \item $g(a,\:a)$;
+            \end{enumerate}
+            \item $g(a,\:a)$;
+        \end{enumerate}
+    \item $g(f(a),\:f(a)) $
+        \begin{enumerate}
+            \item $g(a,\: f(a))$
+                \begin{enumerate}
+                    \item $g(a,\: a)$;
+                \end{enumerate}
+            \item $g(f(a),\:a)$
+                \begin{enumerate}
+                    \item $g(a,\: a)$;
+                \end{enumerate}
+            \item $f(f(a))$
+                \begin{enumerate}
+                    \item $f(a)$
+                    \begin{enumerate}
+                        \item $a$;
+                    \end{enumerate}
+                \end{enumerate}
+        \end{enumerate}
+    \item $f(f(f(a)))$
+        \begin{enumerate}
+            \item $f(f(a))$
+                \begin{enumerate}
+                    \item $f(a)$
+                        \begin{enumerate}
+                            \item $a$.
+                        \end{enumerate}
+                \end{enumerate}
+            \item $f(a)$
+                \begin{enumerate}
+                    \item $a$.
+                \end{enumerate}
+            \item $a$.
+        \end{enumerate}
+\end{enumerate}
+
+Ci possono essere più forme normali, in questo caso sono due: $g(a,\:a)$ e $a$.
+}
+
+\clm{}{}{Una riduzione in un passo\footnote{One-step reduction} $\rightarrow R \in \mcT_\Sigma(X)^2$ è una relazione binaria per cui si può ridurre un termine in un altro}
+
+\cor{}{$\xrightarrow{+} R$ rappresenta la più piccola riduzione tale che $\rightarrow R \subseteq \xrightarrow{+} R$ e $\xrightarrow{+} R$ sia transitiva\footnote{Riduzione in $n$ passi con $n\geq1$}}
+
+\cor{}{$\xrightarrow{*} R$ rappresenta la più piccola riduzione tale che $\rightarrow R \subseteq \xrightarrow{*} R$ e $\xrightarrow{*} R$ sia transitiva e riflessiva\footnote{Riduzione in $n$ passi con $n\geq0$}}
+
+\cor{}{$\xleftrightarrow{*} R$ rappresenta la più piccola riduzione tale che $\rightarrow R \subseteq \xleftrightarrow{*} R$ e $\xleftrightarrow{*} R R$ sia transitiva, riflessiva e simmetrica\footnote{Ossia si può ridurre in ambo i sensi}. Questa relazione si chiama relazione di convertibilità}
+
+\dfn{Church-Rosser}{$R$ è confluente o Church-Rosser (CR) se
+$$\forall s, t, t'\:\:\:\: d \xrightarrow{*}_R t \wedge s \xrightarrow{*}t' \Rightarrow \exists t''\xrightarrow{*}_R \wedge t'\xrightarrow{*}_R b''$$
+}
+
+\cor{}{Se $R$ è CR allora ogni $t$ ha al più una forma normale}
+
+\nt{In un $R$ che è CR, anche se si possono fare più riduzioni differenti il ridotto finale è comune}
+
+\section{Logica equazionale}
+
+\dfn{Logica equazionale}{Fissata una signatura $\Sigma$ e un insieme numerabile di variabili X, un'equazione è una coppia ($s$, $t$) $\in \mcT_\Sigma(X)^2$, scritta $s \approx t$.}
+
+\cor{}{Per un insieme di equazioni E = \{$s_1\approx t_1,\:...,\:s_n\approx t_n $\}$\subseteq T_\Sigma(X)^2$ (definita $E\vdash s\approx t$) valgono le seguenti proprietà:
+
+\begin{itemize}
+    \item Riflessività (\textit{refl}): $\frac{}{E\vdash s\approx s}$;
+    \item Simmetria (\textit{sym}): $\frac{E\vdash s \approx t}{E\vdash t\approx s}$;
+    \item Transitività (\textit{trans}): $\frac{E\vdash s \approx r \:\:\:\: E\vdash r \approx t}{E\vdash s \approx t}$;
+    \item Congruenza (\textit{congr}): $\frac{E\vdash s_1 \approx t_1 \:\:\:\: E\vdash s_n \approx t_n}{E\vdash f(s_1,\: ..., \:s_n) \approx f(t_1,\: ..., \:t_n)}$;
+    \item Sostituzione (\textit{sub}): $\frac{E\vdash a \approx t}{E \vdash s^\sigma \approx t^\sigma}$;
+    \item Uso di un'assioma (\textit{ax}): $ax \:\frac{s\approx t \in E}{E \vdash s \approx t}$.
+\end{itemize}
+}
+
+\nt{Sopra la linea sono poste le premesse e sotto la linea sono poste le conclusioni}
+
+\ex{Logica equazionale}{Sapendo che $E = \{a\approx b, f(x) \approx g(x)$\}, dimostriamo che $E\vdash g(b) \approx f(a)$. Ci sono due metodi per risolvere il problema: 
+\begin{itemize}
+    \item Si combinano le regole partendo dalle ipotesi (metodo sintetico), ma richiede intuito ed è spesso troppo complicato;
+    \item Si parte dalla tesi (metodo analitico).
+\end{itemize}
+
+$$\text{trans}\frac{\text{ax$_1$}\frac{}{\text{cong}\frac{E\vdash a \approx b}{E\vdash f(a) \approx f(b)}} \:\:\:\:\:\text{ax$_2$}\frac{}{\text{sub}\frac{E\vdash f(x)\approx g(x)}{ E\vdash f(b) \approx g(b)}}}{\text{sym}\frac{E\vdash f(a) \approx g(b)}{E \vdash g(b)\approx f(a)}}$$
+
+che si può riscrivere come sym(trans(cong(ax1), sub(ax2))) : $E\vdash g(b) \approx f(a)$
+}
+
+\dfn{s $\leftrightarrow_R$ t}{s $\leftrightarrow_R$ t $\xLeftrightarrow{*}$ s $\rightarrow_R$ t $\vee$ t $\rightarrow_R$. Sia  $\xleftrightarrow{*}_R$ chiusura riflessiva e transitiva di $\leftrightarrow$}
+
+\cor{}{Se R è CR allora $$s \xleftrightarrow{*} t \Leftrightarrow \exists r. s \xrightarrow{*} r \vee t \xrightarrow{*} r$$ 
+
+$$(\rightarrow)\:\:\:\:\: s \equiv t_0 \leftarrow t_1\leftarrow ... \leftarrow t_k \equiv t$$}
+
+\subsection{Normalizzazione}
+
+\dfn{Normalizzazione (forte)}{Fissati $\Sigma$ e $Q$:
+\begin{itemize}
+    \item t è in \underline{forma normale} se $\not \exists t'. t \rightarrow_R t'$;
+    \item R è \underline{fortemente normalizzante} se non esistono riduzioni infinite: $t \equiv t_0 \rightarrow_R t_1 \rightarrow_R$ (SN)
+\end{itemize}
+}
+
+\cor{}{Se R è CR e SN allora $s \xrightarrow{*}_R t$ è deducibile}
