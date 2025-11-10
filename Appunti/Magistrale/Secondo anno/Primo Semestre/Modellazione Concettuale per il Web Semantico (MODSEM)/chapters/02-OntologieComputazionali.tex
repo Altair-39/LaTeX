@@ -608,7 +608,116 @@
 	\end{itemize}
 }
 
-\subsection{Mapping di OWL su RDF}
+\section{Ragionamento Automatico}
+
+\paragraph{Ragionamento su classi:}
+
+\begin{itemize}
+	\item La gerarchia delle classi
+	      asserita mediante gli
+	      assiomi di sottoclasse
+	      può essere diversa da
+	      quella inferita.
+	\item Il reasoner può inferire
+	      delle relazioni di
+	      sussunzione a partire
+	      dalla descrizione delle
+	      classi.
+\end{itemize}
+
+\nt{Il reasoner ha sempre ragione.}
+
+\paragraph{Inserimento di individui:}
+
+\begin{itemize}
+	\item Gli individui vengono inseriti direttamente
+	      in una classe.
+	\item Dopo averli inseriti è possibile predicarne
+	      le caratteristiche, cioè specificarne le
+	      proprietà che li mettono in relazione con
+	      altri individui o con un dato (class e
+	      property assertions).
+	\item Il ragionamento può eventualmente
+	      ricollocare un certo individuo in un’altra
+	      classe.
+	\item Inserendo un individuo con le
+	      caratteristiche di una certa classe,
+	      l’individuo viene classificato come
+	      appartenente alla classe dal reasoner.
+	\item Anche se è stato collocato manualmente
+	      in una classe più generale.
+\end{itemize}
+
+\dfn{Assunzione di Mondo Aperto}{
+	Le inferenze effettuate dal reasoner possono
+	sembrare poco intuitive in alcuni casi. Il ragionamento sulle ontologie OWL segue
+	l’assunzione di mondo aperto:
+
+	\begin{itemize}
+		\item l fatto che un’informazione non sia
+		      rappresentata nel sistema non determina
+		      che essa sia assunta falsa.
+	\end{itemize}
+}
+
+\cor{Quantificatore Universale (Only)}{
+	Se un individuo viene collocato in due o più classi che hanno un Quantificatore only il reasoner rileva un'inconsistenza.
+}
+
+\cor{Classe Primitiva}{
+	La classe primitiva può avere condizioni
+	necessarie associate a essa tramite lo slot SubClassOf.
+}
+
+\cor{Classe Definita}{
+	La classe definita è una classe equivalente a
+	un insieme di condizioni necessarie e
+	sufficienti, specificate mediante EquivalentTo.
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Only non significa almeno uno.
+		\item Il quantificatore universale si applica a tutti.
+	\end{itemize}
+}
+
+\paragraph{Ragionamento su data properties:}
+
+\begin{itemize}
+	\item I valori assegnati a un individuo per
+	      una certa data property devono
+	      appartenere al data type
+	      specificato come range.
+	\item Se il datatype è diverso da quello
+	      previsto, il reasoner rileva
+	      un’inconsistenza.
+\end{itemize}
+
+\paragraph{Restrizioni su data properties:}
+
+\begin{itemize}
+	\item È possibile porre una restrizione su una
+	      data property.
+	\item Usando quantificatori e cardinalità
+	      tuttavia si esprime un vincolo sul
+	      numero delle relazioni, non sul valore
+	      che assume la proprietà.
+	\item Per creare classi definite in molti casi si
+	      usano i pattern che individuano un range
+	      specifico di valori rispetto al tipo di dato.
+	\item Per esempio le stringhe che
+	      cominciano con una certa lettera, gli
+	      interi superiori a un certo valore, ecc\dots
+\end{itemize}
+
+\paragraph{Classi primitive e ragionamento:}
+
+\begin{itemize}
+	\item Le classi primitive non permettono ai reasoner di collocare gli individui nelle classi in modo automatico.
+	\item Esse permettono ai reasoner di individuare inconsistenze con le asserzioni sugli individui.
+\end{itemize}
+
 
 
 
