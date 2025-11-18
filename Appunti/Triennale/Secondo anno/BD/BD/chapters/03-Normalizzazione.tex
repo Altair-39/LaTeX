@@ -1,0 +1,235 @@
+\chapter{Normalizzazione}
+
+\section{Introduzione}
+
+\subsection{Forme normali}
+
+Una \textcolor{blue}{forma normale} è una proprietà di una base di dati relazionale che ne garantisce la qualità, cioè l’assenza di determinati difetti. Solitamente è definita nel modello relazionale. Se non è presente possono esserci anomalie durante operazioni di inserimento, cancellazione o modifica e ridondanze.
+
+A una forma normale può essere associato un algoritmo di normalizzazione, che specifica come decomporre uno schema relazionale per renderlo in forma normale. In questo corso verranno trattate solo le 2 più usate: Boyce-Codd Normal Form (BCNF) e Terza forma normale (3NF).
+
+
+La \textcolor{blue}{normalizzazione} consiste nella decomposizione di uno schema di relazione in modo da ottenere più schemi che rispettino una forma normale e minimizzino le anomalie.
+Può essere usata come tecnica di verifica dei risultati della progettazione di una base di dati. Nelle sezioni successive si userà il seguente esempio:
+
+ESAMI(\underline{MATR}, NomeS, IndirizzoS, CAPS, CodiceFiscaleS, DataNascitaS, \underline{Corso}, Voto, Lode, DataEsame, CodProf, NomeProf, Qualifica, TipoUfficio)
+
+Supponiamo che ESAMI sia l’unica relazione che descrive il sistema informativo.
+
+\subsection{Anomalie}
+
+\subsubsection{Anomalie di inserimento}
+
+Un nuovo studente deve immatricolarsi, dato che non ha superato nessun esame non può essere inserito perchè Corso non può essere NULL, dato che è chiave primaria\footnote{vedi \ref{Vincoli di chiave}}.
+
+Lo stesso errore si verifica con l'inserimento di un nuovo docente.
+
+\subsubsection{Anomalie di cancellazione}
+
+Si vogliono cancellare gli esami degli studenti laureati. Se un professore non ha esami di studenti che devono ancora laurearsi, viene cancellato anche ogni riferimento al professore anche se è ancora in servizio.
+
+\subsubsection{Anomalie di aggiornamento}
+
+Se uno studente cambia indirizzo bisogna cambiarlo in ogni sua tupla e ciò causa una criticità di efficienza.
+
+\subsubsection{Dipendenze funzionali}
+
+Presa una coppia di tuple della relazione ESAMI, se queste tuple coincidono sul valore della matricola, anche tutti gli altri attributi relativi allo studente devono coincidere.
+
+Dati una relazione r(A) e due sottoinsiemi X e Y di attributi di A (X,Y $\subseteq$ A), il vincolo di dipendenza funzionale
+
+\begin{center}
+	X $\rightarrow$ Y (X determina Y)
+\end{center}
+
+è soddisfatto solo se $\forall t_1, t_2 \in r(t_1[X] = t_2[X] \Rightarrow t_1[Y] = t_2[Y])$
+
+Le dipendenze funzionali vengono raccolte attraverso un’analisi attenta della realtà e non esiste un modo univoco per rappresentarle. Per ogni relazione r abbiamo un insieme F di dipendenze funzionali. Due basi di dati, una progettata con i vincoli F’ e un’altra progettata con i vincoli F’’, se F’ e F’’ sono equivalenti, evolvono nello stesso modo.
+
+\section{Teoria di Armstrong}
+
+La \textcolor{blue}{teoria di Armstrong} fornisce una serie di regole (assiomi) per gestire le dipendenze funzionali. Usare gli assiomi di Armstrong equivale a ragionare con le definizioni di dipendenza funzionale.
+
+\subsection{Correttezza e completezza}
+
+La teoria di Armstrong è:
+
+\begin{itemize}
+	\item corretta, perchè dato un insieme di dipendenze funzionali F, se è possibile dedurre $X \rightarrow Y$ tramite gli assiomi di Armstrong, allora è possibile ricavare $X \rightarrow Y$ tramite la definizione di dipendenza funzionale;
+	\item completa, perchè dato un insieme di dipendenze funzionali F, se è possibile ricavare $X \rightarrow Y$ tramite la definizione di dipendenza funzionale, allora è possibile dedurre $X \rightarrow Y$ tramite gli assiomi di Armstrong.
+\end{itemize}
+
+\subsection{Assiomi di Armstrong}
+
+Non sono propriamente assiomi, in quanto sono dimostrabili.
+
+\paragraph{Riflessività:} se $Y \subseteq X$, allora $X \rightarrow Y$.
+
+\paragraph{Unione:} se $Y \rightarrow Y$ e $Y \rightarrow Z$ allora $X \rightarrow YZ$, dove YZ = Y U Z.
+
+\paragraph{Transitività:} se $X \rightarrow Y$ e $Y \rightarrow Z$, allora $X \rightarrow Z$.
+
+\subsection{Regole aggiuntive}
+
+Queste regole si possono ricavare dagli assiomi.
+
+\paragraph{Espansione:} dati una dipendenza funzionale $X \rightarrow Y$ e un insieme di attributi W, allora $WX \rightarrow WY$.
+
+\paragraph{Decomposizione:} se $X \rightarrow YZ$, allora $X \rightarrow Y$ e $X \rightarrow Z$.
+
+\paragraph{Pseudo-transitività:} se $X \rightarrow Y$ e $WY \rightarrow Z$, allora $WX \rightarrow Z$.
+
+\paragraph{Prodotto:} date le dipendenze funzionali $X \rightarrow Y$ e $W \rightarrow Z$, allora vale $XW \rightarrow YZ$.
+
+\section{Chiusure}
+
+\subsection{Chiusura di un insieme F}
+
+Si possono utilizzare le regole della teoria di Armstrong per dimostrare che due insiemi di dipendenze funzionali siano equivalenti. La \textcolor{blue}{chiusura} di un insieme di dipendenze funzionali F è l’insieme $F^+$ di tutte le dipendenze funzionali derivabili da F. Due insiemi di dipendenze funzionali sono equivalenti solo se l'insieme di tutte le dipendenze funzionali derivabili sono uguali. Tuttavia, il tempo per questo calcolo è esponenziale.
+
+\subsection{Chiusura di un insieme di attributi}
+
+Dato un insieme di attributi R su cui è definito l’insieme di dipendenze funzionali F, dato un sottoinsieme $X \subseteq R$,
+la chiusura $X_F^+$ di X (o semplicemente $X^+$ se non ci sono ambiguità) è definita come:
+\begin{center}
+	$X_F^+ = \{A | X \rightarrow A \in F^+\}$
+\end{center}
+
+Questo algoritmo è sia completo che corretto. Il tempo per questo calcolo è polinomiale.
+
+\subsection{Nuova definizione di superchiave}
+
+Dato uno schema di relazione R(A) con un insieme di dipendenze funzionali F, un insieme di attributi K $\subseteq$ A è
+\textcolor{blue}{superchiave} se e solo se A = $K_F^+$ (cioè se e solo se in $F^+$ si trova il vincolo di dipendenza funzionale K $\rightarrow$ A).
+
+\paragraph{Proprietà:} Se due progettisti identificano, su una medesima base di dati, due insiemi di dipendenze funzionali F e G equivalenti, i due progettisti arriveranno alle stesse identiche chiavi candidate.
+
+\section{Decomposizioni}
+
+\subsection{Decomposizione senza perdita}
+
+Si possono \textcolor{blue}{decomporre} relazioni complesse in relazioni più semplici, mantenendo almeno un elemento in comune (per collegare le relazioni derivate).
+
+Per esempio: S(Matr, NomeS, Voto, Corso, CodC, Titolare) si può decomporre in S1(Matr, NomeS, Voto, Corso) e S2(Corso, CodC, Titolare).
+
+\subsection{Tuple spurie}
+
+Le \textcolor{blue}{tuple spurie} sono una perdita di informazioni quando si ricompongono le relazione. Ci sono delle tuple di troppo, scorrette che risultano indistinguibili dalle tuple corrette.
+
+\paragraph{Decomposizione senza perdita di informazioni:} Dato uno schema di relazione R(A), dati due
+sottoinsiemi di attributi $A_1 \in A$ e $A_2 \in A$, con $A_1 U A_2$ = A,
+$\{R_1(A_1), R_2(A_2)\}$ è una decomposizione senza perdita di informazione se e solo se per ogni istanza r(A) di R(A) vale
+\begin{center}
+	r(A) = $r_1(A_1) \bowtie r_2(A_2)$
+\end{center}
+
+dove
+\begin{itemize}
+	\item $r_1(A_1) = \pi_{A_1}(r(A))$;
+	\item $r_2(A_2) = \pi_{A_2}(r(A))$.
+\end{itemize}
+
+\paragraph{Teorema della decomposizione senza perdita:} Sia R(A) uno schema con dipendenze funzionali F decomposto in $\{R_1(A_1), R_2(A_2)\}$ dove $A_1 U A_2$ = A.
+La decomposizione di R(A) in  $\{R_1(A_1), R_2(A_2)\}$ è senza perdita di informazione per ogni istanza che soddisfa le dipendenze funzionali F se e solo se:
+
+\begin{center}
+	$A_1 \subseteq (A_1 \cup A_2)_F^+ \vee A_2 \subseteq (A_1 \cup A_2)_F^+$
+\end{center}
+
+\subsection{Decomposizione che conserva le dipendenze}
+
+Data una relazione R(A) con dipendenze funzionali F, decomposta in $R_1(A_1)$ con la restrizione $F_1$ e $R_2(A_2)$ con la restrizione $F_2$, la decomposizione $\{R_1,R_2\}$ conserva le dipendenze quando $F_1 U F_2 \Rightarrow F$.
+
+\section{BCNF}
+
+La BCNF\footnote{Boyce-Codd normal form} prende il nome da Boyce (uno degli inventori di SQL) e Codd (che ha definito il modello relazionale). Esiste un algoritmo per la BCNF (con complessità esponenziale) ma non verrà visto in questo corso.
+
+Data una relazione R(A) in 1NF e un insieme di dipendenze funzionali F, la relazione è in BCNF se e solo se per ogni $X \rightarrow Y \in F$ si verifica almeno una delle seguenti condizioni:
+
+\begin{itemize}
+	\item $Y \subseteq X$;
+	\item X è superchiave di R.
+\end{itemize}
+
+La BCNF evita le ridondanze perchè ogni antecedente di una dipendenza funzionale è superchiave. La BCNF evita le anomalie.
+Esistono schemi che vìolano la BCNF e per cui non esiste alcuna decomposizione in BCNF che conservi le dipendenze.
+
+\subsection{3NF}
+
+Se una relazione è in 3NF allora è anche in BCNF. La 3NF è sempre raggiungibile mantenendo le dipendenze funzionali, ma non elimina tutte le anomalie.
+
+Una relazione (R(A),F) è in 3NF (terza forma normale) se per ogni ogni $X \rightarrow Y \in F$ si verifica almeno una delle
+seguenti condizioni:
+
+\begin{itemize}
+	\item $Y \subseteq X$;
+	\item X è superchiave di R;
+	\item Y sono attributi primi.
+\end{itemize}
+
+Data una relazione R(A), gli attributi $Y \subseteq A$ sono detti \textcolor{blue}{attributi primi} se e solo se $Y \subseteq K$, dove K è una chiave di R(A).
+
+Partendo da un insieme di dipendenze funzionali, si deve trovare un altro insieme di dipendenze funzionali equivalente e minimale. Per fare ciò si introducono i concetti di \textcolor{blue}{attributo estraneo} e \textcolor{blue}{dipendenza ridondante}.
+
+\paragraph{Attributo estraneo:} un attributo in una dipendenza funzionale in F è estraneo se e solo se possiamo rimuovere l’attributo dalla dipendenza funzionale continuando ad avere un insieme di dipendenze funzionali equivalente.
+
+\paragraph{Dipendenza ridondante:} Una dipendenza funzionale è ridondante in un insieme di dipendenze funzionali F se e solo se possiamo rimuoverla da F continuando un insieme di dipendenze funzionali equivalente.
+
+\subsection{Insieme di copertura minimale}
+
+Un insieme F' di dipendenze funzionali è un \textcolor{blue}{insieme di copertura minimale} rispetto a F quando:
+
+\begin{itemize}
+	\item $F' \equiv F$ (equivalenza, indica che è minimale);
+	\item in ogni $X \rightarrow Y \in F' Y$ è un attributo singolo (si dice che è in forma canonica, non è un requisito necessario, ma semplifica la trattazione);
+	\item ogni $X \rightarrow Y \in F'$ è priva di attributi estranei;
+	\item ogni $X \rightarrow Y \in F'$ non è ridondante.
+\end{itemize}
+
+\subsubsection{Algoritmo per il calcolo di una copertura minimale}
+
+\begin{enumerate}
+	\item per ogni d. f. X $\rightarrow A_1 ... A_n \in F'$ si sostituisce in F' la d. f. X $\rightarrow A_1 ... A_n$ con X $\rightarrow A_1, ..., X \rightarrow A_n$;
+	\item per ogni d. f. $X \rightarrow A_i \in F'$ (per ogni $B_j \in X$ (se $A_i \in (X-B_j)^+_{F'}$ allora cancella $B_j$ da X e aggiorna F'));
+	\item per ogni d. f. $X \rightarrow A_i \in F'$ (F* := F' - ($X \rightarrow A_i)$ se $A_i \in X^+_{F*}$ allora F' := F*) return F'.
+\end{enumerate}
+
+Il passo 1 decompone le d. f. per trasformarle in d. f. di un attributo singolo. Il passo 2 serve per eliminare gli attributi estranei e il passo 3 serve per eliminare le dipendenze ridondanti. Bisogna sempre prima eliminare tutti gli attributi estranei e poi eliminare le dipendenze funzionali ridondanti, altrimenti si rischia di non riconoscere tutte le
+dipendenze funzionali ridondanti.
+
+La copertura minimale F' \textcolor{blue}{non è unica}, ma tutte le coperture minimali che si ottengono eseguendo l'algoritmo sono equivalenti. La complessità dell’algoritmo per il calcolo dell’insieme di copertura minimale è \textcolor{blue}{polinomiale}.
+
+\subsection{Normalizzazione in 3NF}
+
+\begin{enumerate}
+	\item calcola la copertura minimale F' di F;
+	\item per ogni insieme di d. f. $\{X \rightarrow A_1, ..., X \rightarrow A_n\} \subseteq F'$ che contiene tutte le d. f. che hanno a sinistra gli stessi attributi X (crea la relazione ($R_X(\underline{X}A_1 ... A_n), \{X \rightarrow A_1 ... A_n\}$));
+	\item per ogni coppia di relazioni $R_X(\underline{X}Y), R_{X'}(\underline{X}'Y')$ in cui $X'Y' \subseteq XY$ (elimina la relazione $R_{X'}$ e aggiungi le d. f. di $R_{X'}$ a quelle di $R_X$;
+	\item se nessuna relazione contiene una chiave K qualsiasi di R(A) (trova K tale che $K^+ = A$ e crea una nuova relazione $R_K(K)$.
+\end{enumerate}
+
+\paragraph{Proprietà della normalizzazione 3NF:}
+
+\begin{itemize}
+	\item nelle relazioni $R_i(XA_1 ... A_n)$ generate dalle d. f. $X \rightarrow A_i$, X è chiave di $R_i$;
+	\item genera relazioni in 3NF;
+	\item ha complessità polinomiale;
+	\item conserva le dipendenze, infatti troviamo ogni dipendenza di F' all’interno della relazione corrispondente;
+	\item garantisce la decomposizione con join senza perdita.
+\end{itemize}
+
+Tutte le dimostrazioni di queste proprietà sono spiegate in dettaglio nelle slide del corso.
+
+\section{Rapporto tra normalizzazione e schemi ER}
+
+ER produce relazioni in BCNF, soffrendo delle sue limitazioni, per cui si può decidere di passare alla 3NF. Si può utilizzare la normalizzazione per verificare la qualità di uno schema ER, verificando se rispetta le d. f.. Nelle slide del corso sono presenti più costrutti, ma non sono stati trattati nel corso della lezione. Per gli esempi sulla verifica delle qualità fare riferimento alle slide sulla Normalizzazione IV.
+
+\paragraph{Entità.} Un entità E con identificatore I e attributo A diventa $R_E(\underline{I}, A)$. L'entità E rappresenta la d. f. $I \rightarrow A$.
+
+\paragraph{Associazione molti a molti.} Da $E_1$ si ha $I_1 \rightarrow I_2$ e dà E2 si ha $I_2 \rightarrow A_2$. Dall'associazione A si ha che ogni sua occorrenza (e del suo attributo B) è individuata dalla coppia di occorrenze di $E_1$ e $E_2$, per cui $I_1 I_2 \rightarrow B$.\\ La traduzione è: $R_{E_1}(\underline{I_1}, A_1), R_{E_2}(\underline{I_2}, A_2), R_{A}(\underline{I_1}, \underline{I_2}, B)$.
+
+\paragraph{Associazione uno a molti.} Da $E_1$ si ha $I_1 \rightarrow I_2$ e dà E2 si ha $I_2 \rightarrow A_2$.  Dall'associazione A si ha che ogni sua occorrenza (e del suo attributo B) è individuata dalla coppia di occorrenze di $E_1$ e $E_2$, per cui $I_1 I_2 \rightarrow B$. A causa della cardinalità dell'associazione uno a molti (1,1) si ha $I_1 \rightarrow B I_2$. \\La traduzione è: $R_{E_1}(\underline{I_1}, A_1, B, I_2), R_{E_2}(\underline{I_2}, A_2)$.
+
+\paragraph{Identificazione esterna.} Da $E_1$ si ha $I_1 \rightarrow I_2$ e da E2 si ha $I_2 \rightarrow A_2$. Da $E_3$ abbiamo che, considerando l’identificazione esterna, preso un determinato valore di $I_3$ abbinato a una coppia di occorrenze di $E_1$ e di $E_2$, troviamo un determinato valore di $A_3$. Quindi $I_1 I_2 I_3 \rightarrow A_3$.\\ La traduzione è: $R_{E_1}(\underline{I_1}, A_1), R_{E_2}(\underline{I_2}, A_2), R_{E_3}(\underline{I_1}, \underline{I_2}, \underline{I_3}, A_3)$.
+
+\paragraph{Generalizzazione.} Non è considerata dato che viene eliminata nella ristrutturazione dello schema ER.

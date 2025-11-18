@@ -1,0 +1,335 @@
+\chapter{Laboratorio e SQL}
+
+\section{Introduzione alla progettazione}
+
+Il ciclo di vita di una \textcolor{blue}{base  di dati} è diviso in fasi: studio di fattibilità, raccolta e analisi dei requisiti, progettazione, implementazione, validazione e collaudo, funzionamento e manutenzione. In un progetto si devono minimizzare i costi e i tempi e massimizzare la qualità e la funzionalità. Solitamente, nel mondo reale, ci si deve accontentare di un compromesso.
+
+La \textcolor{blue}{progettazione} di un sistema informativo\footnote{vedi \ref{Sistemi informativi}} riguarda due parti:
+
+\begin{itemize}
+	\item \textcolor{blue}{dati} : la parte stabile;
+	\item \textcolor{blue}{funzionalità} : la parte meno stabile.
+\end{itemize}
+
+\subsection{Modello entity-relationship}
+
+Il \textcolor{blue}{modello entity-relationship} è il modello concettuale più diffuso per progettare database. Esso \textbf{\textit{non}} modella il comportamento del sistema, ma modella i dati.
+
+\subsubsection{Entità}
+
+Le \textcolor{blue}{entità} sono aspetti del mondo reale autonomi. Esse sono l'insieme di tutte le occorrenze dei dati, perciò. Per esempio "impiegato" è l'insieme di tutti gli impiegati. Le entità sono rappresentate da un rettangolo.
+
+\begin{center}
+	\begin{tikzpicture}[auto]
+
+		\node[entity] (impiegato) {Impiegato};
+
+	\end{tikzpicture}
+\end{center}
+
+\subsubsection{Associazioni}
+
+Le \textcolor{blue}{associazioni} rappresentano legami logici tra due o più entità. Esse non hanno un verso di lettura e sono rappresentate da rombi.
+
+\begin{center}
+	\begin{tikzpicture}[auto]
+
+		\node[entity] (studente) at (0,0) {Studente};
+		\node[entity] (corso) at (4,0) {Corso};
+		\node[relationship] at (2,0) {Esame}
+		edge (corso)
+		edge (studente);
+	\end{tikzpicture}
+\end{center}
+
+Si possono avere associazioni diverse tra stesse entità.
+
+\begin{center}
+	\begin{tikzpicture}[auto]
+
+		\node[entity] (impiegato) at (0,0) {Impiegato};
+		\node[entity] (città) at (4,0) {Città};
+
+		\node[relationship] at (2,0) {Risiede}
+		edge (corso)
+		edge (studente);
+
+		\node[relationship] at (2,-2) {Lavora}
+		edge (corso)
+		edge (studente);
+
+	\end{tikzpicture}
+\end{center}
+
+Si possono avere associazioni ricorsive.
+
+\begin{center}
+	\begin{tikzpicture}[ node distance =5 em]
+
+		\node[entity] (impiegato) at (0,0) {Impiegato};
+		\node[relationship] (collega) [below of = impiegato] {Collega}
+		edge (impiegato);
+	\end{tikzpicture}
+\end{center}
+
+Le occorrenze di un'associazione sono le coppie o le triple  delle occorrenze delle entità. La semantica delle associazioni \textbf{\textit{non}} permette ripetizioni.
+
+\subsubsection{Cardinalità delle associazioni}
+
+La \textcolor{blue}{cardinalità} delle associazioni descrive il numero minimo e massimo di possibili occorrenze dell'associazione a cui le occorrenze delle entità partecipano.
+
+\begin{center}
+	\begin{tikzpicture}[node distance = 6 em]
+
+		\node[entity] (impiegato) at (0,0) {Impiegato};
+		\node[entity] (progetto) at (8,0) {Progetto};
+
+		\node[relationship] (partecipazione) at (4,0) {Partecipazione};
+		\path (partecipazione) edge [above] node {(0-5)} (impiegato)
+		edge [above] node {(1-50)}	(progetto);
+
+	\end{tikzpicture}
+\end{center}
+
+\subsubsection{Attributi}
+
+Gli \textcolor{blue}{attributi} descrivono proprietà di entità o associazioni. Ogni attributo è caratterizzato da un dominio che comprende i valori ammissibili. Si possono avere attributi con lo stesso nome, ma devono essere legati a entità/associazioni diverse. Gli attributi sono rappresentati da pallini vuoti.
+
+\begin{center}
+	\begin{tikzpicture}[auto]
+
+		\node[entity] (studente) at (0,0) {Studente};
+		\tikzstyle{knode}=[circle,draw=black,thick,inner sep=2pt]
+		\node (n1) at (0:1.5cm) [knode] {};
+		\node (n2) at (100:1.5cm) [knode] {};
+
+		\path (n1) edge [above right] node {Matricola} (studente);
+		\path (n2) edge [above right] node {Anno di iscrizione} (studente);
+	\end{tikzpicture}
+\end{center}
+
+\subsubsection{Cardinalità degli attributi}
+
+Anche gli attributi possono avere una \textcolor{blue}{cardianlità}:
+
+\begin{itemize}
+	\item 0, l'attributo è opzionale;
+	\item 1, l'attributo è obbligatorio;
+	\item n, l'attributo è multivalore.
+\end{itemize}
+
+\begin{center}
+	\begin{tikzpicture}[auto]
+
+		\node[entity] (studente) at (0,0) {Studente};
+		\tikzstyle{knode}=[circle,draw=black,thick,inner sep=2pt]
+		\node (n1) at (0:1.5cm) [knode] {};
+		\node (n2) at (100:1.5cm) [knode] {};
+
+		\path (n1) edge [above right] node {Matricola (1,1)} (studente);
+		\path (n2) edge [above right] node {Esami superati (0, n)} (studente);
+	\end{tikzpicture}
+\end{center}
+
+\subsubsection{Attributi composti}
+
+Gli \textcolor{blue}{attributi composti} raggruppano attributi simili. Per esempio indirizzo può raggruppare via e numero civico.
+
+\section{Identificatori delle entità}
+
+Gli \textcolor{blue}{identificatori} delle entità servono per identificarle univocamente. Possono essere:
+\begin{itemize}
+	\item \textcolor{blue}{interni:} sono costituiti dagli attributi delle entità;
+	\item \textcolor{blue}{esterni:} sono costituiti da attributi delle entità più entità esterne, tramite associazioni.
+\end{itemize}
+
+Gli identificatori sono rappresentati come pallini pieni.
+
+\begin{center}
+	\begin{tikzpicture}[auto]
+
+		\node[entity] (studente) at (0,0) {Studente};
+		\tikzstyle{knode}=[circle,draw=black,thick,inner sep=2pt]
+		\tikzstyle{knode_i}=[circle,draw=black, fill = black,thick,inner sep=2pt]
+		\node (n1) at (0:1.5cm) [knode_i] {};
+		\node (n2) at (100:1.5cm) [knode] {};
+
+		\path (n1) edge [above right] node {Matricola} (studente);
+		\path (n2) edge [above right] node {Anno di iscrizione} (studente);
+	\end{tikzpicture}
+\end{center}
+
+Se sono necessari più attributi si rappresentano con una sbarra con pallino nero sopra gli attributi necessari.
+
+Ogni entità deve avere almeno un identificatore e ogni attributo che fa parte di un identificatore deve avere  cardinalità (1, 1).
+
+\subsection{Generalizzazione}
+
+La \textcolor{blue}{generalizzazione} mette in relazione una o più entità $E_1$, $E_2$, ..., $E_n$ con una entità E che le comprende come casi particolari:
+
+\begin{itemize}
+	\item E è \textcolor{blue}{generalizzazione} di $E_1$, $E_2$, ..., $E_n$;
+	\item $E_1$, $E_2$, ..., $E_n$ sono \textcolor{blue}{specializzazioni} di E;
+\end{itemize}
+
+Ogni occorrenza di $E_1$, $E_2$, ..., $E_n$ è anche occorrenza di E. Ogni proprietà di E è anche proprietà di $E_1$, $E_2$, ..., $E_n$.
+
+Una generalizzazione può essere:
+\begin{itemize}
+	\item \textcolor{blue}{totale} se ogni occorrenza dell'entità genitore è occorrenza di almeno una delle entità figlie;
+	\item \textcolor{blue}{parziale} se non è totale;
+	\item \textcolor{blue}{esclusiva} se ogni occorrenza dell'entità genitore è occorrenza di al più una delle entità figlie;
+	\item \textcolor{blue}{sovrapposta} se non è esclusiva.
+\end{itemize}
+
+\subsubsection{Documentazione schemi concettuali}
+
+\begin{itemize}
+	\item \textcolor{blue}{Descrizione di concetti:} dizionari per entità e associazioni;
+	\item \textcolor{blue}{Vincoli non esprimibili in ER:} di integrità o di derivazione.
+\end{itemize}
+
+\section{Progettazione concettuale}
+
+L'analisi inizia con i primi requisiti raccolti (in linguaggio naturale).
+Le possibili fonti sono:
+\begin{itemize}
+	\item utenti, attraverso documenti o interviste;
+	\item documentazione già esistente, come normative o regolamenti interni;
+	\item realizzazioni preesistenti.
+\end{itemize}
+
+\subsubsection{Acquisizione tramite interviste}
+Utenti diversi possono fornire informazioni diverse (complementari o contradditorie). Gli utenti ad alto livello vedono il quadro generale, mentre gli utenti a basso livello vedono i dettagli.
+
+\subsubsection{Suggerimenti per la progettazione}
+
+Se un concetto ha proprietà significative e descrive oggetti con esistenza autonoma è un'entità.
+
+Se un concetto è semplice e non ha proprietà è un attributo.
+
+Se un concetto lega tra loro due o più concetti è un'associazione.
+
+Se un concetto è un caso particolare di un altro concetto è una generalizzazione.
+
+\subsubsection{Requisiti (documentazione descrittiva)}
+
+Si deve scegliere il corretto livello di astrazione, standardizzare la struttura delle frasi ed evitare frasi contorte. Si devono unificare i termini eliminando omonimi\footnote{Hanno lo stesso nome, ma si riferiscono a concetti diversi} e sinonimi\footnote{Hanno nomi diversi, ma si riferiscono allo stesso concetto}, rendendo espliciti i riferimenti tra i termini. Si deve costruire un \textcolor{blue}{glossario dei termini} (tabella).
+
+\subsection{Pattern di progettazione}
+
+Sono soluzioni progettuali pronte per problemi comuni\footnote{Per la spiegazione in dettaglio si rimanda alle slide}:
+
+\begin{itemize}
+	\item Reificazione di attributo di entità: è la trasformazione di un attributo in un'identità;
+	\item Part-of: due casi, il primo nel quale una parte non può esistere senza l'intero e il secondo in cui la parte può esistere senza l'intero;
+	\item Instance-of: rappresenta il concetto istanza-classe;
+	\item Reificazione di un'associazione binaria: si trasforma l'associazione binaria in un'entità;
+	\item Reificazione di un'associazione ricorsiva: si trasforma l'associazione ricorsiva in un'entità;
+	\item Reificazione di associazione ternaria: si trasforma l'associazione ternaria in un'entità;
+	\item Reificazione di attributo di associazione;
+	\item Caso particolare di un'entità: livelli diversi della generalizzazione partecipano ad associazioni diverse;
+	\item Storicizzazione di un’entità: si usa la generalizzazione per rappresentare le informazioni correnti e contemporaneamente tenere traccia dello storico;
+	\item Storicizzazione di un’associazione;
+	\item Evoluzione di un concetto: si usa la generalizzazione per rappresentare l’evoluzione di un concetto mettendo nel genitore gli attributi e le associazioni comuni.
+\end{itemize}
+
+\subsection{Strategie di progetto}
+
+\paragraph{Top-Down:} si individuano i concetti più importanti e si procede per raffinamenti successivi. Essa è conveniente perchè permette di trascurare momentaneamente alcuni dettagli, ma la si può utilizzare solo quando si ha una visione generale del progetto.
+
+\paragraph{Bottom-Up:} le specifiche vengono divise in parti più semplici e poi unite alla fine. Questa strategia è adatta per i progetti di gruppo, ma l'integrazioni di varie parti può essere difficoltosa.
+
+\paragraph{Inside-Out:} è una variante della Bottom-Up in cui si parte dai concetti più importanti e ci si espande a macchia d'olio. Non richiede integrazione, ma è necessario rivisitare periodicamente i requisiti per essere certi di rappresentare tutti i concetti.
+
+\paragraph{Mista:} nella realtà si procede con una soluzione ibrida.
+
+\subsubsection{Qualità di uno schema concettuale}
+
+\paragraph{Correttezza:} devono essere utilizzati propriamente i costrutti messi a disposizione dal modello concettuale di riferimento.
+
+\paragraph{Completezza:} deve modellare tutte le specifiche.
+
+\paragraph{Leggibilità:} deve poter essere compreso in maniera immediata.
+
+\paragraph{Minimalità:} le specifiche devono presentarsi una volta sola.
+
+\section{Progettazione logica}
+
+La \textcolor{blue}{progettazione logica} è la fase successiva alla progettazione concettuale.
+
+\paragraph{Dati in ingresso:}
+\begin{itemize}
+	\item schema concettuale;
+	\item informazioni sul carico applicativo;
+	\item modello logico che si vuole adottare.
+\end{itemize}
+
+\paragraph{Dati in uscita:}
+\begin{itemize}
+	\item schema logico;
+	\item vincoli di integrità;
+	\item Documentazione associata.
+\end{itemize}
+
+Si può dividere in due sottofasi: la ristrutturazione dello schema concettuale (ER) e la traduzione verso il modello logico con relative ottimizzazioni.
+
+\subsection{Ristrutturazione dello schema ER}
+
+La \textcolor{blue}{ristrutturazione dello schema ER} serve a semplificare la traduzione nel modello logico e a ottimizzare le prestazioni. Si usano due indicatori per tenere traccia delle prestazioni: il tempo (numero di occorrenze visitate per un'operazione nel DB) e lo spazio (quantità di memoria per rappresentare i dati). Per poter valutare questi parametri si ha bisogno di alcune informazioni: il volume dei dati (numero di occorrenze e dimensione degli attributi) e le caratteristiche delle operazioni (se interattive o di batch, la frequenza e il numero di entità/associazioni coinvolte). Queste informazioni  vengono rappresentate su apposite tavole.
+
+Per la ristrutturazione dello schema concettuale si possono seguire i seguenti passi.
+
+\subsubsection{Analisi delle ridondanze}
+
+Una \textcolor{blue}{ridondanza} è un'informazione significativa, ma ricavabile da altre informazioni. Si deve decidere se eliminare le ridondanze o mantenerle, con un calcolo. Le ridondanze rendono più efficienti le operazioni di interrogazione/lettura dei dati, ma rendono meno efficiente l'inserimento e la modifica dei dati, inoltre occupano spazio in memoria.
+
+\subsubsection{Eliminazione delle generalizzazioni}
+
+Le generalizzazioni non sono rappresentabili nel modello relazionale per cui vanno sostituite con entità, associazioni o regole aziendali (\textit{business rules}). In generale si hanno tre modi per eliminare una generalizzazione:
+
+\begin{itemize}
+	\item si accorpano i figli della generalizzazione nel genitore ("uccidendo" le entità figlie);
+	\item si accorpa il genitore della generalizzazione nei figli ("uccidendo" l'entità genitore);
+	\item si sostituisce la generalizzazione con associazioni, aggiungendo eventuali business rules.
+\end{itemize}
+
+Si possono anche adottare soluzioni ibride.
+
+\subsubsection{Partizionamento di concetti}
+
+Si separano attributi di uno stesso concetto ai quali si accede in operazioni diverse e si accorpando attributi di concetti diversi a cui si accede con le medesime operazioni. Spesso è possibile rimandare questo problema alla fase di progettazione fisica (che non è argomento di questo corso).
+
+\subsubsection{Scelta degli identificatori principali}
+
+Si devono scegliere gli identificatori che diventeranno chiave primaria seguendo alcuni criteri:
+
+\begin{itemize}
+	\item assenza di opzionalità;
+	\item semplicità;
+	\item utilizzo nelle operazioni più frequenti/importanti.
+\end{itemize}
+
+Se nessun identificatore rispetta questi criteri si devono introdurre nuovi attributi (per esempio codici) che serviranno da chiave primaria.
+
+\subsubsection{Attributi composti e attributi multivalore}
+
+Si possono trasformare gli attributi multivalore, reificando l’attributo e aggiungendo un’associazione. Gli attributi composti non sono rappresentabili direttamente in relazionale e devono essere trasformati.
+
+\subsection{Traduzione verso il modello relazionale}
+
+\paragraph{Le idee di base sono due:}
+\begin{itemize}
+	\item le entità diventano relazioni con gli stessi attributi delle entità;
+	\item Le associazioni diventano relazioni con attributi delle associazioni + gli identificatori delle entità coinvolte
+\end{itemize}
+
+Si devono dare nomi più espressivi agli attributi della chiave della relazione che rappresenta l’associazione.
+
+La traduzione non riesce a tener conto delle cardinalità minime delle associazioni molti a molti. La traduzione dell’associazione uno a molti riesce a rappresentare efficacemente la cardinalità minima della partecipazione che ha 1 come cardinalità massima (se è 0 ammette valori nulli, se è uno non ammette valori nulli). L’identificazione esterna è sempre su un’associazione uno a molti o un’associazione uno a uno.
+
+
+
+
+
+

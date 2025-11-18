@@ -1,0 +1,439 @@
+\chapter{Architettura dei DBMS}
+
+\section{Transazioni}
+
+\label{Transazioni}
+
+In una base di dati si possono effettuare operazioni di \textcolor{blue}{inserimento} (INSERT), \textcolor{blue}{cancellazione} (DELETE) e \textcolor{blue}{aggiornamento} (UPDATE). Il DBMS accetta modifiche solo se rispettano i vincoli \footnote{vedi \ref{Vincoli}}, altrimenti le rifiuta.
+
+I vincoli possono bloccare istruzioni singole. La soluzione è consentire al DBMS di eseguire quelle istruzioni e attendere l'arrivo di altre istruzioni che pongano rimedio alla violazione dei vincoli. Questo ragionamento è alla base del concetto di \textcolor{blue}{transazione}.
+
+Una transazione è:
+\begin{itemize}
+	\item un'unità di programma che inizia con \textbf{\textit{begin transaction}} che comunica al DBMS la richiesta di interazione da parte dell'applicazione;
+	\item il DBMS identifica l'inizio della transazione $T_i$ e la abbina in modo univoco con l'utente/applicazionec che ne ha fatto richiesta;
+	\item il DBMS riceve dei comandi DML in sequenza e li abbina alla transazione;
+	\item solitamente breve (buona pratica);
+	\item se la transazione va a buon fine si termina con il comando \textbf{\textit{commit work}};
+	\item se la transazione fallisce si termina con il comando \textbf{\textit{rollback work}}.
+\end{itemize}
+
+\subsection{Ciclo di vita di una transazione}
+
+Con stato 1 si indica la transazione attiva, con stato 2 si indica la transazione fallita e con stato 3 si indica la transazione parzialmente terminata. I due stati finali sono aborted e committed. Questa simbologia serve per una rappresentazione mediante un DFA\footnote{come visto nel corso di LFT} del ciclo di vita di una transazione.
+
+\begin{enumerate}
+	\item La transazione ha inizio (Stato 1);
+	\item Finchè la transazione riceve comandi di inserimento, cancellazione e modifica rimane in questo stato (Stato 1). Se fallisce va al punto 3 (Stato 2), se va a buon fine va al punto 4 (Stato 3);
+	\item Dopo il rollback la transazione può solo raggiungere lo stato finale di \textbf{aborted};
+	\item Dopo il commit se la transazione rispetta i vincoli passa allo stato finale di \textbf{committed}, altrimenti passa al punto 3 (Stato 2);
+\end{enumerate}
+
+\subsection{Proprietà delle transazioni}
+
+Una transazione (in una base di dati relazionale) ha le seguenti proprietà (dette ACID):
+
+\begin{itemize}
+	\item \textcolor{blue}{atomica}: una transazione avviene o per intero o non avviene affatto. La BD non può essere lasciata in uno stato intermedio. Per garantire questa proprietà si usano comandi di UNDO o REDO, più file di log;
+	\item \textcolor{blue}{consistente (coerente)}: l'esecuzione di una transazione non deve violare i vincoli;
+	\item \textcolor{blue}{isolata}: per garantire l'esecuzione concorrente come se ogni operazione venisse eseguita singolarmente;
+	\item \textcolor{blue}{durabile (persistente)}: tutte le modifiche devono rimanere, anche se sono presenti guasti.
+\end{itemize}
+
+\section{Struttura dei BDMS}
+
+\paragraph{Gestore delle interrogazioni:} riceve i comandi SQL delle interrogazioni, li rende più efficienti ed elabora un piano per la loro esecuzione.
+
+\paragraph{Gestore delle transazioni:} invia i comandi DML, per gestire il ciclo di vita delle transazioni, alle componenti che ne fanno richiesta. Garantisce parte della proprietà di consistenza.
+
+\paragraph{Serializzatore:} garantisce la proprietà di isolamento e parte della proprietà di consistenza.
+
+\paragraph{Gestore del ripristino:} gestisce ripristini in seguito a guasti ed è responsabile delle proprietà di atomicità e di integrità.
+
+\paragraph{Gestore del buffer:} garantisce la proprietà di durabilità.
+
+\subsection{Gestore del buffer}
+
+Il DBMS usa alcune funzionalità del \textit{file system} creando una propria astrazione dei file che consente di garantire efficienza e transazionalità. La struttura dei file è gestita direttamente dal DBMS.
+
+\subsubsection{Richiami di architettura degli elaboratori}
+
+I programmi possono fare riferimento solo a dati in memoria principale. I dati in memoria secondaria possono essere
+utilizzati solo se prima trasferiti in memoria principale. Le basi di dati sono troppo grandi per essere memorizzate interamente in memoria principale, inoltre la persistenza richiede esplicitamente che i dati siano salvati in memoria secondaria.
+
+\subsection{Richiami di sistemi operativi}
+
+Tutti i dati del database (tabelle, indici, log, dump) e i \textcolor{blue}{record} (la realizzazione fisica del concetto di tupla) sono organizzati in \textcolor{blue}{pagine}. La dimensione delle pagine è variabile e dipende dal sistema. Se la transazione ha bisogno di lavorare su un determinato record , il gestore del buffer cerca una pagina \textit{pid} (page id) che contiene il record desiderato. Il gestore del buffer, riceve una richiesta chiamata fix pid, che significa: metti a disposizione della transazione la pagina pid.
+
+Quando il gestore del buffer riceve la richiesta di una pagina essa viene presa dalla memoria secondaria trasferendola in \textcolor{blue}{cache}. Dalla cache la pagina viene portata in memoria principale. Dopo di chè il gestore del buffer risponde alla transazione, che aveva richiesto la pagina, con l'indirizzo della memoria in cui trovare la pagina.
+Il costo temporale grava soprattutto sulla movimentazione delle pagine da memoria secondaria a memoria principale.
+
+I dispositivi di memoria secondaria sono organizzati in blocchi di lunghezza fissa (grandi alcuni KB). Le uniche operazioni sui dispositivi sono la lettura e la scrittura di una pagina, cioè dei dati di un blocco\footnote{In questo corso pagina e blocco verrano considerati come sinonimi}. Se la dimensione di un blocco è superiore alla dimensione media di un record allora un blocco può contenere più record e lo spazio residuo può essere usato per record spanned (altre relazioni) o non usato.
+
+Un record ID è composto da due parti:
+\begin{itemize}
+	\item un pid che punta all'intera pagina;
+	\item un offset che punta al record preciso di quella pagina.
+\end{itemize}
+
+Nelle pagine sono anche presenti un PinCount (che conta le transazioni che hanno avuto l'okay di accesso alla pagina), un dirty bit (che è a 1 se la pagina è stata modificata rispetto alla versione presente in memoria secondaria) e uno stack dei record (contenente i record della pagina).
+
+\subsection{Strutture primarie per l’organizzazione dei file}
+
+Le \textcolor{blue}{strutture primarie per l’organizzazione dei file} specificano come sono organizzati record e pagine:
+\begin{itemize}
+	\item file di record \textcolor{blue}{a heap} (struttura seriale);
+	\item file di record \textcolor{blue}{ordinati} (struttura sequenziale);
+	\item struttura a hash\footnote{Che non è argomento di questo corso}.
+\end{itemize}
+
+\subsubsection{Record a heap}
+
+Questa struttura è la più usata dai DBMS, spesso associato a strutture di accesso secondarie. I record vengono inseriti nelle pagine in ordine di arrivo (in coda o al posto di record cancellati). La cancellazione lascia spazio inutilizzato, per cui i blocchi vanno ricompattati periodicamente. Il costo di un'interrogazione va valutato a priori: una ricerca con insuccesso prevede la lettura di tutte le pagine, una con successo prevede, in media, di leggere metà delle pagine (perchè il record ha la stessa probabilità di trovarsi in ogni pagina).
+
+\subsubsection{Struttura ordinata}
+
+L’inserimento è costoso perché richiede di spostare pagine. La cancellazione si può attuare contrassegnando un record come
+cancellato e attuando una riorganizzazione periodica. La ricerca con insuccesso sull’attributo chiave (usato per ordinare i record) ha lo stesso costo della ricerca con successo perché non si ha bisogno di scorrere tutte le pagine (ci si può arrestare quando si supera il valore richiesto). Se si fa una ricerca su un attributo non chiave, in caso di insuccesso, si devono scorrere tutte le pagine (come nel caso dei record a heap).
+
+Si possono migliorare i tempi di accesso delle strutture seriali e sequenziali aggiungendo strutture secondarie.
+
+\subsection{Strutture secondarie (indici)}
+\label{Indici}
+Un \textcolor{blue}{indice} è memorizzato in una sezione diversa dalle aree che contengono le pagine. Gli indici contengono puntatori (RID) ai record memorizzati in strutture primarie.
+
+Un DB administrator crea un indice quando il carico di lavoro in termini di interrogazioni è tale per cui il costo di accesso all’indice riduce notevolmente i tempi di risposta rispetto alla scansione sequenziale. Tuttavia ciò appesantisce inserimenti, cancellazioni e modifiche (gli indici sono utili se il DB non viene modificato spesso).
+
+Gli indici possono essere:
+\begin{itemize}
+	\item \textcolor{blue}{primari}: se definiti sullo stesso attributo chiave relazionale su cui sono ordinati i record;
+	\item \textcolor{blue}{clusterizzati}: se definiti su un attributo non chiave relazionale su cui sono ordinati i record;
+	\item \textcolor{blue}{secondari}: se definiti su un attributo qualunque sui cui i record non sono ordinati.
+\end{itemize}
+
+\subsubsection{B-tree}
+
+Un B-tree è una generalizzazione degli alberi binari di ricerca\footnote{visti nel corso di Programmazione II} in cui ogni nodo può avere m figli (\textcolor{blue}{branching factor}):
+\begin{itemize}
+	\item ogni sottoalbero di sinistra di una chiave k ha chiavi di ricerca strettamente inferiori alla chiave k;
+	\item ogni sottoalbero di destra di una chiave k ha chiavi di ricerca strettamente superiori alla chiave k.
+\end{itemize}
+
+I B-tree sono bilanciati.
+
+Dato un B-tree con branching factor m, il B-tree ha le seguenti proprietà:
+
+\begin{itemize}
+	\item ogni nodo ha al massimo m-1 chiavi;
+	\item ogni nodo (tranne la radice) ha almeno $\frac{m}{2}-1$ chiavi (è mezzo pieno);
+	\item se non è vuoto la radice ha almeno una chiave;
+	\item tutte le foglie sono allo stesso livello;
+	\item un nodo non-foglia che ha k chiavi ha k+1 figli.
+\end{itemize}
+
+Il dato quantitativo importante per i DBMS è il numero di livelli (la stima del numero minimo e del numero massimo di livelli è presente sulle slide). Si può approssimare il tutto a $N \simeq m^L$ (dove N è il numero di chiavi, m è il branching factor e L è il numero di livelli).
+
+Nei sistemi DBMS, gli indici reggono bene un carico del 70\% della capacità massima (con 3 livelli si reggono bene 700 mila chiavi).
+
+\subsubsection{B+-tree}
+
+Si cerca di mantenere in memoria principale i nodi più interni (perchè attraversati più spesso). Le chiavi di ricerca vengono duplicate nelle foglie, per alleggerire i nodi interni. Inoltre le foglie sono linkate le une alle altre.
+
+\paragraph{Tipi diversi di data entry K*:}
+
+\begin{itemize}
+	\item $<$k,tupla$>$ il data entry è il record stesso (B+-tree è usato come struttura di memorizzazione primaria);
+	\item $<$k,RID$>$: il data entry è puntatore al record nell'area primaria;
+	\item $<$k,lista\_di\_RID$>$: il data entry è una lista di puntatori con la stessa chiave di k, serve quando si vuole fare riferimento a più record.
+\end{itemize}
+
+\subsubsection{Regole generali per l'utilizzo degli indici}
+
+\begin{itemize}
+	\item Evitare gli indici su tabelle di poche pagine;
+	\item Evitare indici su attributi volatili;
+	\item Evitare indici su chiavi poco selettive;
+	\item Evitare indici su chiavi con valori sbilanciati;
+	\item Limitare il numero di indici;
+	\item Definire indici su chiavi relazionali ed esterne;
+	\item Gli indici velocizzano le scansioni ordinate;
+	\item Conoscere a fondo il DBMS.
+\end{itemize}
+
+\section{Gestione delle transazioni}
+
+Supponiamo che il DBMS riceva contemporaneamente le transazioni $T_1$ e $T_2$. Queste due transazioni devono godere della proprietà di isolamento. Per cui l’esecuzione completa di T1 (isolata) seguita dall’esecuzione completa di T2 (isolata) ha la proprietà di lasciare la BD in una situazione di consistenza. Se il DBMS riceve le transazioni contemporaneamente, la
+scelta di eseguire la sequenza $T_1 T_2$ oppure $T_2 T_1$ è irrilevante. In base al sistema informativo le due transazioni possono essere eseguite in parallelo oppure prima una e poi l'altra (ma questo caso è inefficiente per via dei tempi morti).
+
+L’esecuzione in parallelo di due transazioni richiede di \textcolor{blue}{interfogliare} (interleave) le attività delle transazioni.
+
+\paragraph{Inconsistenze dell'interfogliamento:} l'interfogliamento può causare problemi interferendo con le transazioni.
+
+\subsection{Serializzabilità}
+
+La \textcolor{blue}{schedulazione} (o \textcolor{blue}{storia}) è uno specifico interfogliamento. Una storia è la sequenza di azioni eseguite dal DBMS per far fronte alle transazioni.
+
+Dato che si assume che l’esecuzione seriale delle transazioni sia consistente, sono consistenti tutti gli interfogliamenti equivalenti alle storie seriali. Il criterio di serializzabilità dice che una storia S è corretta se è equivalente a una qualsiasi storia seriale delle transazioni coinvolte da S. Date n transazioni ci possono essere n! storie seriali.
+
+\subsection{Meccanismo dei lock}
+
+Il \textcolor{blue}{meccanismo dei lock} è un protocollo che evita a priori la non serializzabilità.
+
+Le transazioni possiedono alcuni comandi per richiedere l’autorizzazione a compiere azioni sull’oggetto X\footnote{Assimilabile a una tupla}:
+
+\begin{itemize}
+	\item LS(X): lock shared sull'oggetto X, da richiedere prima della lettura;
+	\item LX(X): lock exclusive sull'oggetto X, da richiedere prima della scrittura;
+	\item UN(X): unlock sull'oggetto X.
+\end{itemize}
+
+Di solito LS, LX e UN vengono invocati implicitamente dal gestore della concorrenza.
+
+\paragraph{Lock shared:} quando una transazione $T_i$ vuole eseguire un’azione di lettura $r_i(X)$, prima di effettuare la lettura deve avere acquisito almeno il permesso per leggere l’oggetto X (lock shared). Il lock shared (condiviso) si chiama così perché transazioni diverse possono acquisire un lock condiviso sul medesimo oggetto.
+
+\paragraph{Lock exclusive:} la richiesta di lock exclusive è fatta da una transazione per modificare un oggetto X: questa richiesta deve sempre precedere una $w_i(X)$. Quando $T_i$ ha acquisito l’autorizzazione esclusiva a scrivere l’oggetto X, nessuna altra transazione può acquisire lock (né LS né LX) sullo stesso oggetto.
+
+\paragraph{Unlock:} quando una transazione non ha più bisogno di leggere o scrivere l’oggetto X, può rilasciare il lock
+(shared o exclusive) attraverso l’unlock.
+
+Se il DBMS non può concedere il lock la transazione che lo ha richiesto entra in stato di wait. Tutti i lock sono memorizzati in una tabella dei lock.
+
+Esiste una tabella di compatibilità che descrive il funzionamento del dbms in presenza di più lock.
+\begin{center}
+	\begin{tabular}{|c|c|c|}
+		\hline
+		\textbf{Possesso/richiesta} & \textbf{LS} & \textbf{LX} \\
+		\hline
+		\textbf{LS}                 & Concede     & Nega        \\
+		\hline
+		\textbf{LX}                 & Nega        & Nega        \\
+		\hline
+	\end{tabular}
+\end{center}
+
+
+È possibile aggiornare il lock da LS a LX se una stessa transazione ne fa richiesta ed è l’unica che possiede il LS.
+
+Tuttavia il meccanismo dei lock, da solo, non è sufficiente a risolvere la concorrenza.
+
+\subsection{2PL}
+
+Il \textcolor{blue}{two-phase lock} (2PL) divide il meccanismo dei lock in due fasi:
+
+\begin{itemize}
+	\item fase di acquisizione dei lock;
+	\item fase di rilascio dei lock.
+\end{itemize}
+
+Questo sistema garantisce la serializzabilità\footnote{vedere le slide per esempi}, però il protocollo del lock a due fasi è piuttosto rigido, infatti esistono storie serializzabili che non sono possibili con il lock a due fasi
+
+\subsubsection{Granularità del lock}
+
+\paragraph{L'attributo X può essere:}
+\begin{itemize}
+	\item una tupla (soluzione più diffusa);
+	\item un attributo (aumenta il parallelismo, ma è più difficile da gestire);
+	\item una pagina (facile da gestire, ma riduce il parallelismo);
+	\item un file (usato nella gestione degli indici\footnote{vedi \ref{Indici}}).
+\end{itemize}
+
+\section{Gestore del ripristino}
+
+Il \textcolor{blue}{gestore del ripristino} si occupa dell'affidabilità dei dati (tranne nei casi di guasti hard) a seguito di guasti o anomalie.
+
+\paragraph{Guasti soft (più comuni):}
+
+\begin{itemize}
+	\item Crash di sistema: guasto di natura hardware, software o di rete durante una transazione;
+	\item Errori di programma o di sistema: una transazione viene interrotta da un utente o fallisce a causa di un errore o di un bug;
+	\item Eccezioni gestite dalla transazione: non sono errori, perchè previsti dallo sviluppatore (esempio: saldo insufficiente in un conto corrente);
+	\item Rollback di transazioni forzate dal gestore della transazione e dal serializzatore: per uscire da un deadlock.
+\end{itemize}
+
+\paragraph{Guasti hard (meno comuni):}
+
+\begin{itemize}
+	\item Guasti delle periferiche di storage;
+	\item Eventi catastrofici: furtii, incendi, allagamenti, etc..
+\end{itemize}
+
+Il gestore del ripristino si occupa anche di atomicità e durabilità.
+
+\subsection{Log}
+
+Il \textcolor{blue}{file di log} è un diario di bordo in cui il DBMS tiene traccia delle operazioni effettuate sulla BD tramite transazioni. Un file di log è sequenziale append-only\footnote{Si va solo avanti con la scrittura} memorizzato su storage, quindi non può essere affetto dai guasti soft, ma solo dai guasti hard. Periodicamente ne viene fatto il \textcolor{blue}{backup}. Esso rende possibile UNDO e REDO.
+
+Quando si ha un guasto si annullano tutte le operazioni non committed e si ripristinano quelle committed.
+
+\subsubsection{Struttura del file di log}
+
+Per ogni transazione si tiene traccia dei comandi start transaction / commit transaction / abort transaction. Per ogni operazione (insert/delete/update) effettuata sul DB $<T_i, X, BS(X), AS(X)>$, che contiene:
+
+\begin{itemize}
+	\item l'identificativo $T_i$ della transazione;
+	\item l'oggetto X su cui è stata eseguita l'operazione;
+	\item before state (BS(X)), lo stato precedente a X, tranne in caso di insert;
+	\item after state (AS(X)), lo stato successivo a X, tranne in caso di delete.
+\end{itemize}
+
+\subsubsection{Undo e Redo}
+
+Le operazioni di Undo e Redo sono \textcolor{blue}{idempotenti}\footnote{undo(undo(X)) = undo(X) e redo(redo(X)) = redo(X)}
+\paragraph{Undo di una azione su x:}
+
+\begin{itemize}
+	\item update, delete: si scrive nell'oggetto il valore di BS;
+	\item insert: si elimina X.
+\end{itemize}
+
+\paragraph{Redo di una azione su x:}
+
+\begin{itemize}
+	\item update, insert: si scrive nell'oggetto il valore di AS;
+	\item delete: si elimina X.
+\end{itemize}
+
+Il processo di ripristino può fallire e in quel caso deve essere rieseguito.
+
+Tutte le modifiche al file di log avvengono in memoria primaria e successivamente vengono portate in memoria secondaria. Questo causa alcuni problemi (esempio: una insert(X) viene scritta su storage ma avviene un crash prima che il log venga scritto su storage).
+
+\subsubsection{Regole fondamentali}
+
+\begin{itemize}
+	\item Write-Ahead Log: BS dei record di log deve essere scritto prima dei corrispondenti record della base di dati (garantisce UNDO);
+	\item Commit-Precedenza: AS dei record di log deve essere scritto prima di effettuare il commit (garantisce REDO).
+\end{itemize}
+
+\paragraph{Scrittura dei record di commit:} quando una transazione richiede il commit, il DBMS sceglie in modo atomico e indivisibile tra abort e commit e scrive sul log in modo sincrono/atomico (\textit{primitiva force}) il record di commit. Se il guasto avviene prima del commit si procede con l'UNDO, se avviene dopo con il REDO.
+
+Se $T_i$ richiede un rollback, il DBMS impone un abort o la transazione richiede un commit e almeno un vincolo non è soddisfatto: il DBMS esegue UNDO($T_i$) che annulla tutte le azioni di $T_i$. Al termine di questo processo viene memorizzato nel log il record $<T_i$, abort$>$ seguito da \textbf{FORCE LOG} per forzare la scrittura del log su storage.
+
+\subsection{Ripristino}
+
+Per fare un REDO si esplora il file di log in avanti. Per fare un UNDO si esplora il file di log a ritroso.
+
+\subsubsection{Algoritmo di ripristino}
+
+Quando avviene un crash e il sistema riparte senza transazioni si esegue in ripristino:
+
+\begin{enumerate}
+	\item AT := insieme delle transazioni non terminate;
+	\item CT := insieme delle transazioni che hanno raggiunto il commit;
+	\item UNDO(AT);
+	\item REDO(CT);
+\end{enumerate}
+
+Nei grossi sistemi informativi, il file di log può contenere centinaia di migliaia di record e, se avvenisse un crash di sistema, il ripristino risulterebbe estremamente costoso. I crash possono avvenire in qualsiasi momento, anche in pieno orario di attività ed è necessario ridurre al minimo i tempi necessari al ripristino, perchè il ripristino richiede il blocco dell'attività transazionale.
+
+\subsubsection{Checkpoint}
+
+Periodicamente avviene un processo di \textcolor{blue}{checkpoint}:
+
+\begin{enumerate}
+	\item si sospendono le transazioni;
+	\item si costruisce il record di checkpoint contenente l’elenco delle transazioni che in quel momento sono attive col relativo puntatore alla posizione dello start della transazione nel file di log;
+	\item si esegue un FORCE LOG;
+	\item si esegue un FORCE delle pagine delle transazioni committed;
+	\item si aggiunge un flag di OK nel record di checkpoint e si esegue un nuovo FORCE LOG;
+	\item si riavviano le transazioni.
+\end{enumerate}
+
+\paragraph{Hot restart (ripresa a caldo):}
+
+\begin{enumerate}
+	\item trova l'ultimo checkpoint;
+	\item recupera la lista AT dellee transazioni ancora attive durante il crash;
+	\item recupera la lista CT delle transazioni che hanno raggiunto il commit dopo l'ultimo checkpoint;
+	\item UNDO(AT);
+	\item REDO(CT).
+\end{enumerate}
+
+\subsubsection{Ripristino dopo eventi catastrofici}
+
+In questo caso si deve fare riferimento a memorie secondarie stabili (esenti da guasti, ma sono impossibili). Per approssimare una memoria secondaria a una memoria stabile si può fare un backup con informazioni di dimensioni contenute tenuto al sicuro.
+
+Il \textcolor{blue}{dump} è una copia completa della BD salvata in memoria stabile. Quando si fa il dump si svuota il file di log e si aggiunge un record di dump.
+
+\paragraph{Cold restart (ripresa a freddo):}
+
+\begin{enumerate}
+	\item si ripristinano i dati a partire dai backup (restore);
+	\item si legge tutto il log e si effettua il REDO(CT);
+	\item si effettua la hot restart.
+\end{enumerate}
+
+\section{Database non relazionali}
+
+Negli ultimi anni si sono diffusi approcci \textcolor{blue}{NoSQL}\footnote{Not only SQL} (database non relazionali): database distribuiti (condivisi tra più computers) con dati semi-strutturati ad alte prestazioni, scalabili, disponibili e replicabili.
+
+NoSQL ha applicazioni nel campo dei "big data": social, web link, post, tweet, email, etc.
+
+\subsubsection{Scalabilità}
+
+La \textcolor{blue}{scalabilità} è la capacita di una macchina di crescere.
+
+\paragraph{Scalabilità verticale:} aumenta la potenza di calcolo di una macchina migliorandola (più RAM, CPU, storage).
+
+\paragraph{Scalabilità orizzontale:} aumenta la potenza di calcolo aggiungendo nuove macchine (i database relazionali hanno una limitata scalabilità orizzontale).
+
+\paragraph{Commodity machines:} sono computers poco potenti e identici che servono a favorire la scalabilità orizzontale (esempio: server di google).
+
+\subsection{Caratteristiche di NoSQL}
+
+\paragraph{Si evita:}
+\begin{itemize}
+	\item il costo delle proprietà ACID;
+	\item la complessità delle query in SQL;
+	\item la progettazione a priori dello schema;
+	\item le transazioni.
+\end{itemize}
+
+\paragraph{Vengono permessi:}
+\begin{itemize}
+	\item cambiamenti facili e frequenti alla BD;
+	\item uno sviluppo veloce;
+	\item la gestione di grandi quantità di dati;
+	\item dei database senza schema.
+\end{itemize}
+
+Quindi No SQL è adatto per log di dati e dati temporanei, ma non per dati finanziari o aziendali.
+
+I database non relazionali si possono raggruppare in base al modello di dati utilizzato:
+\begin{itemize}
+	\item chiave-valore: associano ogni chiave a un valore come fanno gli array associativi o le tabelle hash dei linguaggi di programmazione. Sono utili per fare cache in memoria principale per applicazioni web;
+	\item documento: gestiscono enormi volumi di dati su server diversi (nodi). Hanno una grande scalabilità orizzontale;
+	\item a colonna: un documento consiste in un ID associato a valori di vari tipi come hash. Possono contenere strutture annidate;
+	\item a grafo: i data sono altamente interconnessi e nodi e archi possono avere proprietà.
+\end{itemize}
+
+\subsection{Mongo}
+
+mongoDB è un database NoSQL orientato ai documenti. Il nome Mongo deriva da humongous (gigantesco). In mongo:
+
+\begin{itemize}
+	\item i dati sono memorizzati come documenti, in formato JSON/BSON;
+	\item i documenti non devono aderire ad uno schema standard, ma possono contenere qualsiasi campo;
+	\item per le operazioni di ricerca, si recuperano i documenti basandosi sul valore di un determinato campo;
+	\item il DB è scalabile orizzontalmente, supportando partizionamento (sharding) dei dati in sistemi distribuiti;
+	\item esistono funzionalità per aggregazione e analisi dei dati.
+\end{itemize}
+\subsection{Quando conviene usare NoSQL?}
+
+NoSQL è un'alternativa ai database relazionali.
+
+\paragraph{Vantaggi:}
+
+\begin{itemize}
+	\item alte prestazioni;
+	\item riduzione dei tempi di sviluppo;
+	\item supporto alla scalabilità orizzontale.
+\end{itemize}
+
+\paragraph{Svantaggi:}
+
+\begin{itemize}
+	\item nessun supporto per join e transazioni;
+	\item grande ridondanza dei dati;
+	\item mancanza di un linguaggio standard;
+	\item mancanza di vincoli di integrità.
+\end{itemize}
