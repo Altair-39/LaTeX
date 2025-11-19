@@ -720,6 +720,116 @@
 	\item Esse permettono ai reasoner di individuare inconsistenze con le asserzioni sugli individui.
 \end{itemize}
 
+\subsection{Esportare le Inferenze su Protege}
+
+\begin{itemize}
+	\item Protege contiene un tool per esportare le inferenze effettuate dal reasoner attivo in una nuova ontologia.
+	\item È utile se si vogliono utilizzare le inferenze in un ambiente in cui non è disponibile un reasoner.
+	\item Vengono esportate sia le triple che costituiscono l'ontologia sia le triple che rappresentano le inferenze.
+\end{itemize}
+
+\paragraph{Passi per l'esportazione:}
+
+\begin{enumerate}
+	\item Selezione del tipo di inferenze che si intendono esportare.
+	\item Selezione di elementi aggiuntivi:
+	      \begin{itemize}
+		      \item Annotazioni.
+		      \item Asserzioni contenute nell'ontologia.
+	      \end{itemize}
+	\item Inserimento dell'IRI della nuova ontologia.
+	\item Percorso e file in cui salvare la nuova ontologia.
+	\item Selezione della codifica.
+\end{enumerate}
+
+\paragraph{Inferenze esportate:}
+
+\begin{itemize}
+	\item Il set di inferenze di base non esporta tutte le
+	      inferenze che sono visualizzate nell’editor.
+	\item  Le inferenze rappresentate come triple nella
+	      nuova ontologia si dicono materializzate.
+	\item Nei casi reali, il trade-off tra tempo di
+	      esportazione (e lo spazio occupato) e livello di
+	      dettaglio delle inferenze dipende dall’utilizzo
+	      che si intende fare dell’ontologia esportata.
+\end{itemize}
+
+\cor{Object Property Characteristics}{
+	Il flag \fancyglitter{Object} (o data) Property Characteristics esporta le inferenze
+	fatte sulle caratteristiche delle object properties.
+}
+
+\cor{Class Assertion (Individual Types)}{
+	Il flag \fancyglitter{Individual types} esporta le inferenze sugli individui basate sulla
+	gerarchia delle classi.
+}
+
+\cor{Property Assertions}{
+	Il flag \fancyglitter{Property assertions} esporta le inferenze sulle proprietà
+	degli individui.
+}
+
+\subsection{Serializzazione di OWL}
+
+\paragraph{Dall'ontologia astratta alla sua rappresentazion:}
+
+\begin{itemize}
+	\item L’ovale al centro rappresenta la nozione astratta di
+	      ontologia, che può essere pensata sia come struttura
+	      astratta sia come grafo RDF.
+	\item La sintassi di OWL nelle specifiche è descritta come
+	      sintassi \fancyglitter{astratta}.
+	\item L’ontologia può essere serializzata in varie sintassi.
+	\item La semantica dell’ontologia (parte in basso) può essere
+	      specificata direttamente (Direct Mapping, semantica
+	      model-teoretica) oppure a seguito della conversione in
+	      un grafo RDF (RDF-based semantics).
+\end{itemize}
+
+\dfn{Mapping verso RDF}{
+	Il mapping di OWL verso RDF consiste nel rappresentare
+	l’ontologia come triple RDF. È specificata come un insieme di mapping, dove l’operatore
+	T mappa un’ontologia OWL O in un grafo RDF T(O).
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{02/owls.png}
+	\caption{Specifiche di OWL.}
+\end{figure}
+
+\paragraph{OWL2 vs. OWL1:}
+
+\begin{itemize}
+	\item Property chains.
+	\item Datatypes più ricchi e data ranges.
+	\item Restrizioni sulla cardinalità.
+	\item Proprietà asimmetriche, riflessive e disgiuntive.
+	\item Più capacità di annotazione.
+	\item Chiavi.
+\end{itemize}
+
+\paragraph{Profili di OWL2:}
+
+\begin{itemize}
+	\item OWL2 EL: progettato per grandi ontologies. Limitazioni:
+	      \begin{itemize}
+		      \item No negazione e disgiunzione, no quantificazione universale sulle proprietà.
+		      \item No proprietà inverse.
+	      \end{itemize}
+	\item OWL QL (Query Language):  concepito per l’integrazione con le basi di
+	      dati relazionali. Limitazioni:
+	      \begin{itemize}
+		      \item No quantificazione esistenziale in una class expression.
+		      \item No property chains.
+	      \end{itemize}
+	\item OWL RL (Rule Language): concepito per applicazioni che richiedono
+	      l’utilizzo del ragionamento automatico senza sacrificare troppa
+	      espressività.
+\end{itemize}
+
+
 
 
 
