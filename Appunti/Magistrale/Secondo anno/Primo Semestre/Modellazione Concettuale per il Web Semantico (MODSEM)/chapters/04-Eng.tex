@@ -52,14 +52,141 @@
 
 }
 
+\subsection{Neon Methodology}
 
+\dfn{Neon Methodology}{
+	Metodologia orientata agli aspetti collaborativi nello sviluppo e nel
+	mantenimento di network di ontologie.  Si articola in un insieme di 9 scenari, associati a specifiche attività e
+	documenti.
+}
 
+\paragraph{Scenari:}
 
+\begin{enumerate}
+	\item Dalle specifiche all'implementazione.
+	\item Riusare e reingegnerizzare risorse non ontologiche.
+	\item Riusare risorse ontologiche.
+	\item Riusare e reingegnerizzare risorse ontologiche.
+	\item Riusare e unire risorse ontologiche.
+	\item Riusare, unire e reingegnerizzare risorse ontologiche.
+	\item Riusare design pattern ontologici (ODPs).
+	\item Ristrutturare risorse ontologiche.
+	\item Localizzare risorse ontologiche.
+\end{enumerate}
 
+\dfn{Ontology Design Patterns (ODPs)}{
+	Sorta di mattoncini per la creazione di ontologie secondo schemi
+	(pattern) convidisi.
+}
 
+\subsection{Altre Ontologie}
 
+\dfn{DOLCE}{
+	Ontologia orientata alla cognizione e al linguaggio.
+}
 
+\clm{Concetti Importanti}{}{
+	\begin{itemize}
+		\item \fancyglitter{Perdurante} $\rightarrow$ Evento, ha natura temporale.
+		\item \fancyglitter{Endurant} $\rightarrow$ Partecipanti, non ha natura temporale.
+	\end{itemize}
+}
 
+\dfn{Prov}{
+	Concepita per l’interscambio sul Web di informazioni riguardanti la
+	provenienza delle entità. Descrive l’origine delle entità intesa soprattutto come processi che hanno
+	determinato la creazione di quelle entità:
+	\begin{itemize}
+		\item La provenienza degli oggetti è
+		      rilevante per determinarne il
+		      possesso (inteso come diritti) e
+		      l’affidabilità.
+	\end{itemize}
+}
 
+\paragraph{I metadati propriamente detti delle
+	entità e la descrizione degli agenti
+	sono affidati a altre ontologie:}
 
+\begin{itemize}
+	\item FOAF (agenti).
+	\item Dublin Core (entità).
+\end{itemize}
+
+\section{Ontologie e Risorse Linguistiche}
+
+\nt{Approfondita nella seconda parte del corso "Tecnologie del Linguaggio Naturale".}
+
+\subsection{FrameNet}
+
+\dfn{FrameNet}{
+	Si tratta di un catalogo di frame linguistici su varie parti del discorso che rappresentano un frame con una serie di ruoli (complementi) associati.
+}
+
+\nt{
+	La struttura a frame di FrameNet si presta a essere utilizzata insieme allo
+	schema a ruoli (utilizzato per esempio negli Ontology Design Pattern) per
+	rappresentare la partecipazione all’azione. Ogni Frame Element corrisponde a un ruolo nello schema di azione.
+}
+
+\paragraph{Descrizione di Eventi e FrameNet:}
+
+\begin{itemize}
+	\item Repository di frame che descrivono una situazione in
+	      termini di partecipanti con un certo ruolo.
+	\item Ogni  frame corrisponde a un insieme di entità lessicali
+	      (tipicamente verbi ma anche preposizioni).
+	\item Non esiste un insieme predefinito di ruoli (come per
+	      esempio in VerbNet.
+	\item Conversione diretta in un pattern basato su ruoli.
+\end{itemize}
+
+\subsection{WordNet}
+
+\dfn{WordNet}{
+	WordNet è una risorsa linguistica che consiste in un lessico
+	organizzato secondo relazioni di significato. Gli elementi del lessico (sostantivi, verbi, aggettivi, ecc.) sono
+	raggruppati in insiemi denominati synset (synonym set):
+	\begin{itemize}
+		\item Ogni synset corrisponde a un significato.
+		\item L’idea è che i termini che fanno parte di uno stesso synset siano
+		      sinonimi.
+	\end{itemize}
+}
+
+\cor{Synset}{
+	Nello stesso synset si trovano più termini. Lo stesso sostantivo può essere collocato in posizioni del
+	tutto diverse della rete.
+}
+
+\paragraph{Altre relazioni:}
+
+\begin{itemize}
+	\item Meronimia: per i sostantivi, oggetto che è parte di un altro.
+	\item Implicazione: per i verbi.
+	\item Troponimia: per i verbi.
+\end{itemize}
+
+\paragraph{WordNet e ontologie:}
+
+\begin{itemize}
+	\item  Nell’ontologia SUMO le classi sono associate ai synset di WordNet.
+	\item Sigma Browser è uno strumento per cercare concetti nell’ontologia
+	      SUMO usando come chiavi di ricerca i termini della lingua inglese.
+	\item Il browser funziona perché a ogni concetto di SUMO corrispondono
+	      uno o più termini di WordNet.
+	\item Cercando in WordNet, si trovano tutti i significati della parola
+	      cercata e, per ogni significato, il concetto di SUMO
+	      corrispondente.
+\end{itemize}
+
+\paragraph{Ci sono due modi in cui un synset di WordNet può
+	corrispondere a un concetto SUMO:}
+
+\begin{itemize}
+	\item Il concetto SUMO corrisponde esattamente al significato del
+	      synset (equivalent mapping).
+	\item Il concetto SUMO include al suo interno (‘sussume’) anche il
+	      significato del synset (subsumption mapping).
+\end{itemize}
 
