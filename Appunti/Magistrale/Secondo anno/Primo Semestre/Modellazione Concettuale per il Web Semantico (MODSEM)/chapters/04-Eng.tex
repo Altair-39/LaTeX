@@ -113,6 +113,51 @@
 	\item Dublin Core (entità).
 \end{itemize}
 
+\paragraph{In Prov:}
+
+\begin{itemize}
+	\item Un \fancyglitter{agente} prende il ruolo in un'attività in modo che gli si possa assegnare un certo grado di responsabilità.
+	\item \fancyglitter{Attività:} sono il come le entità esistono e come  i loro attributi cambiano per farle diventare nuove entità.
+	\item Un \fancyglitter{ruolo} è una descrizione della funzione di un'entità in un'attività. Specificano la loro relazione.
+\end{itemize}
+
+\paragraph{Problematiche:}
+
+\begin{itemize}
+	\item Come rappresentare i ruoli?
+	      \begin{itemize}
+		      \item Classi dell'ontologia (sottoclassi di Ruolo).
+		      \item Classe generica con etichette linguistiche.
+	      \end{itemize}
+	\item Classi dell'ontologia:
+	      \begin{itemize}
+		      \item Vantaggi: ragionamento.
+		      \item Svantaggi: non aperto, non modulare.
+	      \end{itemize}
+	\item Classe generica:
+	      \begin{itemize}
+		      \item Vantaggi: modulare.
+		      \item Svantaggi: più difficile condurre inferenze.
+	      \end{itemize}
+\end{itemize}
+
+\dfn{LODE}{
+	L’ontologia LODE (Linking Open Descriptions
+	of Events) rappresenta gli eventi (per esempio
+	eventi storici) con un vocabolario molto semplice.
+}
+
+\clm{LODE}{}{
+	\begin{itemize}
+		\item Non rappresenta i ruoli ma solo i partecipanti
+		      e la collocazione nel tempo e nello spazio
+		      degli eventi.
+		\item Orientata alla costruzione di grandi data set
+		      (descrizione di eventi).
+		\item Per ogni classe, corrispondenza con DOLCE.
+	\end{itemize}
+}
+
 \section{Ontologie e Risorse Linguistiche}
 
 \nt{Approfondita nella seconda parte del corso "Tecnologie del Linguaggio Naturale".}
@@ -190,3 +235,101 @@
 	      significato del synset (subsumption mapping).
 \end{itemize}
 
+\section{SKOS}
+
+\subsection{Contesto}
+
+Con l’avvento dei Linked Data, fanno il loro ingresso nel
+Web Semantico molte risorse di tipo tassonomico.
+
+\paragraph{Esempi di tesauri e tassonomie:}
+
+\begin{itemize}
+	\item Iconclass.
+	\item VIAF.
+	\item ULAN.
+	\item ACM Computing Classification System.
+\end{itemize}
+
+\dfn{VIAF}{
+	VIAF (Virtual International Authority File) è un
+	Authority file internazionale:
+	\begin{itemize}
+		\item Ottenuto a partire dagli Authority file nazionali.
+		\item Permette di accedere a una determinata entità dal suo
+		      nome (in una lingua nazionale) per ottenerne la
+		      denominazione in tutti gli authority in cui è presente.
+	\end{itemize}
+}
+
+\cor{Authority File}{
+	Un authority file è una risorsa che contiene un elenco
+	strutturato di valori da utilizzare per riferire un insieme
+	di entità.
+}
+
+\subsection{Simple Knowledge Organization System (SKOS)}
+
+\dfn{SKOS}{
+	L’utilizzo di vocabolari di diverse provenienze, tipico dei
+	Linked Data, annulla le relazioni tra i concetti proprio delle
+	ontologie e si apre alle differenze. Simple Knowledge Organization Systems (SKOS):
+	recommendation del W3C per la creazione di vocabolari di
+	vario tipo: lessici, thesauri, ecc.
+}
+
+\nt{Il suo scopo è quello di facilitare e uniformare la pubblicazione dei vocabolari RDF come linked data.}
+
+\qs{}{Cosa si può fare con SKOS?}
+
+\begin{itemize}
+	\item I concetti possono essere identificati mediante URI.
+	\item Etichettati con stringhe in una o più lingue naturali.
+	\item Assegnare notazioni.
+	\item Documentare con vario tipo di note.
+	\item Collegare concetti ad altri concetti e organizzarli in gerarchie informali.
+	\item Aggregare i concetti in schemi, ordinarli, etichettarli o mapparli.
+\end{itemize}
+
+\cor{SKOS Primer}{
+	Documento che riporta esempi di utilizzo di SKOS.
+}
+
+\paragraph{Concetti ed etichette:}
+
+\begin{itemize}
+	\item I concetti sono identificati con gli URI.
+	\item Ai concetti sono associate delle etichette lessicali:
+	      \begin{itemize}
+		      \item prefLabel.
+		      \item altLabel.
+	      \end{itemize}
+	\item Indicizzazione.
+\end{itemize}
+
+\paragraph{Relazioni semantiche tra concetti:}
+
+\begin{itemize}
+	\item Relazione generica: related.
+	\item Relazione specifica/generale: narrowed/broader.
+	\item Anche transitive.
+\end{itemize}
+
+\paragraph{Documentazione:}
+
+\begin{itemize}
+	\item Associare concetti alla loro documentazione.
+	\item Definizione: definition.
+	\item Esempio: example.
+	\item Cambiamenti: historyNote e changeNote.
+\end{itemize}
+
+\paragraph{Schemi di concetti:}
+
+\begin{itemize}
+	\item Uno schema di concetti e una risorsa strutturata.
+	\item Schema di concetti: ConceptScheme.
+	\item Appartenenza di un concetto a uno schema: inScheme.
+	\item (Ri)utilizzare concetti in uno schema diverso richiamando
+	      quello di origine.
+\end{itemize}
