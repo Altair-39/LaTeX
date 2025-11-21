@@ -1,0 +1,940 @@
+\chapter{Gestione della Memoria}
+
+\section{Introduzione}
+
+\subsection{Indirizzi, Binding e Loading}
+
+\paragraph{Tipi di indirizzo:}
+
+\begin{itemize}
+	\item \fancyglitter{Indirizzo logico:} indirizzo prodotto dalla CPU.
+	\item \fancyglitter{Indirizzo fisico:} indirizzo di ogni parola di memoria.
+\end{itemize}
+
+\dfn{Binding}{
+	Viene eseguito il collegamento tra lo spazio degli
+	indirizzi logici (ind. prodotti dalla CPU) e lo spazio degli indirizzi fisici (ind. effettivi in RAM).
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Quando il binding viene fatto a compile time, indirizzo logico = fisico.
+		\item Quando il binding viene fatto a exec time, la corrispondenza deve essere calcolata (i due
+		      spazi di indirizzi non corrispondono).
+		\item Il binding è a carico dell’MMU (Memory Management Unit), che in genere funziona con un
+		      meccanismo basato sul registro base (registro di rilocazione).
+	\end{itemize}
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{04/bind.png}
+	\caption{Binding.}
+\end{figure}
+
+\dfn{Linking}{
+	Il linking è il processo di composizione dei moduli che servono a un programma. Associa ai
+	nomi di variabili e procedure usate da ciascun modulo (e non definiti in esso) le corrette
+	definizione.
+}
+
+\dfn{Loading}{
+	Il loading è copiare un programma eseguibile (o parte) nella RAM.
+}
+
+\nt{
+	Questi due processi si dicono dinamici quando sono svolti a tempo di esecuzione, statici
+	quando precedono l’esecuzione.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{04/link.png}
+	\caption{Linking statico.}
+\end{figure}
+
+\paragraph{In modo dinamico:}
+
+\begin{itemize}
+	\item Loading: una procedura è caricata in RAM alla sua prima invocazione.
+	      \begin{itemize}
+		      \item Tutte le procedure risiedono in memoria secondaria sotto forma di codice rilocabile.
+		      \item Molto vantaggioso rispetto a dover
+		            caricare l’intera libreria in RAM.
+		      \item Funziona solo se il SO ci fornisce gli strumenti per realizzare librerie a
+		            caricamento dinamico.
+	      \end{itemize}
+	\item Linking: il collegamento del codice di una procedura al suo nome è
+	      effettuato alla sua prima invocazione (linker statico aggiunge solo uno stub della
+	      procedura).
+	      \begin{itemize}
+		      \item Rimanda il collegamento reale di una libreria alla fase di esecuzione.
+		      \item Dopo la compilazione,
+		            il linker statico arricchisce il programma aggiungendo gli stub relativi alle procedure
+		            appartenenti alle librerie dinamiche usate.
+		      \item Durante l’esecuzione, lo stub verifica se il codice della procedura è già stato caricato in
+		            RAM:
+		            \begin{itemize}
+			            \item Se si, sostituisce se stesso con l’indirizzo della procedura in questione.
+			            \item Se no, causa il caricamento del codice della procedura e poi si sostituisce con
+			                  l’indirizzo del codice della procedura in questione.
+		            \end{itemize}
+		      \item Il vantaggio del linking dinamico risiede nella facilità di aggiornare le librerie condivise: se
+		            aggiorno una libreria dinamica, tutti i programmi che la usano faranno riferimento alla nuova
+		            versione senza dover ricompilare.
+	      \end{itemize}
+\end{itemize}
+
+\subsection{Allocazione della RAM}
+
+\paragraph{Esistono 3 approcci per la gestione della memoria principale:}
+
+\begin{itemize}
+	\item Allocazione \fancyglitter{contigua}.
+	\item \fancyglitter{Paginazione}.
+	\item \fancyglitter{Segmentazione}.
+\end{itemize}
+
+\dfn{Allocazione Contigua}{
+	In questo modello si suddivide la RAM in due parti:
+	\begin{itemize}
+		\item Una parte riservata al SO, in genere allocata nella parte bassa.
+		\item Una parte riservata ai processi utente.
+	\end{itemize}
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Bisogna quindi proteggere la parte di memoria riservata al SO dalle
+		      letture/scritture dei processi utente, facilmente realizzabile usando un registro di
+		      rilocazione.
+		\item Il codice del SO può essere, a sua volta, suddiviso in una parte sempre
+		      necessaria, e una parte che può essere utile o meno a seconda delle
+		      circostanze, chiamate \fancyglitter{codice transiente}.
+		\item Questa parte può essere rimossa dalla RAM quando non serve, e quindi ci
+		      occorre modificare la partizione riservata al SO.
+	\end{itemize}
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.6]{04/ac.png}
+	\caption{Allocazione contigua.}
+\end{figure}
+
+\dfn{Allocazione a Partizioni Multiple}{
+	All’inizio, la RAM non utilizzata dal SO è libera. Il SO deve mantenere una lista di porzioni libere dette buchi. Un nuovo processo può essere caricato in RAM solo se esiste un buco abbastanza grande.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.6]{04/apm.png}
+	\caption{Allocazione a partizioni multiple.}
+\end{figure}
+
+\paragraph{Per caricare i processi in RAM, vengono utilizzati 3 criteri principali che aiutano a decidere
+	quale porzione di memoria utilizzare:}
+
+\begin{itemize}
+	\item \fancyglitter{Best-fit:} scelgo la porzione più piccola tra quelle adeguate a contenere l’immagine del processo.
+	\item \fancyglitter{First-fit:} scelgo la prima porzione abbastanza grande da contenere l’immagine del
+	      processo.
+	\item \fancyglitter{Worst-fit:} scelgo la porzione più grande tra quelle libere.
+\end{itemize}
+
+\nt{
+	Per capire qual è la migliore, bisogna analizzare la frammentazione della memoria.
+}
+
+\dfn{Frammentazione}{
+	La frammentazione è lo spezzettamento della memoria in tante parti; ne esistono due tipi:
+	\begin{itemize}
+		\item Esterna: se queste parti sono abbastanza grandi da poter essere utilizzabili.
+		\item Interna: se sono troppo piccole per essere utilizzate, e di solito vengono unite alle
+		      partizioni precedenti.
+	\end{itemize}
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item La frammentazione è un problema, in quanto è molto facile avere ampie quantità di
+		      memoria inutilizzabile: secondo la regola del 50\% usando il first-fit, per ogni $N$ blocchi di
+		      memoria si hanno $\frac{N}{2}$ blocchi di memoria inutilizzabile ($\frac{1}{3}$ della memoria totale).
+		\item In generale worst-fit è la strategia peggiore, first-fit e best-fit sono comparabili ma first-fit
+		      risulta computazionalmente meno costosa.
+		\item Si può combattere la frammentazione attuando una politica di compattamento: spostare le
+		      immagini in memoria in modo che risultino contigue. Questo però, è applicabile solo se il
+		      binding tra indirizzi logici e fisici è effettuato a tempo di esecuzione.
+	\end{itemize}
+}
+
+\dfn{Swapping}{
+	In quanto la RAM ha dimensione limitata, è possibile che i processi in stato running/ready
+	occupino più memoria di quanto ne sia disponibile.
+	La soluzione consiste nel mantenere una parte dei processi ready in memoria secondaria e
+	di tanto in tanto eseguire lo swapping, ovvero lo scambio dei processi tra le due memorie.
+}
+
+\paragraph{Swap:}
+
+\begin{itemize}
+	\item \fancyglitter{Swap in:} si carica l’immagine di un processo ready dalla memoria secondaria (detta anche backing store) alla RAM.
+	\item \fancyglitter{Swap out:} si scarica l'immagine di un processo che non è in esecuzione dalla RAM alla
+	      memoria secondaria.
+\end{itemize}
+
+\paragraph{La collocazione del processo in RAM dipende da quando viene effettuato il binding delle
+	variabili:}
+
+\begin{itemize}
+	\item Se il codice non è rilocabile, l’immagine del processo deve occupare la stessa
+	      sezione di RAM.
+	\item Se il codice è rilocabile, è possibile inserirlo in qualsiasi posizione.
+\end{itemize}
+
+\cor{Tempo di Swapping}{Il tempo necessario al completamento dello swap è dato dal tempo di swap-out + tempo di
+	swap in. Questo tempo è influenzato dalla dimensione della RAM usata dai singoli processi.}
+
+\nt{Lo swapping non può essere effettuato se il processo sta effettuando operazione di I/O:
+	queste operazioni non possono essere effettuato su variabili residenti in memoria
+	secondaria.}
+
+\section{Paginazione}
+
+\subsection{Struttura}
+
+\dfn{Paginazione}{
+	La paginazione è un meccanismo di gestione della RAM alternativa alla allocazione
+	contigua, e sua caratteristica fondamentale è che consente allo spazio degli indirizzi fisici di
+	un processo di non essere contiguo. Questo consente di ridimensionare in modo dinamico lo spazio riservato ad un processo,
+	aggiungendo o togliendo pagine su richiesta.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{04/page.png}
+	\caption{La paginazione.}
+\end{figure}
+
+\qs{}{
+	Come si associano le porzioni di processo a RAM? Come si organizzano le diverse porzioni in un tutt'uno?
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{04/pages.png}
+	\caption{Struttura.}
+\end{figure}
+
+\nt{
+	Per fare il binding tra indirizzi logici e fisici, usiamo una tabella degli indirizzi.
+}
+
+\cor{Dimensione di una Pagina}{
+	La dimensione è la stessa per tutte le pagine ed è definita dall’architettura (tra $2^9 = 512B$ e
+	$2^24=16MB$).
+}
+
+\paragraph{La memoria logica viene suddivisa secondo questa formula:}
+
+\begin{itemize}
+	\item Dimensione di una pagina = $2^n$.
+	\item Dimensione della memoria logica = $2^n$
+	\item Numero di pagine = $2^{m-n}$.
+	\item Bit per rappresentare il numero di pagina = $m - n$.
+	\item Bit per rappresentare lo scostamento (offset) all'interno di una pagina = $n$.
+\end{itemize}
+
+\nt{
+	L’indirizzo logico di una pagina è quindi una coppia $<p, o>$ in cui $p$ è il numero di pagina e $o$ è l’offset.
+}
+
+\dfn{Rilocazione}{
+	La rilocazione nel contesto della paginazione significa consentire l’accesso ad una pagina
+	indipendentemente dal frame in cui è caricata. Per effettuare la rilocazione, il registro di rilocazione è sostituito dalla entry nella tabella delle
+	pagine, corrispondente a p. Il valore f individua l’indirizzo di inizio del frame.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.8]{04/rilocazione.png}
+	\caption{Rilocazione.}
+\end{figure}
+
+\clm{}{}{
+	\begin{itemize}
+		\item La paginazione elimina il problema della frammentazione esterna, ma rimane il problema della \fancyglitter{frammentazione interna}.
+		\item Di ogni processo, solo l’ultima sua pagina allocata può presentare frammentazione interna,
+		      perché raramente la dimensione di un processo sarà un multiplo della grandezza di una
+		      pagina.
+		\item Si può perciò dire che in media si ha mezza pagina inutilizzata per processo.
+	\end{itemize}
+}
+
+\paragraph{Occorre quindi trovare una dimensione ottimale per le pagine in modo da ridurre la
+	frammentazione:}
+
+\begin{itemize}
+	\item Utilizzando pagine di piccole dimensione si riduce la frammentazione interna, ma aumenta il numero di pagine.
+	\item Utilizzando pagine di grandi dimensioni si aumenta la memoria inutilizzata, ma il traferimento di dati dalla memoria secondaria è più veloce.
+\end{itemize}
+
+\subsection{Architettura di Paginazione}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.6]{04/arch.png}
+	\caption{Architettura generale della paginazione.}
+\end{figure}
+
+\paragraph{Tempi di accesso:}
+
+\begin{itemize}
+	\item Si accede alla RAM 2 volte, una per individuare la page table e un'altra per prelevare l'indirizzo fisico d'interesse.
+	\item Questo doppio accesso rallenta troppo l’esecuzione, perciò viene implementata la \fancyglitter{TLB} (\fancyglitter{Translation Look-aside Buffer}), una cache molto veloce contenente delle coppie $<$chiave, valore$>$.
+	\item Quando riceve un input lo confronta contemporaneamente con tutte le chiavi. Se
+	      trova una chiave corrispondente restituisce il valore associato.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{04/tlb.png}
+	\caption{Accesso mediante TLB.}
+\end{figure}
+
+\dfn{Hit Ratio}{
+	È la percentuale di successo di reperimento di una pagina tramite TLB (TLB hit), e consente
+	di calcolare il tempo medio effettivo di accesso a una pagina.
+}
+
+\ex{Hit Ratio}{
+	Tempo di accesso al TLB = 20 nsec
+
+	Tempo di accesso alla RAM = 100 nsec
+
+	Hit Ratio = 0.82
+
+	Percentuale di accessi tramite page table = 0.18
+
+
+
+	T$_TLB$ = accesso TLB + accesso RAM = (20 + 100) nsec = 120 nsec
+
+	T$_PT$ = 2 * accesso RAM = 200 nsec
+
+
+	T$_M$ = (0.82 * T$_TLB$) + (0.18 * T$_PT$) = 134.4 nsec
+}
+
+\paragraph{Quando non trovo una pagina di interesse (TLB miss):}
+
+\begin{itemize}
+	\item Se c’è spazio nel TLB si inserisce la nuova coppia $<$pagina, frame$>$.
+	\item Se non c’è spazio nel TLB, si sostituisce una coppia (in genere quella meno recente, LRU) con quella nuova.
+\end{itemize}
+
+\paragraph{Nella tabella delle pagine del processo viene anche memorizzata la modalità di accesso
+	alle pagine, che può essere:}
+
+\begin{itemize}
+	\item Read-only.
+	\item R/W.
+	\item Exec.
+	\item Invalid (non appartiene allo spazio degli indirizzi del processo).
+\end{itemize}
+
+\nt{
+	Si possono avere pagine non valide quando la tabella delle pagine di un processo è più
+	piccola dello spazio riservato ad essa nella RAM. Se un processo tenta di accedere ad una
+	pagina non valida, viene generato un interrupt.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{04/cond.png}
+	\caption{Condivisione delle pagine.}
+\end{figure}
+
+\dfn{Paginazione Multilivello}{
+	La dimensione della tabella delle pagine dipende dalla dimensione dello spazio degli indirizzi logici. In realtà, nessun processo usa l’intero spazio degli indirizzi. La maggior parte della tabella
+	andrebbe sprecata. Per risolvere questo problema, possiamo suddividere la tabella in tante parti organizzate.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{04/2.png}
+	\caption{Paginazione a 2 livelli.}
+\end{figure}
+
+\paragraph{Vantaggi:}
+
+\begin{itemize}
+	\item Rappresentazione naturale se si adotta un approccio processo-centrico.
+	\item Ordinata in modo tale che sia semplice per il SO identificare il punto in cui si trova
+	      l’indirizzo del frame di interesse.
+\end{itemize}
+
+\paragraph{Svantaggi:}
+
+\begin{itemize}
+	\item Può diventare troppo grande e invece di aiutare a gestire la RAM diventa essa stessa
+	      un problema da gestire.
+\end{itemize}
+
+\subsection{Segmentazione}
+
+\dfn{Segmentazione}{
+	La segmentazione è una modellazione della memoria in cui ogni processo ha una porzione di RAM organizzata come un insieme di segmenti di memoria di dimensione variabile.
+}
+
+\nt{
+	Per organizzare la memoria in questo modo, il compilatore del programma ha il compito di
+	organizzare la memoria in tali segmenti. Spesso è più efficiente della paginazione.
+}
+
+\paragraph{Per esempio, per un programma in C serviranno i segmenti:}
+
+\begin{itemize}
+	\item Codice.
+	\item variabili globali.
+	\item Stack.
+	\item Heap.
+	\item Libreria standard.
+	\item Librerie esterne.
+\end{itemize}
+
+
+\paragraph{Problemi:}
+
+\begin{itemize}
+	\item Occorre gestire dinamicamente la memoria libera.
+	\item Si ha frammentazione esterna.
+\end{itemize}
+
+\ex{Pentium Intel}{
+	Il Pentium Intel utilizza una tecnica mista tra paginazione e segmentazione.
+
+	\includegraphics[scale=0.5]{04/pi.png}
+}
+
+\subsection{Memoria Virtuale}
+
+\dfn{Memoria Virtuale}{
+	Separando la memoria logica dalla memoria fisica, nasce il concetto di memoria
+	virtuale.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{04/memoria virtuale.png}
+	\caption{Memoria virtuale.}
+\end{figure}
+
+\dfn{Spazio degli Indirizzi}{
+	Si tratta di uno spazio predefinito, in genere molto più grande dello spazio occupato dal processi di riferimento. Con l’esecuzione, stack e heap cresceranno uno verso l’altro, Per contenere nuovi dati
+	potranno essere allocati nuovi frame.
+}
+
+\nt{Questo non cambia lo spazio degli indirizzi virtuali del processo, semplicemente una parte di
+	indirizzi prima non corrispondenti ad alcun indirizzo assoluto saranno ora mappati su parole
+	di memoria effettive.}
+
+\dfn{Lazy Swapping}{
+	I processi vengono caricati in modo parziale: quando una pagina diventa utile, la si carica in
+	RAM al posto di una pagina già presente, che verrà scaricata in memoria secondaria.
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Occorre definire un meccanismo per mantenere traccia della locazione delle pagine (RAM o
+		      mem. secondaria).
+		\item La parte del SO che gestisce il caricamento delle pagine è detto \fancyglitter{pager}.
+	\end{itemize}
+}
+
+\paragraph{Per ogni pagina nella page table di un processo è presente un bit che indica la validità della pagina:}
+
+\begin{itemize}
+	\item Una pagina è \fancyglitter{valida} se è presente in RAM e appartiene allo spazio degli indirizzi del processo.
+	\item Una pagina è \fancyglitter{invalida} se è in memoria secondaria o non appartiene allo spazio degli indirizzi del processo.
+\end{itemize}
+
+\dfn{Page Fault}{
+	Quando un processo tenta di accedere ad una pagina non valida, viene generato un
+	interrupt (page fault exception):
+	\begin{itemize}
+		\item Se questa pagina è conservata in memoria secondaria (ed
+		      è quindi valida), viene copiata da disco in un frame libero, si aggiorna la tabella delle pagine
+		      e il processo continua come se non fosse successo niente.
+		\item Altrimenti, se la pagina è invalida, si termina il processo.
+	\end{itemize}
+}
+
+\paragraph{Gestione del page fault:}
+
+\begin{enumerate}
+	\item Si genera un'interruzione.
+	\item Salvataggio dei registri e dello stato del processo.
+	\item Verifica dell'interruzione: in questo caso si determina che si tratta di page fault.
+	\item Controllo della correttezza del riferimento e individuazione della locazione occupata dalla pagina mancante sul disco.
+	\item Lettura e copiatura della pagina da memoria secondaria in RAM (operazione di I/O).
+	\item Durante l'attesa per il completamento di questa operazione, allocazione della CPU a
+	      un altro processo.
+	\item Interupt che segnala il completamento dell'operazione di caricamento della pagina.
+	\item Aggiornamento della tabella delle pagine.
+	\item Quando lo scheduling riavvia il processo sospeso, ripristino dello stato.
+	\item Riesecuzione dell'istruzione interrotta.
+\end{enumerate}
+
+\clm{}{}{
+	Riassumendo:
+	\begin{itemize}
+		\item Servizio di interruzione per page fault.
+		\item Lettura della pagina.
+		\item Riavvio del processo.
+	\end{itemize}
+}
+
+\dfn{Area di Swap}{
+	Le pagine di un processo che non sono in RAM sono contenute in memoria
+	secondaria, che viene vista proprio come un’estensione della RAM (nonostante i tempi di
+	accesso maggiori).
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Ogni SO gestisce l’area di swap in maniera molto diversa: sia per il dimensionamento, sia
+		      per i suoi contenuti. Per quanto riguarda la dimensione:
+		      \begin{itemize}
+			      \item Linux suggerisce di allocare il doppio
+			            della quantità di RAM (outdated).
+			      \item Solaris suggerisce di allocare una quantità pari alla differenza
+			            fra la dimensione dello spazio degli indirizzi logici e la dimensione della RAM.
+		      \end{itemize}
+		\item Per l’implementazione, ci sono due approcci:
+		      \begin{itemize}
+			      \item Come file: l’area di swap diventa un file speciale del file system:
+			            \begin{itemize}
+				            \item Pro: si evita il problema di dimensionamento, perchè un file si può
+				                  ridimensionare secondo le necessità.
+				            \item Contro: la gestione del file system rallenta ulteriormente l’accesso.
+			            \end{itemize}
+			      \item partizione a sé, non formattata, in cui si usa un gestore speciale per usare algoritmi
+			            ottimizzati per ridurre i tempi di accesso:
+			            \begin{itemize}
+				            \item Pro: maggiore velocità.
+				            \item Contro: per ridimensionarla bisogna ripartizionare il disco.
+			            \end{itemize}
+		      \end{itemize}
+	\end{itemize}
+}
+
+\nt{
+	Si preferisce mantenere solamente i dati nello swap: il codice
+	tanto si può prelevare dal file syshem.
+}
+
+\dfn{Processi Padre e Figli}{
+	Quando un processo P esegue una fork, viene creato un processo “figlio”, che esegue lo
+	stesso codice del “padre” (processo che lo ha generato) e ha una copia delle var. e dello
+	stack del padre.
+}
+
+\nt{
+	Tramite codice è possibile (e comunemente usato) cambiare il codice che il figlio deve
+	eseguire.
+}
+
+\paragraph{Con l’esecuzione della fork sorgono 2 problemi relativi alla gestione della memoria tra i processi:}
+
+\begin{itemize}
+	\item \fancyglitter{Duplicazione delle pagine:} risolta condividendo le pagine tra processi padre e figlio.
+	\item \fancyglitter{Sovrascrittura delle pagine:} risolta usando la tecnica di “copiatura su scrittura”:
+	      quando uno dei due processi esegue una exec, si allocano delle nuove pagine per il
+	      processo chiamante e si carica il nuovo codice in esse.
+\end{itemize}
+
+\dfn{Sostituzione delle Pagine}{
+	Avviene quando, all’avvenimento di un page fault, non si trova spazio in RAM per la pagina
+	richiesta. Il meccanismo richiede la copiatura di due pagine: vittima copiata in mem.
+	secondaria, nuova pagina copiata in RAM.
+}
+
+\paragraph{Per evitare molteplici casi di duplice scrittura, si cerca di limitarla solo ai casi in cui serve:}
+
+\begin{itemize}
+	\item Serve copiare una volta per mettere la pagina nuova in RAM.
+	\item Serve copiare un’altra volta per copiare la vittima in mem. secondaria, SOLO SE
+	      essa è stata modificata rispetto ad una sua copia già presente.
+\end{itemize}
+
+\nt{
+	Per controllare i casi di modifica viene mantenuto un bit per ogni pagina (chiamato \fancyglitter{dirty bit}) per indicare se la pagina è stata modificata o meno.
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Memoria logica e fisica sono completamente separate.
+		\item Lo spazio di indirizzamento logico dei processi è maggiore dello spazio di indirizzamento fisico offerto dalla RAM.
+		\item Serve realizzare un meccanismo dinamico tramite il quale caricare/sostituire pagine a seconda dell’esigenza.
+		\item Serve introdurre meccanismi per aumentare l’efficienza, in quanto lettura e copiatura
+		      sono operazioni pesanti.
+		\item Incremento del livello di multiprogrammazione.
+	\end{itemize}
+}
+
+\subsection{Paginazione su Richiesta}
+
+\dfn{Paging on Demand}{
+	Anche detta paginazione a richiesta, è un meccanismo per cui una pagina viene caricata in
+	RAM solo se è stata richiesta (i processi vengono caricati senza pagine)
+}
+
+\nt{Non servono ulteriori strutture per applicare questo meccanismo e vale il principio di località
+	dei riferimenti, ma potrebbe essere più pesante di un meccanismo normale.}
+
+\paragraph{per implementare la paginazione su richiesta occorre sviluppare due algoritmi:}
+
+\begin{itemize}
+	\item \fancyglitter{Allocazione del frame:} spartisce M frame liberi fra N processi.
+	\item \fancyglitter{Sostituzione delle pagine:} secondo un criterio predefinito e informazioni prese dalle pagine, sceglie le pagine da sostituire.
+\end{itemize}
+
+\paragraph{Alcune implementazioni:}
+\begin{itemize}
+	\item FIFO (First-In-First-Out).
+	\item Ottimale.
+	\item LRU (Last-Recently-Used).
+	\item Approssimazioni di LRU:
+	      \begin{itemize}
+		      \item Seconda chance.
+		      \item Bit supplementare.
+	      \end{itemize}
+	\item Conteggio:
+	      \begin{itemize}
+		      \item LFU (Least-Frequently-Used).
+		      \item MFU (Most-Frequently-Used).
+	      \end{itemize}
+\end{itemize}
+
+\dfn{Sostituzione FIFO}{
+	gni pagina si associa un marcatore temporale: quando è stata caricata in memoria. Si
+	sceglie poi di sostituire la pagina più vecchia in memoria. Questo è possibile perché le pagine sono organizzate in una coda FIFO: andremo infatti a
+	prendere sempre la prima pagina in coda.
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Questa tecnica è molto semplice da realizzare, ma non si comporta sempre bene: il fatto che
+		      una pagina sia stata caricata da tempo non significa per forza che non sia più in uso.
+		\item Questo algoritmo presenta anche l’\fancyglitter{anomalia di Belady}: la frequenza delle assenze può
+		      aumentare con l’aumentare del numero di frame in RAM.
+	\end{itemize}
+}
+
+\dfn{Algoritmo Ottimale (OPT)}{
+	È l’algoritmo migliore: non presenta l’anomalia di Belady, e ha la frequenza di page fault più
+	bassa. Si sostituisce la pagina che non verrà usata per il periodo di tempo più lungo.
+}
+
+\nt{
+	Non è implementabile, perché non sappiamo quando una pagina verrà richiesta.
+}
+
+\dfn{LRU}{
+	Simile all’algoritmo FIFO, basiamo la scelta sul tempo di utilizzo. Questo algoritmo è un
+	approssimazione dell’OPT, perché ci basiamo su quanto sia stata usata attualmente una
+	pagina. Scegliamo sempre la pagina usata meno di recente.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{04/LRU.png}
+	\caption{LRU.}
+\end{figure}
+
+\dfn{Algoritmo con Bit Supplementare}{
+	Si associa a ogni elemento nella tabella delle pagine una serie di bit che realizzano registri a
+	scorrimento. A intervalli regolari un timer passa il controllo al SO, che:
+	\begin{itemize}
+		\item Sposta i bit nella sequenza traslandoli a destra di 1.
+		\item Copia i bit di riferimento nel bit più significativo.
+		\item Scarta il bit meno significativo.
+	\end{itemize}
+}
+
+\nt{
+	Quindi i bit di riferimento delle pagine vengono azzerati: una pagina che ha il suo registro a
+	00000000 non è stata usata negli ultimi 8 periodi di tempo.
+}
+
+\dfn{Algoritmo di Seconda Chance}{
+	Unisce il metodo LRU a FIFO: le pagine sono mantenute in una coda circolare FIFO e
+	mantengono un bit di riferimento.
+}
+
+\paragraph{Funzionamento:}
+
+\begin{itemize}
+	\item Carico la pagina e le associo un bit di riferimento impostato ad 1.
+	\item Quando diventerà necessario caricare una nuova pagina, la ricerca partirà dalla
+	      posizione successiva, in questo caso il bit di rif. ora vale 1.
+	\item Quando il bit di riferimento è impostato a 1: la pagina viene saltata ma il suo bit di
+	      riferimento viene azzerato. Idem per la pagina successiva.
+	\item A questo punto si incontra una pagina con bit di riferimento a 0 e la si sovrascrive
+	      mettendo il bit di riferimento a 1.
+\end{itemize}
+
+\clm{}{}{
+	\begin{itemize}
+		\item La struttura circolare della coda è un modo per concedere un po' di tempo in RAM a
+		      ciascuna pagina: infatti una pagina con bit che passa da 1 a 0 non viene rimossa
+		      subito ma solo quando si tornerà alla sua locazione dopo aver percorso tutta la lista.
+		\item Se tutti i bit di rif. vengono impostati a 1, diventa FIFO.
+	\end{itemize}
+}
+
+\dfn{Algoritmo di Seconda Chance Migliorato}{
+	Ogni pagina ha associata una coppia di bit $<$r, m$>$:
+	\begin{itemize}
+		\item Riferimento: indica se la pagina è stata usata di recente.
+		\item Modificata: indica se la pagina è stata modificata di recente.
+	\end{itemize}
+}
+
+\paragraph{Si individuano 4 classi di pagine:}
+
+\begin{itemize}
+	\item $<0,0>$: non usata, non modificata.
+	\item $<0,1>$: non usata, modificata.
+	\item $<1,0>$: usata, non  modificata.
+	\item $<1,1>$: usata, modificata.
+\end{itemize}
+
+
+\nt{Il criterio di scelta è basato sulla priorità delle 4 classi.}
+
+\paragraph{Sostituzioni su conteggio:}
+
+\begin{itemize}
+	\item LFU: sostituisce la pagina col minor numero di riferimenti.
+	      Si basa sull’idea che una pagina molto usata avrà un conteggio alto. Diventa però
+	      difficile distinguere fra una pagina che è stata molto usata in passato e una che è
+	      molto usata di recente.
+	\item MFU: sostituisce la pagina col maggior numero di
+	      riferimenti. Si basa sull’idea che se una pagina ha un contatore basso è
+	      probabilmente stata usata di recente.
+\end{itemize}
+
+\dfn{Pool of Free Frames}{
+	Spesso gli algoritmi di sostituzione delle pagine sono affiancati da altre procedure finalizzate
+	a incrementare le prestazioni del sistema. L’idea è associare un piccolo pool di frame liberi.
+}
+
+\paragraph{Quando diventa necessario caricare una
+	pagina nuova:}
+
+\begin{itemize}
+	\item La si copia in un frame libero associato al processo.
+	\item Si sceglie una vittima e la si copia in mem. secondaria.
+	\item Si libera quindi un frame che viene aggiunto al pool di frame liberi.
+\end{itemize}
+
+\nt{In questo modo, non viene cancellata la vittima, che non dovrà essere ricopiata se nasce il bisogno di accedervi nuovamente.}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{04/pool.png}
+	\caption{Pool of free frames.}
+\end{figure}
+
+
+\section{Allocazione e Thrashing}
+
+\subsection{Allocazione}
+
+\dfn{Allocazione dei Frame}{
+	L’algoritmo di allocazione dei frame si applica quando si hanno a disposizione N frame liberi,
+	occorre caricare 1 o + processi e bisogna decidere come spartire i frame. In generale, il numero di page fault è inversamente proporzionale al numero di frame allocati per
+	ciascun processo. L’idea è quindi di mantenere in memoria un numero minimo di frame
+	per processo, per ridurre la probabilità che si generi page fault.
+}
+
+\paragraph{Il numero minimo di frame dipende dall’istruzione e dall’architettura:}
+
+\begin{itemize}
+	\item Se ha un solo operando occorrono $\geq$ 2 pagine (codice e dati).
+	\item Se è un riferimento alla memoria occorrono $\geq$ 3 pagine (codice, dati, riferimento).
+	\item Se è grande, può stare a cavallo tra due pagine.
+	\item Può avere più livelli di indirizzamento indiretto, tutta la mem. virtuale potrebbe
+	      dover essere caricata.
+\end{itemize}
+
+\dfn{Allocazione Proporzionale}{
+	Indichiamo con $VM^i$ la dimensione della memoria logica occupata dal nostro processo.
+	Indichiamo poi con $M$ il numero di frame disponibili, il numero di frame allocati al processo sarà:
+
+
+	$$m = \displaystyle\frac{VM^i}{V} * M$$
+}
+
+\nt{
+	Se abbiamo poi definito un numero minimo di frame necessari per caricare un’istruzione,
+	potrebbe essere necessario incrementare tale valore per i processi più leggere, o diminuirlo
+	per quelli più pesanti.
+}
+
+\cor{Dinamicità}{
+	Se il numero di processi in RAM aumenta bisognerà redistribuire il numero di frame ancora
+	liberi ai nuovi processi, se diminuisce si può assegnare un numero maggiore di frame.
+}
+
+\subsection{Thrashing}
+
+\dfn{Thrashing}{
+	Il thrashing è un fenomeno che si verifica nella gestione della memoria virtuale: quando una
+	pagina in realtà in uso da un processo viene sostituita, e subito dopo viene scatenato di
+	nuovo un page fault, avviene questo fenomeno.
+	Questo loop può continuare per molto tempo, e si spenderà più tempo nel sostituire le
+	pagine che nell’eseguire il processo.
+}
+
+\nt{Quando si ha thrashing perché i processi hanno a disposizione meno frame del numero di
+	pagine attive, l'attività della CPU tende a diminuire: i processi tendono a rimanere in attesa
+	del completamento di operazioni di I/O.}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{04/tr.png}
+	\caption{Effetti del thrashing.}
+\end{figure}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Molti SO monitorano l’uso della CPU: quando questo cala, se ci sono processi conservati in
+		      mem. secondaria, portano in RAM qualche processo in più.
+		\item Ai nuovi processi vengono allocati frame sottratti ad altri processi in RAM se la strategia di
+		      allocazione è globale, quindi aumenta la frequenza di page fault, diminuisce l’uso della CPU
+		      e si ripete fino al blocco totale.
+		\item Si ha thrashing perché la politica di allocazione dei frame è globale: il
+		      SO può sottrarre frame ad un processo per assegnarli ad un altro, rendendo degeneri più
+		      processi alla volta.
+	\end{itemize}
+}
+
+\subsection{Pagine Attive e Working Set}
+
+L’ideale è cercare di prevedere di quante pagine avrà bisogno un processo e
+assegnargli un numero sufficiente di frame. L’allocazione dipenderà dal numero di pagine attive per processo, e si distribuiranno frame
+liberi solo ai processi che ne hanno bisogno. Poiché il numero di pagine attive varia nel
+tempo, se cresce si allocano nuovi frame e se decresce si liberano frame.
+
+\dfn{Working Set}{
+	Si basa sul principio di località: per
+	periodi di durata consistente, il programma avrà accesso solo ad un sottoinsieme del suo
+	codice, variabili globali e locali (quindi un sottoinsieme di pagine, le pagine attive).
+}
+
+\nt{
+	Il WS è
+	quindi l’insieme delle pagine attive di un processo in un certo periodo di tempo.
+}
+
+\paragraph{Definita la finestra $\sigma$ è possibile calcolare il WS di ogni processo, e quindi calcolare la
+	quantità di frame necessari ai processi in esecuzione:}
+
+\[
+	D = \displaystyle\sum_{i = 1}^{n} |WS^i|
+\]
+
+\begin{itemize}
+	\item Quando $D > $ numero di frame liberi si genera thrashing: significa che qualche processo non ha a
+	      disposizione frame a sufficienza.
+	\item Se $S < $ numero di frame liberi è possibile avviare nuovi processi (limitandosi ai frame disponibili).
+\end{itemize}
+
+\nt{
+	Quando il WS di un processo cresce, se non ci sono frame liberi, il SO sceglie uno dei
+	processi, lo copia in memoria secondaria, lo sospende e assegna (parte dei) suoi frame al
+	processo richiedente: così si evita il thrashing.
+}
+
+\dfn{Prepaginazione}{
+	La prepaginazione consiste nel memorizzare insieme al PCB anche il WS, in questo modo si caricano in memoria tutte le pagine utili subito.
+}
+
+\paragraph{Memoria virtuale e file:}
+
+\begin{itemize}
+	\item Quando i processi agiscono sui file tramite system call read() e write(), richiedono accessi
+	      sequenziali alla memoria secondaria, in quanto il file stesso non fa parte del loro codice.
+	\item Eseguire operazioni direttamente sul disco comporta bassa efficienza: sarebbe meglio
+	      eseguire le operazioni sulla RAM (memoria più veloce) e riportare ogni tot le modifiche in
+	      mem. secondaria.
+\end{itemize}
+
+\dfn{Mappatura dei File}{
+	Procedimento nel quale si associano degli indirizzi virtuali di un processo ad una parte di un
+	file a cui ha accesso.
+}
+
+\nt{Scrivere su RAM renderà le operazioni di I/O più veloci, e se un file è usato da più processi,
+	lo si carica in RAM una singola volta e si condividono le pagine.}
+
+\paragraph{È possibile utilizzare diverse strategie per riportare le modifiche dalle copie dei file in RAM
+	ai file effettivi presenti in mem. secondaria:}
+
+\begin{itemize}
+	\item \fancyglitter{Controllo periodico:} se durante il controllo la pagina risulta modificata, la si copia in
+	      mem. secondaria.
+	\item \fancyglitter{Chiusura del file}.
+	\item Operazioni di \fancyglitter{flush} esplicite nel codice del programma.
+\end{itemize}
+
+\dfn{Mappatura I/O}{
+	Oltre ai file, alcuni SO mappano anche i registri dei controller dei dispositivi di I/O. Così
+	l’interazione con questi device avviene solamente scrivendo/leggendo le porzioni della RAM
+	associate ai device.
+}
+
+\ex{Page Fault Malgestiti}{
+	Supponiamo di dover inizializzare una matrice. Abbiamo due possibilità scorrerele colonne per riga o scorrere le righe per colonna.
+
+	Sebbene siano equivalenti dal punto di vista del risultato la seconda causa molti pù page fault del necessario dato che le matrici sono salvate per righe.
+}
+
+\dfn{Allocazione dei Frame per il Kernel}{
+	Differente dall’allocazione per i processi utente a causa di caratteristiche differenti dei
+	processi kernel:
+	\begin{itemize}
+		\item Necessità di strutturare dati di dimensioni variabili, spesso molto più piccole di una pagina.
+		\item Alcuni dispositivi interagiscono direttamente con la RAM: c’è bisogno di avere aree di memoria contigua.
+		\item Codice e dati del kernel non sono sottoposti a paginazione.
+	\end{itemize}
+}
+
+\cor{Sistema Buddy}{
+	Il sistema buddy, anche noto come sistema gemellare, che consiste
+	nell’utilizzo di pagine fisicamente contigue allocate in memoria in unità di dimensioni pari
+	a potenze di 2 (4KB, 8KB, 16KB…), e arrotondando poi per eccesso le richieste (es: se
+	servono 6KB, si allocano 8KB).
+}
+
+\nt{Lo svantaggio principale di questo sistema è l’alta frammentazione interna: per allocare
+	33KB uso 64KB, per allocare 65KB ne uso 128 ecc.}
+
+\dfn{Allocazione a Slab}{
+	Una slab è una sequenza di pagine fisicamente contigue, e una cache un insieme di slab.
+	Con questo sistema viene mantenuta una cache per ogni tipo di strutture dati usate dal SO,
+	per esempio: i semafori, PCB… Ogni cache contiene delle istanze, e queste istanze
+	possono essere libere o occupate. Quando viene richiesta una nuova istanza, il SO cerca la cache in questione, e se c’è un
+	istanza libera usa quella. Se non la trova, alloca una nuova slab.
+}
+
+\nt{
+	Questa tecnica è molto efficiente, perchè elimina il problema della frammentazione interna.
+	Introdotta in Solaris, ora è usata anche da Linux (in precedenza usava il buddy system).
+}
+
+
+

@@ -1,0 +1,630 @@
+\chapter{Gestione della Sincronizzazione}
+
+\section{Semafori}
+
+Strumento di sincronizzazione introdotti da Dijkstra per minimizzare il busy-waiting.
+
+\subsection{Introduzione}
+
+\dfn{Semafori}{
+	Il semaforo non è altro che una variabile a cui si può accedere solo con due operazioni
+	atomiche:
+
+	\begin{itemize}
+		\item P (Proberen, verificare in olandese).
+		\item V (Verhogen, incrementare, in olandese).
+	\end{itemize}
+
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.7]{03/pv.png}
+	\caption{Definizioni.}
+\end{figure}
+
+\dfn{Spinlock}{
+	L'implementazione originale dei semafori, detta spinlock, aveva attesa attiva.
+}
+
+\nt{Una possibile soluzione per evitare attesa attiva: ogni semaforo mantiene una lista di PCB dei processi sospesi su quel
+	semaforo; quando un processo si sospende su quel semaforo, lo scheduler assegna la CPU a un altro processo, e quando il semaforo viene alzato, uno dei processi in attesa viene
+	riattivato.}
+
+\begin{figure}[h]
+	\centering
+	\begin{minted}{c}
+typedef struct {
+    int valore; /* Valore del semaforo */
+    processo *lista; /* Lista di attesa relativa al semaforo */
+} semaforo;
+P (semaforo *s) {
+    S->valore - -; /* Decremento il valore del semaforo se il valore diventa negativo 
+                   occorre sospendere il processo */
+    if (S->valore < 0) {
+        <aggiungi il PCB di questo processo a S->lista>
+        /* block è una system call che richiama lo scheduler della CPU, che deve riassegnare 
+	la medesima a un altro processo, e il dispatcher, che deve effettuare il context switch */
+        block();
+    }
+} 
+V (semaforo *S) {
+    S->valore++; /* Incremento il valore del semaforo */
+                 /* Se il valore è negativo, allora ci sono processi da
+                 risvegliare */
+    if (S->valore < 0) {
+        <scegli un PCB P da S->lista>
+        wakeup(P);
+    }
+}
+\end{minted}
+	\caption{Implementazione di un semaforo.}
+\end{figure}
+
+\nt{
+	Il valore del semaforo indica il numero di processi in attesa.
+}
+
+\paragraph{I valori dei semafori possono essere:}
+
+\begin{itemize}
+	\item 1: valore di inizializzazione, risorsa disponibile.
+	\item 0, -1, -2, \dots, -n: risorsa occupata.
+\end{itemize}
+
+\nt{
+	I semafori che possono assumere valori $>$ 1 sono detti \fancyglitter{semafori contatori}, il cui numero
+	rappresenta una quantità di risorse disponibili.
+}
+
+\paragraph{I semafori possono realizzare molti tipi di sincronizzazione:}
+
+\begin{itemize}
+	\item \fancyglitter{Mutua esclusione:} tutti i processi coinvolti separano le loro sezioni critiche con
+	      P(mutex) e V(mutex), dove mutex è un semaforo di mutua esclusione.
+	\item \fancyglitter{Accesso limitato:} tutti i processi coinvolti separano le loro sezioni critiche con
+	      P(nris) e V(nris), dove nris è un semaforo contatore che permette a molteplici
+	      processi di eseguire in parallelo una certa sezione critica.
+	\item \fancyglitter{Ordinamento:} l’ordine di esecuzione dei processi viene esplicitamente controllato.
+\end{itemize}
+
+\nt{
+	Le operazioni sui semafori devono essere eseguite in modo atomico, in quanto i semafori
+	sono variabili condivise (le operazioni sono quindi dentro sezioni critiche).
+}
+
+\paragraph{Si può ottenere l'atomicità:}
+
+\begin{itemize}
+	\item Sui sistemi monoprocessore disabilitando gli interrupt (P e V sono brevi quindi non
+	      rallentano il sistema).
+	\item Sui sistemi multiprocessore utilizzando gli spinlock (disabilitare gli interrupt fa calare le
+	      prestazioni).
+\end{itemize}
+
+\subsection{Problemi Classici}
+
+\subsubsection{Produttori e Consumatori}
+Usiamo un buffer circolare di SIZE posizioni in cui i
+produttori inseriscono i dati e i consumatori li prelevano.
+
+\begin{figure}[h]
+	\centering
+	\begin{minted}{c}
+typedef struct {...} item;
+item buffer [SIZE];
+semaphore full, empty, mutex;
+item nextp, nextc;
+int in = 0, out = 0;
+full = 0 ; empty = SIZE; mutex = 1;
+\end{minted}
+	\caption{Dati condivisi e inizializzazione.}
+\end{figure}
+
+\begin{itemize}
+	\item full: conta il numero di posizioni piene del buffer.
+	\item empty: conta il numero di posizioni vuote del buffer.
+	\item mutex: semaforo binario, per l’accesso in mutua esclusione
+	      del buffer circolare e delle variabili in e out.
+	\item in e out: servono per gestire il buffer circolare.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\begin{minted}{c}
+while (true) {
+    ...
+    produci un item in nextp
+    ...
+    wait(empty);
+    wait(mutex);
+    buffer[in] = nextp;     // inserisce nextp
+    in = (in + 1) mod SIZE; // nel buffer
+    signal(mutex);
+    signal(full);
+}
+\end{minted}
+	\caption{Codice di un PRODUTTORE.}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\begin{minted}{c}
+while (true) {
+    wait(full)
+    wait(mutex);
+    nextc = buffer[out]    // rimuove un
+    out = out + 1 mod SIZE // elemento
+    signal(mutex);
+    signal(empty);
+    ...
+    consuma item in nextc
+    ...
+}
+\end{minted}
+	\caption{Codice di un CONSUMATORE.}
+\end{figure}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Se ci sono più produttori, e buffer ha almeno due posizioni
+		      libere (empty $\geq$ 2) , ci possono essere due (o più) processi
+		      che hanno superato la wait(empty) e cercano di inserire in
+		      buffer un item e di aggiornare la variabile in.
+		\item Se ci sono più consumatori, e buffer ha almeno due posizioni
+		      piene (full $\geq$ 2) , ci possono essere due (o più) processi che
+		      hanno superato la wait(full) e cercano di prelevare un item
+		      dal buffer e di aggiornare la variabile out.
+	\end{itemize}
+}
+
+\subsubsection{Lettori e Scrittori}
+
+\paragraph{Problema:} condividere un file tra molti processi.
+
+\begin{itemize}
+	\item Alcuni processi richiedono solo la lettura (\fancyglitter{lettori}), altri
+	      possono voler modificare il file (\fancyglitter{scrittori}).
+	\item Due o più lettori possono accedere al file
+	      contemporaneamente.
+	\item Un processo scrittore deve poter accedere al file in mutua
+	      esclusione con tutti gli altri processi.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\begin{minted}{c}
+wait(scrivi);
+...
+esegui la scrittura del file
+...
+signal(scrivi);
+\end{minted}
+	\caption{Codice di uno SCRITTORE.}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\begin{minted}{c}
+wait(mutex); // mutua escl. per aggiornare numlettori
+numlettori++;
+if (numlettori == 1) wait(scrivi); // il primo lettore ferma
+				   // eventuali scrittori
+signal(mutex);
+... leggi il file ...
+wait(mutex);
+numlettori--;
+if (numlettori == 0) signal(scrivi);
+signal(mutex);
+\end{minted}
+	\caption{Codice di un LETTORE.}
+\end{figure}
+
+\subsubsection{Cinque Filosofi}
+
+\paragraph{Problema:} 5 filosofi passano il tempo seduti intorno a un tavolo pensando e mangiando a fasi alterne.
+Per mangiare un filosofo ha bisogno di due posate ma ci sono solo cinque posate in tutto.
+
+\dfn{Deadlock}{
+	Lo stallo o deadlock indica una situazione in cui due o più processi o azioni si bloccano a vicenda, aspettando che uno esegua una certa azione (per esempio rilasciare il controllo su una risorsa come un file, una porta input/output ecc.) che serve all'altro e viceversa.
+}
+
+\dfn{Starvation}{
+	La starvation è l'impossibilità perpetua, da parte di un processo pronto all'esecuzione, di ottenere le risorse sia hardware sia software di cui necessita per essere eseguito.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.7]{03/5f.png}
+	\caption{Problema dei 5 filosofi.}
+\end{figure}
+
+\nt{Dijkstra propone una soluzione che consente di evitare il deadlock. Bisogna rompere la
+	simmetria nell'accesso alle posate, introducendo la seguente regola: ogni filosofo deve
+	prendere per prima la posata con indice minore.}
+
+\paragraph{Soluzione di Chandy-Misra:} quando due processi sono in competizione l’algoritmo non favorisce
+sempre lo stesso (causando starvation). Viene introdotto un concetto di precedenza
+dinamica tra processi (cambia nel tempo), che funziona associando un concetto di stato alla
+risorsa.
+
+\begin{enumerate}
+	\item Ogni forchetta (risorsa) può essere “sporca” o “pulita”; inizialmente sono tutte
+	      “sporche” e ogni filosofo ne ha una.
+	\item Quando un filosofo vuole mangiare, invia ai suoi vicini dei messaggi per ottenere le
+	      forchette che gli mancano.
+	\item Quando un filosofo, che ha una forchetta, riceve una richiesta: se sta pensando, la
+	      cede altrimenti se la forchetta è pulita ne mantiene il possesso, se è sporca la cede.
+	      Quando passa una forchetta ne pone lo stato a “pulita”.
+	\item Dopo aver mangiato, tutte le forchette di un filosofo diventano “sporche”. Se risultano
+	      richieste pendenti per qualche forchetta, il filosofo la pulisce e la passa.
+\end{enumerate}
+
+\section{Monitor}
+
+\subsection{Introduzione}
+
+\dfn{Monitor}{
+	Sono dei costrutti di sincronizzazione contenenti i dati e le operazioni necessarie per
+	allocare una risorsa condivisa usabile in modo seriale. Le variabili di un monitor sono condivise dai processi che usano quel monitor. Per
+	accedere alle variabili condivise un processo deve eseguire una routine di accesso al
+	monitor (possono essercene diverse). Un solo processo per volta può essere attivo all’interno di un monitor.
+}
+
+\nt{
+	È un abstract data type (ADT): in sé non è un tipo di dato, ma contiene dati e le istruzioni per
+	utilizzarli.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{03/monitor.png}
+	\caption{Monitor.}
+\end{figure}
+
+\paragraph{I monitor consentono anche di effettuare sincronizzazione tra processi attraverso variabili
+	di tipo condition (boolean), su cui si possono eseguire solo le operazioni:}
+
+\begin{itemize}
+	\item wait(x): esecutore sospeso se x == false.
+	\item signal(x): se un processo è sospeso sulla condition x, uno viene scelto e
+	      risvegliato.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.6]{03/em.png}
+	\caption{Esempio di monitor.}
+\end{figure}
+
+\paragraph{Quando un processo (thread) esegue signal rischiamo di avere due processi attivi nel
+	monitor. Ci sono 2 soluzioni:}
+
+\begin{itemize}
+	\item Segnalare e attendere:
+	      \begin{itemize}
+		      \item P attende.
+		      \item Q riprende ed esegue.
+	      \end{itemize}
+	\item Segnalare e proseguire:
+	      \begin{itemize}
+		      \item P continua.
+		      \item Q aspetta che P finisca.
+	      \end{itemize}
+\end{itemize}
+
+\section{Transazioni e Lock}
+
+\subsection{Transazioni}
+
+\dfn{Transazione}{
+	Un insieme di istruzioni che esegue una singola funzione logica, ovvero una sequenza di
+	read e write che si conclude con un commit (successo) o con un abort (fallimento).
+}
+
+\paragraph{La transazione deve essere atomica, e l’atomicità dipende dai dispositivi di memoria utilizzati
+	per mantenere i dati elaborati dalla macchina:}
+
+\begin{itemize}
+	\item \fancyglitter{Memorie volatili} (RAM, cache, registri): cancellati a spegnimento.
+	\item \fancyglitter{Memorie non volatili} (dischi, EEPROM): persistenti, ma non sempre “eterni”.
+	\item \fancyglitter{Memorie stabili} (RAID\footnote{Questo è visto in dettaglio nel corso di "Basi di Dati".}): supporti di memorizzazione che aggiungono
+	      politiche/strumenti di duplicazione, rendendo i dati “eterni”.
+\end{itemize}
+
+\qs{}{Cosa succede se una transazione viene abortita e la memoria volatile viene cancellata?}
+
+\nt{Dobbiamo tenere traccia delle operazioni eseguite, un logfile mantenuto su memoria stabile.}
+
+\paragraph{Il log dovrà contenere quindi:}
+
+\begin{itemize}
+	\item L'inizio di una transazione T.
+	      \begin{itemize}
+		      \item $<$T, start$>$
+	      \end{itemize}
+	\item Una sequenza di tuple, relativa a un operazione di write da fare.
+	      \begin{itemize}
+		      \item $<$ID transazione, ID dato modificato, valore precedente, nuovo valore$>$
+	      \end{itemize}
+	\item Il successo della transazione.
+	      \begin{itemize}
+		      \item $<$T, commit$>$
+	      \end{itemize}
+\end{itemize}
+
+\paragraph{A seguito di un crash di sistema, il SO controlla il log e per ogni transazione T registrata:}
+
+\begin{itemize}
+	\item se a $<$T, start$>$ non corrisponde un $<$T, commit$>$, il SO esegue l’operazione
+	      undo(T) che ripristina tutti i valori modificati dalla transazione eseguita in modo
+	      parziale.
+	\item Se a $<$T, start$>$ corrisponde un $<$T, commit$>$, il SO verifica che le modifiche
+	      registrate siano state effettivamente eseguite. In caso contrario, il SO esegue un
+	      redo(T) attuando le modifiche.
+\end{itemize}
+
+\nt{Questa registrazione dei dati riduce leggermente l’efficienza dell’esecuzione, ma fornisce
+	un’enorme affidabilità e stabilità al sistema.}
+
+\paragraph{Per evitare di scorrere tutto il log file ad ogni crash, introduciamo dei checkpoint. Questi checkpoint ci fanno sapere che:}
+
+\begin{itemize}
+	\item Tutte le transazioni prima di questo checkpoint sono state riportate in memoria stabile.
+	\item Tutte le operazioni di scrittura registrate nel logfile sono state applicate con successo.
+\end{itemize}
+
+\nt{In caso di crash, basta andare a trovare il primo checkpoint, cosicché si possa
+	ignorare tutto quello che avviene prima, applicando le operazioni di undo/redo solo
+	successive al checkpoint.}
+
+\dfn{Serializzabilità}{
+	La serializzabilità è la proprietà per cui la loro esecuzione concorrente è equivalente alla loro
+	esecuzione in una sequenza arbitraria.
+}
+
+\paragraph{\fancyglitter{Operazioni conflittuali:}}
+
+\begin{itemize}
+	\item Date due transazione $T_1$ e $T_2$ e le due operazioni $O_1$ e $O_2$, se le operazioni
+	      appaiono in successione, accedono agli stessi dati e almeno una delle due
+	      operazioni è una write, allora $O_1$ e $O_2$ sono operazioni conflittuali.
+\end{itemize}
+
+\subsection{Lock}
+
+\paragraph{Per garantire la serializzabilità si può usare un meccanismo di lock in cui:}
+
+\begin{itemize}
+	\item A ogni dato soggetto a transazione si associa un lock.
+	\item Il lock di un dato può essere S (read only) o X (read \& write).
+	\item Una transazione che intenda usare un certo dato deve richiederne il lock appropriato,
+	      ed eventualmente attendere che un'altra transazione lo rilasci.
+\end{itemize}
+
+\dfn{Lock a 2 Fasi}{
+	Inizialmente le transazioni sono in fase di “crescita”, ovvero possono ottenere nuovi lock
+	per acquisire tutte le risorse necessarie, senza rilasciarne mai nessuno.
+	Successivamente, in fase di “riduzione”, le transazioni rilasciano via i lock per rimuovere le
+	risorse inutilizzate, senza richiederne mai di nuovi.
+}
+
+\nt{
+	In questo caso è possibile però avere deadlock.
+}
+
+\dfn{Timestamp}{
+	Il timestamp è una rappresentazione univoca di un istante temporale.
+}
+
+\cor{Protocollo basato su Timestamp}{
+	Il protocollo assegna a ogni transazione $T_S$ un timestamp $T$ prima della loro esecuzione.
+	Se due transazioni sono tali che $T_S(T_1) < T_S(T_2)$, allora il sistema deve garantire
+	l’esecuzione sequenziale con $T_1$ prima di $T_2$.
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item L’algoritmo non impone un ordinamento corretto fra le transazioni, l’unico scopo è far
+		      sì che tutte le volte che una transazione legge un dato, abbia il dato originale oppure
+		      il dato modificato dalla transazione stessa.
+		\item Viene garantita l’atomicità funzionale, diversa dall’atomicità di
+		      esecuzione per il fatto che viene consentito l’interleaving delle istruzioni.
+		\item Si hanno quindi transazioni che non interferiscono tra di loro perché usano dati
+		      diversi oppure non vengono eseguite in modo concorrente.
+		\item L'algoritmo non è preventivo: identifica situazioni problematiche e le aggiusta.
+	\end{itemize}
+}
+
+\section{Deadlock}
+
+\subsection{Introduzione}
+
+\dfn{Deadlock}{
+	Un deadlock è una situazione per cui un insieme di processi sono fermi in attesa di un
+	evento che solo uno dei processi appartenenti all’insieme stesso potrebbe causare.
+}
+
+\nt{Se un processo vuole usare N istanze di una certa risorsa, dovrà chiederle al gestore delle
+	risorse (SO).}
+
+\paragraph{Si hanno 3 fasi:}
+
+\begin{itemize}
+	\item Richiesta.
+	\item Uso.
+	\item Rilascio.
+\end{itemize}
+
+\dfn{Grafo di Assegnazione delle Risorse}{
+	È una rappresentazione delle assegnazioni che permette di rilevare situazioni di deadlock,
+	tramite un grafo $G = <V, E>$.
+}
+
+\paragraph{Nel grafo:}
+
+\begin{itemize}
+	\item $V$ è l’insieme dei vertici ed è partizionato in due sottoinsiemi $P$ e $R$ $(P \cap R = \emptyset)$
+	      \begin{itemize}
+		      \item $P$ è l’insieme di tutti i processi del sistema.
+		      \item $R$ è l’insieme di tutte le classi di risorse del sistema.
+	      \end{itemize}
+	\item $E$ è l’insieme degli archi:
+	      \begin{itemize}
+		      \item Un arco direzionato da $R_i$ a $P_j$ indica che una risorsa di classe $R_i$ è stata assegnata al processo $P_j$.
+		      \item Un arco direzionato da $P_j$ a $R_i$ indica che il processo $P_j$ ha richiesto ed è in attesa di una risorsa di tipo $R_i$.
+	      \end{itemize}
+\end{itemize}
+
+\nt{Se il grafo non contiene ciclo, non c’è deadlock. La presenza di un ciclo è condizione
+	necessaria ma non sufficiente per avere deadlock.}
+
+\subsection{Prevenzione del Deadlock}
+
+\qs{}{Cosa fare con il deadlock?}
+
+\begin{itemize}
+	\item Rilevarlo.
+	\item Rompere il deadlock richiede la capacità di monitorare richieste e assegnazioni di risorse.
+	\item Per prevenire il deadlock occorre definire opportuni protocolli di assegnazione delle risorse.
+	\item Fare finta che il deadlock sia impossibile è la tecnica più usata e poco costosa
+	      perché non richiede politiche né risorse aggiuntive.
+\end{itemize}
+
+\paragraph{Per prevenire il deadlock è necessario rendere impossibile una delle 4 condizioni necessarie
+	al deadlock:}
+
+\begin{enumerate}
+	\item \fancyglitter{Mutua Esclusione:} la richiesta di usare le risorse in ME può essere rilasciata solo
+	      per alcuni tipi di risorse, altre sono intrinsecamente ME.
+	\item \fancyglitter{Strategia di Havender 1} (possesso e attesa): se un processo ha bisogno di più
+	      risorse, le ottiene tutte insieme, oppure non ne ottiene nessuna.
+	\item \fancyglitter{Strategia di Havender 2} (prelazione): quando un processo con N risorse ne richiede
+	      un'altra, la ottiene subito oppure rilascia tutte le altre.
+	\item \fancyglitter{Strategia di Havender 3} (attesa circolare): imporre un ordinamento delle risorse e
+	      dei processi.
+\end{enumerate}
+
+\dfn{Prima Strategia di Havender}{
+	Tutte le risorse necessarie ad un processo devono essere richieste insieme:
+	\begin{itemize}
+		\item Se sono tutte disponibili, il sistema le assegna e il processo prosegue.
+		\item Se anche solo una non è disponibile, il processo non ne acquisisce e si mette in
+		      attesa.
+	\end{itemize}
+}
+
+\paragraph{Vantaggio:} previene il deadlock.
+
+\paragraph{Svantaggio:} spreco di risorse (non vengono utilizzate in modo ottimale in quanto un
+processo può tenersi per più tempo risorse che non usa più).
+
+\nt{
+	Questa strategia non funziona per processi heavyweight però se all'interno del processo
+	riusciamo a distinguere più thread di esecuzione, ciascuno dei quali ha bisogno di un
+	sottoinsieme delle risorse ed è generato solo quando occorre, la strategia può risultare
+	efficace.
+}
+
+\dfn{Seconda Strategia di Havender}{
+	Quando un processo richiede una risorsa che gli viene negata, rilascia tutte le risorse
+	accumulate fino a quel momento. Eventualmente, il processo richiederà tutte le risorse che
+	ha perso, più quella che gli serviva.
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item È una tecnica costosa (perdere delle risorse può significare perdere un lavoro già compiuto
+		      in parte) e vale la pena solo se il sistema è tale per cui questa tecnica viene eseguita
+		      raramente.
+		\item Il suo uso in congiunzione a un criterio di priorità che predilige l'assegnazione di risorse a
+		      processi che ne richiedono poche (può causare starvation).
+	\end{itemize}
+}
+
+\dfn{Terza Strategia di Havender}{
+	Ogni risorsa ha assegnato un numero utilizzato per quella risorsa soltanto, che le rende
+	ordinabili in ordine crescente $(R_1 < R_2 < \dots < R_n)$.
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Un processo che ha bisogno di M risorse deve richiederle in ordine crescente.
+		\item Non si può avere deadlock perché l’ordinamento delle richieste impedisce l’attesa circolare,
+		      ma non è molto flessibile.
+	\end{itemize}
+}
+
+\subsection{Deadlock Avoidance}
+
+\dfn{Deadlock Avoidance}{
+	Non si può sempre evitare deadlock a priori. I metodi che consentono di fare ciò richiedono
+	alcune informazioni, come per esempio il numero di risorse di cui hanno bisogno.
+	L’algoritmo di deadlock avoidance esamina lo stato di allocazione delle risorse e garantisce
+	che in futuro non si formeranno attese circolari.
+}
+
+\paragraph{Si introducono 2 nuove nozioni:}
+
+\begin{itemize}
+	\item Stato (del sistema) sicuro: si dice che un sistema è in un stato sicuro se il SO può
+	      garantire che ciascun processo finisca la propria esecuzione in un tempo finito.
+	\item Sequenza sicura: una sequenza di processi viene detta sicura se le richieste che
+	      ogni processo deve ancora fare sono soddisfacibili usando le risorse attualmente
+	      libere più le risorse usate e liberate da altri processi.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{03/sar.png}
+	\caption{Stato di allocazione delle risorse.}
+\end{figure}
+
+\nt{
+	Uno stato è sicuro se da esso si dirama almeno una sequenza sicura, quindi se esiste
+	almeno un ordinamento dei processi che è una sequenza sicura.
+
+	Uno stato non sicuro non è necessariamente di deadlock ma può portare a esso.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{03/dead.png}
+	\caption{Esempio.}
+\end{figure}
+
+\cor{Algoritmo di Deadlock Avoidance}{
+	Variante del grafo di assegnazione che utilizza un terzo tipo di arco: l’arco di reclamo (claim
+	edge). Funziona solo se ogni classe di risorsa ha una sola istanza. All'inizio tutti i processi inseriscono nel grafo di assegnazione un claim edge per ciascuna
+	risorsa di cui avranno bisogno. Verranno trasformati in arco di richiesta solo se non si
+	genera un ciclo (lo stato è quindi sicuro).
+}
+
+\paragraph{Alcuni algoritmi:}
+
+\begin{itemize}
+	\item Banchiere.
+	\item Verifica della sicurezza.
+	\item Gestione delle richieste.
+\end{itemize}
+
+\subsection{Rottura del Deadlock}
+
+\paragraph{Tre possibili soluzioni:}
+
+\begin{itemize}
+	\item Terminare i processi coinvolti:
+	      \begin{itemize}
+		      \item Terminare tutti i processi coinvolti.
+		      \item Terminare un processo per volta fino alla risoluzione del deadlock, applicando
+		            l’algoritmo dopo l’abort di ciascun processo.
+	      \end{itemize}
+	\item Effetture la prelazione delle risorse: sottrarre risorse ad altri processi per assegnarle ad altri. Anche qua bisogna identificare una
+	      vittima, su criteri economici.
+	\item Riassegnare le risorse.
+\end{itemize}
+
+
+
+
+

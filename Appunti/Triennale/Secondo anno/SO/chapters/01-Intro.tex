@@ -1,0 +1,690 @@
+\chapter{Introduzione}
+
+\qs{}{Che cosa sono i sistemi operativi?}
+
+\dfn{Sistema Operativo}{
+	Permette di usare l'hardware attraverso programmi. È principalmente un gestore di risorse, ma si occupa anche di controllare l'esecuzione dei programmi applicativi.
+}
+
+\paragraph{Le risorse costituiscono il sistema e consentono la risoluzione di problemi. Possono essere
+	di 2 tipi:}
+
+\begin{itemize}
+	\item \fancyglitter{Hardware:} CPU, RAM, I/O\dots
+	\item \fancyglitter{Software:} code di messaggi, processi, thread\dots
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.6]{01/so.png}
+	\caption{Schema generale di un computer.}
+\end{figure}
+
+\section{Idee base}
+
+\dfn{Astrazioni}{
+	Il SO definisce delle “astrazioni”, ovvero delle rappresentazioni dei vari elementi del SO
+	stesso, in modo che siano di facile comprensione da parte dell’utente. In generale il SO definisce delle astrazioni software di tutti i tipi di oggetti che occorre rappresentare e
+	gestire per far funzionare un computer (compresi gli utenti), implementa opportuni algoritmi
+	di controllo e contiene interfacce sia verso gli utenti sia verso i dispositivi fisici.
+}
+
+\subsection{Eventi}
+
+\dfn{Program Event-Driven}{
+	Sono dei programmi che eseguono diverse routine basandosi su determinate situazioni
+	chiamate eventi. A ogni evento corrisponde una routine di gestione predefinita detta
+	“event-handler”.
+}
+
+\nt{
+	La gestione degli eventi deve essere molto efficiente in un SO.
+}
+
+\cor{Dispatch}{
+	Gli eventi possono essere accumulati in una coda, e quando vengono gestiti si esegue un
+	“dispatch”, che consiste nell’individuare ed eseguire la routine associata all’evento.
+}
+
+\nt{
+	È possibile implementare il dispatch attraverso un vettore di puntatori agli event handler: basta
+	associare a ogni evento un numero (id dell'evento e al contempo indice nel vettore). Il
+	vettore è detto vettore delle interruzioni (interrupt vector).
+}
+
+\paragraph{La gestione degli interrupt causa un context switch:}
+
+\begin{enumerate}
+	\item SO sospende il processo e salva le sue informazioni in RAM.
+	\item Carica nei registri CPU le informazioni necessarie per l’esecuzione dell’handler.
+\end{enumerate}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.6]{01/ih.png}
+	\caption{Context switch.}
+\end{figure}
+
+\subsection{Architetture}
+
+\paragraph{Gli elaboratori possono essere divisi in 2 categorie:}
+
+\begin{itemize}
+	\item \fancyglitter{Monoprocessore (Single Core):} possiedono una singola CPU, ma possono
+	      presentare processori ausiliari dedicati ad attività specifiche (es: controller).
+	\item \fancyglitter{Multiprocessore (Multi Core):} posseggono due o più CPU e godono di maggiore
+	      capacità elaborativa, maggiore affidabilità e gestione della memoria più efficiente, ma
+	      possiedono un costo di risorse HW più elevato legato alla gestione e
+	      sincronizzazione dei processori.
+\end{itemize}
+
+\cor{Cluster di Elaboratori}{
+	Sono sistemi multiprocessore costituiti da insiemi di elaboratori completi (chiamati nodi).
+	Ogni nodo può essere single o multi-core.
+	C’è bisogno di un software che gestisce il cluster, per controllare e sistemare i possibili crash
+	e per dividere il carico sui nodi.
+}
+
+\dfn{Memoria Centrale (RAM)}{
+	E’ l’unica memoria di grandi dimensioni direttamente accessibile dalla CPU. Queste
+	interazioni avvengono tramite istruzioni load (RAM $\rightarrow$ registro) e store (registro $\rightarrow$ RAM).
+}
+
+\nt{È molto più veloce di una memoria secondaria, ma è anche volatile, ovvero viene
+	cancellata allo spegnimento della macchina, e ha una capacità limitata a causa dell’elevato
+	costo di produzione.}
+
+\dfn{Memoria Secondaria}{
+	È una memoria permanente, con capacità
+	elevata. In genere si tratta di un disco
+	magnetico, ma gli SSD, nastri, CD/DVD/BD.
+	Si differenziano in base al costo e la
+	velocità di accesso.
+}
+
+\paragraph{I dispositivi di input/output vengono gestiti
+	da un certo numero di controller, tutti
+	connessi da un bus. Ogni controller:}
+
+\begin{itemize}
+	\item Gestisce uno o più dispositivi.
+	\item Ha una memoria interna (buffer e registri).
+	\item Ha un software chiamato driver che si interfaccia con il SO.
+	\item Per operazioni più rapide utilizzano DMA (Direct Memory Access).
+\end{itemize}
+
+\subsection{Caratteristiche di un SO}
+
+\dfn{Scheduling della CPU}{
+	\begin{itemize}
+		\item Multiprogrammazione: il SO gestisce contemporaneamente un insieme di processi
+		      (job, task) distribuendo l’utilizzo della CPU fra i vari processi.
+		\item Multitasking: estensione della multiprogrammazione in cui si tiene conto
+		      dell’interazione con l’utente, facendo in modo che esso abbia la percezione che solo
+		      il suo job sia in esecuzione (parallelismo virtuale).
+	\end{itemize}
+}
+
+\nt{La gestione di quali processi spostare in memoria centrale e viceversa è detta job
+	scheduling.}
+
+\dfn{Dual Mode}{
+	Politica di protezione del SO che permette ai processi di utilizzare un Instruction Set “sicuro”,
+	che non li lascia eseguire modifiche drastiche alla memoria (i processi possono solo
+	accedere all’area di memoria a loro assegnata).
+}
+
+\paragraph{In dual mode, tramite un \fancyglitter{bit di validità}, è possibile decidere quale IS utilizzare:}
+
+\begin{itemize}
+	\item 0 $\rightarrow$ Modalità \fancyglitter{kernel} (o supervisore): accesso all'intero IS.
+	\item 1 $\rightarrow$ Modalità \fancyglitter{utente}: non si ha accesso alle istruzioni di I/O.
+\end{itemize}
+
+\nt{Al bootstrap, il bit di modalità è inizializzato a 0. Con la richiesta di esecuzione di processi
+	utente, a seconda del processo, il bit di modalità cambierà valore.}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.6]{01/dual.png}
+	\caption{Dual Mode.}
+\end{figure}
+
+\dfn{System Call}{
+	Comandi che possono essere utilizzati dai processi per eseguire indirettamente (le op. non
+	le esegue il processo ma il SO) operazioni di I/O. Durante l’esecuzione di una system call, il
+	bit di modalità vale 0.
+}
+
+\section{Gestione Generale del SO}
+
+\subsection{Programmi e Processi}
+
+\dfn{Processo}{
+	Un programma in sé è un file, un'entità passiva che non fa nulla. La sua esecuzione produce
+	un’entità attiva detta processo.
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Un programma può avere diversi processi che possono portare ad eseguire task diversi,
+		      ognuno con una propria area di memoria che può essere anche condivisa.
+		\item Di ogni processo viene mantenuta un’astrazione.
+	\end{itemize}
+}
+
+\paragraph{Il SO deve gestire i processi:}
+
+\begin{itemize}
+	\item Identificazione.
+	\item Creazione e cancellazione.
+	\item Sincronizzazione e comunicazione.
+	\item Identificare e gestire il deadlock.
+	\item Evitare starvation.
+\end{itemize}
+
+\cor{Terminazione di un Processo}{
+	La terminazione dei processi è gestita da un system call, e la terminazione anormale può
+	causare la copiatura dell’immagine del processo (dump o core). In questa maniera si può
+	eseguire il codice passo per passo, per vedere cosa sia successo.
+}
+
+\paragraph{Un processo può anche fare delle azioni:}
+
+\begin{itemize}
+	\item Caricare un programma diverso da quello originario.
+	\item Generare un altro processo.
+	\item può essere sospeso per un lasso di tempo o in attesa di un evento (per esempio, un
+	      segnale)
+\end{itemize}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Il SO “convive” con gli altri processi utente, perciò anche esso ha bisogno di utilizzare
+		      la CPU.
+		\item Il SO può riprendere la CPU assegnata ad un processo utente tramite l’utilizzo di
+		      timer predefiniti, che causano un interrupt del processo.
+	\end{itemize}
+}
+
+\subsection{Gestione del Sistema}
+
+\paragraph{Le operazioni principali per la gestione dei file che il SO esegue sono:}
+
+\begin{itemize}
+	\item Creazione e cancellazione.
+	\item Apertura e chiusura.
+	\item Lettura e scrittura.
+	\item Riposizionamento e Spostamento.
+	\item Copiatura.
+	\item Lettura e modifica delle proprietà.
+\end{itemize}
+
+\paragraph{Ci sono varie operazioni che si possono fare sui dispositivi:}
+
+\begin{itemize}
+	\item Request o release.
+	\item Lettura, scrittura e riposizionamento.
+\end{itemize}
+
+\nt{
+	Sono system call che trasferiscono informazioni come la data e l’ora,
+	informazioni sui processi o informazioni sui file all’utente o a suoi programmi.
+}
+
+\paragraph{Ci sono 2 modelli principali per la comunicazione tra processi:}
+
+\begin{itemize}
+	\item \fancyglitter{Scambio di messaggi:}
+	      \begin{itemize}
+		      \item Identificare macchina e processo.
+		      \item Mittente: apertura connessione.
+		      \item Destinatario: accettazione connessione.
+		      \item Scambio messaggio.
+		      \item Chiusura connessione.
+	      \end{itemize}
+	\item \fancyglitter{Memoria condivisa:}
+	      \begin{itemize}
+		      \item Allocazione di un’area di memoria condivisa.
+		      \item Aggancio (attach) di un’area di memoria condivisa.
+	      \end{itemize}
+\end{itemize}
+
+\paragraph{Gestione delle memorie:}
+
+\begin{itemize}
+	\item Memoria principale:
+	      \begin{itemize}
+		      \item Ricordarsi chi sta usando quale parte di memoria e quale parte è invece libera.
+		      \item Assegnare/revocare lo spazio a seconda delle necessità.
+		      \item Decidere quali processi vanno trasferiti in RAM e quali vanno rimossi.
+	      \end{itemize}
+	\item Memoria secondaria:
+	      \begin{itemize}
+		      \item Assegnazione dello spazio.
+		      \item Scheduling del disco.
+		      \item Swapping.
+	      \end{itemize}
+\end{itemize}
+
+\clm{Memoria e File System}{}{
+	\begin{itemize}
+		\item Gli utenti vedono la memoria organizzata in \fancyglitter{file}, unità logiche di archiviazione di solito
+		      organizzati in \fancyglitter{directory}.
+		\item Quando gli utenti utilizzano i nomi dei file e i loro “cammini” (path), il SO deve essere in
+		      grado di identificare i blocchi di memoria ad essi corrispondenti: perciò ogni file mantiene
+		      delle proprietà che aiutano al SO ad identificarli (es: tipo di file, permessi di accesso, data di
+		      creazione/modifica…).
+	\end{itemize}
+}
+
+\subsection{SO come Ambiente di Lavoro}
+
+\paragraph{Il SO è in grado di offrire diversi servizi:}
+
+\begin{itemize}
+	\item \fancyglitter{Interfaccia utente (UI, User Interface):}
+	      \begin{itemize}
+		      \item Linea di comando (CLI, Command User Interface).
+		      \item Interfacce grafiche (GUI, Graphical User Interface).
+	      \end{itemize}
+	\item \fancyglitter{Esecuzione di programmi:}
+	      \begin{itemize}
+		      \item I programmi possono richiedere l’accesso a file e dispositivi I/O.
+		      \item Deve essere possibile rilevare lo stato di terminazione di un programma.
+	      \end{itemize}
+	\item \fancyglitter{Comunicazione tra processi:}
+	      \begin{itemize}
+		      \item Memoria condivisa: processi lavorano in un'area comune che deve essere
+		            gestita in modo da evitare inconsistenze.
+		      \item Scambio di messaggi (o pacchetti).
+	      \end{itemize}
+	\item \fancyglitter{Protezione:}
+	      \begin{itemize}
+		      \item Gli utenti possono limitare l’accesso alle proprie informazioni.
+		      \item Non tutti gli utenti possono eseguire tutti i comandi o accedere a ogni file.
+	      \end{itemize}
+\end{itemize}
+
+\nt{
+	In molti SO l’interfaccia utente non è altro che un programma che viene avviato all’atto del
+	login.
+}
+
+\paragraph{Esistono due tipi di interfacce utente:}
+
+\begin{itemize}
+	\item CLI (Command-line interface) o shell: esegue un ciclo infinito in cui attende un
+	      comando, lo esegue, e torna di nuovo in attesa.
+	\item GUI (Graphical User Interface): si basa su un desktop, su cui sono posti oggetti
+	      selezionabili e attivabili tramite puntatore.
+\end{itemize}
+
+
+\paragraph{Implementazione di un SO:}
+
+\begin{enumerate}
+	\item \fancyglitter{Scelta di un linguaggio che supporti la portabilità:} mentre in passato i SO
+	      venivano scritti in linguaggio macchina (assembly), attualmente le CPU moderne
+	      sono troppo complesse per fare ciò, quindi vengono scritti in linguaggi di alto livello
+	      (es: Unix, Linux e Windows sono scritti in C).
+	\item \fancyglitter{Definizione delle politiche di alto livello:} serve definire criteri e meccanismi per le
+	      funzioni che l’utente vorrà utilizzare.
+	      \begin{itemize}
+		      \item Criterio (o politica): specifica un comportamento da seguire in una certa
+		            circostanza.
+		      \item Meccanismo: strumenti (anche software) neutri rispetto ai criteri, che
+		            vengono quindi utilizzati per seguire i criteri.
+	      \end{itemize}
+	\item \fancyglitter{Scelta di un’architettura per il SO:} per poter essere mantenuto e aggiornato, un
+	      SO deve essere ben strutturato, anche per evitare problemi dovuti alla crescita di
+	      complessità del programma e/o degli applicativi.
+\end{enumerate}
+
+\dfn{Stratificazione}{
+	Per questioni di sicurezza e modularità, il sistema ha una struttura “a cipolla”\footnote{Cit. Shrek.}: lo strato più
+	interno corrisponde all’HW, quello più esterno all’interfaccia utente.
+	Su ogni strato esiste un oggetto astratto, che incapsula dei dati. Le operazioni che poi
+	elaborano questi dati possono scegliere se rendere visibili/accessibili all’esterno o no.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.7]{01/strat.png}
+	\caption{Struttura a strati.}
+\end{figure}
+
+\paragraph{Vantaggi e Svantaggi:}
+
+\begin{itemize}
+	\item Semplicità di progettazione: per realizzare uno strato basta sapere quali funzionalità
+	      ha a disposizione, non importa sapere come sono realizzate.
+	\item Semplicità di debug e verifica del sistema: ogni strato usa solo funzionalità messe a
+	      disposizione dallo strato immediatamente inferiore, possiamo verificare gli strati uno
+	      per volta.
+	\item Difficoltà: definire in modo opportuno gli strati, e quali funzionalità mettere in ognuno
+	      di loro.
+	\item Minore efficienza in fase di esecuzione: ogni passaggio di stato comporta infatti la
+	      chiamata di una nuova funzione, da caricare, che può richiedere parametri, da
+	      caricare a loro volta\dots
+\end{itemize}
+
+\dfn{Macchine Virtuali}{
+	Le macchine virtuali sono un approccio alla stratificazione che implica la duplicazione del
+	comportamento di ogni componente hardware del computer.
+	Invece di installare un SO direttamente, installandolo su una macchina virtuale può lavorare
+	su un computer che ha già un suo SO.
+	I SO installati sulla macchina virtuale sono detti ospiti.
+}
+
+\nt{
+	Può essere utile per usare SO diversi sullo stesso computer (anche da utenti diversi) o
+	verificare/debuggare applicativi su SO diversi dal proprio.
+}
+
+
+\dfn{Microkernel}{
+	Questo tipo di modularizzazione consiste nel rimuovere dal kernel tutto ciò che non è
+	essenziale, spostandolo a livello di applicativo utente.
+	I microkernel contengono i servizi minimi per la gestione di processi, comunicazione e
+	memoria.
+}
+
+\paragraph{Vantaggi e svantaggi:}
+
+\begin{itemize}
+	\item Facilità di estensione: possibile aggiungere nuovi servizi senza modificare il kernel.
+	\item Maggiore semplicità di adattamento a nuove architetture.
+	\item Maggiore sicurezza: il kernel non viene direttamente affetto da cambiamenti.
+	\item Possibile generare sovraccarichi quando processi utente vengono eseguiti con
+	      funzionalità di SO.
+	\item Bottleneck: comunicazione indiretta.
+\end{itemize}
+
+\dfn{Tecnica a Moduli}{
+	L’approccio considerato il migliore adottato, daI SO moderni. A un kernel minimale possono
+	essere aggiunti moduli nuovi, in fase di avvio ma anche di esecuzione.
+	Aggiungere moduli significa aggiungere system call, ma anche capacità di gestire nuovo
+	hardware.
+}
+
+\nt{
+	Come nei sistemi a microkernel, il kernel qui gestisce un nucleo essenziale, che viene
+	espanso poi con moduli.
+}
+
+\paragraph{Vantaggi:}
+
+\begin{itemize}
+	\item Ogni modulo può usare qualsiasi altro modulo (\fancyglitter{flessibilità}).
+	\item La comunicazione tra moduli è diretta (\fancyglitter{efficienza}).
+\end{itemize}
+
+\section{Gestione dei Processi}
+
+\dfn{Processo}{
+	“Processo” è un'astrazione, una rappresentazione interna al SO, che consente di pensare e
+	realizzare meccanismi quali multitasking, scheduling della CPU, protezione.
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Il SO deve mantenere informazioni riguardo i diversi task: ogni task esegue un programma,
+		      elabora dei dati, ha un utente “proprietario”, può avere una priorità.
+		\item Quando un task viene interrotto e ripreso occorre mantenere tutte le informazioni
+		      necessarie.
+		\item Ogni processo ha una propria \fancyglitter{sezione dati} composta dallo stack di esecuzione e dallo
+		      heap, ma in RAM viene anche memorizzato (per ogni processo) il \fancyglitter{programma} in sé e il \fancyglitter{program counter}, che indica la prossima istruzione da eseguire.
+	\end{itemize}
+}
+
+\subsection{Dettagli sui Processi}
+
+\paragraph{Ogni processo può avere diversi stati che aiutano il SO ad eseguire scheduling e
+	parallelismo:}
+
+\begin{itemize}
+	\item new: appena creato.
+	\item running: in esecuzione.
+	\item waiting: in attesa di un evento (es: ricevere un dato, completamento di
+	      un’operazione I/O, sospensione volontaria).
+	\item ready: aspetta l’assegnazione della CPU (può passare running → ready con un
+	      interrupt).
+	\item terminated: cessata esecuzione (exit, abort, kill).
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.7]{01/tran.png}
+	\caption{Diagramma di transizione degli stati di un processo.}
+\end{figure}
+
+\dfn{Process Control Block (PCB)}{
+	In un SO un processo è rappresentato dal PCB, Process Control Block, in cui sono
+	rappresentate le sue informazioni:
+	\begin{itemize}
+		\item Stato del processo.
+		\item PC (Program Counter).
+		\item Copia dei registri di CPU (copiati nel PCB quando il processo passa da running a
+		      ready).
+		\item Info sullo scheduling CPU (priorità e parametri di scheduling).
+		\item Info sulla gestione della memoria (tabella delle pagine).
+		\item Contabilizzazione risorse.
+		\item Stato di I/O
+	\end{itemize}
+}
+
+\paragraph{Vengono Mantenuti in strutture dati dette \fancyglitter{code}:}
+
+\begin{itemize}
+	\item Coda ready: contiene tutti i PCB dei processi caricati in memoria in stato ready.
+	\item Coda di dispositivo: contiene tutti i PCB dei processi in stato waiting.
+\end{itemize}
+
+\dfn{Swapping}{
+	Quando un sistema ha in esecuzione più processi di quanto la RAM può sostenere, viene
+	eseguito lo swapping: una parte dei processi, quindi i loro PCB, vengono trasferiti in
+	memoria secondaria (swap out) fino a quando non sarà possibile eseguirli (swap in).
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.7]{01/swap.png}
+	\caption{Swapping.}
+\end{figure}
+
+\subsection{Commutazione e Scheduling}
+
+\dfn{Context Switch}{
+	Il passaggio di un processo da running a waiting, o anche da ready a running richiede quello
+	che si chiama context switch.
+}
+
+\nt{
+	Questa operazione avviene esclusivamente in modalità kernel.
+	Il tempo per un context switch dipende dall’architettura, in quanto si possono avere diversi
+	set di registri.
+}
+
+\paragraph{Ci sono tre tipi di scheduling:}
+
+\begin{itemize}
+	\item \fancyglitter{Scheduling a breve termine:} politica di avvicinamento alla CPU dei processi.
+	\item \fancyglitter{Scheduling a medio termine:} quando il grado di multiprogrammazione è troppo
+	      alto, e quindi non tutti i processi possono essere contenuti in RAM, a turno vengono
+	      spostati in memoria secondaria.
+	\item \fancyglitter{Scheduling a lungo termine:} presente in sistemi batch, in cui la coda dei processi
+	      era conservata in memoria secondaria. Si attiva quando un processo in esecuzione
+	      termina, scegliendone uno in memoria secondaria da caricare.
+\end{itemize}
+
+\dfn{Scheduling a Breve Termine}{
+	Seleziona dalla coda ready il processo a cui assegnare la CPU. Casi:
+	\begin{enumerate}
+		\item Running $\rightarrow$ Waiting.
+		\item Running $\rightarrow$ Ready tramite interrupt.
+		\item Waiting $\rightarrow$ Ready.
+		\item Running $\rightarrow$ Terminated.
+	\end{enumerate}
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Lo scheduling è \fancyglitter{preemptive} se interviene in almeno uno dei casi 2 e 3, può occorrere anche
+		      in 1 o 4.
+		\item Lo scheduling è non-preemptive se interviene solo nei casi 1 o 4.
+		\item Il \fancyglitter{dispatcher} effettua il cambio di contesto, effettua il posizionamento alla giusta istruzione,
+		      passa nella modalità di esecuzione giusta.
+	\end{itemize}
+}
+
+\paragraph{Criteri di scheduling:}
+
+\begin{itemize}
+	\item Mantenere la CPU il più attiva possibile.
+	\item \fancyglitter{Throughput:} numero di processi completati nell’unità di tempo.
+	\item \fancyglitter{Tempo di attesa:} tempo trascorso in coda ready.
+	\item \fancyglitter{Turnaround time:} tempo di completamento di un processo; somma del tempo di
+	      esecuzione e dei tempi di attesa.
+	\item \fancyglitter{Tempo di risposta}.
+\end{itemize}
+
+\dfn{Diagramma di Gantt}{
+	In un diagramma di Gantt si rappresenta l'occupazione della CPU con un rettangolo.
+}
+
+\subsection{Algoritmi di Scheduling}
+
+\dfn{First Come First Served (FCFS)}{
+	PCB organizzati in una coda FIFO, non è preemptive, il primo processo arrivato è il
+	primo processo ad avere la CPU, e la mantiene per un intero CPU burst.
+	Il tempo medio di attesa è abbastanza lungo.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.7]{01/fcfs.png}
+	\caption{Diagramma di Gantt di FCFS.}
+\end{figure}
+
+\cor{Prelazione}{
+	Meccanismo generale per il quale il SO può togliere una risorsa riservata per un
+	processo (la CPU nello scheduling a breve termine) anche se il processo la sta utilizzando
+	o la utilizzerà in futuro.
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item La prelazione richiede l’introduzione di meccanismi di sincronizzazione per evitare
+		      inconsistenze: se due processi condividono dati e uno dei due li sta aggiornando quando gli
+		      viene tolta la CPU, i dati possono risultare mancanti o corrotti.
+		\item La prelazione non è sempre possibile: occorre avere un’architettura che supporti i timer
+		      (in caso contrario lo scheduling è solo preemptive).
+	\end{itemize}
+}
+
+\dfn{Shortest Job First}{
+	SJF è ottimale nel minimizzare il tempo medio di attesa, seleziona sempre il processo
+	avente CPU burst successivo di durata minima. Se la durata dei CPU burst non è nota, si
+	prevede la durata sulla base dei CPU burst precedenti, combinati con una media
+	esponenziale.
+}
+
+\paragraph{Questo scheduler può essere:}
+
+\begin{itemize}
+	\item Preemptive (o shortest remaining time left): quando un nuovo processo diventa
+	      ready, lo scheduler controlla se il suo burst è inferiori a quanto rimane del burst del
+	      processo running:
+	      \begin{itemize}
+		      \item Sì: il nuovo processo diventa running, context switching.
+		      \item No: il nuovo processo va in coda ready.
+	      \end{itemize}
+	\item Non-preemptive: il processo viene messo in coda ready, eventualmente in prima
+	      posizione.
+\end{itemize}
+
+\dfn{Scheduling a Priorità}{
+	Ogni processo ha associata una priorità che decide l’ordine di assegnazione della CPU. Può
+	essere con o senza prelazione.
+}
+
+\paragraph{La priorità può essere definita su due criteri:}
+
+\begin{itemize}
+	\item Internamente: sulla base di caratteristiche del processo. Per esempio, potremmo
+	      usare SJF e definire la priorià come l’inverso della durata stimata del CPU burst.
+	\item Esternamente: non calcolabile, impostata in base a criteri esterni, dall'utente per
+	      esempio.
+\end{itemize}
+
+\cor{Starvation}{
+	Tutti gli algoritmi a priorità sono soggetti a starvation: un processo potrebbe non ottenere
+	mai la CPU perché continuano a passargli davanti nuovi processi a priorità maggiore.
+	Per risolvere, la priorità dei processi viene alzata con il trascorrere del tempo (aging).
+}
+
+\dfn{Round Robin (RR)}{
+	Tipo di scheduling preemptive ideato per i sistemi time-sharing.
+	La coda ready è FIFO circolare. A ogni processo viene assegnata la CPU per un quanto di
+	tempo, se non è sufficiente a concludere, il processo viene inserito nuovamente in coda
+	ready e la CPU riassegnata al successivo.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.7]{01/rr.png}
+	\caption{Diagramma di Gantt di RR.}
+\end{figure}
+
+\nt{
+	Il tma è abbastanza alto ma non si ha starvation: ogni processo viene servito ogni
+	($n_{proc}$ -1) * quanto msec.
+
+	La velocità dell’algoritmo dipende anche dal quanto di tempo scelto: se è troppo lungo RR
+	tenta di diventare un FCFS, mentre se è troppo corto i tempi del context switch possono
+	rallentare e appesantire il processo.
+}
+
+\dfn{Code a Multilivello con Feedback}{
+	Algoritmi utili quando si possono dividere i processi in categorie legate alla loro natura. La
+	ready queue è divisa in tante code quante sono le categorie, che possono avere algoritmi di
+	scheduling. Tra le code, poi, esiste una priorità.
+}
+
+\nt{
+	Se i processi possono cambiare code, si parla di multilivello con feedback.
+}
+
+\subsection{Creazione e Terminazione}
+
+\dfn{Creazione di un Processo}{
+	Un processo viene generato dall’unica entità attiva gestita dal SO: un altro processo.
+	Con l’avvio del SO si genera un albero di processi che cresce e decresce dinamicamente, a
+	seconda dell’evoluzione dell’elaborazione.
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Ogni processo ha un PID.
+		\item I processi figli, generati dal padre, in genere condividono delle risorse. In unix, per
+		      esempio, il figlio riceve una copia di tutte le variabili del padre.
+	\end{itemize}
+}
+
+\dfn{Terminazione}{
+	Un processo giunto alla sua ultima istruzione termina tramite la system call exit.
+	Il SO libera le risorse associate al processo.
+	A terminazione completata, il padre del processo viene notificato della terminazione.
+	In certi SO, i dati sulla terminazione del figlio possono essere mantenuti finché non vengono
+	ispezionati dal padre, che a sua volta si occupa di rimuoverli.
+}
+
+\paragraph{Un processo può esplicitamente terminare un altro processo (conoscendo il suo PID) tramite
+	system call se:}
+
+\begin{itemize}
+	\item Il processo sta usando troppe risorse.
+	\item Finisce di elaborare.
+	\item Il padre è terminato (SO forza la terminazione dei figli).
+\end{itemize}

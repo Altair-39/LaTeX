@@ -1,0 +1,487 @@
+\chapter{Sincronizzazione}
+
+\section{Processi Cooperanti}
+
+\subsection{Introduzione}
+
+\paragraph{Classico esempio (produttore/consumatore):}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{02/coop.png}
+	\caption{Processi che cooperano.}
+\end{figure}
+
+
+\begin{itemize}
+	\item Il processo \fancyglitter{produttore} produce dei dati.
+	\item Il processo \fancyglitter{Consumatore} consuma dei dati.
+\end{itemize}
+
+\dfn{Memoria Condivisa}{
+	Area di memoria fruibile da più processi.
+	Richiesta tramite system call, i processi che la vogliono utilizzare devono agganciarla al
+	proprio spazio di indirizzi.
+	Può essere modificata a piacimento secondo qualsiasi tipo di dati utile ai programmi che la
+	utilizzano.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.35]{02/prco.png}
+	\caption{Produttore e consumatore.}
+\end{figure}
+
+\dfn{Inconsistenza dei Dati}{
+	Per colpa dello scheduler della CPU su sistemi a singolo core, o su sistemi con 2 o più core,
+	potrebbero verificarsi problemi di inconsistenza dei dati.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{02/inc.png}
+	\caption{Caso di inconsistenza.}
+\end{figure}
+
+\subsection{Scambi di Messaggi}
+
+\dfn{Scambio di Messaggi}{
+	Consente a due processi di comunicare senza condividere una stessa area di memoria.
+}
+
+\paragraph{Lo scambio di messaggi può essere:}
+
+\begin{itemize}
+	\item \fancyglitter{Diretto} o \fancyglitter{indiretto}: se diretto, ricevente deve comunicare il PID al mittente.
+	\item \fancyglitter{Sincrono} (bloccante) o \fancyglitter{asincrono} (non bloccante):
+	      \begin{itemize}
+		      \item Invio sincrono: mittente aspetta che ricevente riceve il messaggio.
+		      \item Ricezione sincrona: ricevente aspetta il messaggio.
+		      \item Rendez-vous: entrambi insieme.
+	      \end{itemize}
+	\item A gestione automatica.
+\end{itemize}
+
+\nt{Questo è visto in dettaglio nel corso di "Modelli Concorrenti e Algoritmi Distribuiti".}
+
+\paragraph{Per comunicare, due processi utilizzano un canale, e le funzioni \texttt{send} e \texttt{receive} per scambiarsi messaggi:}
+
+\begin{itemize}
+	\item \fancyglitter{Comunicazione diretta:}
+	      \begin{itemize}
+		      \item \texttt{send(P, msg)}: invia msg al processo P.
+		      \item \texttt{receive(P, msg) / receive(id, msg)}: attendi un messaggio da P,
+		            memorizza il messaggio in msg / ricevi un messaggio, memorizza in id il PID del mittente e in msg il messaggio.
+		      \item la reciproca conoscenza del PID finisce in un canale logico.
+	      \end{itemize}
+	\item \fancyglitter{Comunicazione indiretta:}
+	      \begin{itemize}
+		      \item Si utilizza una mailbox come canale intermedio di comunicazione, distinte dall’identità del ricevente.
+		      \item \texttt{send(M, msg)}: invia msg alla mailbox M.
+		      \item \texttt{receive(M, msg)}: attendi un messaggio alla mailbox M.
+		      \item Più mittenti e/o riceventi possono usare la stessa mailbox.
+		      \item Una stessa coppia di processi può utilizzare diverse mailbox per comunicare.
+		      \item La mailbox ha una capacità N definita da un buffer:
+		            \begin{itemize}
+			            \item 0: il canale non ha memoria (meccanismo no buffering); il mittente
+			                  rimane sospeso se il ricevente non ha ancora consumato il messaggio
+			                  ricevente (gestione esplicita del buffer).
+			            \item N $>$ 0: il mittente rimane in attesa solo se il buffer è pieno (automatic
+			                  buffering).
+			            \item Illimitata: il mittente non attende mai (automatic buffering).
+		            \end{itemize}
+	      \end{itemize}
+\end{itemize}
+
+\dfn{Socket}{
+	Usato in sistemi client-server, socket è il nome dato ad un endpoint di un canale di
+	comunicazione tra due processi.
+	Due processi che vogliono comunicare usano una coppia di socket, formati da l’IP della
+	macchina concatenato ad una porta
+}
+
+\nt{Questo è visto in dettaglio nel corso di "Programmazione III".}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Le porte $<$ 1024 sono riservate. Se un processo utente richiede una porta, riceverà un
+		      numero maggiore di 1024.
+		\item L’indirizzo di loopback (127.0.0.1) identifica la macchina stessa.
+	\end{itemize}
+}
+
+\dfn{Remote Procedure Call (RPC)}{
+	Meccanismo di scambio di messaggi utilizzato in sistemi client server per invocare
+	l’esecuzione di una procedura che risiede su un'altra macchina connessa in rete.
+	I messaggi sono ben strutturati: hanno identificatore della procedura e parametri.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{02/rpc.png}
+	\caption{Remote Procedure Call.}
+\end{figure}
+
+\dfn{Pipe}{
+	Canale di comunicazione tra processi.
+}
+
+\paragraph{Esistono due tipi di pipe:}
+
+\begin{itemize}
+	\item \fancyglitter{Pipe anonima:}
+	      \begin{itemize}
+		      \item Canale simplex (unidirezionale), FIFO.
+		      \item Uno produce, l'altro consuma.
+	      \end{itemize}
+	\item \fancyglitter{Named pipe:}
+	      \begin{itemize}
+		      \item FIFO.
+		      \item In UNIX è simplex, in windows è full-duplex.
+		      \item Può far comunicare più di due processi.
+		      \item Spesso realizzata come file.
+	      \end{itemize}
+\end{itemize}
+
+\section{Thread}
+
+\subsection{Heavyweight Process}
+
+\dfn{Thread}{
+	Sono le diverse parti di un processo che cooperano per eseguire tutte le sue funzioni.
+	Molti SO li considerano come l’unità di base d’uso della CPU al posto del processo.
+
+	Un processo costituito solo da thread è detto heavyweight process.
+}
+
+\paragraph{Un thread è costituito da:}
+
+\begin{itemize}
+	\item Un identificatore.
+	\item Un PC (Program Counter).
+	\item Un insieme di valori di registri.
+\end{itemize}
+
+\nt{
+	Condivide con gli altri thread dello stesso processo il codice, la sezione dati, i file aperti, i
+	segnali.
+}
+
+\paragraph{Vantaggi dell'utilizzo di thread:}
+
+\begin{itemize}
+	\item Usare thread al posto di processi cooperanti è più efficiente.
+	\item Molti programmi contengono sezioni di codice che è possibile eseguire indipendentemente.
+	\item I context switch avvengono più rapidamente.
+	\item Si allocano meno risorse, in quanto molte vengono condivise.
+	\item La comunicazione è più veloce, perché avviene tramite variabili condivise.
+	\item È possibile assegnare thread diversi a core diversi in architetture multicore.
+\end{itemize}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Mentre i thread sono definiti dal programmatore e gestiti dal programma, i processi
+		      sono generati in modo invisibile all’utente, non permettendo ai programmi di gestirli
+		      direttamente ma solo tramite system call.
+		\item Alcuni linguaggi di programmazione includono specifiche istruzioni per la creazione e il
+		      controllo dei thread (es: Java, C\#, Python), mentre per altri c’è bisogno di includere apposite
+		      librerie (es: C, C++; sono detti “a singolo flusso di controllo”).
+	\end{itemize}
+}
+
+\paragraph{Operazioni sui thread:}
+
+\begin{itemize}
+	\item \fancyglitter{Creazione}.
+	\item \fancyglitter{Terminazione:} più rapida di quella dei processi perché non richiede la gestione delle risorse.
+	\item \fancyglitter{Sospensione} (blocco).
+	\item \fancyglitter{Recupero} (risveglio).
+	\item \fancyglitter{Join:} comporta l’attesa da parte di un thread della terminazione di un altro.
+\end{itemize}
+
+\subsection{Tipi di Thread}
+
+\paragraph{I thread si possono dividere in:}
+
+\begin{itemize}
+	\item \fancyglitter{Thread Utente}.
+	\item \fancyglitter{Thread Kernel}.
+\end{itemize}
+
+\dfn{Thread Utente}{
+	Funzionamento a singolo contesto: ogni processo multithread deve gestire le info dei suoi
+	thread, il loro scheduling, la comunicazione tra i thread.
+	Sono creati da funzioni di libreria che non possono eseguire istruzioni privilegiate.
+	Sono trasparenti al SO, che vede il processo come una sola entità.
+}
+
+\paragraph{Vantaggi:}
+
+\begin{itemize}
+	\item Possibile utilizzarli su SO senza multi-threading in quanto sono gestiti internamente
+	      al processo.
+	\item Criteri di scheduling adattabili alle esigenze del programma.
+	\item Esecuzione più rapida perché non usa nè interrupt nè system call.
+\end{itemize}
+
+\paragraph{Svantaggi:}
+
+\begin{itemize}
+	\item Non adattabili a sistemi multiprocessore.
+	\item Operazioni I/O bloccano l’intero processo fino al termine dell’operazione.
+\end{itemize}
+
+\dfn{Thread Kernel}{
+	Funzionamento a molteplici contesti, uno per ogni thread creato. L’utente genera thread utente, e il SO li implementa a livello kernel associando a essi delle
+	strutture proprie (thread kernel sono strutture separate).
+}
+
+\nt{
+	Sono gestiti dal SO, quindi esso gestisce anche il loro scheduling e sono più costosi perché
+	per ogni thread deve mantenere gli appositi descrittori e le loro associazioni ad ogni
+	processo.
+}
+
+\paragraph{Vantaggi:}
+
+\begin{itemize}
+	\item Possibile distribuire i thread su più processori.
+	\item Le operazioni di I/O non bloccano l’intero processo (eseguite solo sul thread).
+	\item Maggiore interattività con l’utente.
+	\item I singoli processi sono più veloci.
+\end{itemize}
+
+\paragraph{Svantaggi:}
+
+\begin{itemize}
+	\item Non portabili su SO non-multithreaded.
+	\item In caso di troppi thread, è possibile sovraccaricare il processore.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{02/tuk.png}
+	\caption{Tipi di Thread.}
+\end{figure}
+
+\paragraph{Associazione dei thread kernel:}
+
+\begin{itemize}
+	\item \fancyglitter{Uno a uno:} un thread utente assegnato a un solo thread kernel.
+	\item \fancyglitter{Molti a uno:} un pool di thread utente assegnata a un solo thread kernel.
+	\item \fancyglitter{Molti a molti:} un pool di thread utente assegnata a molteplici thread kernel (di solito di numero inferiore).
+\end{itemize}
+
+\subsection{Lightweight Process}
+
+\dfn{Lightweight Process}{
+	Nei SO che usano il modello molti a molti o a due livelli, si ha la necessità di eseguire uno
+	scheduling dei thread utente per l'accesso ai thread kernel.
+	Questo viene fatto introducendo un layer tra thread utente e kernel, chiamato Lightweight
+	Process (LWP). Questi LWP sono visti come processori virtuali, e corrispondono ad un
+	thread kernel.
+}
+
+\nt{
+	Questa associazione viene fatta in modo esplicito dall’applicativo che deve usare delle
+	“upcall” speciali.
+}
+
+\clm{}{}{
+	\begin{enumerate}
+		\item L’utente quindi effettua il proprio scheduling dei thread su un insieme di LWP messi a
+		      disposizione dal kernel. Un thread utente è in esecuzione se ha un LWP assegnato.
+		\item Se un thread esegue una syscall bloccante, il SO informa l’applicativo con una upcall.
+		\item L’applicativo quindi esegue un gestore della upcall, che salva lo stato del thread bloccante, e
+		      riassegna l’LWP ad un altro thread pronto per l’esecuzione.
+		\item Quando poi si verifica l’evento che sveglia il thread sospeso, il SO con un’altra upcall farà
+		      segnare all’applicativo il thread come pronto, a cui verrà assegnato un LWP.
+	\end{enumerate}
+}
+
+
+\section{Implementare la Sincronizzazione}
+
+\subsection{Scheduling della CPU}
+
+\paragraph{In presenza di thread, lo scheduling della CPU è quindi a due livelli:}
+
+\begin{itemize}
+	\item \fancyglitter{Process-Contention Scope (PCS):} è lo scheduling effettuato all’interno di un processo
+	      per decidere a quali thread utente assegnare LWP. I thread kernel vengono gestiti
+	      come PCB.
+	\item \fancyglitter{System-Contention Scope (SCS):} lo scheduling della CPU viene fatto tra tutti i thread
+	      kernel in queue, con una granularità più fine rispetto ai PCB, tutto in maniera
+	      indipendente dal processo di appartenenza.
+\end{itemize}
+
+\paragraph{Problema:} interleaving delle istruzioni di diversi processi produttori eseguite in
+un’area di memoria condivisa. In assenza di controlli, diverse istruzioni sugli stessi dati
+possono non essere eseguite in modo atomico, producendo dati inconsistenti.
+
+\nt{
+	Il problema è spesso presente in un SO con multitasking, in cui possono essere presenti allo
+	stesso tempo diversi processi in modalità kernel.
+}
+
+\paragraph{Soluzione:} per risolvere il problema, viene implementata nel programma la \fancyglitter{sezione criticà}.
+
+\dfn{Sezione Critica}{Una porzione di codice in cui un processo modifica variabili condivise secondo un certo criterio sicuro.}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.75]{02/cs.png}
+	\caption{Sezione critica.}
+\end{figure}
+
+\nt{
+	Una sezione critica è determinata dalle variabili condivise utilizzate, e non deve essere
+	eseguita con interleaving di istruzioni di altre sezioni critiche che usano le stesse variabili.
+}
+
+\paragraph{Criteri soddisfatti da una soluzione al problema della sezione critica:}
+
+\begin{itemize}
+	\item \fancyglitter{Mutua Esclusione:} un solo processo per volta può eseguire la sua sezione critica.
+	\item \fancyglitter{Progresso:} nessun processo che non desideri utilizzare una variabile condivisa può
+	      impedirne l’accesso a processi che desiderano utilizzarla. Solo i processi che
+	      intendono entrare in sezione critica concorrono a determinare chi entrerà.
+	\item \fancyglitter{Attesa limitata:} esiste un limite superiore all'attesa di ingresso in sezione critica.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.6]{02/s1.png}
+	\caption{Primo tentativo di soluzione.}
+\end{figure}
+
+\paragraph{Problema:} se un programma non ha più bisogno di usare la sezione critica, non ci entrerà;
+se è il turno per un programma di utilizzare la sezione critica ma non ci entra, l’altro
+processo rimane in waiting (violazione progresso).
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.6]{02/s2.png}
+	\caption{Seconda soluzione.}
+\end{figure}
+
+\paragraph{Problema:} quando entrambi i processi hanno il flag attivo, entrambi vanno in loop infinito
+(violazione attesa limitata).
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.6]{02/s3.png}
+	\caption{Terza soluzione: algoritmo di Peterson.}
+\end{figure}
+
+\nt{
+	L'algoritmo di Peterson garantisce tutti i criteri ma funziona solo per 2 processi (non è generalizzabile).
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{02/s4.png}
+	\caption{Quarta soluzione: algoritmo del fornaio.}
+\end{figure}
+
+\nt{
+	L'algoritmo del fornaio garantisce tutti i criteri, funziona per N processi, ma il codice è complesso e i processi
+	fanno busy waiting (anziché sospendersi, attengono il turno tenendo occupata la CPU).
+}
+
+\subsection{Altri tipi di sincronizzazione:}
+
+\paragraph{Sincronizzazione hardware:}
+
+\begin{itemize}
+	\item Potremmo disabilitare gli interrupt quando entriamo in una sezione critica, questo
+	      eviterebbe la prelazione. Ma causa interferenze pesanti con lo scheduling della CPU,
+	      e gli interrupt non possono essere mantenuti disabilitati a lungo.
+	\item Introdurre l’uso di lock: per entrare in una sezione critica, il processo deve avere
+	      ottenuto il giusto lock, che rilascerà al termine. Per questo motivo molte architetture
+	      forniscono operazioni di controllo e modifica del valore di una cella e istruzioni per lo
+	      scambio in modo atomico.
+\end{itemize}
+
+\dfn{TestAndSet}{
+	TestAndSet restituisce il valore precedente di lock che sarà falso se nessun altro processo è
+	in una sezione critica controllata tramite lock. Solo in questo caso si esce dal while.
+}
+
+\nt{
+	L’esecuzione dell’intera routine è atomica.
+}
+
+\begin{figure}[h]
+	\centering
+	\begin{minted}{c}
+bool TestAndSet (bool *variabile) {
+    bool valore = *variabile;
+    *variabile = true;
+    return valore;
+}
+\end{minted}
+	\caption{Implementazione di TestAndSet.}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\begin{minted}{c}
+while (TestAndSet(&lock));
+
+<sezione critica>
+
+lock = false;
+\end{minted}
+	\caption{Esecuzione di TestAndSet.}
+\end{figure}
+
+\dfn{Swap}{
+	Scambia in modo atomico i valori dei suoi due parametri.
+}
+
+\begin{figure}[h]
+	\centering
+	\begin{minted}{c}
+Swap(bool *a, bool *b) {
+    bool temp = *a;
+    *a = *b;
+    *b = temp;
+}
+\end{minted}
+	\caption{Implementazione di Swap.}
+\end{figure}
+
+\clm{}{}{
+	\begin{itemize}
+		\item La particolarità è nell’esecuzione della routine, che è atomica.
+		\item Usiamo lo swap per realizzare l’accesso in mutua esclusione ad una sezione. Oltre al lock,
+		      variabile condivisa, abbiamo anche una variabile booleana locale “chiuso”
+		\item Si esce dal ciclo while solo quando lock è false.
+		\item All’uscita da Swap lock risulta automatica impostato a true.
+	\end{itemize}
+}
+
+\begin{figure}[h]
+	\centering
+	\begin{minted}{c}
+chiuso = true;
+
+while(chiuso) Swap(&lock, &chiuso);
+
+<sezione critica>
+
+lock = false;
+\end{minted}
+	\caption{Esecuzione di Swap.}
+\end{figure}
+
+\nt{Entrambi i metodi visti garantiscono la mutua esclusione, ma non l’attesa limitata. Non c’è
+	garanzia che un processo che vuole eseguire una delle due non venga sempre prevaricato
+	da altri.}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.7]{02/al.png}
+	\caption{Algoritmo di attesa limitata.}
+\end{figure}

@@ -1,0 +1,602 @@
+\chapter{Filesystem}
+
+\section{Introduzione}
+
+\subsection{Cos'è il Filesystem?}
+
+\dfn{Filesystem}{
+	Programmi e dati sono memorizzati in memoria secondaria, organizzata in file e directory
+	che insieme formano il file system.
+}
+
+\cor{File}{
+	Il file è un'astrazione: è un insieme di informazioni correlate (a discrezione dell’autore) a
+	cui è associato un nome.
+}
+
+\nt{
+	Per l’utente, i file sono gli elementi base in cui è organizzata la
+	memoria, ma non sono uguali tra loro.
+}
+
+\paragraph{Ogni file può essere diviso in due parti:}
+
+\begin{itemize}
+	\item Contenuto del file.
+	\item Metadati\footnote{Insieme di caratteristiche che descrivono il file stesso:}
+	      \begin{itemize}
+		      \item Nome.
+		      \item Tipo.
+		      \item Dimensione.
+		      \item Proprietario.
+		      \item Protezione.
+		      \item Data/Ora di modifica.
+	      \end{itemize}
+\end{itemize}
+\nt{
+	In alcuni sistemi, per associare al file un suo tipo viene utilizzato un codice all’interno del file
+	stesso, chiamato magic number.
+}
+
+\cor{Estensioni}{
+	Le estensioni dei file (.pdf, .java, .xml ecc.) servono per definire un particolare formato
+	con cui i dati sono organizzati: i file immagine sono quindi organizzati diversamente dai
+	file di testo, ma anche un file .docx (documento di Word) è organizzato diversamente da un
+	file .html
+}
+
+\nt{
+	Curiosità: i docx files sono solo zip in disguise.
+}
+
+\paragraph{I file possono essere caratterizzati anche da tipologie più generali rispetto alla specifica
+	applicazione che li gestirà, in particolare:}
+
+\begin{itemize}
+	\item \fancyglitter{File alfanumerici:} contengono una sequenza di caratteri:
+	      \begin{itemize}
+		      \item Testi.
+		      \item Sorgenti.
+	      \end{itemize}
+	\item \fancyglitter{File binari:} contengono byte organizzati secondo una struttura precisa ben diversa
+	      da un file di testo:
+	      \begin{itemize}
+		      \item File oggetto.
+		      \item Eseguibili.
+	      \end{itemize}
+\end{itemize}
+
+\subsection{Organizzazione del Filesystem}
+
+\paragraph{Esistono due visioni classiche:}
+
+\begin{itemize}
+	\item \fancyglitter{Organizzazione piatta:} insieme di file tutti allo stesso livello (appunto “piatto”), non
+	      possono esserci file con lo stesso nome.
+	\item \fancyglitter{Organizzazione gerarchica:} memoria organizzata ad albero, i cui nodi interni
+	      fungono da contenitori e sono chiamati \fancyglitter{directory}.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{05/org.png}
+	\caption{Tipi di organizzazione.}
+\end{figure}
+
+\paragraph{Un file aperto da un processo è inteso come una risorsa in uso da parte del processo:}
+
+\begin{itemize}
+	\item Li\fancyglitter{apertura} di un file comporta l'allocazione di un insieme di risorse di file system che
+	      consentono l'accesso al file stesso.
+	\item \fancyglitter{Chiudere} n file significa rilasciare le risorse di file system allocate. Se il processo era
+	      l'unico utilizzatore del file, le pagine di RAM usate per consentire un'elaborazione efficiente
+	      dei dati possono essere liberate.
+\end{itemize}
+
+\clm{}{}{
+	\begin{itemize}
+		\item In genere, sia apertura che chiusura restituiscono/richiedono un handle come argomento,
+		      che definisce il file aperto/il file da chiudere.
+		\item In C la funzione \texttt{fopen()} restituisce un FILE* (puntatore al file).
+		\item La \texttt{fclose()} richiede come parametro il FILE* ottenuto con fopen.
+	\end{itemize}
+}
+
+\paragraph{Anche lettura e scrittura richiedono un handle, ma occorre anche definire il punto del file da
+	cui leggere o scrivere:}
+
+\begin{itemize}
+	\item \fancyglitter{Accesso sequenziale:} non si specifica esplicitamente la posizione, ma il SO
+	      mantiene un puntatore alla posizione corrente (mantenuta nella tabella dei file aperti
+	      del processo):
+	      \begin{itemize}
+		      \item Quando si legge, si fa avanzare un puntatore che indica la posizione
+		            raggiunta all’interno del file.
+		      \item Quando si scrive, il contenuto viene aggiunto al fondo del file.
+	      \end{itemize}
+	\item \fancyglitter{Accesso diretto:} si può leggere/scrivere in punti specifici del file, che vanno indicati
+	      espressamente:
+	      \begin{itemize}
+		      \item Il file è visto come una sequenza di record di uguale dimensione.
+		      \item Conoscendo dimensione e posizione dei record è possibile accedervi
+		            direttamente.
+	      \end{itemize}
+	\item \fancyglitter{Accesso a indice:} un file indicizzato è costituito da due file:
+	      \begin{itemize}
+		      \item Il file dei contenuti, memorizzati in un formato specifico.
+		      \item Il file indice, con i riferimenti ai record.
+	      \end{itemize}
+\end{itemize}
+
+\dfn{Protezione dei File}{
+	Per gestire gli accessi ai file, alcuni SO richiedono di indicare la modalità di apertura di un
+	file: solo lettura, lettura/scrittura, esecuzione. Certi SO consentono di associare ai file dei
+	diritti di accesso che indicano le modalità di apertura del file consentite agli utenti.
+}
+
+\paragraph{Alcuni SO consentono di associare dei lock ai file:}
+
+\begin{itemize}
+	\item \fancyglitter{Lock condiviso} (lettura): consente a n processi di effettuare determinate operazioni
+	      sullo stesso file, anche in parallelo.
+	\item \fancyglitter{Lock esclusivo} (scrittura): solo il processo che detiene il lock può usare il file.
+\end{itemize}
+
+\nt{
+	Questi lock possono essere consigliati od obbligatori.
+}
+
+\section{Directory}
+
+\subsection{Che Cos'è una Directory?}
+
+\dfn{Directory}{
+	È un entità che può contenere file o altre directory. Dal punto di vista astratto, la directory non è altro che una tabella che consente di accedere
+	ai contenuti di un file a partire dal suo nome. Le operazioni possibili sono le solite: scrittura,
+	lettura, ricerca, attraversamento.
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Prima, molti filesystem erano piatti: cioè,
+		      i file sono tutti sullo stesso livello, senza alcuna organizzazione.
+		\item Altri consentivano l’uso di
+		      un solo livello di directory.
+		\item Il primo filesystem gerarchico è stato UNIX.
+	\end{itemize}
+}
+
+\subsection{Tipi}
+
+\dfn{Directory a 1 Livello}{
+	Contengono i file tutti nella stessa directory. Non si può quindi avere
+	due file con lo stesso nome, la multiutenza diventa difficile.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.7]{05/1L.png}
+	\caption{Directory a 1 livello.}
+\end{figure}
+
+\dfn{Directory a 2 Livelli}{
+	Ogni utente ha una propria cartella. Sistema il problema precedente,
+	ma con molti file diventa di difficile uso.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.7]{05/2L.png}
+	\caption{Directory a 2 livelli.}
+\end{figure}
+
+\dfn{Directory ad Albero}{
+	I file diventano foglie dell’albero, abbiamo infiniti livelli. Usare cammini
+	assoluti diventa scomodo. Per questo l’utente viene posizionato virtualmente in una directory di
+	lavoro.
+}
+
+\nt{
+	Ogni utente sarà proprietario di un sottoalbero, e un utente sarà proprietario della parte di
+	sistema (amministratore).
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{05/tree.png}
+	\caption{Directory ad albero.}
+\end{figure}
+
+\dfn{Directory con Grafo Aciclico}{
+	Un file/directory può essere accessibile da cammini diversi. Se si vuole eliminare un file che
+	è puntato da due sottoalberi diversi, significa due cose:
+	\begin{itemize}
+		\item Il file non serve a nessuno dei due utenti: viene rimosso.
+		\item Solo uno dei due utenti rinuncia ad usarlo: solo uno dei collegamenti viene rimosso.
+	\end{itemize}
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{05/graph.png}
+	\caption{Directory a grafo.}
+\end{figure}
+
+\dfn{Link}{
+	I link sono riferimenti a file/directory.
+}
+
+\paragraph{Ci sono due possibili soluzioni:}
+
+\begin{itemize}
+	\item Soluzione demandata all’utente, l’utente ha due scelte:
+	      \begin{itemize}
+		      \item \fancyglitter{Link simbolico:} se il link creato viene eliminato, il file/directory a cui punta
+		            rimane intatto.
+		      \item \fancyglitter{Link fisico:} eliminare questo link vuol dire anche cancellare ciò a cui punta.
+	      \end{itemize}
+	\item Soluzione globale, mantenere il numero di riferimenti a quello che puntiamo:
+	      \begin{itemize}
+		      \item Creare un link aumenta il valore.
+		      \item Cancellare un link lo decrementa.
+		      \item Quando il valore arriva a zero, il file/directory viene rimossa.
+	      \end{itemize}
+\end{itemize}
+
+\dfn{Mount}{
+	Device possono essere aggiunti/rimossi; possiamo poi partizionare gli hdd, e montare
+	suddette partizioni in punti diversi.
+}
+
+\nt{
+	Il mount su linux viene fatto nel file /etc/fstab.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.7]{05/mount.png}
+	\caption{Mount.}
+\end{figure}
+
+\dfn{Filesystem Distribuiti}{
+	I file a cui si accede attraverso un FS possono anche risiedere su macchine diverse,
+	collegate tra di loro in rete. Il modello client-server si basa sul concetto di una macchina
+	chiamata server che contiene fisicamente i file condivisi. Le macchine che vogliono
+	accedere ai file sono dette client.
+}
+
+\nt{Questi FS distribuiti si possono montare esattamente come le partizioni locali.}
+
+\paragraph{Per proteggere i file da accessi impropri, si possono usare due soluzioni:}
+
+\begin{itemize}
+	\item \fancyglitter{Access Control List} (ACL):
+	      \begin{itemize}
+		      \item A ogni nodo del FS viene associata una lista che specifica gli utenti che
+		            possono accedere al FILE.
+		      \item Questa soluzione però complica l’implementazione delle directory, perchè
+		            dovrebbe mantenere una ACL, che possono essere lunghe.
+	      \end{itemize}
+	\item Proprietario, Gruppo, Altri:
+	      \begin{itemize}
+		      \item Ogni nodo ha un proprietario.
+		      \item Tutti gli utenti sono divisi in gruppi di lavoro.
+	      \end{itemize}
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.7]{05/distr.png}
+	\caption{implementazione di FS distribuito.}
+\end{figure}
+
+
+\section{Aprire un File}
+
+\subsection{Inode}
+
+\dfn{Inode}{
+	Un FCB (o inode) viene conservato in memoria secondaria, e mantiene le informazioni
+	relative ai files. Hanno dimensione fissa.
+}
+
+\nt{Quando un file viene aperto all’inizio, viene arricchito da alcune informazioni aggiuntive.}
+
+\paragraph{In linux:}
+
+\begin{itemize}
+	\item Inode copiato da disco.
+	\item Stato dell'incore dell'inode:
+	      \begin{itemize}
+		      \item Inode locked (file non disponibile).
+		      \item La copia dell'inode in RAM è diversa da quella su disco.
+		      \item Il file è un punto di mount.
+	      \end{itemize}
+	\item Device number: identificatore del FS a cui appartiene il file.
+	\item Inode number: identificatore dell'inode nella struttura dati su disco.
+	\item Contatore del numero di riferimenti all'inode.
+	\item Contatore del numero di riferimenti all'inode (numero di utilizzi del file attuale).
+\end{itemize}
+
+\paragraph{Supponiamo di volere aprire un file. Dovremo fare le seguenti operazioni:}
+
+\begin{itemize}
+	\item Il kernel mantiene una inode table di dimensione finita.
+	\item Nell'eseguire la open: controlla se l'inode corrispondente al file è già stato caricato,
+	      se sì userà l'incore inode trovato altrimenti.
+	\item Se c'è spazio, crea un nuovo incore inode, lo “locka” e va a copiarvi l'inode su disco
+	      corrispondente al file da usare.
+	\item Se non c'è spazio l'operazione fallisce e viene restituito un errore (così il processo
+	      richiedente non rischia di rimanere sospeso per tempi lunghi.
+\end{itemize}
+
+\qs{}{
+	Gli inode, però, sono immagazzinati in una sequenza di blocchi. Come facciamo a trovare
+	un file, a partire da un lungo percorso assoluto?
+}
+
+\begin{figure}[h]
+	\centering
+	\begin{minted}{c}
+inode-number NAMEI(string cammino)
+	if (la prima directory del cammino è /)
+		current = root inode;
+	else
+		current = inode della working directory;
+	repeat
+		el = leggi prossimo elemento da input;
+		if (el == null)
+			return current;
+		else if (el è contenuto in current)
+			current = inode associato a el;
+		else
+			return (no inode);
+	until (el == null)
+return current;
+\end{minted}
+	\caption{Algoritmo di NAMEI.}
+\end{figure}
+
+\subsection{Apertura in UNIX}
+
+\paragraph{Per aprire un file in UNIX, un processo deve:}
+
+\begin{itemize}
+	\item Eseguire \texttt{open(pathname, flags)}.
+	\item Il SO verifica se il file è in uso da qualche processo.
+	\item Se no:
+	      \begin{itemize}
+		      \item Utilizza l’algoritmo namei per trovare il numero di inode del file.
+		      \item Calcola l’indirizzo su disco che permette di accede fisicamente all’inode.
+		      \item Invia al controller del disco il comando di lettura, che risulterà nella copiatura
+		            dell’inode in una entry della tabella in RAM (in-core inode).
+		      \item Aggiorna la tabella di sistema.
+	      \end{itemize}
+	\item Se sì:
+	      \begin{itemize}
+		      \item Identifica l’in-core inode e lo rende accessibile al processo modificando la
+		            tabella di sistema.
+	      \end{itemize}
+\end{itemize}
+
+\nt{
+	La system call open restituisce come handle del file un \fancyglitter{file descriptor}, un numero intero.
+	Ogni volta che viene chiamata la open, viene aggiunto il file nella tabella dei file, una tabella
+	globale con il riferimenti a tutti i file aperti.
+}
+
+\section{Allocazione}
+
+\subsection{Implementazione delle Directory}
+
+\paragraph{Esistono possibili alternative:}
+
+\begin{itemize}
+	\item Lista lineare (UNIX): una directory è una sequenza di coppie $<$nomeFile,inodeNumber$>$.
+	\item B-tree.
+	\item Tabella hash.
+\end{itemize}
+
+\paragraph{Limiti della lista lineare:}
+
+\begin{itemize}
+	\item Per verificare se un file è in una directory, bisogna scorrerla interamente.
+	\item La ricerca di tipo lineare è lenta.
+	\item È difficile mantenere la lista ordinata senza appesantire la gestione.
+	\item Sono necessarie strutture di appoggio e algoritmi per gestire i buchi creati dalla
+	      cancellazione dei file.
+\end{itemize}
+
+\dfn{B-tree}{
+	Un B-tree è un albero ordinato: ogni nodo può contenere da N a 2N elementi detti chiavi. Un
+	nodo avrà poi K elementi, con K+1 puntatori a nodi del livello successivo.
+	Il numero N è anche detto ordine dell’albero. Questo, è un albero di ordine 2.
+}
+
+\nt{
+	Per ricercare in un B-tree si parte sempre dalla radice. Il suo ordinamento consente tempi
+	rapidi di ricerca. Il suo bilanciamento e fan-out (apertura dell’albero) sono caratteristiche
+	sfruttate per velocizzare la ricerca.
+}
+
+\subsection{Spazio Disco ai Files}
+
+\paragraph{Ci sono tre metodi per organizzare la memorizzazione dei dati su disco:}
+
+\begin{itemize}
+	\item \fancyglitter{Contigua}.
+	\item \fancyglitter{Concatenata}.
+	\item \fancyglitter{Indicizzata}.
+\end{itemize}
+
+\dfn{Allocazione Contigua}{
+	Ogni file è allocato in una sequenza contigua di blocchi. In genere utilizzata negli HDD a
+	disco magnetico.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{05/cont.png}
+	\caption{Allocazione contigua.}
+\end{figure}
+
+\paragraph{Vantaggi dell'allocazione contigua:}
+
+\begin{itemize}
+	\item Rapidità di accesso ai file: empo di seek (posizionamento della testina sulla traccia
+	      giusta) trascurabile.
+	\item Quando si accede a un file si tiene traccia dell'ultimo blocco letto, quindi se
+	      abbiamo appena letto il blocco B, sia l'accesso sequenziale (al blocco B+1) sia
+	      l'accesso diretto (al blocco B+k) sono immediati.
+\end{itemize}
+
+\paragraph{Svantaggi della ricerca sequenziale:}
+
+\begin{itemize}
+	\item Difficile gestire la quantità di memoria da riservare per i file (può essere troppa o
+	      troppo poca, il file può crescere).
+	\item Frammentazione esterna, c’è bisogno di deframmentazione ogni tanto.
+	\item Bisogna gestire i buchi di memoria.
+\end{itemize}
+
+\dfn{Allocazione Concatenata}{
+	Consiste nello spezzare il file in parti che possono essere allocate in modo non contiguo
+	(blocchi di dati). Ogni blocco contiene un puntatore a quello successivo.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{05/conc.png}
+	\caption{Allocazione concatenata.}
+\end{figure}
+
+\paragraph{Vantaggi dell'allocazione concatenata:}
+
+\begin{itemize}
+	\item Non è necessario preallocare memoria per i files.
+	\item La lista concatenata è dinamica.
+	\item Non è necessario deframmentare.
+\end{itemize}
+
+\paragraph{Svantaggi:}
+
+\begin{itemize}
+	\item Solo l'accesso sequenziale è efficiente, accesso diretto e indicizzato devono
+	      comunque scorrere la lista dei blocchi.
+	\item I puntatori ai blocchi sono sparsi per il disco, e ogni salto ha latenza (spreco di
+	      tempo).
+	\item Occorre spazio per mantenere i puntatori ai blocchi successivi.
+	\item Se si corrompe un puntatore il resto del file va perso.
+\end{itemize}
+
+\cor{Allocazione Concatenata FAT}{
+	Si riserva una sezione della partizione per mantenere una tabella che ha tanti elementi
+	quanti blocchi. Se un blocco fa parte di un file, il contenuto della entry corrispondente in
+	tabella è un riferimento al blocco successivo.
+}
+
+\nt{
+	Usata nei sistemi MS-DOS e successori.
+}
+
+\dfn{Allocazione Indicizzata}{
+	Questo tipo di allocazione risolve i problemi delle precedenti soluzioni introducendo un
+	blocco indice. Posseduto da ogni file, il blocco indice è un array degli indirizzi dei blocchi che
+	costituiscono il file. I riferimenti ai blocchi indice dei file sono mantenuti nelle directory.
+}
+
+\paragraph{Per l'accesso:}
+
+\begin{itemize}
+	\item Tramite la directory recupero il blocco indice.
+	\item Tramite i riferimenti contenuti nel blocco indice posso accedere ai vari blocchi dati.
+\end{itemize}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Più adeguata ad accessi diretti.
+		\item L'allocazione indicizzata richiede di mantenere in
+		      RAM una parte dei blocchi indice, possono occorrere due o più accessi al disco se la RAM
+		      non è sufficiente:
+		      \begin{itemize}
+			      \item Uno (o più) per accedere al blocco indice giusto.
+			      \item Uno per raggiungere il dato di interesse.
+		      \end{itemize}
+		\item Alcuni sistemi combinano allocazione contigua e indicizzata: finché il file rimane di piccole
+		      dimensioni si usa l'allocazione contigua, oltre un certo limite si comincia ad usare un indice.
+	\end{itemize}
+}
+
+\section{Gestione e Implementazione}
+
+\subsection{Gestione dello Spazio Libero}
+
+\dfn{Gestione dello Spazio Libero}{
+	Per tenere traccia dei blocchi liberi, si utilizza una struttura basata su un array di bit, ognuno
+	dei quali corrisponde a un blocco. Se il blocco è libero, il bit è impostato a 1
+}
+
+\paragraph{Tecniche di utilizzo:}
+
+\begin{itemize}
+	\item \fancyglitter{Lista concatenata:} i blocchi liberi sono concatenati in una lista. Poiché i blocchi
+	      vengono allocati ai file uno per volta, basta pescare dalla testa della lista il primo
+	      blocco libero ed aggiornare il puntatore.
+	\item \fancyglitter{Raggruppamento:} concatenazione di blocchi indice. Si utilizza un blocco libero per
+	      mantenere N-1 puntatori ad altrettanti blocchi liberi, e l’ultimo puntatore per un
+	      eventuale ulteriore blocco simile.
+	\item \fancyglitter{Conteggio:} variante del precedente, in presenza di sequenze di blocchi liberi contigui
+	      si mantiene un riferimento al primo di tali blocchi e il numero di blocchi liberi ad esso
+	      consecutivi.
+\end{itemize}
+
+\paragraph{Quantità massima di memoria gestibile:}
+
+\begin{itemize}
+	\item Dipende dalle strutture del file system.
+	\item Se devo gestire un disco di dimensioni superiori alla
+	      quantità di mem. massima gestibile, bisogna partizionare il disco in file system diversi.
+\end{itemize}
+
+\subsection{Implementazione del Filesystem}
+
+\paragraph{Programmi e dati sono conservati in memoria secondaria. la memoria secondaria ha le
+	seguenti caratteristiche:}
+
+\begin{itemize}
+	\item È organizzata in blocchi (un blocco può comprendere più settori).
+	\item È possibile accedere direttamente a qualsiasi blocco.
+	\item È possibile leggere un blocco, modificarlo e riscriverlo esattamente nella stessa posizione di memoria.
+	\item Si accede alla memoria secondaria attraverso un FS.
+\end{itemize}
+
+\paragraph{Il FS è strutturate in una gerarchia di livelli:}
+
+\begin{itemize}
+	\item driver di dispositivo: si occupa del trasferimento dei dati da dispositivo di memoria
+	      secondaria a RAM e viceversa. È il gestore del dispositivo.
+	\item FS di base: è proposto a passare comandi al driver di dispositivo.
+	\item modulo di organizzazione dei file: è a conoscenza di come i file sono memorizzati su
+	      disco, è in grado di tradurre indirizzi logici in indirizzi fisici. Mantiene e gestisce anche
+	      l'informazione relativa ai blocchi liberi.
+	\item FA logico: gestisce il FS a livello di metadati. Ogni file è rappresentato da un
+	      File Control Block (FCB).
+\end{itemize}
+
+\dfn{Struttura del Disco}{
+	Un disco può essere diviso in più partizioni. Ogni partizione
+	può avere il suo FS, ed i diversi FS sono composti in una solo struttura.
+}
+
+\paragraph{Ogni FS non è altro che una sequenza di blocchi di memoria secondaria. Esistono poi
+	cosiddetti blocchi speciali:}
+
+\begin{itemize}
+	\item \fancyglitter{Boot Control Block:} blocco che in presenza di un SO contiene informazioni necessarie
+	      per la fase di bootstrap.
+	\item \fancyglitter{Volume Control Block:} descrive lo stato del FS, grandezza e altre
+	      informazioni (il numero di blocchi liberi, usati e la loro dimensione).
+	\item Struttura delle directory: organizza i file, implementata in modo diverso, e contiene le
+	      coppie $<$nome file, FCB$>$
+\end{itemize}
+
