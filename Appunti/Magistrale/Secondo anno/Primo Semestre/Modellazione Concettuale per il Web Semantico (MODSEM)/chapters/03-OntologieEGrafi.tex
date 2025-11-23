@@ -1,5 +1,32 @@
 \chapter{Dalle Ontologie ai Grafi}
 
+\section{SPARQL}
 
+\subsection{Introduzione}
 
+\dfn{SPARQL}{
+	SPARQL è un linguaggio di interrogazione per RDF. Permette di creare nuovi grafi con le triple esatte.
+}
 
+\paragraph{Le query possono essere diverse:}
+
+\begin{itemize}
+	\item Selezione di triple secondo un semplice pattern.
+	\item Query complesse costruite con filtri, aggregatori, path expressions, ecc.
+	\item Query booleane (ASK).
+\end{itemize}
+
+\paragraph{Risultati di SPARQL:}
+
+\begin{itemize}
+	\item Il risultato di una query può essere un insieme di triple o uno o più grafi RDF.
+	\item SPARQL supporta i formati più comuni: XML, CSV, TSV, JSON.
+\end{itemize}
+
+\cor{SPARQL Endpoint}{
+	Le query vengono indirizzate a un indirizzo HTTP che ospita un endpoint SPARQL. L'endpoint esegue le query su uno o più dataset contenuti in uno store di triple.
+}
+
+\nt{
+	Molte Linked Data Platforms (LDP) hanno un'interfaccia in cui è possibile inserire manualmente le query.
+}

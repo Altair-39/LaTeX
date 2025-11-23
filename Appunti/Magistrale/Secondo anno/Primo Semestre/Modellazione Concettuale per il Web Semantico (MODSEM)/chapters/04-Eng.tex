@@ -333,3 +333,42 @@ Web Semantico molte risorse di tipo tassonomico.
 	\item (Ri)utilizzare concetti in uno schema diverso richiamando
 	      quello di origine.
 \end{itemize}
+
+\section{SWRL}
+
+\subsection{Specifiche}
+
+\paragraph{Regole:}
+
+\begin{itemize}
+	\item Antecedente e conseguente: l'antecedente viene valutato su un determinato dataset.
+	\item Dichiarative: risultano in una nuova asserzione, possono solo aggiungere nuove proprietà.
+	\item Produzione: hanno come conseguente un'azione.
+\end{itemize}
+
+\dfn{Specifica di SWRL}{
+	Ufficiosa, limitata a causa di problematiche di tipo computazionale (OWL diventa non più decidibile) ed è supportata solo da alcuni reasoner.
+}
+
+\paragraph{SWRL Tab in Protege:}
+
+\begin{itemize}
+	\item Si basa su un engine esterno (Drools).
+	\item Implementazione migliorata dell'algoritmo RETE per il pattern matching.
+	\item Le regole vengono impostate in Drools ed eseguite. I risultati possono essere importati in modo permanente nell'ontologia.
+\end{itemize}
+
+\dfn{Rule Interchange Format}{
+	Standard del W3C, per facilitare la sintesi e l'integrazione di sistemi di refole.
+}
+
+\nt{
+	RIF può anche essere usato nei linked data.
+}
+
+
+
+
+
+
+
