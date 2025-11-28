@@ -119,6 +119,180 @@ Nei sistemi \fancyglitter{assiomatici} il processo di derivare un teorema da ass
 
 \nt{Il Machine Learning è la ricerca attraverso lo spazio delle ipotesi per trovare l'insieme di tutte le ipotesi che sono consistenti con i training data e selezionare i migliori secondo un qualche criterio.}
 
+\cor{Spazio delle Versioni}{
+	Sottoinsiem dello spazio delle ipotesi in cui tutte le ipotesi sono consistenti con il training data.
+}
+
+\dfn{Bias Induttivo}{
+	Il bias induttivo è un insieme di assunzioni che permette agli algoritmi di apprendimento di scegliere un'ipotesi dallo spazio delle versioni.
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Ogni algoritmo ha un bias induttivo.
+		\item L'unica altra possibilità sarebbe quella di scegliere a caso, ma è dumb as fuck come cosa.
+	\end{itemize}
+}
+
+\qs{}{Possiamo adottare un'algoritmo con il miglior bias induttivo possibile?}
+
+\paragraph{\fancyglitter{Rasoio di Occam:}} tra ipotesi in competizione si sceglie la più semplice.
+
+\begin{itemize}
+	\item Sarebbe troppo bello se fosse così.
+	\item Ma cosa vuol dire "più semplice"?
+	      \begin{itemize}
+		      \item Minor numero di parole/termini?
+		      \item Più facile da interpretare?
+		      \item Che faccia meno assunzioni sui dati?
+	      \end{itemize}
+\end{itemize}
+
+\subsection{No Free Lunch Theorem}
+
+\thm{No Free Lunch Theorem}{
+	Nessun algoritmo è universalmente migliore di tutti gli altri quando la loro performance è la media su tutti i possibili problemi.
+}
+
+
+\paragraph{Denotiamo con:}
+
+\begin{itemize}
+	\item $P(h|X,\mathcal{L}_a)$: la probabilità che l'algoritmo $\mathcal{L}_a$ restituisca l'ipotesi $h$ dato il training set $X$.
+	\item $f$ la funzione che si vuole apprendere.
+	\item L'errore out-of-sample, media dell'errore sugli esempi non nel training set:
+	      \[
+		      E_{ote}(\mathcal{L}_a \mid X, f)
+		      = \sum_{h} \sum_{x \in \mathcal{X}-X} P(x)\,\mathbb{I}(h(x)\ne f(x))\,P(h \mid X, \mathcal{L}_a)
+	      \]
+\end{itemize}
+
+\paragraph{Sommando tutte le possibili funzioni $f_i$ otteniamo:}
+
+\[
+	\sum_{f} E_{ote}(\mathcal{L}_a \mid X, f)
+	= \sum_f \sum_h \sum_{x \in \mathcal{X}-X} P(x)\mathbb{I}(h(x)\neq f(x))P(h \mid X, \mathcal{L}_a)
+\]
+
+\[
+	= \sum_{x \in \mathcal{X}-X} P(x)\sum_h P(h \mid X,\mathcal{L}_a)\sum_f \mathbb{I}(h(x)\neq f(x))
+\]
+
+\[
+	= \sum_{x \in \mathcal{X}-X} P(x)\sum_h P(h \mid X,\mathcal{L}_a)\,\frac{1}{2} 2^{|\mathcal{X}|}
+\]
+
+\[
+	= \frac{1}{2} 2^{|\mathcal{X}|} \sum_{x \in \mathcal{X}-X} P(x)\sum_h P(h \mid X,\mathcal{L}_a)
+\]
+
+\[
+	= \frac{1}{2} 2^{|\mathcal{X}|} \sum_{x \in \mathcal{X}-X} P(x)\cdot 1
+\]
+
+\nt{
+	Il No Free Lunch theorem si basa sull'assunzione che tutte le funzioni $f$ sono ugualmente probabili. Ciò implica che la scelta dell'algoritmo di learning dovrebbe essere guidata dalle caratteristiche del problema.
+}
+
+\section{Selezione del Modello e Valutazione}
+
+\subsection{Errore Empirico e Overfitting}
+
+\qs{}{Come misuriamo la bontà di un modello?}
+
+\begin{itemize}
+	\item \fancyglitter{Error Rate:} si contano le predizioni sbagliate fatte, $E = \frac{a}{m}$.
+	\item \fancyglitter{Accuratezza:} accuracy = $ 1 - E$.
+	\item L'errore valutato sul training set è chiamato \fancyglitter{empirical error} o \fancyglitter{training error}.
+	\item L'errore valutato su nuovi esempi al di fuori del training set è chiamato \fancyglitter{generalization error} o \fancyglitter{test error}.
+\end{itemize}
+
+\nt{
+	Lo scopo dell'apprendimento è quello di minimizzare il generalization error. Però non si può fare direttamente, per cui si tende a minimizzare l'errore di training.
+}
+
+\dfn{Overfitting}{
+	Quando un modello si adatti ai dati troppo bene si rischia che esso sia troppo legato ai dati del training.
+}
+
+\nt{Il fenomeno opposto è l'underfitting.}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.45]{01/esempio.png}
+	\caption{Overfitting e Underfitting.}
+\end{figure}
+
+\clm{}{}{
+	\begin{itemize}
+		\item L'underfitting si risolve facilmente usando modelli più complessi. 
+		\item L'overfitting richiede un bilancio tra complessità del modello e capacità di generalizzazione. 
+		\item Molti algoritmi di apprendimento automatico hanno meccanismi per prevenire l'overfitting come \fancyglitter{tecniche di regolarizzazione} o \fancyglitter{early stopping}.
+	\end{itemize}
+}
+
+\subsection{Metodi di Valutazione}
+
+Quello che si vuole fare è misurare l'errore di generalizzazione su nuovi esempi. 
+
+
+\dfn{Hold-out Validation}{Dato l'insieme dei dati se ne tiene nascosta una parte all'algoritmo (test set).} 
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.4]{01/hold.png}
+	\caption{Validazione Hold-out.}
+\end{figure}
+
+\paragraph{Gli split:}
+
+\begin{itemize}
+	\item Split semplice: si prendono i primi $n$ dati come test set. I problemi sorgono quando i dati non sono ben distribuiti.
+	\item Split stratificato: si mescolano i dati prima di estrarli. 
+\end{itemize}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Ripetere la validazione Hold-out più volte produrra risultati diversi poiché lo split è randomico.
+		\item Per ottenere una stima migliore dell'errore di generalizzazione possiamo ripetere più volte e fare una media.
+		\item La media di $n$ variabili indipendenti  è una nuova variabile avente media: 
+			\[
+				\displaystyle\frac{1}{n}\displaystyle\sum_{i = 1}^{n} E_i = \displaystyle\frac{1}{n}\displaystyle\sum_{i = 1}^{n} \mu = \mu
+			\]
+		\item E varianza: 
+			\[
+				\displaystyle\frac{1}{n^2}\displaystyle\sum_{i = 1}^{n} \sigma^2 = \displaystyle\frac{\sigma^2}{n}
+			\]
+	\end{itemize}
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.55]{01/out.png}
+	\caption{Validazione Hold-out con differenti split ratio.}
+\end{figure}
+
+\nt{Se il dataset è abbastanza grande la validazione Hold-out è semplice ed efficacie. Se il dataset è piccolo si ricorre alla \fancyglitter{cross-validation}.}
+
+\dfn{Cross-Validation}{
+	Ripetizione dell'Hold-out validation $k$ volte, la prima volta si usa come test set $[0, \frac{1}{k}]$, la seconda $[\frac{1}{k}, \frac{2}{k}]$ fino all'ultima in cui si usa $[\frac{k-1}{k}, 1]$. 
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.55]{01/cross.png}
+	\caption{Cross-Validation.}
+\end{figure}
+
+\qs{}{
+	Perché usare la cross-validation invece di prendere la media degli hold-out ripetuti?
+}
+
+\begin{itemize}
+	\item Nella cross-validation ogni esempio è usato come test esattamente una volta, mentre ripetendo hold-out alcuni esempi possono essere usati più volte e alcuni mai usati. 
+	\item È più accurata, ma se il dataset è sufficientemente grande la differenza è trascurabile.
+\end{itemize}
+
 
 
 
