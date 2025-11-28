@@ -225,57 +225,57 @@ Nei sistemi \fancyglitter{assiomatici} il processo di derivare un teorema da ass
 
 \clm{}{}{
 	\begin{itemize}
-		\item L'underfitting si risolve facilmente usando modelli più complessi. 
-		\item L'overfitting richiede un bilancio tra complessità del modello e capacità di generalizzazione. 
+		\item L'underfitting si risolve facilmente usando modelli più complessi.
+		\item L'overfitting richiede un bilancio tra complessità del modello e capacità di generalizzazione.
 		\item Molti algoritmi di apprendimento automatico hanno meccanismi per prevenire l'overfitting come \fancyglitter{tecniche di regolarizzazione} o \fancyglitter{early stopping}.
 	\end{itemize}
 }
 
 \subsection{Metodi di Valutazione}
 
-Quello che si vuole fare è misurare l'errore di generalizzazione su nuovi esempi. 
+Quello che si vuole fare è misurare l'errore di generalizzazione su nuovi esempi.
 
 
-\dfn{Hold-out Validation}{Dato l'insieme dei dati se ne tiene nascosta una parte all'algoritmo (test set).} 
+\dfn{Hold-Out Validation}{Dato l'insieme dei dati se ne tiene nascosta una parte all'algoritmo (test set).}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.4]{01/hold.png}
-	\caption{Validazione Hold-out.}
+	\caption{Validazione Hold-Out.}
 \end{figure}
 
 \paragraph{Gli split:}
 
 \begin{itemize}
 	\item Split semplice: si prendono i primi $n$ dati come test set. I problemi sorgono quando i dati non sono ben distribuiti.
-	\item Split stratificato: si mescolano i dati prima di estrarli. 
+	\item Split stratificato: si mescolano i dati prima di estrarli.
 \end{itemize}
 
 \clm{}{}{
 	\begin{itemize}
-		\item Ripetere la validazione Hold-out più volte produrra risultati diversi poiché lo split è randomico.
+		\item Ripetere la validazione Hold-Out più volte produrra risultati diversi poiché lo split è randomico.
 		\item Per ottenere una stima migliore dell'errore di generalizzazione possiamo ripetere più volte e fare una media.
-		\item La media di $n$ variabili indipendenti  è una nuova variabile avente media: 
-			\[
-				\displaystyle\frac{1}{n}\displaystyle\sum_{i = 1}^{n} E_i = \displaystyle\frac{1}{n}\displaystyle\sum_{i = 1}^{n} \mu = \mu
-			\]
-		\item E varianza: 
-			\[
-				\displaystyle\frac{1}{n^2}\displaystyle\sum_{i = 1}^{n} \sigma^2 = \displaystyle\frac{\sigma^2}{n}
-			\]
+		\item La media di $n$ variabili indipendenti  è una nuova variabile avente media:
+		      \[
+			      \displaystyle\frac{1}{n}\displaystyle\sum_{i = 1}^{n} E_i = \displaystyle\frac{1}{n}\displaystyle\sum_{i = 1}^{n} \mu = \mu
+		      \]
+		\item E varianza:
+		      \[
+			      \displaystyle\frac{1}{n^2}\displaystyle\sum_{i = 1}^{n} \sigma^2 = \displaystyle\frac{\sigma^2}{n}
+		      \]
 	\end{itemize}
 }
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.55]{01/out.png}
-	\caption{Validazione Hold-out con differenti split ratio.}
+	\caption{Validazione Hold-Out con differenti split ratio.}
 \end{figure}
 
-\nt{Se il dataset è abbastanza grande la validazione Hold-out è semplice ed efficacie. Se il dataset è piccolo si ricorre alla \fancyglitter{cross-validation}.}
+\nt{Se il dataset è abbastanza grande la validazione Hold-Out è semplice ed efficacie. Se il dataset è piccolo si ricorre alla \fancyglitter{Cross-Validation}.}
 
 \dfn{Cross-Validation}{
-	Ripetizione dell'Hold-out validation $k$ volte, la prima volta si usa come test set $[0, \frac{1}{k}]$, la seconda $[\frac{1}{k}, \frac{2}{k}]$ fino all'ultima in cui si usa $[\frac{k-1}{k}, 1]$. 
+	Ripetizione dell'Hold-Out validation $k$ volte, la prima volta si usa come test set $[0, \frac{1}{k}]$, la seconda $[\frac{1}{k}, \frac{2}{k}]$ fino all'ultima in cui si usa $[\frac{k-1}{k}, 1]$.
 }
 
 \begin{figure}[h]
@@ -285,17 +285,216 @@ Quello che si vuole fare è misurare l'errore di generalizzazione su nuovi esemp
 \end{figure}
 
 \qs{}{
-	Perché usare la cross-validation invece di prendere la media degli hold-out ripetuti?
+	Perché usare la Cross-Validation invece di prendere la media degli Hold-Out ripetuti?
 }
 
 \begin{itemize}
-	\item Nella cross-validation ogni esempio è usato come test esattamente una volta, mentre ripetendo hold-out alcuni esempi possono essere usati più volte e alcuni mai usati. 
+	\item Nella Cross-Validation ogni esempio è usato come test esattamente una volta, mentre ripetendo Hold-Out alcuni esempi possono essere usati più volte e alcuni mai usati.
 	\item È più accurata, ma se il dataset è sufficientemente grande la differenza è trascurabile.
 \end{itemize}
 
+\dfn{Leave-One-Out}{
+	Ogni esempio è usato per testare esattamente una volra e tutti gli altri esempi sono usati per il training. L'errore di generalizzazione ha varianza molto bassa.
+}
+
+\nt{
+	È lo stimatore più preciso, ma è estremamente costoso dal punto di vista computazionale.
+}
+
+\dfn{Bootstrapping}{
+	Dato un dataset $D$ con $m$ esempi l'obiettivo è di stimare l'errore con l'intero dataset.  L'idea è quella di creare multipli esempi di bootstrap dal dataset originale per rimpiazzare gli esempi che verranno usati per stimare l'errore.
+}
+
+\nt{Gli esempi di bootstrap non sono disgiunti: diversi esempi saranno ripetuti e alcuni non compariranno.}
+
+\paragraph{Probabilità che un esempio non sarà selezionato:}
+
+$P(sns) = (1 - \displaystyle\frac{1}{m})^m$
+
+\clm{}{}{
+	\begin{itemize}
+		\item Consideriamo $D'$ come bootstrap di $D$.
+		\item Possiamo addestrare un modello su $D'$ e valutare la performance su $D - D'$.
+		\item È particolarmente utile su piccoli dataset o quando non c'è un modo decente di splittare in training e dataset.
+	\end{itemize}
+}
+
+\begin{itemize}
+	\item \fancyglitter{Parametri:} gli oggetti modificati dall'algoritmo di apprendimento per adattarsi ai dati.
+	\item \fancyglitter{Hyperparametri:} parametri dell'algoritmo di apprendimento in sè e per sè.
+\end{itemize}
+
+\dfn{Parameter Tuning}{
+	Scegliere il miglior modello da un insieme di modelli candidati o scegliere i miglior Hyperparametri per un dato algoritmo.
+}
+
+\nt{
+	Bisogna prestare attenzione a non fare overfitting sul test set.
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.45]{01/tuning.png}
+	\caption{Tuning.}
+\end{figure}
 
 
+\subsection{Misure di Performance}
 
+Misure di performance differenti riflettono le varie domande di task e producono diversi risultati. Scegliere la misura giusta è cruciale per una valutazione equa del modello.
 
+\dfn{Mean Square Error (MSE)}{
+È una misura per task di regressione. Se si conosce la distribuzione dei dati di $D$:
+
+\[
+E(f; \mathcal{D})
+= \mathbb{E}_{(x,y)\sim \mathcal{D}} \big[ (f(x) - y)^2 \big]
+= \int_{(x,y)\sim \mathcal{D}} (f(x) - y)^2 p(x,y)\, dx\, dy
+\]
+}
+
+\paragraph{Però spesso non si conosce la distribuzione, per cui si stima MSE come:}
+
+\[
+	E(f; D) = \frac{1}{m} \sum_{i=1}^m (f(x_i) - y_i)^2.
+\]
+
+\dfn{Error Rate}{
+Assumendo nota la conoscenza della distribuzione $D$:
+\[
+E(f; D) = \mathbb{E}_{(\mathbf{x},y)\sim D} [\mathbb{I}(f(\mathbf{x}) \neq y)] = \int_{(\mathbf{x},y)\sim D} \mathbb{I}(f(\mathbf{x}) \neq y)p(\mathbf{x}, y)dx dy
+\]
+dove $\bbI$ è la funzione indicatore che restituisce 1 se la condizione è vera e 0 altrimenti.
+}
+
+\paragraph{Si può stimare come:}
+\[
+	E(f; D) = \frac{1}{m} \sum_{i=1}^{m} \mathbb{I}(f(\mathbf{x}_i) \neq y_i)
+\]
+
+\nt{L'accuratezza si calcola come complemento dell'error rate.}
+
+\dfn{Matrice di Confusione}{
+	Si tratta di una matrice 2x2 con esempi e predizioni (su righe o su colonne dipende da come gira all'autore).
+}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{01/confusion.png}
+	\caption{Matrice di confusione.}
+\end{figure}
+
+\paragraph{Altre misure:}
+
+\begin{itemize}
+	\item \fancyglitter{Precision:} l'abilità di identificare i casi positivi.
+	      \begin{center}
+		      Precision = $\frac{TP}{TP + FP}$
+	      \end{center}
+	\item \fancyglitter{Recall:} l'abilità di evitare di etichettare in modo sbagliato.
+	      \begin{center}
+		      Recall = $\frac{TP}{TP + FN}$
+	      \end{center}
+\end{itemize}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Precision e Recall sono spesso usate insieme perché complementari.
+		\item Solitamente l'aumento di una implica la diminuzione dell'altra.
+	\end{itemize}
+}
+
+\dfn{P-R Plots}{
+	Assumendo di avere un classificatore che restituisce una misura di confidenza per ogni campione indicando quanto sia confidente che il campione appartenga alla classe positiva, s può variare un threshold per ottenere diversi valori di precision e recall.
+}
+\begin{figure}[h]
+
+	\centering
+	\includegraphics[scale=0.5]
+	{01/pr.png}
+	\caption{Esempio di P-R Plot.}
+\end{figure}
+
+\qs{}{Come selezioniamo il miglior modello date poche curve P-R?}
+
+\begin{itemize}
+	\item Fissare una data precision e prendere il modello con la maggiore recall (e viceversa).
+	\item Prendere il miglior \fancyglitter{break-even point}: in cui precision e recall sono uguali.
+\end{itemize}
+
+\dfn{F1-Score}{
+	Media armonizzata di precision e recall:
+	\[
+		F1 = \displaystyle\frac{2}{\displaystyle\frac{1}{\text{precision}} + \displaystyle\frac{1}{\text{recall}}}
+	\]
+
+}
+
+\nt{Si può generalizzare come F$_\beta$-score in cui si dà un peso diverso a precision e recall.}
+
+\paragraph{Per ottenere la media dei contributi di diverse matrici di confusione ci sono 2 modi:}
+
+\begin{itemize}
+	\item \fancyglitter{Macro-averaging:} si computa la precision (P) e la recall (R) per ogni matrice di confusione.
+	      \[
+		      \text{macro-}P = \frac{1}{n} \sum_{i=1}^{n} P_i
+	      \]
+	      \[
+		      \text{macro-}R = \frac{1}{n} \sum_{i=1}^{n} R_i
+	      \]
+	      \[
+		      \text{macro-}F_1 = \frac{2 \times \text{macro-}P \times \text{macro-}R}{\text{macro-}P + \text{macro-}R}
+	      \]
+
+	\item \fancyglitter{Micro-averaging:} si calcola la media degli elementi sulla matrice di confusione.
+	      \[
+		      \text{micro-}P = \frac{\overline{TP}}{\overline{TP} + \overline{FP}}
+	      \]
+	      \[
+		      \text{micro-}R = \frac{\overline{TP}}{\overline{TP} + \overline{FN}}
+	      \]
+	      \[
+		      \text{micro-}F_1 = \frac{2 \times \text{micro-}P \times \text{micro-}R}{\text{micro-}P + \text{micro-}R}
+	      \]
+\end{itemize}
+
+\dfn{ROC Plot}{
+	Invece di usare precision e recall si fa un plot dei false positive rate (FPR) contro il true positive rate (TPR) per ottenere la Receiver Operating Characteristic curve (ROC):
+	\[
+		FPR = \frac{FP}{FP + TN} = \frac{FP}{\# \text{ actual negatives}}
+	\]
+	\[
+		TPR = \frac{TP}{TP + FN} = \frac{TP}{\# \text{ actual positives}}
+	\]
+}
+
+\begin{figure}[h]
+
+	\centering
+	\includegraphics[scale=0.5]
+	{01/roc.png}
+	\caption{ROC Plot.}
+\end{figure}
+
+\begin{itemize}
+	\item \fancyglitter{ROC Heaven:} classificatore perfetto, non sbaglia mai.
+	\item \fancyglitter{ROC Hell:} classificatore che sbaglia sempre.
+\end{itemize}
+
+\nt{Avere un classificatore perfetto o uno che sbaglia sempre è la stessa cosa (basta prendere il contrario di cosa restituisce). Il punto peggiore è nel mezzo: tira sempre a caso.}
+
+\paragraph{Area sotto la curva (AUC):}
+\[
+	1 - \text{AUC} = \ell_{\text{rank}} \triangleq \frac{1}{m^+m^-} \sum_{\mathbf{x}^+ \in D^+} \sum_{\mathbf{x}^- \in D^-} \mathbb{I}[f(\mathbf{x}^+) < f(\mathbf{x}^-)] + \frac{1}{2}\mathbb{I}[f(\mathbf{x}^+) = f(\mathbf{x}^-)]
+\]
+
+\dfn{Cost-Sensitive Error Rate}{
+	Il cost-sensitive error rate si calcola come:
+	\[
+		E(f; D; \text{cost}) = \frac{1}{m} \left( \sum_{(\mathbf{x},y) \in D^+} \mathbb{I}[f(\mathbf{x}) \neq y] \times \text{cost}_{01} + \sum_{(\mathbf{x},y) \in D^-} \mathbb{I}[f(\mathbf{x}) \neq y] \times \text{cost}_{10} \right)
+	\]
+}
+
+\subsection{Comparison Test}
 
 
