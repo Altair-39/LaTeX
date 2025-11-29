@@ -736,10 +736,249 @@ Assumendo di avere due classificatori $A$ e $B$ e volendo comparare le loro perf
 
 \section{Modelli Lineari}
 
+\subsection{Least Squares}
+
+\dfn{Modello Lineare}{
+	Assumiamo $x = (x_1,..., x_d)^\top$ come campione descritto da $d$ variabili. Un modello lineare mira ad apprendere una funzione che consente di vare predizioni con una combinazione lineare delle variabili in input:
+	\[
+		f(\mathbf{x}) = w_1x_1 + w_2x_2 + \ldots + w_dx_d + w_{d+1} = \mathbf{w}^\top \mathbf{x} + w_{d+1}
+	\]
+	In cui  $\mathbf{w} = (w_1, w_2, \ldots, w_d)^\top$ è il vettore peso e $w_{d+1}$ è il termine di bias.
+}
+
+\nt{Il modello è determinato quando $w$ e $\mathbf{w}_{d+1}$ sono appresi dai dati.}
+
+\dfn{Regressione Lineare}{
+Dato un dataset $D = {(x_1, y_1), ..., (x_n,y_n)}$ dove $x_i = (x_{i1}, ..., x_{id})$ e $y_i \in \bbR$, la regressione lineare punta a imparare un modello lineare che possa predirre accuratamente delle vere etichette. Si cerca di ridurre la funzione:
+
+\[
+	\text{MSE}(\mathbf{w}, w_{d+1}) = \frac{1}{n} \sum_{i=1}^{n} (y_i - f(\mathbf{x}_i))^2 = \frac{1}{n} \sum_{i=1}^{n} (y_i - (\mathbf{w}^\top \mathbf{x}_i + w_{d+1}))^2
+\]
+
+}
+
+\nt{La spiegazione di questo argomento è diversa da quella del libro.}
+
+\dfn{Mean Square}{
+	Si ha un dataset con un certo numero di punti e le loro coordinate. Si vuole trovare la retta che passi per tutti i punti.
+}
+
+\nt{È molto comoda la rappresentazione matriciale.}
+
+\paragraph{Per esempio, il sistema:}
+
+\[
+	\begin{cases}
+		w_1 \cdot (-1) + w_2 = -1.52   \\
+		w_1 \cdot (-0.8) + w_2 = -1.21 \\
+		w_1 \cdot (-0.6) + w_2 = -0.67 \\
+		\ldots
+	\end{cases}
+\]
+
+\paragraph{Può essere riscritto come \fancyglitter{matrice}:}
+
+\[
+	\begin{bmatrix}
+		-1   \\
+		-0.8 \\
+		-0.6 \\
+		\ldots
+	\end{bmatrix}
+	[w_1] + w_2 =
+	\begin{bmatrix}
+		-1.52 \\
+		-1.21 \\
+		-0.67 \\
+		\ldots
+	\end{bmatrix}
+	= \mathbf{X}\mathbf{w} + w_2
+\]
+
+\cor{Coordinate Omogenee}{
+	Incorporiamo il termine di bias $b$ nel vettore peso (che diventa $w^i = (w_1,..., w_d, w_{d+1}$) e aggiungiamo una colonna di 1 nella matrice X:
+	\[
+		\underset{\mathbf{X}}{\begin{bmatrix}
+				-1     & 1 \\
+				-0.8   & 1 \\
+				-0.6   & 1 \\
+				\ldots & 1
+			\end{bmatrix}}
+		\underset{\mathbf{w}}{\begin{bmatrix}
+				w_1 \\
+				w_2
+			\end{bmatrix}}
+		=
+		\underset{\mathbf{y}}{\begin{bmatrix}
+				-1.52 \\
+				-1.21 \\
+				-0.67 \\
+				\ldots
+			\end{bmatrix}}
+		\equiv \mathbf{X}\mathbf{w} = \mathbf{y}
+	\]
+}
+
+\ex{}{
+	Dato l'esempio:
+	\begin{align*}
+		x_1 & = (1,2), \quad y_1 = 0.8 \\
+		x_2 & = (3,4), \quad y_2 = 0.4 \\
+		x_3 & = (1,4), \quad y_3 = 0.7 \\
+		x_4 & = (2,2), \quad y_4 = 0.9
+	\end{align*}
+	Quali sono la matrice X e il vettore y?
+
+	Nel caso ideale X è quadrata e l'equazione può essere semplicemente risolta moltiplicando entrambi i lati con l'inversa di X.
+	\begin{align*}
+		\mathbf{X}\mathbf{w}                                 & = \mathbf{y}                                 \\
+		\Downarrow                                                                                          \\
+		\textcolor{red}{\mathbf{X}^{-1}}\mathbf{X}\mathbf{w} & = \textcolor{red}{\mathbf{X}^{-1}}\mathbf{y} \\
+		\Downarrow                                                                                          \\
+		\mathbf{w}                                           & = \mathbf{X}^{-1}\mathbf{y}
+	\end{align*}
+
+	Sfortunatamente questo è vero solo nel caso triviale. X non è solitamente invertibile ed è necessario un approccio più generale.
+}
+
+\paragraph{Quindi, utilizzando un approccio geometrico:}
+
+\begin{itemize}
+	\item Iniziamo notando che variando w ci stiamo muovendo nello spazio delle colonne di X.
+	      \begin{figure}[h]
+		      \centering
+		      \includegraphics[scale=0.35]{01/g1.png}
+	      \end{figure}
+	\item Dato che il sistema di equazioni non è risolvibile si capisce che nessuna combinazione di $w_i$ consente di ottenere y, per cui y non appartiene al piano C(X).
+	      \begin{figure}[h]
+		      \centering
+		      \includegraphics[scale=0.35]
+		      {01/g2.png}
+	      \end{figure}
+	\item Il miglior modo è quello di trovare il vettore w che minimizza la lunghezza del vettore errore $e = y - Xw$. In altre parole vogliamo trovare:
+	      \[
+		      \argmin_{\mathbf{w}} \|\mathbf{e}\| = \argmin_{\mathbf{w}} \|\mathbf{e}\|^2 = \argmin_{\mathbf{w}} \|\mathbf{y} - \mathbf{X}\mathbf{w}\|^2
+	      \]
+	      \begin{figure}[h]
+		      \centering
+		      \includegraphics[scale=0.35]{01/g3.png}
+	      \end{figure}
+	\item Come scegliamo il miglior punto sul piano $C(X)$ per approssimare y?
+	\item Il miglior punto è la proiezione ortogonale di y su $C(X)$. Quel punto corrisponde a $p = Xw$ dove $w$ è il vettore peso ottimale.
+
+	      \begin{figure}[h]
+
+		      \centering
+		      \includegraphics[scale=0.5]{01/g4.png}
+
+	      \end{figure}
+	\item Per imporre l'ortogonalità al piano si impone che sia ortogonale a tutti i vettori del piano:
+	      \begin{align*}
+		      \mathbf{x}_1 \perp \mathbf{e} & \Rightarrow \mathbf{x}_1^\top \mathbf{e} = 0 \\
+		      \mathbf{x}_2 \perp \mathbf{e} & \Rightarrow \mathbf{x}_2^\top \mathbf{e} = 0 \\
+		                                    & \ldots
+	      \end{align*}
+	\item Che può essere scritto come $X^\top e = 0$.
+	\item La soluzione si può trovare risolvendo:
+	      \begin{gather*}
+		      \mathbf{X}^\top (\mathbf{y} - \mathbf{X}\mathbf{w}) = \mathbf{0} \\
+		      \mathbf{X}^\top \mathbf{y} - \mathbf{X}^\top \mathbf{X}\mathbf{w} = \mathbf{0} \\
+		      \mathbf{X}^\top \mathbf{X}\mathbf{w} = \mathbf{X}^\top \mathbf{y} \\
+		      \mathbf{w} = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}
+	      \end{gather*}
+\end{itemize}
+
+\nt{
+	Se i dati sono pochi o rumorosi la matrice $X^\top X$ può essere malcondizionata rendendo difficile l'inversione. In tali casi si effettuano tecniche di regolarizzazione per stabilizzare la soluzione.
+}
+
+\paragraph{Un'altra possibilità per derivare la soluzione di Least Squares è l'analisi:}
+
+\begin{itemize}
+	\item Possiamo riscrivere il problema come:
+	      \begin{align*}
+		      \argmin_{\mathbf{w}} \|\mathbf{y} - \mathbf{X}\mathbf{w}\|^2 & = \argmin_{\mathbf{w}} (\mathbf{y} - \mathbf{X}\mathbf{w})^\top (\mathbf{y} - \mathbf{X}\mathbf{w})                                                             \\
+		                                                                   & = \argmin_{\mathbf{w}} \left( \mathbf{y}^\top \mathbf{y} - 2\mathbf{y}^\top \mathbf{X}\mathbf{w} + \mathbf{w}^\top \mathbf{X}^\top \mathbf{X}\mathbf{w} \right)
+	      \end{align*}
+	\item Differenziando rispetto a w e impostando la derivata a 0 otteniamo:
+	      \begin{align*}
+		      \frac{\partial}{\partial \mathbf{w}} \left( \mathbf{y}^\top \mathbf{y} - 2\mathbf{y}^\top \mathbf{X}\mathbf{w} + \mathbf{w}^\top \mathbf{X}^\top \mathbf{X}\mathbf{w} \right) & = 0                                                            \\
+		      -2\mathbf{X}^\top \mathbf{y} + 2\mathbf{X}^\top \mathbf{X}\mathbf{w}                                                                                                          & = 0                                                            \\
+		      \mathbf{X}^\top \mathbf{X}\mathbf{w}                                                                                                                                          & = \mathbf{X}^\top \mathbf{y}                                   \\
+		      \mathbf{w}                                                                                                                                                                    & = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{y}
+	      \end{align*}
+	\item Dove:
+	      \[
+		      \frac{\partial}{\partial \mathbf{w}} \left[ \mathbf{w}^\top \mathbf{X}^\top \mathbf{X}\mathbf{w} \right] = 2\mathbf{X}^\top \mathbf{X}\mathbf{w}
+	      \]
+	\item E:
+	      \[
+		      \frac{\partial}{\partial \mathbf{w}} \left[ \mathbf{y}^\top \mathbf{X}\mathbf{w} \right] = \mathbf{X}^\top \mathbf{y}
+	      \]
+\end{itemize}
+
+\subsection{Regolarizzazione}
+
+Il metodo Least Squares è uno strumento potente, ma non è immune all'overfitting.
+
+\dfn{Regolarizzazione}{
+	La regolarizzazione è un metodo generale per evitare l'overfitting applicando vincoli aggiuntivi al vettore peso. Un approccio comune consiste nell'assicurarsi che i pesi sono piccoli in magnitudo (shrinkage).
+}
+
+\paragraph{La versione regolarizzata del Least Squares è:}
+\[
+	\underset{\mathbf{w}}{\text{arg min}} \|\mathbf{y} - \mathbf{X}\mathbf{w}\|^2 + \lambda \|\mathbf{w}\|_p^p
+\]
+
+\nt{Dove $\lambda$ è un Hyperparametro che controlla la quantità di regolarizzazione e $p$ è la norma usata per misurare la dimensione dei pesi.}
+
+\cor{Ridge Regression}{
+	Nel caso di norma $L_2$ la versione regolarizzata di Least Squares ha una soluzione in forma chiusa:
+	\[
+		\hat{\mathbf{w}} = (\mathbf{X}^\top \mathbf{X} + \lambda \mathbf{I})^{-1} \mathbf{X}^\top \mathbf{y}
+	\]
+	Dove $I$ è la matrice identità.
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Una matrice è invertibile se e solo se tutti i suoi autovalori sono non-zero.
+		\item Aggiungere $\lambda$ ci assicura che tutti gli autovalori sono reali e non-negativi.
+	\end{itemize}
+}
+
+\cor{Lasso Regression}{
+	Nel caso di norma $L_1$:
+	\[
+		\|\mathbf{w}\|_1 = \sum_{i} |w_i|
+	\]
+	Il risultato è che alcuni pesi sono ridotti e altri settati a 0.
+}
+
+\nt{Lasso Regression favorisce soluzioni sparse.}
+\begin{figure}[h]
+
+	\centering
+	\includegraphics[scale=0.5]{01/reg.png}
+	\caption{Confronti tra regressioni.}
+\end{figure}
+
+\qs{}{
+	Perché i metodi di regolarizzazione funzionano?
+}
+
+\begin{itemize}
+	\item Se si assume che X è affetta da un errore D allora: (X + D)w = Xw + Dw.
+	\item Per cui minimizzare la norma del vettore peso minimizza gli effetti dell'errore su X.
+	\item Limitando i pesi introduciamo un bias verso modelli più semplici riducendo la varianza:
+	      \begin{itemize}
+		      \item Una grande riduzione nella varianza compensa un piccolo incremento nel bias, riducendo gli errori.
+		      \item Possiamo utilizzare il rasosio di Occam, assumendo che modelli più semplici generalizzano meglio.
+	      \end{itemize}
+\end{itemize}
 
 
-
-
+\subsection{Generalizzare Modelli Lineari e Regressioni Logistiche}
 
 
 
