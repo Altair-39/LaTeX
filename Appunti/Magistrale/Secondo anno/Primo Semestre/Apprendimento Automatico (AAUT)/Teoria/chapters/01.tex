@@ -485,7 +485,7 @@ dove $\bbI$ è la funzione indicatore che restituisce 1 se la condizione è vera
 
 \paragraph{Area sotto la curva (AUC):}
 \[
-	1 - \text{AUC} = \ell_{\text{rank}} \triangleq \frac{1}{m^+m^-} \sum_{\mathbf{x}^+ \in D^+} \sum_{\mathbf{x}^- \in D^-} \mathbb{I}[f(\mathbf{x}^+) < f(\mathbf{x}^-)] + \frac{1}{2}\mathbb{I}[f(\mathbf{x}^+) = f(\mathbf{x}^-)]
+	1 - \text{AUC} = \ell_{\text{rank}} \triangle \frac{1}{m^+m^-} \sum_{\mathbf{x}^+ \in D^+} \sum_{\mathbf{x}^- \in D^-} \mathbb{I}[f(\mathbf{x}^+) < f(\mathbf{x}^-)] + \frac{1}{2}\mathbb{I}[f(\mathbf{x}^+) = f(\mathbf{x}^-)]
 \]
 
 \dfn{Cost-Sensitive Error Rate}{
@@ -493,8 +493,253 @@ dove $\bbI$ è la funzione indicatore che restituisce 1 se la condizione è vera
 	\[
 		E(f; D; \text{cost}) = \frac{1}{m} \left( \sum_{(\mathbf{x},y) \in D^+} \mathbb{I}[f(\mathbf{x}) \neq y] \times \text{cost}_{01} + \sum_{(\mathbf{x},y) \in D^-} \mathbb{I}[f(\mathbf{x}) \neq y] \times \text{cost}_{10} \right)
 	\]
+
+	Dove si dà un costo agli errori.
 }
 
 \subsection{Comparison Test}
+
+\paragraph{Confrontare i risultati di diversi classificatori non è triviale:}
+
+\begin{itemize}
+	\item Desideriamo valutare una performance generalizzata, ma abbiamo accesso solo a un insieme di test finito.
+	\item Le performance del modello variano su insiemi di test diversi anche se hanno la stessa dimensione.
+	\item La randomicità di diversi algoritmi di apprendimento possono produrre modelli diversi quando addestrati diverse volte sugli stessi dati.
+\end{itemize}
+
+\dfn{Binomial Testing}{
+	Dato un modello $f$ con un error rate sconosciuto $\epsilon$ si desidera testare se il modello performi meglio di un dato threshold $\epsilon_0 \in [0, 1]$ avendo osservato il tasso di errore empirico $\hat \epsilon$ su un insieme di test di taglia $m$ per il modello $f$.
+}
+
+\paragraph{Hypothesis Test:}
+
+\begin{itemize}
+	\item \fancyglitter{Null Hypothesis:} il modello non è migliore di $\epsilon_0$.
+	      \[H_0: \epsilon \ge \epsilon_0 \]
+	\item \fancyglitter{Alternative Hypothesis:} il modello è migliore di $\epsilon_0$.
+	      \[H_1: \epsilon < \epsilon_0 \]
+
+	\item Assumendo $E$ come variabile casuale che conta il numero di errori commessi dal modello sull'insieme di test. Con $H_0$ abbiamo: $E \sim \text{Bin}(m, \epsilon_0)$.
+\end{itemize}
+
+
+\cor{Decision Rule}{
+	Si rigetta l'ipotesi nulla $H_0$ a un livello $\alpha$ (con confidenza $1 - \alpha$) se:
+	\[
+		P(E \le \hat e | \epsilon = \epsilon_0) < \alpha
+	\]
+}
+
+\nt{
+	In altre parole: se è improbabile osservare poche errori concludiamo che il modello performi meglio di $H_0$.
+}
+
+\cor{P-Value}{
+Il P-Value di un test statistico è la probabilità di osservare una statistica almeno estrema quanto quella effettivamente osservata, assumendo che l'ipotesi nulla sia vera.
+\[
+	\text{p-value} = P(E \le \hat{e} \mid \epsilon = \epsilon_0) = \sum_{k=0}^{\hat{e}} \binom{m}{k} \epsilon_0^k (1 - \epsilon_0)^{m-k}
+\]
+
+}
+
+\cor{Critical Value}{
+	Assumendo di voler ripetere un test più volte si può calcolare l'errore massimo per rigettare l'ipotesini nulla.
+	\[
+		\bar{\epsilon} = \underset{\epsilon}{\text{maximize}} \quad \epsilon
+	\]
+	\[
+		\text{subject to} \quad \sum_{i=0}^{\lfloor \epsilon \times m \rfloor} \binom{m}{i} \epsilon^i (1-\epsilon)^{m-i} \leq \alpha
+	\]
+}
+
+\dfn{Student's T-Test}{
+	Ripetendo Hold-Out validation o Cross-Validation si possono calcolare:
+	\begin{itemize}
+		\item Media:
+		      \[
+			      \mu = \frac{1}{k} \sum_{i=1}^{k} \hat{\epsilon}_i
+		      \]
+
+		\item Varianza:
+		      \[
+			      \sigma^2 = \frac{1}{k} \sum_{i=1}^{k} (\hat{\epsilon}_i - \mu)^2
+		      \]
+
+	\end{itemize}
+
+	E così facendo si può calcolare la distribuzione:
+	\[
+		\tau = \sqrt{k} \frac{\mu - \epsilon_0}{\sigma}
+	\]
+
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Il test di Student è usato per determinare se la media di due gruppi è significativamente diversa.
+		\item Si può rigettare l'ipotesi nulla a un livello di significatività $\alpha$ se $\tau$ è al di fuori dell'intervallo $[-t_{\frac{\alpha}{2}}, t_{\frac{\alpha}{2}}]$.
+	\end{itemize}
+}
+
+\begin{figure}[h]
+
+	\centering
+	\includegraphics[scale=0.3]
+	{01/tst.png}
+	\caption{Esempio di t di Student.}
+\end{figure}
+
+\cor{Cross-Validated Student's T-Test}{
+	Assumendo di avere due classificatori $A$ e $B$ denotando con $\epsilon_1^A,..., \epsilon_k^A$ e $\epsilon_1^B,..., \epsilon_k^B$ gli error rate ottenuti dalla Cross-Validation, se le loro performance sono le stesse allora i testing error rates dovrebbero essere circa gli stessi: $\epsilon_i^A \approx \epsilon_i^B$.
+
+}
+
+\paragraph{Un metodo più robusto è 5x2 Cross-Validated T-Test:}
+
+\begin{enumerate}
+	\item Eseguire un 2-fold Cross-Validation, con la differenza tra errori $\Delta_{1,1}$ e $\Delta_{1,2}$.
+	\item Ripetere il punto 1 quattro volte con mischiaggi randomici dei dati, in questo modo si ottenfono 5 paia differenti.
+	\item Per ognuna si va a calcolare la varianza delle differenze:
+	      \[
+		      \sigma_i^2 = (\Delta_{i,1} - \bar{\Delta}_i)^2 + (\Delta_{i,2} - \bar{\Delta}_i)^2 \quad \text{where} \quad \bar{\Delta}_i = \frac{\Delta_{i,1} + \Delta_{i,2}}{2}
+	      \]
+	\item Si utilizza la differenza del primo fold\footnote{Per ammissione del professore nemmeno lui sa il perché.} e la media delle stime delle 5 varianze:
+	      \[
+		      \tau = \frac{\Delta_{1,1}}{\sqrt{\frac{1}{5} \sum_{i=1}^{5} \sigma_i^2}}
+	      \]
+	\item Sotto l'ipotesi nulla la statistica si distribuisce come una Student's T-Distribution con 5 gradi di libertà.
+\end{enumerate}
+
+\dfn{McNemar's Test}{
+Assumendo di avere due classificatori $A$ e $B$ e volendo comparare le loro performance tramite Hold-Out si possono addestrare sullo stesso training set e valutarli sullo stesso test set. L'idea è che sotto l'ipotesi nulla il numero di errori fatto da ogni classificatore dovrebbe essere simile.
+\[
+	T_{\chi^2} = \frac{(|e_{10} - e_{01}| - 1)^2}{e_{10} + e_{01}},
+\]
+
+}
+
+\paragraph{Decision Rule:}
+
+\begin{itemize}
+	\item Si rigetta l'ipotesi nulla a un livello di significatività $\alpha$ se:
+	      \[
+		      \tau_{\chi^2} > \chi_{\alpha,1}^2
+	      \]
+\end{itemize}
+
+\nt{Ma sia il test di Student che quello di McNemar sono pensati per confrontare due algoritmi su un singolo dataset, però spesso si vogliono confrontare più algoritmi su più dataset.}
+
+\dfn{Friedman's Test}{
+	Si tratta di un ranking test che permette di confrontare più algoritmi su più dataset. Se l'ipotesi nulla è rigettata si effettua un test post-hoc (solitamente Nemenyi's Test) per identificare specifiche paia di algoritmi con performance molto diverse.
+}
+
+\paragraph{In pratica:}
+
+\begin{itemize}
+	\item Assumendo che si vogliano comparare gli algoritmi $A, B, C$ sui datasets $D_1, D_2, D_3$.
+	\item Si inizia con un Hold-Out o una Cross-Validation per ottenere gli error rates di ogni algoritmo su ogni dataset.
+	\item Si fa un ranking degli algoritmi per ogni dataset.
+	      \begin{figure}[h]
+
+		      \centering
+		      \includegraphics[scale=0.4]
+		      {01/friedman.png}
+		      \caption{Esempio di Friedman's Test.}
+	      \end{figure}
+	\item Usiamo $k$ per definire il numero di algoritmi, $N$ per il numero dei datasets e $r_i$ la media dell'algoritmo $i$.
+	\item Per calcolare la statistica del test di Friedman iniziamo dalla formula:
+	      \[
+		      \tau_{\chi^2} = \frac{12N}{k(k+1)} \left( \sum_{i=1}^{k} r_i^2 - \frac{k(k+1)^2}{4} \right)
+	      \]
+
+	\item Se ci fermassimo qua ci servirebbermo molti algoritmi (circa 100-150), per cui questa statistica è corretta da \fancyglitter{Iman} e \fancyglitter{Davenport}:
+	      \[
+		      \tau_F = \frac{(N-1)\tau_{\chi^2}}{N(k-1) - \tau_{\chi^2}}
+	      \]
+\end{itemize}
+
+\cor{Nemenyi Post-Hoc Test}{
+	Si cofrontano le performance dei classificatori guardando le differenze tra i loro ranks. La differenza è considerata significativamente differente se è maggiore di CD:
+	\[
+		CD = q_{\alpha} \sqrt{\frac{k(k+1)}{6N}}
+	\]
+	Dove:
+	\begin{itemize}
+		\item $k$ è il numero di algoritmi.
+		\item $N$ è il numero di datasets.
+		\item $q_\alpha$ è il critical value della distribuzione di Student a livello di significatività $\alpha$.
+	\end{itemize}
+}
+
+\subsection{Decomposizione Bias-Varianza}
+
+\dfn{Decomposizione Bias-Varianza}{
+	Si tratta di un modo per capire meglio il motivo per cui un algoritmo produce un certo errore. Si tratta di 3 componenti:
+	\begin{itemize}
+		\item Bias: l'errore dovuto ad assunzioni sbagliate.
+		\item Varianza: ci si sta adattando troppo al training set.
+		\item Errori irriducibili: dovuti ai rumori nei dati.
+	\end{itemize}
+}
+
+\paragraph{In pratica:}
+
+\begin{itemize}
+	\item Consideriamo un problema di regressione con $x$ come campione di test con etichetta $y_D$ nel dataset $D$, con $f(x;D)$ la predizione del modello $f$ addestrato su $D$.
+	\item Il \fancyglitter{Valore atteso} è:
+	      \[
+		      \bar{f} = \mathbb{E}_D[f(\mathbf{x}; D)]
+	      \]
+	\item La \fancyglitter{Varianza} è:
+	      \[
+		      var = \mathbb{E}_D \left[ (f(\mathbf{x}; D) - \bar{f})^2 \right]
+	      \]
+	\item Il \fancyglitter{Rumore} è:
+	      \[
+		      \varepsilon^2 = \mathbb{E}_D \left[ (y_D - y)^2 \right]
+	      \]
+	\item Il \fancyglitter{Bias} è:
+	      \[
+		      bias^2 = (\bar{f} - y)^2
+	      \]
+\end{itemize}
+
+\paragraph{Il valore atteso di MSE può essere scritto come:}
+
+\begin{align*}
+	E(f; D) & = \mathbb{E}_D[(f(\mathbf{x}; D) - y_D)^2]                                                                                                             \\
+	        & = \mathbb{E}_D[(f(\mathbf{x}; D) - \overbrace{\bar{f} + \bar{f}}^{a} - \overbrace{y_D}^{b})^2] = E_D[(a + b)^2]                                        \\
+	        & = \mathbb{E}_D[(f(\mathbf{x}; D) - \bar{f})^2] + \mathbb{E}_D[(\bar{f} - y_D)^2] + \cancel{2\mathbb{E}_D[(f(\mathbf{x}; D) - \bar{f})(\bar{f} - y_D)]} \\
+	        & \quad \textcolor{red}{\text{since }} y_D \perp f_D                                                                                                     \\
+	        & = \mathbb{E}_D[(f(\mathbf{x}; D) - \bar{f})^2] + \mathbb{E}_D[(\bar{f} - y_D)^2]                                                                       \\
+	        & = var + \mathbb{E}_D[(\bar{f} - y + y - y_D)^2]                                                                                                        \\
+	        & = var + \cancel{\mathbb{E}_D}[(\bar{f} - y)^2] + \mathbb{E}_D[(y - y_D)^2] + \cancel{2\mathbb{E}_D[(\bar{f} - y)(y - y_D)]}                            \\
+	        & \quad \textcolor{red}{\text{since }} \mathbb{E}_D[y_D - y] = 0 \text{ } (\Rightarrow E_D[y_D] = y)                                                     \\
+	        & = var + bias^2 + \varepsilon^2
+\end{align*}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Il bias misura la capacità dell'algoritmo di adattarsi.
+		\item La varianza misura l'impatto delle fluttuazioni nei dati sull'apprendimento.
+		\item Il rumore rappresenta l'errore atteso per ogni algoritmo di apprendimento per un dato task.
+	\end{itemize}
+}
+
+\nt{
+	Per ottenere una performance eccellente un modello ha bisogno di un piccolo bias e di una piccola varianza.
+}
+
+\cor{Bias-Varianza Dilemma}{
+	Trovare un trade-off tra bias e varianza, poiché generalmente un algoritmo con basso bias ha alta varianza e viceversa.
+}
+
+\section{Modelli Lineari}
+
+
+
+
+
+
 
 
