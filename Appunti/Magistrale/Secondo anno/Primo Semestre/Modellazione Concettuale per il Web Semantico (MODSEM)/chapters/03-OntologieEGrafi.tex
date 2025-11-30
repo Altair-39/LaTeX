@@ -23,6 +23,8 @@
 	\item SPARQL supporta i formati più comuni: XML, CSV, TSV, JSON.
 \end{itemize}
 
+\subsection{Query}
+
 \cor{SPARQL Endpoint}{
 	Le query vengono indirizzate a un indirizzo HTTP che ospita un endpoint SPARQL. L'endpoint esegue le query su uno o più dataset contenuti in uno store di triple.
 }
@@ -30,3 +32,32 @@
 \nt{
 	Molte Linked Data Platforms (LDP) hanno un'interfaccia in cui è possibile inserire manualmente le query.
 }
+
+\paragraph{WHERE:}
+
+\begin{itemize}
+	\item Nella clausola WHERE si trovano una o
+	      più triple che contengono variabili ?v
+	\item Le triple formano un pattern che corrisponde a un insieme di grafi.
+	\item Il pattern viene unificato con le tripl presenti nel repository rdf.
+	\item Il risultato nella query è dato da tutte
+	      le occorrenze delle variabili contenute
+	      nella clausola WHERE (proiezione) nei
+	      grafi trovati.
+\end{itemize}
+
+\cor{Filtri}{
+	I filtri sono elementi opzionali che si possono includere nella clausola
+	WHERE per selezionare un sottoinsieme nell’insieme dei risultati.
+}
+
+\paragraph{Operazioni sui risultati:}
+
+\begin{itemize}
+	\item OrderBy: ordina i risultati delle query sulla base di una delle variabili.
+	\item Distinct.
+	\item Group: estrae e conta gli individui che hanno determinati requisiti.
+	\item Blank node: seleziona tutte le entità situate da qualche parte.
+	\item Count.
+\end{itemize}
+
