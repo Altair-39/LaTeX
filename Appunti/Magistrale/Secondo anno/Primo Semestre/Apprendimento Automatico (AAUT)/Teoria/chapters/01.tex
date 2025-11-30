@@ -120,7 +120,7 @@ Nei sistemi \fancyglitter{assiomatici} il processo di derivare un teorema da ass
 \nt{Il Machine Learning è la ricerca attraverso lo spazio delle ipotesi per trovare l'insieme di tutte le ipotesi che sono consistenti con i training data e selezionare i migliori secondo un qualche criterio.}
 
 \cor{Spazio delle Versioni}{
-	Sottoinsiem dello spazio delle ipotesi in cui tutte le ipotesi sono consistenti con il training data.
+	Sottoinsieme dello spazio delle ipotesi in cui tutte le ipotesi sono consistenti con il training data.
 }
 
 \dfn{Bias Induttivo}{
@@ -977,8 +977,231 @@ Il metodo Least Squares è uno strumento potente, ma non è immune all'overfitti
 	      \end{itemize}
 \end{itemize}
 
-
 \subsection{Generalizzare Modelli Lineari e Regressioni Logistiche}
 
+\dfn{Generalized Linear Model (GLM)}{
+	GLM estende i modelli lineari per permettere diversi diversi tipi di risposta. Si usa una link function per collegare il predittore lineare al valore atteso:
+	\[
+		y = g^{-1}(\mathbf{w}^\top \mathbf{x} + b)
+	\]
+	Dove $g$ è la link function.
+}
+
+\nt{
+	Per semplificare utilizziamo la variabile y invece del suo valore atteso.
+}
+
+\qs{}{Come possiamo risolvere dei problemi di classificazione utilizzando i modelli lineari?}
+
+\begin{itemize}
+	\item Possiamo cercare una funzione monotona differenziabile $g$ che collega l'output della regressione alle etichette di classificazione.
+	\item Nello specifico vogliamo convertire l'output del modello lineare in etichette binarie (0/1). Si potrebbe utilizzare una funzione:
+	      \[
+		      y = f(z) = \begin{cases}
+			      0,   & \text{if } z < 0 \\
+			      0.5, & \text{if } z = 0 \\
+			      1    & \text{if } z > 0
+		      \end{cases}
+	      \]
+	\item Tuttavia questa funzione non è differenziabile.
+	\item Per cui si usa la \fancyglitter{funzione logistica}:
+	      \[y = f(z) = \frac{1}{1 + e^{-z}}.\]
+	\item E la sua inversa:
+	      \[z = f^{-1}(y) = \ln \frac{y}{1 - y}\]
+	\item Usando questa funzione e la sua inversa si può modellare la probabilità che un certo input appartenga a una particolare classe. La probabilità della classe positiva:
+	      \[
+		      y' = p(y=1|\mathbf{x}) = g^{-1}(\mathbf{w}^{\top}\mathbf{x} + b) = \frac{1}{1 + e^{-(\mathbf{w}^{\top}\mathbf{x} + b)}}
+	      \]
+	\item Applicando la funzione di link a entrambi i membri otteniamo:
+	      \[g(y') = \ln \frac{y'}{1 - y'} = \ln \frac{p(y=1|\mathbf{x})}{p(y=0|\mathbf{x})} = g(g^{-1}(\mathbf{w}^{\top}\mathbf{x} + b)) = \mathbf{w}^{\top}\mathbf{x} + b\]
+	\item Per cui:
+	      \[\mathbf{w}^{\top}\mathbf{x} + b = \ln \frac{p(y=1|\mathbf{x})}{p(y=0|\mathbf{x})}\]
+\end{itemize}
+
+\nt{Si può fare lo stesso partendo dai log-odds.}
+
+\dfn{Maximum Likelihood Estimation (MLE)}{
+	L'idea è quella di trovare i parametri w e b che massimizzano la likelihood dei dati osservati. Si utilizza una distribuzione di Bernoulli\footnote{Usata negli esperimenti binari.}:
+	\[
+		p(y_i|\mathbf{x}_i) = p(y_i = 1|\mathbf{x}_i)^{y_i} \cdot p(y_i = 0|\mathbf{x}_i)^{1-y_i}
+	\]
+}
+
+\begin{itemize}
+	\item Per trovare i parametri ottimali possiamo lavorare con la log-likelihood. Assumendo $z_i = w^\top x_i + b$:
+	      \begin{align*}
+		      \ln p(y_i|\mathbf{x}_i) & = y_i \ln p(y_i = 1|\mathbf{x}_i) + (1-y_i) \ln p(y_i = 0|\mathbf{x}_i)    \\
+		                              & = y_i \ln \frac{e^{z_i}}{1 + e^{z_i}} + (1-y_i) \ln \frac{1}{1 + e^{z_i}}  \\
+		                              & = y_i \left( z_i - \ln(1 + e^{z_i}) \right) - (1-y_i) \ln(1 + e^{z_i})     \\
+		                              & = y_i z_i - y_i \ln(1 + e^{z_i}) - \ln(1 + e^{z_i}) + y_i \ln(1 + e^{z_i}) \\
+		                              & = y_i z_i - \ln(1 + e^{z_i})
+	      \end{align*}
+	\item Si vuole minimizzare la funzione costo:
+	      \[\ell(\boldsymbol{\beta}; \mathbf{x}_i', y_i) = -\ln p(y_i|\mathbf{x}_i') = \ln(1 + e^{\boldsymbol{\beta}^{\top} \mathbf{x}_i'}) - y_i(\boldsymbol{\beta}^{\top} \mathbf{x}_i')\]
+	\item Per un dataset con $n$ osservazioni indipendenti la likelihood totale è il prodotto delle likelihood individuali:
+	      \[\ell(\boldsymbol{\beta}) = \sum_{i=1}^{n} \ell(\boldsymbol{\beta}; \mathbf{x}_i', y_i) = \sum_{i=1}^{n} \left( \ln(1 + e^{\boldsymbol{\beta}^{\top} \mathbf{x}_i'}) - y_i(\boldsymbol{\beta}^{\top} \mathbf{x}_i') \right)\]
+	\item Per minimizzare la funzione di loss:
+	      \[\boldsymbol{\beta}^{\star} = \arg \min_{\boldsymbol{\beta}} \ell(\boldsymbol{\beta})\]
+\end{itemize}
+
+\subsection{Classificazione Multi-Classe}
+
+\dfn{Metodi di Trasformazione del Problema}{
+	Questi metodi puntano a ridurre il problema della multiclassificazione in una serie di problemi di classificazione binaria.
+}
+
+\paragraph{Idea principale:}
+
+\begin{itemize}
+	\item Si divide il problema in una serie di piccoli task di classificazione binaria.
+	\item Per ogni task si crea un nuovo dataset e si addestra un semplice classificatore binario.
+	\item Dopo di ché si combinano i risultati per fare la predizione finale.
+\end{itemize}
+
+\paragraph{Ci sono diverse alternative a questo approccio basico:}
+
+\begin{itemize}
+	\item One-vs-One (OVO\footnote{OwO}).
+	\item One-vs-Rest (OvR).
+	\item Many-vs-Many (MvM).
+	\item Error-Correcting Output Codes (ECOC).
+\end{itemize}
+
+\dfn{Matrice di Codifica}{
+	Una matrice di codifica è una matrice che definisce la relazione tra le classi originali ei classificatori binari.
+}
+\[
+	\begin{array}{c|cccc}
+		\hline
+		    & h_1           & h_2           & h_3           & h_4           \\
+		\hline
+		C_1 & \color{blue}1 & \color{blue}1 & \color{red}-1 & \color{red}-1 \\
+		C_2 & \color{blue}1 & \color{red}-1 & \color{blue}1 & \color{red}-1 \\
+		C_3 & \color{red}-1 & \color{blue}1 & \color{red}-1 & \color{blue}1 \\
+		C_4 & \color{red}-1 & \color{red}-1 & \color{blue}1 & \color{blue}1 \\
+		\hline
+	\end{array}
+\]
+
+\clm{}{}{
+	\begin{itemize}
+		\item Ogni colonna corrisponde a un classificatore binario che distingue tra due gruppi di classi, le entries nella matrice indicano quali classi devono essere considerate positive o negative per ciascun classificatore.
+		\item La riga nella matrice di codifica che è più simile al vettore di predizione indica la \fancyglitter{classe predetta}.
+	\end{itemize}
+}
+
+\dfn{One-vs-One}{
+	Assumiamo di avere $k$ classi, addestriamo un classificatore binario per ogni paia di classi. Il risultato sono $\frac{k(k-1)}{2}$ classificatori.
+}
+
+\ex{One-vs-One}{
+	\[\begin{array}{c|cccccc}
+			\hline
+			    & h_{12}        & h_{13}        & h_{14}        & h_{23}        & h_{24}        & h_{34}        \\
+			\hline
+			C_1 & \color{blue}1 & \color{blue}1 & \color{blue}1 & 0             & 0             & 0             \\
+			C_2 & \color{red}-1 & 0             & 0             & \color{blue}1 & \color{blue}1 & 0             \\
+			C_3 & 0             & \color{red}-1 & 0             & \color{red}-1 & 0             & \color{blue}1 \\
+			C_4 & 0             & 0             & \color{red}-1 & 0             & \color{red}-1 & \color{red}-1 \\
+			\hline
+		\end{array}\]
+}
+
+\dfn{One-vs-Rest}{
+	Addestriamo $k$ classificatori binari, ognuno addestrato per distinguere una classe da tutte le altre.
+}
+
+\ex{One-vs-Rest}{
+	\[\begin{array}{c|cccc}
+			\hline
+			    & h_1           & h_2           & h_3           & h_4           \\
+			\hline
+			C_1 & \color{blue}1 & \color{red}-1 & \color{red}-1 & \color{red}-1 \\
+			C_2 & \color{red}-1 & \color{blue}1 & \color{red}-1 & \color{red}-1 \\
+			C_3 & \color{red}-1 & \color{red}-1 & \color{blue}1 & \color{red}-1 \\
+			C_4 & \color{red}-1 & \color{red}-1 & \color{red}-1 & \color{blue}1 \\
+			\hline
+		\end{array}
+	\]}
+
+\dfn{Many-vs-Many}{
+	Ogni classificatore binario è addestrato su un sottoinsieme delle classi dove alcune classi sono trattate come positive e altre come negative.
+
+}
+
+\ex{Many-vs-Many}{
+	\[\begin{array}{c|cccccc}
+			\hline
+			    & h_1           & h_2           & h_3           & h_4           & h_5           & h_6           \\
+			\hline
+			C_1 & \color{blue}1 & \color{blue}1 & \color{red}-1 & \color{red}-1 & \color{red}-1 & \color{red}-1 \\
+			C_2 & \color{blue}1 & \color{red}-1 & \color{red}-1 & \color{blue}1 & \color{blue}1 & \color{blue}1 \\
+			C_3 & \color{blue}1 & \color{blue}1 & \color{blue}1 & \color{red}-1 & \color{blue}1 & \color{blue}1 \\
+			C_4 & \color{red}-1 & \color{red}-1 & \color{blue}1 & \color{red}-1 & \color{blue}1 & \color{red}-1 \\
+			\hline
+		\end{array}
+	\]
+}
+
+\nt{Sia OvO che OvR sono casi speciali di MvM.}
+
+\dfn{Error-Correcting Output Codes}{
+	La matrice di codifica è realizzata in modo tale che le righe sono ben separate dalla distanza di Hamming. Questa separazione permette di correggere errori fatti da predizioni individuali.
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Trovare ECOC ottimale per un dato numero di classi è NP-Hard. 
+		\item Utilizzare una matrice di codifica randomica può essere una buona euristica se il codice è abbastanza lunga. 
+		\item Quando $k$ è piccolo l'efficacia è limitata.
+	\end{itemize}
+}
+
+\paragraph{OvO vs OvR:}
+
+\begin{itemize}
+	\item OvO:
+		\begin{itemize}
+			\item Ogni classificatore è addestrato solo un sottoinsieme dei dati, quindi ha efficacia limitata se i dati sono scarsi.
+			\item Può essere costosa quando ci sono tante classi.
+		\end{itemize}
+	\item OvR: 
+		\begin{itemize}
+			\item Produce sottoproblemi binari molto sbilanciati, anche se il dataset originale era bilanciato. 
+			\item Usa l'intero dataset per ogni classificatore binario, ciò aumenta l'efficienza.
+		\end{itemize}
+\end{itemize}
+
+\subsection{Problemi di Sbilanciamento}
+
+Assumiamo di avere un dataset molto sbilanciato dove la classe di maggioranza ha 998 istanze e la classe di minoranza ne ha solo 2. Un classificatore può ottenere 99.8\% di accuratezza predicendo per tutte le istanze quelle di maggioranza, però ciò fallisce nell'identificare la classe di minoranza che spesso è la \fancyglitter{classe di interesse}.
 
 
+\dfn{Threshold Update}{
+	Assumendo di usare un classificatore lineare $y = \mathbf{w}^{\top} \mathbf{x} + b$ e che le classi con $y > 0.5$ vengono classificate positivamente, se abbiamo $m^+$ istanze positive e $m^-$ istanze negative possiamo utilizzare un likelihood ratio:
+	$$\frac{y}{1 - y} > \frac{m^{+}}{m^{-}} \iff y > \frac{m^{+}}{m^{+} + m^{-}}$$
+}
+
+\cor{Oversampling}{
+	I metodi di oversampling mirano a bilanciare la distribuzione delle classi aumentando il numero di istanze nella classe di minoranza.
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Il metodo più semplice consiste nel duplicare casualmente gli esempi nella classe di minoranza. 
+		\item Può portare all'overfitting.
+		\item \fancyglitter{SMOTE} (Synthetic Minority Oversampling Technique): si prendono esempi a coppie e si interpolano a vicenda prendendo i punti nel mezzo. 
+		\item Ciò introduce un bias.
+	\end{itemize}
+}
+
+\cor{Undersampling}{
+	Si riducono gli esempi delle classi di maggioranza. 
+}
+
+\clm{}{}{
+	\begin{itemize}
+		\item Si rischia di perdere informazione (problematico per piccoli datasets). 
+		\item \fancyglitter{EasyEnsemble:} si inducono più classificatori e si prende il voto di maggioranza.
+	\end{itemize}
+}
