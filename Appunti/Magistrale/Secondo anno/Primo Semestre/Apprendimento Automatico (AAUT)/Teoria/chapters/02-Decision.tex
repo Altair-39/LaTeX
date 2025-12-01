@@ -1,1 +1,137 @@
-\chapter{Alberi di Decisione e Reti Neurali}
+\chapter{Alberi di Decisione, Reti Neurali e Classificatori Bayesiani}
+
+\section{Alberi di Decisione}
+
+\subsection{Basic Processing}
+
+\paragraph{Processo di base:}
+
+\begin{itemize}
+	\item Ogni domanda posta nel processo di decisione è un test su una feature.
+	\item Alla fine del percorso si raggiunge una conclusione.
+	\item Ogni test raggiunge o un nodo foglia o un nodo interno.
+	\item Ogni percorso corrisponde a una sequenza di test (predicato congiuntivo).
+	\item \fancyglitter{Goal:} produrre un albero che può generalizzare su campioni sconosciuti\footnote{Il "salto induttivo", per Peter Flach.}.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.45]
+	{02/alg.png}
+	\caption{Algoritmo per l'apprendimento basato su decision tree.}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]
+	{02/case.png}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]
+	{02/alg2.png}
+\end{figure}
+\begin{figure}[!h]
+
+	\centering
+	\includegraphics[scale=0.5]
+	{02/case2.png}
+\end{figure}
+
+
+\begin{figure}[h]
+
+	\centering
+	\includegraphics[scale=0.5]
+	{02/alg3.png}
+	\caption{}
+\end{figure}
+
+\begin{figure}[h]
+
+	\centering
+	\includegraphics[scale=0.5]
+	{02/case3.png}
+	\caption{}
+\end{figure}
+
+\subsection{Split Selection}
+
+\dfn{Split Selection}{
+	Il cuore dell'algoritmo di apprendimento di un decision tree è la scelta delle features su cui fare splitting.
+}
+
+\paragraph{Guidelines per scegliere la features su cui fare splitting:}
+
+\begin{itemize}
+	\item \fancyglitter{Minority Class:} $min{p^+,p^-}$, corrisponde al confronto tra la probabilità della classe positiva con quella della classe negativa e scegliere la minore.
+	\item \fancyglitter{Gini Index:} $2p^+ p^-$, è l'errore atteso se gli esempi sono etichettati a caso (con una carta probabilità $p^+$ la classe positiva e $p^-$ la classe negativa.
+	\item \fancyglitter{Entropy:} $-p^+ log_2(p^+) - p^-log_2(p^-)$ è la quantità di informazione attesa (in bits) contenuta in un messaggio.
+	\item \fancyglitter{Gain Ratio:}
+\end{itemize}
+
+\paragraph{Gini Index:}
+
+\begin{itemize}
+	\item Assumiamo che gli esempi nella popolazione sono positivi con probabilità $p$ e negativi con $1 - p$.
+	\item Gli esempi sono etichettati casualmente e indipendentemente.
+	\item Quando estraiamo un esempio ci sarà $p$ probabilità di estrarlo positivo e $1 - p$ probabilità di estrarlo negativo.
+	\item Probabilità totale di errore: $p(1-p) + (1-p)p = 2p(1-p)$.
+\end{itemize}
+
+\dfn{Entropia}{
+	Viene utilizzata per quantificare il numero  di unità (bits) richieste per rappresentare l'informazione.
+	Misura la quantità di informazione associata a un evento.
+}
+
+\nt{Se un esperimento a $n$ possibili risultati (equiprobabili) il numero di bits richiesti per rappresentare qualsiasi risultato è $b$:}
+
+\[b = [log_2 n]\]
+
+\ex{}{
+	\begin{itemize}
+		\item Supponiamo di lanciare un dado a 6 facce.
+		\item Se vogliamo rappresentare e comunicare un risultato abbiamo bisogno di $n$ bits:
+		      \[b = [log_2 6] = [2.58] = 3\]
+		\item Se invece comunichiamo solo la parità del risultato:
+		      \[b_1 = [log_2 2] = 1\]
+		\item Con solo la parità si ha incertezza sul risultato effettivo. Ci sono 3 possibili risultati per pari e 3 per dispari.
+		\item Abbiamo bisogno di:
+		      \[b_2 = [log_2 3] = [1.58] = 2\]
+		\item $b_2$ rappresenta la quantità di confusione rimanente dopo aver inviato la parità:
+		      \[b_2 = b - b_1\]
+		\item L'informazione guadagnata dal primo messaggio è:
+		      $b_1 = b - b_2$
+	\end{itemize}
+}
+
+\cor{Informazione}{
+	Se un evento E ha probabilità $p$ di avvenire l'informazione guadagnata quando lo osserviamo è:
+	\[I(E) = log_2(\displaystyle\frac{1}{p}) = - log_2 p\]
+}
+
+\nt{Se un evento è probabile ($p$ tende a 1) si guadagnerà poca informazione dall'evento, se è improbabile ($p$ tende a 0) si guadagnerà molta informazione.}
+
+\begin{figure}[h]
+
+	\centering
+	\includegraphics[scale=0.5]
+	{02/information.png}
+	\caption{Curva della quantità di informazioni misurata.}
+\end{figure}
+
+\dfn{Informazione Attesa}{
+	Se un esperimento a $n$ risultati $(E_1,..., E_n)$ ognuno con probabilità $p_1,..., p_n$ allora la quantità media di informazione guadagnata è:
+	\[H(E) = \sum_{i=1}^{n} p_i \cdot \log_2 \left(\frac{1}{p_i}\right) = - \sum_{i=1}^{n} p_i \cdot \log_2(p_i)\]
+}
+
+\subsection{Pruning}
+
+\subsection{Continuous and Missing Values}
+
+\subsection{Multivariate Decision Trees}
+
+\section{Reti Neurali}
+
+\section{Classificatori Bayesiani}
