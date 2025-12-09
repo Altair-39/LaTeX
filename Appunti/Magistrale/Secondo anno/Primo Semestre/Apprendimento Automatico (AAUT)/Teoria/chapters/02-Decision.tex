@@ -126,9 +126,123 @@
 	\[H(E) = \sum_{i=1}^{n} p_i \cdot \log_2 \left(\frac{1}{p_i}\right) = - \sum_{i=1}^{n} p_i \cdot \log_2(p_i)\]
 }
 
+\paragraph{Applicazione dell'entropia:}
+
+\begin{itemize}
+	\item Assumiamo $p_k$ come la probabilità che in una partizione $D$ ci siano esempi della classe $k$ (1,..., $|y|$).
+	\item L'entropia è definita come:
+	      \[\text{Ent}(D) = - \sum_{k=1}^{|\mathcal{Y}|} p_k \log_2 p_k\]
+	\item  L'entropia minima è 0, la massima è $log_2 |y|$.
+	\item Più piccola è l'entropia maggiore è la purezza.
+\end{itemize}
+
+\dfn{Guadagno di Informazione}{
+	Assumiamo che la feature discreta $a$ ha $v$ possibili valori $\{a^1,..., a^v\}$.
+	In questo caso dividere il dataset $D$ in base alla feature $a$ produce $v$ nodi. Il guadagno di informazione dello split è calcolato come:
+	\[\text{Gain}(D, a) = \text{Ent}(D) - \sum_{v=1}^{V} \frac{|D^v|}{|D|} \text{Ent}(D^v)\]
+}
+
+\nt{In generale  maggiore è il guadagno di informazione e maggiore è il miglioramento della purezza.}
+
+\cor{Bias}{
+	Se consideriamo la feature ID come candidata per lo splitting il suo guadagno di informazione saràà più alta rispetto alle altre features.
+}
+
+\nt{Il criterio di guadagno delle informazioni ha un bias verso le features con molti valori possibili.}
+
+\dfn{Gain Ratio}{
+	Il gain value di una feature $a$ è definito come:
+	\[\text{Gain\_ratio}(D, a) = \frac{\text{Gain}(D, a)}{\text{IV}(a)}\]
+	Dove:
+	\[\text{IV}(a) = - \sum_{v=1}^{V} \frac{|D^v|}{|D|} \log_2 \frac{|D^v|}{|D|}\]
+	è chiamato valore intrinseco della feature $a$.
+}
+
+\nt{$\text{IV}(a)$ è grande quando la feature $a$ ha molti valori possibili.
+	Il Gain Ratio ha un bias verso features con pochi valori possibili.
+}
+
+\dfn{Gini Index}{
+	Il gini index di una feature $a$ è definito come:
+	\[\text{Gini\_index}(D, a) = \sum_{v=1}^{V} \frac{|D^v|}{|D|} \text{Gini}(D^v)\]
+}
+
+\cor{Gini Value}{
+Il gini value di un dataset $D$ è definito come:
+\[\text{Gini}(D) = \sum_{k=1}^{|\mathcal{Y}|} \sum_{k' \neq k} p_k p_{k'} = 1 - \sum_{k=1}^{|\mathcal{Y}|} p_k^2\]
+}
+
 \subsection{Pruning}
 
+\qs{}{Perché fare pruning?}
+
+\begin{itemize}
+	\item Strategia principale per affrontare il problema dell'\fancyglitter{overfitting}.
+	\item Se ci sono troppi rami il classificatore potrebbe essere deviato da peculiarità dei campioni.
+\end{itemize}
+
+\paragraph{Strategie possibili:}
+
+\begin{itemize}
+	\item Pre-pruning: durante la crescita dell'albero (condizione nella valutazione dello split).
+	\item Post-pruning: quando l'albero è già costruito.
+\end{itemize}
+
+\dfn{Pre-pruning}{
+	Il Pre-pruning decide se tagliare i nodi figli immediatamente dopo essere stati generati. Ciò avviene confrontando l'abilità di generalizzazione prima e dopo lo splitting:
+	\begin{itemize}
+		\item Se la funzione obiettivo è ancora buona lo split viene confermato.
+		\item Altrimenti vengono eliminati i nodi figli e lo split non avviene.
+	\end{itemize}
+}
+
+\nt{Quando non si fa nessuno splitting il nodo genitore viene marchiato come foglia ed etichettato come classe di maggioranza.}
+
+\paragraph{Vantaggi:}
+
+\begin{itemize}
+	\item Riduce il rischio di overfitting.
+	\item Riduce il costo computazionale sia del training che del testing.
+\end{itemize}
+
+\paragraph{Svantaggi:}
+
+\begin{itemize}
+	\item Rischio di underfitting: possono venir tagliati nodi che avrebbero migliorato l'accuratenza.
+\end{itemize}
+
+\dfn{Post-pruning}{
+	Prima si costruisce tutto l'albero, successivamente si valuta se eliminare le foglie.
+}
+
+\paragraph{Vantaggi:}
+
+\begin{itemize}
+	\item Tiene più rami del pre-pruning.
+	\item Ha un'abilità di generalizzazione maggiore.
+\end{itemize}
+
+\paragraph{Svantaggi:}
+
+\begin{itemize}
+	\item Training molto più lungo.
+\end{itemize}
+
 \subsection{Continuous and Missing Values}
+
+\dfn{Strategia di Discretizzazione (Bi-Partizione)}{
+	Dato un dataset $D$ e una feature continua $a$ assumiamo che $n$ valori di $a$ siano osservati in $D$. Se ordiniamo questi valori in ordine crescente  come $a^1,..., a_n$ e uno split point $t$, allora $D$ è partizionato in sottoinsiemi $D_t^-$ e $D_t^+$ dove $D_t^-$ include i campioni  con $a$ minore di $t$ e $D_t^+$ dove $D_t^-$ include i campioni  con $a$ maggiore di $t$. Ci sono $n-1$ elementi nell'insieme: 
+	\[T_a = \left\{\frac{a^i+a^{i+1}}{2} \mid 1 \leq i \leq n-1 \right\}\]	
+	dove $\frac{a^i+a^{i+1}}{2}$ è usato come split point candidato per l'intervallo $[a^i,a^{i + 1}$.
+}
+
+\begin{itemize}
+	\item Gli split point sono esaminati nello stesso modo in cui sono esaminate le features discrete. 
+	\item Viene scelto lo split point ottimale: 
+		\[\text{Gain}(D, a) = \max_{t \in T_a} \text{Gain}(D, a, t) \\
+= \max_{t \in T_a} \text{Ent}(D) - \sum_{\lambda \in \{l, r\}} \frac{|D_t^{\lambda}|}{|D|} \text{Ent}(D_t^{\lambda})\]
+\item $\text{Gain}(D, a)$ è il guadagno di informazione dovuto alla Bi-Partizione $D$ tramite $t$. 
+\end{itemize}
 
 \subsection{Multivariate Decision Trees}
 
