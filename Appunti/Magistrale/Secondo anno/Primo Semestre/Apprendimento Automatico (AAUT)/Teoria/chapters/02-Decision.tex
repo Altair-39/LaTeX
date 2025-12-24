@@ -231,20 +231,44 @@ Il gini value di un dataset $D$ è definito come:
 \subsection{Continuous and Missing Values}
 
 \dfn{Strategia di Discretizzazione (Bi-Partizione)}{
-	Dato un dataset $D$ e una feature continua $a$ assumiamo che $n$ valori di $a$ siano osservati in $D$. Se ordiniamo questi valori in ordine crescente  come $a^1,..., a_n$ e uno split point $t$, allora $D$ è partizionato in sottoinsiemi $D_t^-$ e $D_t^+$ dove $D_t^-$ include i campioni  con $a$ minore di $t$ e $D_t^+$ dove $D_t^-$ include i campioni  con $a$ maggiore di $t$. Ci sono $n-1$ elementi nell'insieme: 
-	\[T_a = \left\{\frac{a^i+a^{i+1}}{2} \mid 1 \leq i \leq n-1 \right\}\]	
-	dove $\frac{a^i+a^{i+1}}{2}$ è usato come split point candidato per l'intervallo $[a^i,a^{i + 1}$.
+Dato un dataset $D$ e una feature continua $a$ assumiamo che $n$ valori di $a$ siano osservati in $D$. Se ordiniamo questi valori in ordine crescente  come $a^1,..., a_n$ e uno split point $t$, allora $D$ è partizionato in sottoinsiemi $D_t^-$ e $D_t^+$ dove $D_t^-$ include i campioni  con $a$ minore di $t$ e $D_t^+$ dove $D_t^-$ include i campioni  con $a$ maggiore di $t$. Ci sono $n-1$ elementi nell'insieme:
+\[T_a = \left\{\frac{a^i+a^{i+1}}{2} \mid 1 \leq i \leq n-1 \right\}\]
+dove $\frac{a^i+a^{i+1}}{2}$ è usato come split point candidato per l'intervallo $[a^i,a^{i + 1}$.
 }
 
 \begin{itemize}
-	\item Gli split point sono esaminati nello stesso modo in cui sono esaminate le features discrete. 
-	\item Viene scelto lo split point ottimale: 
-		\[\text{Gain}(D, a) = \max_{t \in T_a} \text{Gain}(D, a, t) \\
-= \max_{t \in T_a} \text{Ent}(D) - \sum_{\lambda \in \{l, r\}} \frac{|D_t^{\lambda}|}{|D|} \text{Ent}(D_t^{\lambda})\]
-\item $\text{Gain}(D, a)$ è il guadagno di informazione dovuto alla Bi-Partizione $D$ tramite $t$. 
+	\item Gli split point sono esaminati nello stesso modo in cui sono esaminate le features discrete.
+	\item Viene scelto lo split point ottimale:
+	      \[\text{Gain}(D, a) = \max_{t \in T_a} \text{Gain}(D, a, t) \\
+		      = \max_{t \in T_a} \text{Ent}(D) - \sum_{\lambda \in \{l, r\}} \frac{|D_t^{\lambda}|}{|D|} \text{Ent}(D_t^{\lambda})\]
+	\item $\text{Gain}(D, a)$ è il guadagno di informazione dovuto alla Bi-Partizione $D$ tramite $t$.
 \end{itemize}
 
-\subsection{Multivariate Decision Trees}
+\paragraph{Valori mancanti:}
+
+\begin{itemize}
+	\item I dati non sono sempre completamente descritti.
+	\item Scartare i valori mancanti è un grande spreco di dati.
+	\item Due problemi:
+	      \begin{itemize}
+		      \item Come scegliere come splittare le features quando ci sono valori mancanti?
+		      \item Come splittare un campione in cui la feature su cui si fa lo splittig ha un valore mancante?
+	      \end{itemize}
+\end{itemize}
+
+\dfn{Missing Values}{
+	Dato un training set $D$ e una feature $a$ assumiamo $\tilde{D}$ come sottoinsieme dei campioni in $D$ che hanno valore $a$, $\tilde{D}^v$ come sottoinsieme dei campioni in $\tilde{D}$ che hanno valore $a^v$, $\tilde{D}_k$ come sottoinsieme dei campioni in $\tilde{D}$ appartenenti alla $k$-esima classe.
+	Assegnamo un peso $w_x$ a ogni campione $x$ e definiamo:
+
+	\begin{itemize}
+		\item La proporzione di campioni senza valori mancanti:
+		      \[\rho = \frac{\sum_{x \in \tilde{D}} w_x}{\sum_{x \in D} w_x}\]
+		\item La proporzione della $k$-esima classe in tutti i campioni senza valori mancanti:
+		      \[\tilde{p}_k = \frac{\sum_{x \in \tilde{D}_k} w_x}{\sum_{x \in \tilde{D}} w_x} \quad (1 \leq k \leq |\mathcal{Y}|)\]
+		\item La proporzione di cambioni con valore $a^v$ in tutti i campioni senza valori mancanti:
+		      \[\tilde{r}_v = \frac{\sum_{x \in \tilde{D}^v} w_x}{\sum_{x \in \tilde{D}} w_x} \quad (1 \leq v \leq V)\]
+	\end{itemize}
+}
 
 \section{Reti Neurali}
 
